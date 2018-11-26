@@ -1,0 +1,164 @@
+/* voson dashboard shiny app css */
+
+/* shiny css ------------------------------------------------------------------------------------------------------- */
+
+h1, h2, h3 {
+  margin-top:10px;
+}
+
+.tab-content {
+  padding-top:6px;
+}
+
+.nav-tabs-custom {
+  margin-bottom:10px !important;
+}
+
+.btn {
+  margin-bottom:4px;
+}
+
+.checkbox {
+  margin-top:5px;
+}
+
+.box {
+  margin-bottom:10px;
+  border-top:1px solid #d2d6de;
+}
+
+.content {
+  padding-top:5px;
+}
+
+.form-group {
+  margin-bottom:10px; 
+}
+
+.progress {
+  margin-bottom:0px;
+}
+
+.shiny-input-container:not(.shiny-input-container-inline) {
+  width:100%;
+}
+
+.shiny-notification {
+  height:100px;
+  width:300px;
+  position:fixed;
+  top:calc(25%);
+  left:calc(60%);
+}
+
+[class*="col-lg-"],[class*="col-md-"],
+[class*="col-sm-"],[class*="col-xs-"] {
+    padding-right:12px;
+    padding-left:10px;
+}
+
+#dt_vertices table.dataTable tr.selected td, 
+#dt_vertices table.dataTable td.selected {
+  background-color:#e1b3fdb0 !important;
+}
+
+pre.shiny-text-output {
+  font-size: 12px;
+}
+
+/* custom css ------------------------------------------------------------------------------------------------------ */
+.inactive_menu_link {
+  pointer-events:none;
+  cursor:default;
+  color:#484e50 !important;
+}
+
+.youtube_red {
+  color:#DB4437
+}
+
+.twitter_blue {
+  color:#1DA1F2
+}
+
+.social_green {
+  color:#3CBC8D
+}
+
+.version {
+  font-size:65%;
+}
+
+.dataTables_length {
+  margin-right:10px;
+}
+
+#graph_details_bottom_output {
+  margin-top:0px;
+}
+
+#graph_info_well {
+  padding-left:25px;
+  padding-top:10px;
+  padding-bottom:6px;
+  margin-bottom:5px;
+}
+
+.custom_node_size_div {
+  margin-bottom:5px;
+}
+
+.custom_well_for_buttons {
+    padding-left:25px;
+    padding-top:10px;
+    padding-bottom:6px;
+    margin-bottom:10px;
+}
+
+.custom_well_for_controls {
+    padding-left:10px;
+    padding-right:10px;
+    padding-top:6px;
+    padding-bottom:0px;
+    margin-bottom:4px;    
+}
+
+.custom_well_for_controls_collect {
+    padding-left:10px;
+    padding-right:10px;
+    padding-top:6px;
+    padding-bottom:5px;
+    margin-bottom:4px;    
+}
+
+.custom_well_for_keys {
+    padding-left:10px;
+    padding-right:10px;
+    padding-top:6px;
+    padding-bottom:6px;
+    margin-bottom:10px;
+}
+
+.div_inline_200 {
+  display:inline-block;
+  vertical-align:middle;
+  margin-left:10px;
+  width:200px;
+}
+
+.div_inline_400 {
+  display:inline-block;
+  vertical-align:middle;
+  margin-left:10px;
+  width:400px;
+}
+
+.div_inline {
+  display:inline-block;
+  vertical-align:middle;
+}
+
+.date_range_label {
+  font-weight:bold;
+  margin-bottom:5px;
+}

@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<!-- Created by igraph -->
+  <key id="g_type" for="graph" attr.name="type" attr.type="string"/>
+  <key id="v_name" for="node" attr.name="name" attr.type="string"/>
+  <key id="v_id" for="node" attr.name="id" attr.type="string"/>
+  <key id="v_vosonCA_Stance" for="node" attr.name="vosonCA_Stance" attr.type="string"/>
+  <graph id="G" edgedefault="directed">
+    <data key="g_type">www-hyperlink</data>
+    <node id="n0">
+      <data key="v_name">mypetjawa.mu.nu</data>
+      <data key="v_id">n0</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n1">
+      <data key="v_name">wizbangblog.com</data>
+      <data key="v_id">n1</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n2">
+      <data key="v_name">littlegreenfootballs.com/weblog</data>
+      <data key="v_id">n2</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n3">
+      <data key="v_name">michellemalkin.com</data>
+      <data key="v_id">n3</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n4">
+      <data key="v_name">captainsquartersblog.com/mt</data>
+      <data key="v_id">n4</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n5">
+      <data key="v_name">instapundit.com</data>
+      <data key="v_id">n5</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n6">
+      <data key="v_name">vodkapundit.com</data>
+      <data key="v_id">n6</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n7">
+      <data key="v_name">indcjournal.com</data>
+      <data key="v_id">n7</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n8">
+      <data key="v_name">powerlineblog.com</data>
+      <data key="v_id">n8</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n9">
+      <data key="v_name">blogsforbush.com</data>
+      <data key="v_id">n9</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n10">
+      <data key="v_name">hughhewitt.com</data>
+      <data key="v_id">n10</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n11">
+      <data key="v_name">realclearpolitics.com</data>
+      <data key="v_id">n11</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n12">
+      <data key="v_name">wonkette.com</data>
+      <data key="v_id">n12</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n13">
+      <data key="v_name">deanesmay.com</data>
+      <data key="v_id">n13</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n14">
+      <data key="v_name">talkleft.com</data>
+      <data key="v_id">n14</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n15">
+      <data key="v_name">digbysblog.blogspot.com</data>
+      <data key="v_id">n15</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n16">
+      <data key="v_name">andrewsullivan.com</data>
+      <data key="v_id">n16</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n17">
+      <data key="v_name">j-bradford-delong.net/movable_type</data>
+      <data key="v_id">n17</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n18">
+      <data key="v_name">atrios.blogspot.com</data>
+      <data key="v_id">n18</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n19">
+      <data key="v_name">mydd.com</data>
+      <data key="v_id">n19</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n20">
+      <data key="v_name">washingtonmonthly.com</data>
+      <data key="v_id">n20</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n21">
+      <data key="v_name">talkingpointsmemo.com</data>
+      <data key="v_id">n21</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n22">
+      <data key="v_name">theleftcoaster.com</data>
+      <data key="v_id">n22</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n23">
+      <data key="v_name">crookedtimber.org</data>
+      <data key="v_id">n23</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n24">
+      <data key="v_name">dailykos.com</data>
+      <data key="v_id">n24</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n25">
+      <data key="v_name">yglesias.typepad.com/matthew</data>
+      <data key="v_id">n25</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n26">
+      <data key="v_name">belmontclub.blogspot.com</data>
+      <data key="v_id">n26</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n27">
+      <data key="v_name">oliverwillis.com</data>
+      <data key="v_id">n27</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n28">
+      <data key="v_name">pandagon.net</data>
+      <data key="v_id">n28</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n29">
+      <data key="v_name">rogerlsimon.com</data>
+      <data key="v_id">n29</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n30">
+      <data key="v_name">jameswolcott.com</data>
+      <data key="v_id">n30</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n31">
+      <data key="v_name">prospect.org/weblog</data>
+      <data key="v_id">n31</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n32">
+      <data key="v_name">politicalwire.com</data>
+      <data key="v_id">n32</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n33">
+      <data key="v_name">juancole.com</data>
+      <data key="v_id">n33</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n34">
+      <data key="v_name">americablog.blogspot.com</data>
+      <data key="v_id">n34</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <node id="n35">
+      <data key="v_name">volokh.com</data>
+      <data key="v_id">n35</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n36">
+      <data key="v_name">allahpundit.com</data>
+      <data key="v_id">n36</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n37">
+      <data key="v_name">windsofchange.net</data>
+      <data key="v_id">n37</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n38">
+      <data key="v_name">timblair.spleenville.com</data>
+      <data key="v_id">n38</data>
+      <data key="v_vosonCA_Stance">conservative</data>
+    </node>
+    <node id="n39">
+      <data key="v_name">blog.johnkerry.com</data>
+      <data key="v_id">n39</data>
+      <data key="v_vosonCA_Stance">liberal</data>
+    </node>
+    <edge source="n0" target="n1">
+    </edge>
+    <edge source="n0" target="n2">
+    </edge>
+    <edge source="n0" target="n3">
+    </edge>
+    <edge source="n0" target="n4">
+    </edge>
+    <edge source="n0" target="n5">
+    </edge>
+    <edge source="n0" target="n6">
+    </edge>
+    <edge source="n0" target="n7">
+    </edge>
+    <edge source="n0" target="n8">
+    </edge>
+    <edge source="n0" target="n9">
+    </edge>
+    <edge source="n7" target="n10">
+    </edge>
+    <edge source="n7" target="n11">
+    </edge>
+    <edge source="n7" target="n12">
+    </edge>
+    <edge source="n7" target="n0">
+    </edge>
+    <edge source="n7" target="n1">
+    </edge>
+    <edge source="n7" target="n2">
+    </edge>
+    <edge source="n7" target="n3">
+    </edge>
+    <edge source="n7" target="n4">
+    </edge>
+    <edge source="n7" target="n13">
+    </edge>
+    <edge source="n7" target="n5">
+    </edge>
+    <edge source="n7" target="n8">
+    </edge>
+    <edge source="n7" target="n14">
+    </edge>
+    <edge source="n15" target="n16">
+    </edge>
+    <edge source="n15" target="n17">
+    </edge>
+    <edge source="n15" target="n18">
+    </edge>
+    <edge source="n15" target="n19">
+    </edge>
+    <edge source="n15" target="n8">
+    </edge>
+    <edge source="n15" target="n14">
+    </edge>
+    <edge source="n15" target="n20">
+    </edge>
+    <edge source="n15" target="n21">
+    </edge>
+    <edge source="n15" target="n22">
+    </edge>
+    <edge source="n15" target="n23">
+    </edge>
+    <edge source="n15" target="n24">
+    </edge>
+    <edge source="n15" target="n25">
+    </edge>
+    <edge source="n15" target="n26">
+    </edge>
+    <edge source="n15" target="n5">
+    </edge>
+    <edge source="n15" target="n27">
+    </edge>
+    <edge source="n15" target="n28">
+    </edge>
+    <edge source="n3" target="n24">
+    </edge>
+    <edge source="n3" target="n1">
+    </edge>
+    <edge source="n3" target="n10">
+    </edge>
+    <edge source="n3" target="n2">
+    </edge>
+    <edge source="n3" target="n20">
+    </edge>
+    <edge source="n3" target="n4">
+    </edge>
+    <edge source="n3" target="n18">
+    </edge>
+    <edge source="n3" target="n5">
+    </edge>
+    <edge source="n3" target="n29">
+    </edge>
+    <edge source="n3" target="n6">
+    </edge>
+    <edge source="n3" target="n0">
+    </edge>
+    <edge source="n3" target="n8">
+    </edge>
+    <edge source="n3" target="n7">
+    </edge>
+    <edge source="n30" target="n15">
+    </edge>
+    <edge source="n30" target="n24">
+    </edge>
+    <edge source="n28" target="n20">
+    </edge>
+    <edge source="n28" target="n15">
+    </edge>
+    <edge source="n28" target="n21">
+    </edge>
+    <edge source="n28" target="n17">
+    </edge>
+    <edge source="n28" target="n18">
+    </edge>
+    <edge source="n28" target="n12">
+    </edge>
+    <edge source="n28" target="n23">
+    </edge>
+    <edge source="n28" target="n24">
+    </edge>
+    <edge source="n28" target="n25">
+    </edge>
+    <edge source="n28" target="n31">
+    </edge>
+    <edge source="n28" target="n32">
+    </edge>
+    <edge source="n28" target="n30">
+    </edge>
+    <edge source="n28" target="n27">
+    </edge>
+    <edge source="n28" target="n14">
+    </edge>
+    <edge source="n33" target="n24">
+    </edge>
+    <edge source="n33" target="n30">
+    </edge>
+    <edge source="n33" target="n18">
+    </edge>
+    <edge source="n25" target="n20">
+    </edge>
+    <edge source="n25" target="n31">
+    </edge>
+    <edge source="n25" target="n21">
+    </edge>
+    <edge source="n25" target="n28">
+    </edge>
+    <edge source="n25" target="n17">
+    </edge>
+    <edge source="n25" target="n18">
+    </edge>
+    <edge source="n24" target="n15">
+    </edge>
+    <edge source="n24" target="n21">
+    </edge>
+    <edge source="n24" target="n17">
+    </edge>
+    <edge source="n24" target="n18">
+    </edge>
+    <edge source="n24" target="n33">
+    </edge>
+    <edge source="n24" target="n22">
+    </edge>
+    <edge source="n24" target="n31">
+    </edge>
+    <edge source="n24" target="n19">
+    </edge>
+    <edge source="n24" target="n32">
+    </edge>
+    <edge source="n24" target="n34">
+    </edge>
+    <edge source="n24" target="n30">
+    </edge>
+    <edge source="n24" target="n14">
+    </edge>
+    <edge source="n24" target="n28">
+    </edge>
+    <edge source="n2" target="n24">
+    </edge>
+    <edge source="n2" target="n10">
+    </edge>
+    <edge source="n2" target="n11">
+    </edge>
+    <edge source="n2" target="n8">
+    </edge>
+    <edge source="n2" target="n9">
+    </edge>
+    <edge source="n13" target="n29">
+    </edge>
+    <edge source="n13" target="n9">
+    </edge>
+    <edge source="n18" target="n15">
+    </edge>
+    <edge source="n18" target="n17">
+    </edge>
+    <edge source="n18" target="n31">
+    </edge>
+    <edge source="n18" target="n19">
+    </edge>
+    <edge source="n18" target="n14">
+    </edge>
+    <edge source="n18" target="n21">
+    </edge>
+    <edge source="n18" target="n33">
+    </edge>
+    <edge source="n18" target="n22">
+    </edge>
+    <edge source="n18" target="n23">
+    </edge>
+    <edge source="n18" target="n24">
+    </edge>
+    <edge source="n18" target="n25">
+    </edge>
+    <edge source="n18" target="n34">
+    </edge>
+    <edge source="n18" target="n30">
+    </edge>
+    <edge source="n18" target="n27">
+    </edge>
+    <edge source="n18" target="n28">
+    </edge>
+    <edge source="n19" target="n11">
+    </edge>
+    <edge source="n19" target="n15">
+    </edge>
+    <edge source="n19" target="n21">
+    </edge>
+    <edge source="n19" target="n18">
+    </edge>
+    <edge source="n19" target="n22">
+    </edge>
+    <edge source="n19" target="n24">
+    </edge>
+    <edge source="n19" target="n31">
+    </edge>
+    <edge source="n19" target="n32">
+    </edge>
+    <edge source="n19" target="n34">
+    </edge>
+    <edge source="n19" target="n8">
+    </edge>
+    <edge source="n19" target="n27">
+    </edge>
+    <edge source="n19" target="n14">
+    </edge>
+    <edge source="n19" target="n28">
+    </edge>
+    <edge source="n14" target="n24">
+    </edge>
+    <edge source="n14" target="n20">
+    </edge>
+    <edge source="n14" target="n31">
+    </edge>
+    <edge source="n14" target="n35">
+    </edge>
+    <edge source="n14" target="n32">
+    </edge>
+    <edge source="n14" target="n21">
+    </edge>
+    <edge source="n14" target="n34">
+    </edge>
+    <edge source="n14" target="n18">
+    </edge>
+    <edge source="n14" target="n5">
+    </edge>
+    <edge source="n14" target="n6">
+    </edge>
+    <edge source="n14" target="n12">
+    </edge>
+    <edge source="n14" target="n28">
+    </edge>
+    <edge source="n1" target="n36">
+    </edge>
+    <edge source="n1" target="n3">
+    </edge>
+    <edge source="n1" target="n8">
+    </edge>
+    <edge source="n1" target="n20">
+    </edge>
+    <edge source="n1" target="n29">
+    </edge>
+    <edge source="n1" target="n0">
+    </edge>
+    <edge source="n1" target="n2">
+    </edge>
+    <edge source="n1" target="n4">
+    </edge>
+    <edge source="n1" target="n26">
+    </edge>
+    <edge source="n1" target="n13">
+    </edge>
+    <edge source="n1" target="n35">
+    </edge>
+    <edge source="n1" target="n5">
+    </edge>
+    <edge source="n1" target="n6">
+    </edge>
+    <edge source="n1" target="n7">
+    </edge>
+    <edge source="n1" target="n27">
+    </edge>
+    <edge source="n35" target="n25">
+    </edge>
+    <edge source="n35" target="n20">
+    </edge>
+    <edge source="n35" target="n16">
+    </edge>
+    <edge source="n35" target="n5">
+    </edge>
+    <edge source="n35" target="n12">
+    </edge>
+    <edge source="n35" target="n8">
+    </edge>
+    <edge source="n4" target="n5">
+    </edge>
+    <edge source="n4" target="n24">
+    </edge>
+    <edge source="n4" target="n6">
+    </edge>
+    <edge source="n4" target="n10">
+    </edge>
+    <edge source="n4" target="n3">
+    </edge>
+    <edge source="n4" target="n8">
+    </edge>
+    <edge source="n4" target="n9">
+    </edge>
+    <edge source="n4" target="n18">
+    </edge>
+    <edge source="n12" target="n24">
+    </edge>
+    <edge source="n12" target="n3">
+    </edge>
+    <edge source="n12" target="n31">
+    </edge>
+    <edge source="n12" target="n32">
+    </edge>
+    <edge source="n12" target="n21">
+    </edge>
+    <edge source="n12" target="n16">
+    </edge>
+    <edge source="n12" target="n18">
+    </edge>
+    <edge source="n12" target="n30">
+    </edge>
+    <edge source="n12" target="n5">
+    </edge>
+    <edge source="n20" target="n11">
+    </edge>
+    <edge source="n20" target="n15">
+    </edge>
+    <edge source="n20" target="n21">
+    </edge>
+    <edge source="n20" target="n17">
+    </edge>
+    <edge source="n20" target="n18">
+    </edge>
+    <edge source="n20" target="n33">
+    </edge>
+    <edge source="n20" target="n23">
+    </edge>
+    <edge source="n20" target="n24">
+    </edge>
+    <edge source="n20" target="n25">
+    </edge>
+    <edge source="n20" target="n31">
+    </edge>
+    <edge source="n20" target="n35">
+    </edge>
+    <edge source="n20" target="n5">
+    </edge>
+    <edge source="n20" target="n37">
+    </edge>
+    <edge source="n20" target="n38">
+    </edge>
+    <edge source="n20" target="n27">
+    </edge>
+    <edge source="n20" target="n14">
+    </edge>
+    <edge source="n20" target="n28">
+    </edge>
+    <edge source="n17" target="n25">
+    </edge>
+    <edge source="n17" target="n21">
+    </edge>
+    <edge source="n17" target="n20">
+    </edge>
+    <edge source="n17" target="n18">
+    </edge>
+    <edge source="n38" target="n10">
+    </edge>
+    <edge source="n38" target="n16">
+    </edge>
+    <edge source="n38" target="n12">
+    </edge>
+    <edge source="n38" target="n29">
+    </edge>
+    <edge source="n38" target="n2">
+    </edge>
+    <edge source="n38" target="n26">
+    </edge>
+    <edge source="n38" target="n30">
+    </edge>
+    <edge source="n38" target="n5">
+    </edge>
+    <edge source="n38" target="n6">
+    </edge>
+    <edge source="n38" target="n8">
+    </edge>
+    <edge source="n34" target="n24">
+    </edge>
+    <edge source="n34" target="n31">
+    </edge>
+    <edge source="n34" target="n19">
+    </edge>
+    <edge source="n34" target="n15">
+    </edge>
+    <edge source="n34" target="n21">
+    </edge>
+    <edge source="n34" target="n16">
+    </edge>
+    <edge source="n34" target="n18">
+    </edge>
+    <edge source="n34" target="n12">
+    </edge>
+    <edge source="n34" target="n14">
+    </edge>
+    <edge source="n11" target="n8">
+    </edge>
+    <edge source="n11" target="n10">
+    </edge>
+    <edge source="n11" target="n3">
+    </edge>
+    <edge source="n31" target="n20">
+    </edge>
+    <edge source="n31" target="n15">
+    </edge>
+    <edge source="n31" target="n21">
+    </edge>
+    <edge source="n31" target="n18">
+    </edge>
+    <edge source="n31" target="n33">
+    </edge>
+    <edge source="n31" target="n23">
+    </edge>
+    <edge source="n31" target="n24">
+    </edge>
+    <edge source="n31" target="n25">
+    </edge>
+    <edge source="n31" target="n32">
+    </edge>
+    <edge source="n31" target="n35">
+    </edge>
+    <edge source="n31" target="n30">
+    </edge>
+    <edge source="n31" target="n5">
+    </edge>
+    <edge source="n31" target="n14">
+    </edge>
+    <edge source="n31" target="n28">
+    </edge>
+    <edge source="n8" target="n5">
+    </edge>
+    <edge source="n8" target="n29">
+    </edge>
+    <edge source="n8" target="n10">
+    </edge>
+    <edge source="n8" target="n2">
+    </edge>
+    <edge source="n8" target="n11">
+    </edge>
+    <edge source="n8" target="n3">
+    </edge>
+    <edge source="n8" target="n4">
+    </edge>
+    <edge source="n8" target="n26">
+    </edge>
+    <edge source="n22" target="n20">
+    </edge>
+    <edge source="n22" target="n15">
+    </edge>
+    <edge source="n22" target="n21">
+    </edge>
+    <edge source="n22" target="n18">
+    </edge>
+    <edge source="n22" target="n17">
+    </edge>
+    <edge source="n22" target="n33">
+    </edge>
+    <edge source="n22" target="n24">
+    </edge>
+    <edge source="n22" target="n31">
+    </edge>
+    <edge source="n22" target="n19">
+    </edge>
+    <edge source="n22" target="n32">
+    </edge>
+    <edge source="n22" target="n30">
+    </edge>
+    <edge source="n22" target="n27">
+    </edge>
+    <edge source="n22" target="n14">
+    </edge>
+    <edge source="n27" target="n5">
+    </edge>
+    <edge source="n27" target="n1">
+    </edge>
+    <edge source="n27" target="n20">
+    </edge>
+    <edge source="n27" target="n33">
+    </edge>
+    <edge source="n27" target="n7">
+    </edge>
+    <edge source="n27" target="n32">
+    </edge>
+    <edge source="n23" target="n20">
+    </edge>
+    <edge source="n23" target="n21">
+    </edge>
+    <edge source="n23" target="n17">
+    </edge>
+    <edge source="n23" target="n18">
+    </edge>
+    <edge source="n23" target="n33">
+    </edge>
+    <edge source="n23" target="n24">
+    </edge>
+    <edge source="n23" target="n25">
+    </edge>
+    <edge source="n23" target="n31">
+    </edge>
+    <edge source="n23" target="n35">
+    </edge>
+    <edge source="n23" target="n5">
+    </edge>
+    <edge source="n23" target="n8">
+    </edge>
+    <edge source="n23" target="n28">
+    </edge>
+    <edge source="n26" target="n10">
+    </edge>
+    <edge source="n26" target="n2">
+    </edge>
+    <edge source="n26" target="n11">
+    </edge>
+    <edge source="n26" target="n3">
+    </edge>
+    <edge source="n26" target="n35">
+    </edge>
+    <edge source="n26" target="n5">
+    </edge>
+    <edge source="n26" target="n29">
+    </edge>
+    <edge source="n26" target="n6">
+    </edge>
+    <edge source="n26" target="n37">
+    </edge>
+    <edge source="n26" target="n8">
+    </edge>
+    <edge source="n29" target="n10">
+    </edge>
+    <edge source="n29" target="n16">
+    </edge>
+    <edge source="n29" target="n24">
+    </edge>
+    <edge source="n29" target="n2">
+    </edge>
+    <edge source="n29" target="n3">
+    </edge>
+    <edge source="n29" target="n4">
+    </edge>
+    <edge source="n29" target="n26">
+    </edge>
+    <edge source="n29" target="n35">
+    </edge>
+    <edge source="n29" target="n5">
+    </edge>
+    <edge source="n29" target="n6">
+    </edge>
+    <edge source="n29" target="n37">
+    </edge>
+    <edge source="n29" target="n8">
+    </edge>
+    <edge source="n9" target="n0">
+    </edge>
+    <edge source="n9" target="n11">
+    </edge>
+    <edge source="n9" target="n4">
+    </edge>
+    <edge source="n9" target="n13">
+    </edge>
+    <edge source="n21" target="n20">
+    </edge>
+    <edge source="n21" target="n33">
+    </edge>
+    <edge source="n21" target="n18">
+    </edge>
+    <edge source="n5" target="n11">
+    </edge>
+    <edge source="n5" target="n16">
+    </edge>
+    <edge source="n5" target="n17">
+    </edge>
+    <edge source="n5" target="n12">
+    </edge>
+    <edge source="n5" target="n3">
+    </edge>
+    <edge source="n5" target="n31">
+    </edge>
+    <edge source="n5" target="n32">
+    </edge>
+    <edge source="n5" target="n8">
+    </edge>
+    <edge source="n5" target="n14">
+    </edge>
+    <edge source="n5" target="n10">
+    </edge>
+    <edge source="n5" target="n20">
+    </edge>
+    <edge source="n5" target="n21">
+    </edge>
+    <edge source="n5" target="n29">
+    </edge>
+    <edge source="n5" target="n23">
+    </edge>
+    <edge source="n5" target="n25">
+    </edge>
+    <edge source="n5" target="n2">
+    </edge>
+    <edge source="n5" target="n4">
+    </edge>
+    <edge source="n5" target="n13">
+    </edge>
+    <edge source="n5" target="n35">
+    </edge>
+    <edge source="n5" target="n6">
+    </edge>
+    <edge source="n5" target="n37">
+    </edge>
+    <edge source="n5" target="n27">
+    </edge>
+    <edge source="n37" target="n2">
+    </edge>
+    <edge source="n37" target="n4">
+    </edge>
+    <edge source="n37" target="n13">
+    </edge>
+    <edge source="n37" target="n26">
+    </edge>
+    <edge source="n37" target="n35">
+    </edge>
+    <edge source="n37" target="n16">
+    </edge>
+    <edge source="n37" target="n5">
+    </edge>
+    <edge source="n37" target="n36">
+    </edge>
+    <edge source="n37" target="n23">
+    </edge>
+    <edge source="n10" target="n11">
+    </edge>
+    <edge source="n10" target="n16">
+    </edge>
+    <edge source="n10" target="n3">
+    </edge>
+    <edge source="n10" target="n8">
+    </edge>
+    <edge source="n10" target="n21">
+    </edge>
+    <edge source="n10" target="n29">
+    </edge>
+    <edge source="n10" target="n25">
+    </edge>
+    <edge source="n10" target="n1">
+    </edge>
+    <edge source="n10" target="n2">
+    </edge>
+    <edge source="n10" target="n4">
+    </edge>
+    <edge source="n10" target="n26">
+    </edge>
+    <edge source="n10" target="n35">
+    </edge>
+    <edge source="n10" target="n5">
+    </edge>
+    <edge source="n10" target="n6">
+    </edge>
+    <edge source="n10" target="n37">
+    </edge>
+    <edge source="n10" target="n9">
+    </edge>
+    <edge source="n6" target="n16">
+    </edge>
+    <edge source="n6" target="n36">
+    </edge>
+    <edge source="n6" target="n31">
+    </edge>
+    <edge source="n6" target="n14">
+    </edge>
+    <edge source="n6" target="n10">
+    </edge>
+    <edge source="n6" target="n20">
+    </edge>
+    <edge source="n6" target="n21">
+    </edge>
+    <edge source="n6" target="n29">
+    </edge>
+    <edge source="n6" target="n25">
+    </edge>
+    <edge source="n6" target="n2">
+    </edge>
+    <edge source="n6" target="n4">
+    </edge>
+    <edge source="n6" target="n26">
+    </edge>
+    <edge source="n6" target="n13">
+    </edge>
+    <edge source="n6" target="n35">
+    </edge>
+    <edge source="n6" target="n5">
+    </edge>
+    <edge source="n6" target="n37">
+    </edge>
+    <edge source="n6" target="n7">
+    </edge>
+    <edge source="n6" target="n27">
+    </edge>
+  </graph>
+</graphml>
