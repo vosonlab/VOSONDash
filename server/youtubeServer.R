@@ -50,6 +50,9 @@ observeEvent(input$youtube_collect_button, {
       #withCallingHandlers({
       shinyjs::html(id = "youtube_console", html = "")
       
+      youtube_video_id_list <- sapply(youtube_video_id_list, 
+                                      function(x) gsub("^v=", "", x, ignore.case = TRUE, perl = TRUE))
+      
       # collect youtube data and print any output to console
       tryCatch({
         youtube_rvalues$youtube_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list)
@@ -120,7 +123,7 @@ observeEvent(input$view_youtube_graph_button, {
     
     video_id_list_text <- paste0(youtube_video_id_list, collapse = ', ')
     
-    ng_rvalues$graph_desc <<- paste0("Youtube actor network for video Ids: ", video_id_list_text, sep = "")
+    ng_rvalues$graph_desc <<- paste0("Youtube actor network for videos: ", video_id_list_text, sep = "")
     ng_rvalues$graph_type <<- "youtube"
     ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
     
@@ -149,7 +152,7 @@ observeEvent(input$view_youtube_graphWT_button, {
     
     video_id_list_text <- paste0(youtube_video_id_list, collapse = ', ')
     
-    ng_rvalues$graph_desc <<- paste0("Youtube actor network for video Ids: ", video_id_list_text, sep = "")
+    ng_rvalues$graph_desc <<- paste0("Youtube actor network for videos: ", video_id_list_text, sep = "")
     ng_rvalues$graph_type <<- "youtube"
     ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
     
@@ -234,9 +237,15 @@ videoListAdd <- reactive({
     return(NULL)
   }
   
+  video_id <- getYoutubeVideoId(input$youtube_video_id_input)
+  if (is.null(video_id)) {
+    return(NULL)
+  }
+  
+  video_id <- paste0("v=", video_id)
   # only add if not already in list
-  if (!(trimws(input$youtube_video_id_input) %in% youtube_video_id_list)) {
-    youtube_video_id_list <<- append(youtube_video_id_list, trimws(input$youtube_video_id_input))
+  if (!(trimws(video_id) %in% youtube_video_id_list)) {
+    youtube_video_id_list <<- append(youtube_video_id_list, trimws(video_id))
   }
   
   return(youtube_video_id_list)
@@ -285,7 +294,7 @@ youtubeArgumentsOutput <- function() {
   }
   
   if (!is.null(youtube_video_id_list) && length(youtube_video_id_list) > 0) {
-    command_str_2 <- paste0("video ids: ", trimws(paste0(youtube_video_id_list, collapse = ', ')))
+    command_str_2 <- paste0("videos: ", trimws(paste0(youtube_video_id_list, collapse = ', ')))
     
     if (collect_state == 1) {
       collect_state <- 2

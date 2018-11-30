@@ -8,6 +8,7 @@ library(lattice)
 library(wordcloud)
 library(vosonSML)
 suppressMessages(library(dplyr))
+library(httr)
 
 # server helper files
 source("utils.R", local = TRUE)

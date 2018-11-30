@@ -13,7 +13,10 @@ tabItem(tabName = "youtube_collection_tab",
                    
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                                 # youtube video ids input
-                                textInput("youtube_video_id_input", label = "Add Video ID", value = ""),
+                                # textInput("youtube_video_id_input", label = "Add Video ID", value = ""),
+                                textAreaInput("youtube_video_id_input", label = "Add Youtube URL / Video ID", value = "",
+                                              width = NULL, height = NULL,
+                                              cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
                                 actionButton("youtube_add_video_id_button", label = "Add"),
                                 selectInput("youtube_video_id_list_output", "", c(), multiple = TRUE, selectize = FALSE, size = 3),
                                 actionButton("youtube_remove_video_id_button", label = "Remove"),

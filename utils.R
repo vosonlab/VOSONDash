@@ -93,3 +93,37 @@ getRedditUrlSubreddit <- function(url) {
   subreddit <- gsub("^(.*)?/r/(.*)?/comments/.*?(/)?$", "\\2", 
                     url, ignore.case = TRUE, perl = TRUE)  
 }
+
+getYoutubeVideoId <- function(url) {
+  # already an id
+  if (grepl("^[0-9A-Za-z_\\-]+$", url, ignore.case = TRUE, perl = TRUE)) {
+    return(url)
+  }  
+  
+  url <- parse_url(url)
+  video_id <- NULL
+  
+  if (is.null(url$hostname)) {
+    return(NULL)
+  }
+  
+  # https://youtu.be/xxxxxxxxxxx
+  if (tolower(trimws(url$hostname)) == "youtu.be") {
+    if (length(url$path) > 0) {
+      video_id <- url$path[1]
+    }
+  }
+  
+  # https://www.youtube.com/watch?v=xxxxxxxxxxx
+  if (tolower(trimws(url$hostname)) == "www.youtube.com") {
+    if (!is.null(url$query$v)) {
+      video_id <- url$query$v
+    }
+  }
+  
+  if (!grepl("^[0-9A-Za-z_\\-]+$", video_id, ignore.case = TRUE, perl = TRUE)) {
+    return(NULL)
+  }
+  
+  return(video_id)
+}
