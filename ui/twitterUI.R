@@ -74,7 +74,9 @@ tabItem(tabName = "twitter_collection_tab",
                                   disabled(downloadButton("download_twitter_data_button", label = "Download Data")),
                                   disabled(downloadButton("download_twitter_graph_button", label = "Download Graphml")),
                                   disabled(downloadButton("download_twitter_graphWT_button", label = "Download Graphml (+text)")),
-                                  disabled(actionButton("view_twitter_graph_button", label = "View Graph", icon("eye")))
+                                  disabled(actionButton("view_twitter_graph_button", label = "View Graph", icon("eye"))),
+                                  disabled(actionButton("view_twitter_graphWT_button", label = "View Graph (+text)", 
+                                                        icon("eye")))
                                 )
                    )
                  )

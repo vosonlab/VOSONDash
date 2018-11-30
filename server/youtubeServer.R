@@ -8,6 +8,7 @@
 youtube_rvalues <- reactiveValues()
 youtube_rvalues$youtube_data <- NULL      # dataframe returned by vosonSML collection
 youtube_rvalues$youtube_graphml <- NULL   # graphml object returned from collection
+youtube_rvalues$youtubeWT_graphml <- NULL
 
 youtube_api_key <- NULL        # youtube api key
 youtube_video_id_list <- c()   # list of youtube video ids to collect on
@@ -63,7 +64,10 @@ observeEvent(input$youtube_collect_button, {
       # if youtube data collected create graphml object
       if (!is.null(youtube_rvalues$youtube_data)) {
         tryCatch({
-          youtube_rvalues$youtube_graphml <<- createYoutubeNetwork(youtube_rvalues$youtube_data)
+          # youtube_rvalues$youtube_graphml <<- createYoutubeNetwork(youtube_rvalues$youtube_data)
+          netList <- createYoutubeNetwork(youtube_rvalues$youtube_data)
+          youtube_rvalues$youtube_graphml <<- netList$network
+          youtube_rvalues$youtubeWT_graphml <<- netList$networkWT   # "with text" (edge attribute)          
         }, error = function(err) {
           incProgress(1, detail = "Error")
           cat(paste('youtube graphml error:', err))
@@ -94,10 +98,14 @@ observeEvent(youtube_rvalues$youtube_data, {
 observeEvent(youtube_rvalues$youtube_graphml, {
   if (!is.null(youtube_rvalues$youtube_graphml)) {
     shinyjs::enable("download_youtube_graph_button")
+    shinyjs::enable("download_youtube_graphWT_button")
     shinyjs::enable("view_youtube_graph_button")
+    shinyjs::enable("view_youtube_graphWT_button")
   } else {
     shinyjs::disable("download_youtube_graph_button")
+    shinyjs::disable("download_youtube_graphWT_button")
     shinyjs::disable("view_youtube_graph_button")
+    shinyjs::disable("view_youtube_graphWT_button")
   }
 })
 
@@ -130,6 +138,34 @@ observeEvent(input$view_youtube_graph_button, {
   }
 })
 
+observeEvent(input$view_youtube_graphWT_button, {
+  
+  if (!is.null(isolate(youtube_rvalues$youtubeWT_graphml))) {
+    # clear graph file data
+    shinyjs::reset("graphml_data_file")
+    
+    # set graph data
+    ng_rvalues$graph_data <<- isolate(youtube_rvalues$youtubeWT_graphml)
+    
+    video_id_list_text <- paste0(youtube_video_id_list, collapse = ', ')
+    
+    ng_rvalues$graph_desc <<- paste0("Youtube actor network for video Ids: ", video_id_list_text, sep = "")
+    ng_rvalues$graph_type <<- "youtube"
+    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
+    
+    # get a random number to seed graphs - experimental
+    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
+    
+    ng_rvalues$graph_CA <- c()
+    ng_rvalues$graph_CA_selected <- ""
+    
+    # until reactivity issue
+    setGraphFilterControls()
+    
+    # change to graphs tab
+    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
+  }
+})
 #### output ----------------------------------------------------------------------------------------------------------- #
 
 # render youtube collection arguments
@@ -170,6 +206,17 @@ output$download_youtube_graph_button <- downloadHandler(
   
   content = function(file) {
     write_graph(youtube_rvalues$youtube_graphml, file, format=c("graphml"))
+  }
+)
+
+# set file name and content for youtube graphml (with text) download
+output$download_youtube_graphWT_button <- downloadHandler(
+  filename = function() {
+    systemTimeFilename("youtube-with-text", "graphml")
+  },
+  
+  content = function(file) {
+    write_graph(isolate(youtube_rvalues$youtubeWT_graphml), file, format=c("graphml"))
   }
 )
 
@@ -216,8 +263,8 @@ datatableYoutubeData <- reactive({
     }
     DT::datatable(youtube_rvalues$youtube_data, extensions = 'Buttons', 
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
-                  columnDefs = col_defs, dom = 'lBfrtip',
-                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
+                                 columnDefs = col_defs, dom = 'lBfrtip',
+                                 buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
   }
 })
 
@@ -231,12 +278,14 @@ youtubeArgumentsOutput <- function() {
   collect_state <- 0
   
   if (!is.null(youtube_api_key) && nchar(youtube_api_key) > 1) {
-    command_str <- paste0("api_key <- \"", youtube_api_key, "\"\n")
+    # command_str <- paste0("api key: ", youtube_api_key, "\n")
+    command_str <- trimws(paste0("api key: ", strtrim(youtube_api_key, 6), "...", sep = ""))
+    command_str <- paste0(command_str, "\n")
     collect_state <- 1
   }
   
   if (!is.null(youtube_video_id_list) && length(youtube_video_id_list) > 0) {
-    command_str_2 <- paste0("video_ids <- c(", trimws(paste0(youtube_video_id_list, collapse = ', ')), ")")
+    command_str_2 <- paste0("video ids: ", trimws(paste0(youtube_video_id_list, collapse = ', ')))
     
     if (collect_state == 1) {
       collect_state <- 2

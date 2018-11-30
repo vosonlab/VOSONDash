@@ -1,13 +1,13 @@
 # voson dashboard shiny app server
 
 # server libraries
-library(igraph)
+suppressMessages(library(igraph))
 library(SnowballC)
 library(tm)
 library(lattice)
 library(wordcloud)
 library(vosonSML)
-library(dplyr)
+suppressMessages(library(dplyr))
 
 # server helper files
 source("utils.R", local = TRUE)
@@ -33,6 +33,9 @@ shinyServer(function(input, output, session) {
   
   #### youtube ####
   source("server/youtubeServer.R", local = TRUE)
+  
+  #### reddit ####
+  source("server/redditServer.R", local = TRUE)
   
   #### api keys ####
   source("server/apiKeysServer.R", local = TRUE)

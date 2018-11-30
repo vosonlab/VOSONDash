@@ -6,6 +6,7 @@ textAnalysisUI <- source("ui/textAnalysisUI.R")
 assortativitysUI <- source("ui/assortativityUI.R")
 twitterUI <- source("ui/twitterUI.R")
 youtubeUI <- source("ui/youtubeUI.R")
+redditUI <- source("ui/redditUI.R")
 apiKeysUI <- source("ui/apiKeysUI.R")
 
 #### shiny ui --------------------------------------------------------------------------------------------------------- #
@@ -25,6 +26,7 @@ dashboardPage(
                                menuItem("Assortativity", tabName = "assortativity_tab", icon = icon("bar-chart")),
                                menuItem("Twitter", tabName = "twitter_collection_tab", icon = icon("twitter")),
                                menuItem("Youtube", tabName = "youtube_collection_tab", icon = icon("youtube")),
+                               menuItem("Reddit", tabName = "reddit_collection_tab", icon = icon("reddit")),
                                menuItem("API Keys", tabName = "keys_tab", icon = icon("key"))
                    )
   ),
@@ -65,6 +67,9 @@ dashboardPage(
       
       #### youtube collection tab
       youtubeUI$value,
+      
+      #### reddit collection tab
+      redditUI$value,
       
       #### api keys tab
       apiKeysUI$value

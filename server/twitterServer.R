@@ -40,27 +40,27 @@ twitter_filter_positive <- NULL
 
 # set twitter api keys on input
 observeEvent({input$twitter_api_key_input
-              input$twitter_api_secret_input
-              input$twitter_access_token_input
-              input$twitter_access_token_secret_input}, {
+  input$twitter_api_secret_input
+  input$twitter_access_token_input
+  input$twitter_access_token_secret_input}, {
     
-  setTwitterAPIKeys()
-})
+    setTwitterAPIKeys()
+  })
 
 # set twitter parameters on input
 observeEvent({input$twitter_search_term_input
-              input$twitter_retweets_check
-              input$twitter_search_type_select
-              input$twitter_date_since_input
-              input$twitter_date_until_input
-              input$twitter_filter_from
-              input$twitter_filter_to
-              input$twitter_filter_safe
-              input$twitter_filter_media
-              input$twitter_filter_url
-              input$twitter_filter_negative
-              input$twitter_filter_positive              
-              }, {
+  input$twitter_retweets_check
+  input$twitter_search_type_select
+  input$twitter_date_since_input
+  input$twitter_date_until_input
+  input$twitter_filter_from
+  input$twitter_filter_to
+  input$twitter_filter_safe
+  input$twitter_filter_media
+  input$twitter_filter_url
+  input$twitter_filter_negative
+  input$twitter_filter_positive              
+}, {
   
   setTwitterParams()
 })
@@ -180,14 +180,43 @@ observeEvent(twitter_rvalues$twitter_graphml, {
     shinyjs::enable("download_twitter_graph_button")
     shinyjs::enable("download_twitter_graphWT_button")
     shinyjs::enable("view_twitter_graph_button")
+    shinyjs::enable("view_twitter_graphWT_button")
   } else {
     shinyjs::disable("download_twitter_graph_button")
     shinyjs::disable("download_twitter_graphWT_button")
     shinyjs::disable("view_twitter_graph_button")
+    shinyjs::disable("view_twitter_graphWT_button")
   }
 })
 
 observeEvent(input$view_twitter_graph_button, {
+  
+  if (!is.null(isolate(twitter_rvalues$twitter_graphml))) {
+    # clear graph file data
+    shinyjs::reset("graphml_data_file")
+    
+    # set graph data
+    ng_rvalues$graph_data <<- isolate(twitter_rvalues$twitter_graphml)
+    
+    ng_rvalues$graph_desc <<- paste0("Twitter network for search term: ", twitter_search_term, sep = "")
+    ng_rvalues$graph_type <<- "twitter"
+    ng_rvalues$graph_name <<- "" # only used when graph loaded from file
+    
+    # get a random number to seed graphs - experimental
+    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
+    
+    ng_rvalues$graph_CA <- c()
+    ng_rvalues$graph_CA_selected <- ""
+    
+    # until reactivity issue
+    setGraphFilterControls()
+    
+    # change to graphs tab
+    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
+  }
+})
+
+observeEvent(input$view_twitter_graphWT_button, {
   
   if (!is.null(isolate(twitter_rvalues$twitterWT_graphml))) {
     # clear graph file data
@@ -339,8 +368,8 @@ datatableTwitterData <- reactive({
     }
     DT::datatable(data, extensions = 'Buttons', 
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
-                                  columnDefs = col_defs, dom = 'lBfrtip',
-                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
+                                 columnDefs = col_defs, dom = 'lBfrtip',
+                                 buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
   }
 })
 
@@ -353,23 +382,23 @@ twitterArgumentsOutput <- function() {
   check_keys <- sapply(twitter_api_keyring, isNullOrEmpty)
   
   if (any(check_keys == FALSE)) {
-    output <- append(output, paste0("api_keys <- c(", 
-      trimws(paste0(sapply(strtrim(twitter_api_keyring, 6), function(x) paste0("\"", x, "...\"", sep = "")), collapse = ', ')), ")"))
+    output <- append(output, paste0("api keys: ", 
+                                    trimws(paste0(sapply(strtrim(twitter_api_keyring, 6), function(x) paste0(x, "...", sep = "")), collapse = ', '))))
   }
   
   search_term_flag <- FALSE
   if (!isNullOrEmpty(twitter_search_term)) {
     temp_search_term <- twitter_search_term
-    output <- append(output, paste0("search_term <- \"", trimws(temp_search_term), "\""))
+    output <- append(output, paste0("search term: ", trimws(temp_search_term)))
     search_term_flag <- TRUE
   }
   
   # if (search_term_flag) {
-    output <- append(output, paste0("results_type <- \"", trimws(twitter_search_type), "\""))
+  output <- append(output, paste0("results type: ", trimws(twitter_search_type)))
   # }
   
   twitter_search_options <- c()
-
+  
   if (nchar(twitter_filter_from) > 2) {
     twitter_search_options <- append(twitter_search_options, paste0("from:", twitter_filter_from))
     search_term_flag <- TRUE
@@ -394,23 +423,23 @@ twitterArgumentsOutput <- function() {
   })
   
   if (!isNullOrEmpty(twitter_tweet_count) && is.numeric(twitter_tweet_count)) {
-    output <- append(output, paste0("num_of_tweets <- ", twitter_tweet_count))
+    output <- append(output, paste0("number of tweets: ", twitter_tweet_count))
   }
   
   if (!isNullOrEmpty(twitter_language)) {
-    output <- append(output, paste0("language <- ", twitter_language))
+    output <- append(output, paste0("language: ", twitter_language))
   }
   
   if (!isNullOrEmpty(twitter_date_since)) {
-    output <- append(output, paste0("since_date <- \"", twitter_date_since, "\"", sep = ""))
+    output <- append(output, paste0("since date: ", twitter_date_since, sep = ""))
   }
   
   if (!isNullOrEmpty(twitter_date_until)) {
-    output <- append(output, paste0("until_date <- \"", twitter_date_until, "\"", sep = ""))
+    output <- append(output, paste0("until date: ", twitter_date_until, sep = ""))
   }
   
   if (length(twitter_search_options) > 0) {
-    output <- append(output, paste0("filters <- \"", paste0(twitter_search_options, collapse = " "), "\""))
+    output <- append(output, paste0("filters: ", paste0(twitter_search_options, collapse = " ")))
   }
   
   # if api key and video ids have been inputed enable collect button

@@ -4,8 +4,11 @@ tabItem(tabName = "youtube_collection_tab",
           column(width = 3, offset = 0,
                  fluidRow(
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                # youtube api keys input
-                                textInput("youtube_api_key_input", label = "Data API Key", value = "")
+                                checkboxInput('expand_youtube_keys_panel_check', 'Show API Key', FALSE),
+                                conditionalPanel(condition = 'input.expand_youtube_keys_panel_check',
+                                                 # youtube api keys input
+                                                 textInput("youtube_api_key_input", label = "Data API Key", value = "")
+                                )
                    ),
                    
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
@@ -35,7 +38,11 @@ tabItem(tabName = "youtube_collection_tab",
                                 fluidRow(
                                   disabled(downloadButton("download_youtube_data_button", label = "Download Data")),
                                   disabled(downloadButton("download_youtube_graph_button", label = "Download Graphml")),
-                                  disabled(actionButton("view_youtube_graph_button", label = "View Graph", icon("eye")))
+                                  disabled(downloadButton("download_youtube_graphWT_button", 
+                                                          label = "Download Graphml (+text)")),                    
+                                  disabled(actionButton("view_youtube_graph_button", label = "View Graph", icon("eye"))),
+                                  disabled(actionButton("view_youtube_graphWT_button", label = "View Graph (+text)", 
+                                                        icon("eye")))
                                 )
                    )
                  )

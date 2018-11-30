@@ -21,7 +21,7 @@ withConsoleRedirect <- function(ui_id, value) {
              ui = paste0(output, "\n", collapse = "")
     )
   }
-
+  
   return(results)
 }
 
@@ -62,4 +62,34 @@ systemTimeFilename <- function(name_suffix, name_ext, clean = FALSE) {
   file_name <- paste0(format(current_time, "%Y-%m-%d_%H-%M-%S"), 
                       "_", name_suffix, ".", name_ext, sep = "")
   return(file_name)
+}
+
+createRedditRequestUrl <- function(url) {
+  url <- tolower(url)
+  
+  # base_url       <- "https://reddit.com/r/"
+  # base_url_oauth <- "https://oauth.reddit.com/r/"
+  
+  # https://www.reddit.com/r/MakeupAddiction/comments/9yrj6k/pink_everything/
+  if(!grepl("^https://(www\\.)?reddit.com/r/(.*?)/comments/([0-9A-Za-z]{6})?/.*$", 
+            url, ignore.case = TRUE, perl = TRUE)) {
+    return(NULL)
+  } else {
+    # "https://oauth.reddit.com/r/"
+    url <- gsub("^https://(www\\.)?reddit.com/r/", "r/", 
+                url, ignore.case = TRUE, perl = TRUE)
+    
+    url <- gsub("^(.*)?/comments/([0-9A-Za-z]{6})?/.*?(/)?$", "\\1/comments/\\2/", 
+                url, ignore.case = TRUE, perl = TRUE)
+  }
+}
+
+getRedditUrlThreadId <- function(url) {
+  thread_id <- gsub("^(.*)?/comments/([0-9A-Za-z]{6})?/.*?(/)?$", "\\2", 
+                    url, ignore.case = TRUE, perl = TRUE)
+}
+
+getRedditUrlSubreddit <- function(url) {
+  subreddit <- gsub("^(.*)?/r/(.*)?/comments/.*?(/)?$", "\\2", 
+                    url, ignore.case = TRUE, perl = TRUE)  
 }
