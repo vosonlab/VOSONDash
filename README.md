@@ -25,4 +25,4 @@ Network graph controls include filtering out vertex isolates, multi-edges, self-
 
 Network data can be loaded either by the `graphml` upload control or from the `view graph` button in the network collection sections.
 
-<img src="www/VOSONDashboard-NetworkGraphs-1061x901.png" alt="VOSON Dashboard Network Graphs" width=861 height=701 />
+<img src="VOSONDash/www/VOSONDashboard-NetworkGraphs-1061x901.png" alt="VOSON Dashboard Network Graphs" width=861 height=701 />
