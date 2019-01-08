@@ -15,14 +15,4 @@ https://github.com/vosonlab/VOSONDash/archive/master.zip
 
 The app can be run by typing `runApp()` in the RStudio Console (optionally with a path `appDir = '~/my/voson/dash/folder/path/'`) or alternatively by clicking on the `Run App` button that appears in the top right of the RStudio file viewer frame when either the `ui.R` or `server.R` files are open.
 
-## Features
-
-### Network Graphs
-
-The Network Graphs section allows the user to manipulate or filter graph data using a number of interactive network controls. Data is visualised as a network graph in the graph views and as a table of vertices and edges in the data table.
-
-Network graph controls include filtering out vertex isolates, multi-edges, self-loops and components (by size). Graph layout, vertex size and color can also be adjusted based on network or categorical attributes. Finally, the vertices data table can be used to prune selected vertices from the graph. Modified graph will be automatically loaded into the other analysis sections and can also be saved from the network graphs section as a standalone `graphml` file.
-
-Network data can be loaded either by the `graphml` upload control or from the `view graph` button in the network collection sections.
-
-<img src="VOSONDash/www/VOSONDashboard-NetworkGraphs-1061x901.png" alt="VOSON Dashboard Network Graphs" width=861 height=701 />
+<img src="VOSONDash/www/VOSONDash-NetworkGraphs-1400x990.jpg" alt="VOSON Dashboard Network Graphs" />
