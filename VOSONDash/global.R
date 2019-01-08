@@ -1,17 +1,17 @@
 # voson dashboard shiny app globals
 
 # app version
-app_version <- "v0.2.1"
-app_date <- "26Nov18"
+app_version <- "v0.2.2"
+app_date <- "30Nov18"
 
 # app libraries
 library(shiny)
-library(shinydashboard)
-library(shinyjs)
+suppressMessages(library(shinydashboard))
+suppressMessages(library(shinyjs))
 library(RColorBrewer)
-library(DT)
+suppressMessages(library(DT))
 library(htmlwidgets)
-library(networkD3)
+suppressMessages(library(networkD3))
 library(visNetwork)
 
 # plots
@@ -37,6 +37,9 @@ g_dt_col_defs <- list(list(
 
 # twitter
 g_default_tweet_count <- 100
+
+# api keys
+g_api_keys_path <- paste0(getwd(), "/voson_keys.rds", sep = "")
 
 # modules
 source("modules/textAnalysisModule.R", local = TRUE)

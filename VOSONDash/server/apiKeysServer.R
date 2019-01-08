@@ -7,12 +7,41 @@
 
 # named list of app api keys
 api_keys <- NULL
-
-# set api keys file to R working directory voson_keys.rds for now
-path <- paste0(getwd(), "/voson_keys.rds", sep = "")
 key_status <- "" # text description of last action
 
+check_keys_startup <- TRUE
+
 #### events ----------------------------------------------------------------------------------------------------------- #
+
+observeEvent(check_keys_startup, {
+  isolate({
+    if (file.exists(g_api_keys_path)) {
+      api_keys <- readRDS(file = g_api_keys_path)
+      
+      load_and_use_keys <- api_keys$load_and_use_keys
+      
+      if (load_and_use_keys) {
+        readKeysFile()
+        
+        updateTextInput(session, "twitter_api_key_input", label = NULL, value = api_keys$twitter_api_key)
+        updateTextInput(session, "twitter_api_secret_input", label = NULL, value = api_keys$twitter_api_secret)
+        updateTextInput(session, "twitter_access_token_input", label = NULL, value = api_keys$twitter_access_token)
+        updateTextInput(session, "twitter_access_token_secret_input", label = NULL, value = api_keys$twitter_access_token_secret)
+        updateTextInput(session, "youtube_api_key_input", label = NULL, value = api_keys$youtube_api_key)
+        
+        key_status <<- paste0("* loaded and populated api keys.\n", sep = "")
+      }
+    }
+  })
+}, once = TRUE)
+
+observeEvent(saveButtonStatus(), {
+  if (saveButtonStatus()) {
+    shinyjs::enable("keys_save_button")
+  } else {
+    shinyjs::disable("keys_save_button")
+  }
+})
 
 observeEvent(input$keys_save_button, {
   writeKeysFile()
@@ -38,6 +67,21 @@ output$keys_file_output <- renderText({
 
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
+saveButtonStatus <- reactive({
+  key_values <- c(input$keys_twitter_api_key_input,
+                  input$keys_twitter_api_secret_input,
+                  input$keys_twitter_access_token_input,
+                  input$keys_twitter_access_token_secret_input,
+                  input$keys_youtube_api_key_input)
+  
+  check_keys <- sapply(key_values, isNullOrEmpty)
+  
+  if (any(check_keys != TRUE)) { 
+    return(TRUE)
+  }
+  return(FALSE)
+})
+
 setKeyStatus <- reactive({
   input$keys_save_button
   input$keys_load_button
@@ -54,6 +98,7 @@ writeKeysFile <- function() {
   status <- ""
   
   api_keys <<- list(
+    load_and_use_keys = input$load_and_use_keys_check,
     twitter_api_key = input$keys_twitter_api_key_input,
     twitter_api_secret = input$keys_twitter_api_secret_input,
     twitter_access_token = input$keys_twitter_access_token_input,
@@ -61,9 +106,9 @@ writeKeysFile <- function() {
     youtube_api_key = input$keys_youtube_api_key_input
   )
   
-  saveRDS(api_keys, path)
+  saveRDS(api_keys, g_api_keys_path)
   
-  status <- paste0("* wrote keys to ", path, ".\n", sep = "")
+  status <- paste0("* wrote keys to ", g_api_keys_path, ".\n", sep = "")
   key_status <<- status
 }
 
@@ -71,18 +116,20 @@ writeKeysFile <- function() {
 readKeysFile <- function() {
   status <- ""
   
-  if (file.exists(path)) {
-    status <- paste0("* file ", path, " exists.\n", sep = "")
+  if (file.exists(g_api_keys_path)) {
+    status <- paste0("* file ", g_api_keys_path, " exists.\n", sep = "")
     key_status <<- status
     
-    api_keys <<- readRDS(file = path)
+    api_keys <<- readRDS(file = g_api_keys_path)
     
   } else {
-    status <- paste0("* file ", path, " not found.\n", sep = "")
+    status <- paste0("* file ", g_api_keys_path, " not found.\n", sep = "")
     key_status <<- status
     
     return(NULL)
   }
+  
+  updateCheckboxInput(session, "load_and_use_keys_check", label = NULL, value = api_keys$load_and_use_keys)
   
   updateTextInput(session, "keys_twitter_api_key_input", label = NULL, value = api_keys$twitter_api_key)
   updateTextInput(session, "keys_twitter_api_secret_input", label = NULL, value = api_keys$twitter_api_secret)
@@ -90,7 +137,7 @@ readKeysFile <- function() {
   updateTextInput(session, "keys_twitter_access_token_secret_input", label = NULL, value = api_keys$twitter_access_token_secret)
   updateTextInput(session, "keys_youtube_api_key_input", label = NULL, value = api_keys$youtube_api_key)
   
-  status <- paste0(status, "* read keys from ", path, ". (", length(api_keys), ").\n", sep = "")
+  status <- paste0(status, "* read keys from ", g_api_keys_path, ". (", length(api_keys), ").\n", sep = "")
   key_status <<- status
 }
 

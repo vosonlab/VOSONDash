@@ -76,11 +76,11 @@ createTwitterActorNetwork <- function(data) {
   network <- NULL
   
   network <- data %>% Create("Actor", writeToFile = FALSE)
-
+  
   network <- set.graph.attribute(network,"type", "twitter")
   
   networkWT <- network # with text data
-
+  
   # with twitter data, text is edge attribute (tweet payload leading to the edge)
   E(networkWT)$vosonTxt_payload <- data$text[match(E(networkWT)$tweet_id, data$id)]
   
@@ -117,17 +117,49 @@ createYoutubeNetwork <- function(data) {
   network <- NULL
   
   network <- data %>% Create('actor', writeToFile = FALSE)
-
-  network <- set.graph.attribute(network,"type","youtube")
-
+  
+  network <- set.graph.attribute(network, "type", "youtube")
+  
   # Rob started work on getting text data into network, but needs to make change to vosonSML (comment id as edge attribute)
-  # networkWT <- network # with text data
-
+  networkWT <- network # with text data
+  
   # with YouTube data, text is edge attribute (comment leading to the edge)
-  # E(networkWT)$vosonTxt_comment <- data$text[match(E(networkWT)$tweet_id,data$id)]
+  E(networkWT)$vosonTxt_comment <- data$Comment[match(E(networkWT)$commentId, data$CommentId)]
+  
+  # return(network)
+  return(list(network = network, networkWT = networkWT))
+}
 
-  return(network)
-  # return(list(network=network, networkWT=networkWT))
+#' Collect reddit thread comments using vosonSML.
+#' 
+#' @param reddit_url_list vector of thread urls to collect comments from
+#'
+#' @return data as vosonSML reddit collection dataframe
+#'
+collectRedditData <- function(reddit_url_list) {
+  data <- NULL
+  
+  if (length(reddit_url_list) > 0) {
+    data <- Authenticate("reddit") %>% 
+      Collect(threadUrls = reddit_url_list, waitTime = 5, writeToFile = FALSE)
+  }
+  
+  return(data)
+}
+
+#' Create reddit actor network using vosonSML.
+#' 
+#' @param data as vosonSML reddit collection dataframe
+#'
+#' @return list of reddit actor networks as graphml objects
+#'
+createRedditActorNetwork <- function(data) {
+  network <- networkWT <- NULL
+  
+  network <- data %>% Create("actor", writeToFile = FALSE)
+  networkWT <- data %>% Create("actor", includeTextData = TRUE, writeToFile = FALSE)
+  
+  return(list(network = network, networkWT = networkWT))
 }
 
 #' Check if graph object has vertex or edge voson text attributes.

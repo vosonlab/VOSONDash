@@ -4,13 +4,19 @@ tabItem(tabName = "youtube_collection_tab",
           column(width = 3, offset = 0,
                  fluidRow(
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                # youtube api keys input
-                                textInput("youtube_api_key_input", label = "Data API Key", value = "")
+                                checkboxInput('expand_youtube_keys_panel_check', 'Show API Key', FALSE),
+                                conditionalPanel(condition = 'input.expand_youtube_keys_panel_check',
+                                                 # youtube api keys input
+                                                 textInput("youtube_api_key_input", label = "Data API Key", value = "")
+                                )
                    ),
                    
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                                 # youtube video ids input
-                                textInput("youtube_video_id_input", label = "Add Video ID", value = ""),
+                                # textInput("youtube_video_id_input", label = "Add Video ID", value = ""),
+                                textAreaInput("youtube_video_id_input", label = "Add Youtube URL / Video ID", value = "",
+                                              width = NULL, height = NULL,
+                                              cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
                                 actionButton("youtube_add_video_id_button", label = "Add"),
                                 selectInput("youtube_video_id_list_output", "", c(), multiple = TRUE, selectize = FALSE, size = 3),
                                 actionButton("youtube_remove_video_id_button", label = "Remove"),
@@ -35,7 +41,11 @@ tabItem(tabName = "youtube_collection_tab",
                                 fluidRow(
                                   disabled(downloadButton("download_youtube_data_button", label = "Download Data")),
                                   disabled(downloadButton("download_youtube_graph_button", label = "Download Graphml")),
-                                  disabled(actionButton("view_youtube_graph_button", label = "View Graph", icon("eye")))
+                                  disabled(downloadButton("download_youtube_graphWT_button", 
+                                                          label = "Download Graphml (+text)")),                    
+                                  disabled(actionButton("view_youtube_graph_button", label = "View Graph", icon("eye"))),
+                                  disabled(actionButton("view_youtube_graphWT_button", label = "View Graph (+text)", 
+                                                        icon("eye")))
                                 )
                    )
                  )
