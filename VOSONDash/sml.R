@@ -9,13 +9,16 @@
 #' @param search_term twitter search term as character string
 #' @param search_type search type as character string - mixed, recent, popular
 #' @param tweet_count number of tweets to collect
+#' @param include_retweets logical whether to include retweets in the results
+#' @param retry_on_rate_limit logical whether to wait and retry when the twitter api rate limit is hit
 #' @param language language code of tweets to collect as two character ISO 639-1 code
-#' @param date_since date to collect tweets from as character string YYYY-MM-DD
 #' @param date_until date to collect tweets to as character string YYYY-MM-DD
 #'
 #' @return data as vosonSML twitter collection dataframe
 #'
-collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tweet_count, language, date_since, date_until) {
+collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tweet_count, 
+                               include_retweets, retry_on_rate_limit,
+                               language, date_until) {
   
   check_keys <- sapply(twitter_api_keyring, isNullOrEmpty)
   
@@ -26,41 +29,52 @@ collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tw
   # locale, geocode, sinceID, maxID, resultType, retryOnRateLimit
   
   collect_parameters <- list()
+  
+  cred <- Authenticate("twitter", apiKey = twitter_api_keyring$twitter_api_key, 
+                       apiSecret = twitter_api_keyring$twitter_api_secret,
+                       accessToken = twitter_api_keyring$twitter_access_token, 
+                       accessTokenSecret = twitter_api_keyring$twitter_access_token_secret, 
+                       useCachedToken = FALSE)
+  
+  collect_parameters[['credential']] <- cred
+  
   collect_parameters['searchTerm'] <- search_term
   
   if (!isNullOrEmpty(search_type)) {
-    collect_parameters['resultType'] <- search_type
+    collect_parameters['searchType '] <- search_type
   }
   
   if (is.numeric(tweet_count) && tweet_count > 0) {
     collect_parameters['numTweets'] <- tweet_count
   }
   
+  collect_parameters['includeRetweets'] <- TRUE
+  if (!include_retweets) {
+    collect_parameters['includeRetweets'] <- FALSE
+  }
+  
+  collect_parameters['retryOnRateLimit'] <- TRUE
+  if (!retry_on_rate_limit) {
+    collect_parameters['retryOnRateLimit'] <- FALSE
+  }
+  
   if (!isNullOrEmpty(language)) {
-    collect_parameters['language'] <- language
+    collect_parameters['lang'] <- language
   }
   
   # since and until
-  if (!isNullOrEmpty(date_since)) {
-    collect_parameters['since'] <- date_since
-  }
+  # if (!isNullOrEmpty(date_since)) {
+  #   collect_parameters['since'] <- date_since
+  # }
   
   if (!isNullOrEmpty(date_until)) {
     collect_parameters['until'] <- date_until
   }
   
-  data <- NULL
-  create_token <- FALSE
-  cred <- Authenticate("twitter", apiKey = twitter_api_keyring$twitter_api_key, 
-                       apiSecret = twitter_api_keyring$twitter_api_secret,
-                       accessToken = twitter_api_keyring$twitter_access_token, 
-                       accessTokenSecret = twitter_api_keyring$twitter_access_token_secret, 
-                       createToken = create_token)
-  
-  collect_parameters[['credential']] <- cred
   collect_parameters['writeToFile'] <- FALSE
   collect_parameters['verbose'] <- TRUE
   
+  data <- NULL
   data <- do.call(Collect, collect_parameters)
   
   return(data)
