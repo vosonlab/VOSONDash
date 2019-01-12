@@ -24,9 +24,10 @@ twitter_search_type <- NULL
 twitter_retweets <- NULL
 twitter_tweet_count <- NULL
 twitter_language <- NULL
-
-twitter_date_since <- NULL
 twitter_date_until <- NULL
+
+twitter_since_id <- NULL
+twitter_max_id <- NULL
 
 twitter_filter_from <- NULL
 twitter_filter_to <- NULL
@@ -51,8 +52,9 @@ observeEvent({input$twitter_api_key_input
 observeEvent({input$twitter_search_term_input
   input$twitter_retweets_check
   input$twitter_search_type_select
-  input$twitter_date_since_input
   input$twitter_date_until_input
+  input$twitter_since_id_input
+  input$twitter_max_id_input
   input$twitter_filter_from
   input$twitter_filter_to
   input$twitter_filter_safe
@@ -112,8 +114,8 @@ observeEvent(input$twitter_collect_button, {
           twitter_search_options <- append(twitter_search_options, paste0("to:", twitter_filter_to))
         }
         
-        opts <- list("-filter:nativeretweets" = !twitter_retweets,
-                     "filter:safe" = !twitter_filter_safe,
+        # "-filter:nativeretweets" = !twitter_retweets,
+        opts <- list("filter:safe" = !twitter_filter_safe,
                      "filter:media" = !twitter_filter_media,
                      "filter:links" = !twitter_filter_url,
                      ":)" = !twitter_filter_positive,
@@ -130,9 +132,13 @@ observeEvent(input$twitter_collect_button, {
           search_term <- paste0(search_term, paste0(twitter_search_options, collapse = " "))
         }
         
+        # twitter_api_keyring, search_term, search_type, tweet_count, 
+        # include_retweets, retry_on_rate_limit,
+        # language, date_until, since_id, max_id
         twitter_rvalues$twitter_data <<- collectTwitterData(twitter_api_keyring, search_term, search_type,
-                                                            twitter_tweet_count, twitter_language, 
-                                                            twitter_date_since, twitter_date_until)
+                                                            twitter_tweet_count, twitter_retweets, TRUE, 
+                                                            twitter_language, twitter_date_until,
+                                                            twitter_since_id, twitter_max_id)
         
       }, error = function(err) {
         incProgress(1, detail = "Error")
@@ -258,8 +264,10 @@ output$twitter_arguments_output <- renderText({
   input$twitter_retweets_check
   input$twitter_tweet_count_input
   input$twitter_language_input
-  input$twitter_date_since_input
   input$twitter_date_until_input
+  
+  input$twitter_since_id_input
+  input$twitter_max_id_input
   
   input$twitter_filter_from
   input$twitter_filter_to
@@ -333,8 +341,10 @@ setTwitterParams <- reactive({
   twitter_tweet_count <<- input$twitter_tweet_count_input
   twitter_language <<- input$twitter_language_input
   
-  twitter_date_since <<- trimws(input$twitter_date_since_input)
   twitter_date_until <<- trimws(input$twitter_date_until_input)
+  
+  twitter_since_id <<- trimws(input$twitter_since_id_input)
+  twitter_max_id <<- trimws(input$twitter_max_id_input)
   
   twitter_filter_from <<- trimws(input$twitter_filter_from)
   twitter_filter_from <<- gsub("^@", "", twitter_filter_from)
@@ -353,18 +363,22 @@ datatableTwitterData <- reactive({
   
   data <- twitter_rvalues$twitter_data
   
-  # x <- vapply(data$users_mentioned, length, 1L)
-  # data <- data[rep(rownames(data), x), ]
-  # data$users_mentioned <- unlist(data$users_mentioned, use.names = FALSE)
+  if (is.null(data)) {
+    return(NULL)
+  }
   
-  data$users_mentioned <- vapply(data$users_mentioned, paste, collapse = ", ", character(1L))
-  data$hashtags_used <- vapply(data$hashtags_used, paste, collapse = ", ", character(1L))
+  data <- select(data, "status_id", "text", "user_id", "screen_name", "reply_to_status_id", "reply_to_user_id",
+                 "reply_to_screen_name", "is_quote", "is_retweet", "hashtags")
+  
+  data$hashtags <- vapply(data$hashtags, paste, collapse = ", ", character(1L))
+  # data$symbols <- vapply(data$symbols, paste, collapse = ", ", character(1L))
+  # data$urls_url <- vapply(data$symbols, paste, collapse = ", ", character(1L))
   
   if (!is.null(twitter_rvalues$twitter_data)) {
     col_defs <- NULL
     if (input$dt_twitter_truncate_text_check == TRUE) {
       col_defs <- g_dt_col_defs
-      col_defs[[1]]$targets <- c(1)
+      col_defs[[1]]$targets <- c(2)
     }
     DT::datatable(data, extensions = 'Buttons', 
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
@@ -393,6 +407,8 @@ twitterArgumentsOutput <- function() {
     search_term_flag <- TRUE
   }
   
+  output <- append(output, paste0("include retweets: ", ifelse(twitter_retweets, "yes", "no")))
+  
   # if (search_term_flag) {
   output <- append(output, paste0("results type: ", trimws(twitter_search_type)))
   # }
@@ -409,8 +425,7 @@ twitterArgumentsOutput <- function() {
     search_term_flag <- TRUE
   }
   
-  opts <- list("-filter:nativeretweets" = !twitter_retweets,
-               "filter:safe" = !twitter_filter_safe,
+  opts <- list("filter:safe" = !twitter_filter_safe,
                "filter:media" = !twitter_filter_media,
                "filter:links" = !twitter_filter_url,
                ":)" = !twitter_filter_positive,
@@ -430,12 +445,16 @@ twitterArgumentsOutput <- function() {
     output <- append(output, paste0("language: ", twitter_language))
   }
   
-  if (!isNullOrEmpty(twitter_date_since)) {
-    output <- append(output, paste0("since date: ", twitter_date_since, sep = ""))
-  }
-  
   if (!isNullOrEmpty(twitter_date_until)) {
     output <- append(output, paste0("until date: ", twitter_date_until, sep = ""))
+  }
+  
+  if (!isNullOrEmpty(twitter_since_id)) {
+    output <- append(output, paste0("since ID: ", twitter_since_id, sep = ""))
+  }
+  
+  if (!isNullOrEmpty(twitter_max_id)) {
+    output <- append(output, paste0("max ID: ", twitter_max_id, sep = ""))
   }
   
   if (length(twitter_search_options) > 0) {

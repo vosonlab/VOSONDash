@@ -13,12 +13,14 @@
 #' @param retry_on_rate_limit logical whether to wait and retry when the twitter api rate limit is hit
 #' @param language language code of tweets to collect as two character ISO 639-1 code
 #' @param date_until date to collect tweets to as character string YYYY-MM-DD
-#'
+#' @param since_id numeric id get results with an id more recent than this id
+#' @param max_id numeric id get results with an id older than this id
+#' 
 #' @return data as vosonSML twitter collection dataframe
 #'
 collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tweet_count, 
                                include_retweets, retry_on_rate_limit,
-                               language, date_until) {
+                               language, date_until, since_id, max_id) {
   
   check_keys <- sapply(twitter_api_keyring, isNullOrEmpty)
   
@@ -62,13 +64,16 @@ collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tw
     collect_parameters['lang'] <- language
   }
   
-  # since and until
-  # if (!isNullOrEmpty(date_since)) {
-  #   collect_parameters['since'] <- date_since
-  # }
-  
   if (!isNullOrEmpty(date_until)) {
     collect_parameters['until'] <- date_until
+  }
+  
+  if (!isNullOrEmpty(since_id)) {
+    collect_parameters['since_id'] <- since_id
+  }
+  
+  if (!isNullOrEmpty(max_id)) {
+    collect_parameters['max_id'] <- max_id
   }
   
   collect_parameters['writeToFile'] <- FALSE
@@ -89,14 +94,14 @@ collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tw
 createTwitterActorNetwork <- function(data) {
   network <- NULL
   
-  network <- data %>% Create("Actor", writeToFile = FALSE)
-  
+  network <- data %>% Create("actor", verbose = TRUE)
+  network <- network$g
   network <- set.graph.attribute(network,"type", "twitter")
   
   networkWT <- network # with text data
   
   # with twitter data, text is edge attribute (tweet payload leading to the edge)
-  E(networkWT)$vosonTxt_payload <- data$text[match(E(networkWT)$tweet_id, data$id)]
+  E(networkWT)$vosonTxt_payload <- data$text[match(E(networkWT)$status_id, data$status_id)]
   
   # return(network)
   return(list(network = network, networkWT = networkWT))
@@ -212,6 +217,15 @@ getInfo <- function() {
     info <- paste0(info, "\nvosonSML package v.", packageVersion("vosonSML"), sep = "")
   } else {
     info <- paste0(info, "\nvosonSML package not found.", sep = "")
+  }
+  
+  return(info)
+}
+
+getVosonSMLVersion <- function() {
+  info <- NULL
+  if ("vosonSML" %in% loadedNamespaces()) {
+    info <- packageVersion("vosonSML")
   }
   
   return(info)
