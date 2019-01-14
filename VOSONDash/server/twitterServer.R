@@ -397,7 +397,8 @@ twitterArgumentsOutput <- function() {
   
   if (any(check_keys == FALSE)) {
     output <- append(output, paste0("api keys: ", 
-                                    trimws(paste0(sapply(strtrim(twitter_api_keyring, 6), function(x) paste0(x, "...", sep = "")), collapse = ', '))))
+                                    trimws(paste0(sapply(strtrim(twitter_api_keyring, 6), 
+                                                         function(x) paste0(x, "...", sep = "")), collapse = ', '))))
   }
   
   search_term_flag <- FALSE

@@ -120,7 +120,7 @@ collectYoutubeData <- function(youtube_api_key, youtube_video_id_list) {
   
   if ((!is.null(youtube_api_key) && nchar(youtube_api_key) > 1) && (length(youtube_video_id_list) > 0)){
     data <- Authenticate("youtube", apiKey = youtube_api_key) %>% 
-      Collect(videoIDs = youtube_video_id_list, writeToFile = FALSE, verbose = TRUE)
+      Collect(videoIDs = youtube_video_id_list, writeToFile = FALSE, verbose = FALSE)
   }
   
   return(data)
@@ -176,7 +176,7 @@ createRedditActorNetwork <- function(data) {
   network <- networkWT <- NULL
   
   network <- data %>% Create("actor", writeToFile = FALSE)
-  networkWT <- data %>% Create("actor", includeTextData = TRUE, writeToFile = FALSE)
+  networkWT <- data %>% Create("actor", textData = TRUE, writeToFile = FALSE)
   
   return(list(network = network, networkWT = networkWT))
 }
