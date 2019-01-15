@@ -15,6 +15,8 @@ https://github.com/vosonlab/VOSONDash/archive/master.zip
 
 The app can be run by typing `runApp()` in the RStudio Console (optionally with a path `appDir = '~/my/voson/dash/folder/path/'`) or alternatively by clicking on the `Run App` button that appears in the top right of the RStudio file viewer frame when either the `ui.R` or `server.R` files are open.
 
-| ![VOSONDash Interface](VOSONDash/www/VOSONDash-NetworkGraphs-1400x990.jpg)
-|:--| 
-| `VOSONDash` app interface. |
+### VOSONDash app interface
+
+`VOSONDash` features an intuitive web interface with a section for analysis of graph data in `graphml` format and a section for collecting social media data with [vosonSML](https://github.com/vosonlab/vosonSML).
+
+![VOSONDash Interface](VOSONDash/www/VOSONDash-NetworkGraphs-1400x990.jpg)
