@@ -9,13 +9,18 @@
 #' @param search_term twitter search term as character string
 #' @param search_type search type as character string - mixed, recent, popular
 #' @param tweet_count number of tweets to collect
+#' @param include_retweets logical whether to include retweets in the results
+#' @param retry_on_rate_limit logical whether to wait and retry when the twitter api rate limit is hit
 #' @param language language code of tweets to collect as two character ISO 639-1 code
-#' @param date_since date to collect tweets from as character string YYYY-MM-DD
 #' @param date_until date to collect tweets to as character string YYYY-MM-DD
-#'
+#' @param since_id numeric id get results with an id more recent than this id
+#' @param max_id numeric id get results with an id older than this id
+#' 
 #' @return data as vosonSML twitter collection dataframe
 #'
-collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tweet_count, language, date_since, date_until) {
+collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tweet_count, 
+                               include_retweets, retry_on_rate_limit,
+                               language, date_until, since_id, max_id) {
   
   check_keys <- sapply(twitter_api_keyring, isNullOrEmpty)
   
@@ -26,41 +31,55 @@ collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tw
   # locale, geocode, sinceID, maxID, resultType, retryOnRateLimit
   
   collect_parameters <- list()
+  
+  cred <- Authenticate("twitter", apiKey = twitter_api_keyring$twitter_api_key, 
+                       apiSecret = twitter_api_keyring$twitter_api_secret,
+                       accessToken = twitter_api_keyring$twitter_access_token, 
+                       accessTokenSecret = twitter_api_keyring$twitter_access_token_secret, 
+                       useCachedToken = FALSE)
+  
+  collect_parameters[['credential']] <- cred
+  
   collect_parameters['searchTerm'] <- search_term
   
   if (!isNullOrEmpty(search_type)) {
-    collect_parameters['resultType'] <- search_type
+    collect_parameters['searchType '] <- search_type
   }
   
   if (is.numeric(tweet_count) && tweet_count > 0) {
     collect_parameters['numTweets'] <- tweet_count
   }
   
-  if (!isNullOrEmpty(language)) {
-    collect_parameters['language'] <- language
+  collect_parameters['includeRetweets'] <- TRUE
+  if (!include_retweets) {
+    collect_parameters['includeRetweets'] <- FALSE
   }
   
-  # since and until
-  if (!isNullOrEmpty(date_since)) {
-    collect_parameters['since'] <- date_since
+  collect_parameters['retryOnRateLimit'] <- TRUE
+  if (!retry_on_rate_limit) {
+    collect_parameters['retryOnRateLimit'] <- FALSE
+  }
+  
+  if (!isNullOrEmpty(language)) {
+    collect_parameters['lang'] <- language
   }
   
   if (!isNullOrEmpty(date_until)) {
     collect_parameters['until'] <- date_until
   }
   
-  data <- NULL
-  create_token <- FALSE
-  cred <- Authenticate("twitter", apiKey = twitter_api_keyring$twitter_api_key, 
-                       apiSecret = twitter_api_keyring$twitter_api_secret,
-                       accessToken = twitter_api_keyring$twitter_access_token, 
-                       accessTokenSecret = twitter_api_keyring$twitter_access_token_secret, 
-                       createToken = create_token)
+  if (!isNullOrEmpty(since_id)) {
+    collect_parameters['since_id'] <- since_id
+  }
   
-  collect_parameters[['credential']] <- cred
+  if (!isNullOrEmpty(max_id)) {
+    collect_parameters['max_id'] <- max_id
+  }
+  
   collect_parameters['writeToFile'] <- FALSE
   collect_parameters['verbose'] <- TRUE
   
+  data <- NULL
   data <- do.call(Collect, collect_parameters)
   
   return(data)
@@ -75,14 +94,14 @@ collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tw
 createTwitterActorNetwork <- function(data) {
   network <- NULL
   
-  network <- data %>% Create("Actor", writeToFile = FALSE)
-  
+  network <- data %>% Create("actor", verbose = TRUE)
+  network <- network$g
   network <- set.graph.attribute(network,"type", "twitter")
   
   networkWT <- network # with text data
   
   # with twitter data, text is edge attribute (tweet payload leading to the edge)
-  E(networkWT)$vosonTxt_payload <- data$text[match(E(networkWT)$tweet_id, data$id)]
+  E(networkWT)$vosonTxt_payload <- data$text[match(E(networkWT)$status_id, data$status_id)]
   
   # return(network)
   return(list(network = network, networkWT = networkWT))
@@ -101,7 +120,7 @@ collectYoutubeData <- function(youtube_api_key, youtube_video_id_list) {
   
   if ((!is.null(youtube_api_key) && nchar(youtube_api_key) > 1) && (length(youtube_video_id_list) > 0)){
     data <- Authenticate("youtube", apiKey = youtube_api_key) %>% 
-      Collect(videoIDs = youtube_video_id_list, writeToFile = FALSE, verbose = TRUE)
+      Collect(videoIDs = youtube_video_id_list, writeToFile = FALSE, verbose = FALSE)
   }
   
   return(data)
@@ -157,7 +176,7 @@ createRedditActorNetwork <- function(data) {
   network <- networkWT <- NULL
   
   network <- data %>% Create("actor", writeToFile = FALSE)
-  networkWT <- data %>% Create("actor", includeTextData = TRUE, writeToFile = FALSE)
+  networkWT <- data %>% Create("actor", textData = TRUE, writeToFile = FALSE)
   
   return(list(network = network, networkWT = networkWT))
 }
@@ -198,6 +217,15 @@ getInfo <- function() {
     info <- paste0(info, "\nvosonSML package v.", packageVersion("vosonSML"), sep = "")
   } else {
     info <- paste0(info, "\nvosonSML package not found.", sep = "")
+  }
+  
+  return(info)
+}
+
+getVosonSMLVersion <- function() {
+  info <- NULL
+  if ("vosonSML" %in% loadedNamespaces()) {
+    info <- packageVersion("vosonSML")
   }
   
   return(info)

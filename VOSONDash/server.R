@@ -16,7 +16,6 @@ source("sml.R", local = TRUE)
 
 #### shiny server ----------------------------------------------------------------------------------------------------- #
 shinyServer(function(input, output, session) {
-  
   #### network graphs ####
   source("server/networkGraphsServer.R", local = TRUE)
   
@@ -41,4 +40,17 @@ shinyServer(function(input, output, session) {
   #### api keys ####
   source("server/apiKeysServer.R", local = TRUE)
   
+  #### vosonSML version ####
+  vosonsml_version <- getVosonSMLVersion()
+  if (!is.null(vosonsml_version)) {
+    vosonsml_version <- paste0("vosonSML v", vosonsml_version)  
+  } else {
+    vosonsml_version <- ""
+  }
+  
+  output$vosonSML_version_field <- renderMenu({
+    sidebarMenu(
+      menuItem(vosonsml_version)
+    )
+  })
 }) #### end shinyServer

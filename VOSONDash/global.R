@@ -1,8 +1,8 @@
 # voson dashboard shiny app globals
 
 # app version
-app_version <- "v0.2.2"
-app_date <- "30Nov18"
+app_version <- "v0.3.0"
+app_date <- "13Jan19"
 
 # app libraries
 library(shiny)
