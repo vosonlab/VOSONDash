@@ -12,6 +12,7 @@ youtube_rvalues$youtubeWT_graphml <- NULL
 
 youtube_api_key <- NULL        # youtube api key
 youtube_video_id_list <- c()   # list of youtube video ids to collect on
+youtube_max_comments <- 200
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 
@@ -38,6 +39,10 @@ observeEvent(input$youtube_remove_video_id_button, {
                     choices = youtube_video_id_list)
 })
 
+observeEvent(input$youtube_max_comments_input, {
+  youtube_max_comments <<- input$youtube_max_comments_input
+})
+
 # youtube collection button pushed
 observeEvent(input$youtube_collect_button, {
   
@@ -55,7 +60,8 @@ observeEvent(input$youtube_collect_button, {
       
       # collect youtube data and print any output to console
       tryCatch({
-        youtube_rvalues$youtube_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list)
+        youtube_rvalues$youtube_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
+                                                            youtube_max_comments)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('youtube collection error:', err))
@@ -176,6 +182,7 @@ output$youtube_arguments_output <- renderText({
   input$youtube_api_key_input
   input$youtube_add_video_id_button
   input$youtube_remove_video_id_button
+  input$youtube_max_comments_input
   
   # do not update arguments text on input field or list changes
   isolate({input$youtube_video_id_input
@@ -281,25 +288,29 @@ datatableYoutubeData <- reactive({
 
 # format youtube collection arguments output
 youtubeArgumentsOutput <- function() {
-  command_str <- ""
-  command_str_2 <- ""
-  
+  commands_list <- c()
   collect_state <- 0
   
   if (!is.null(youtube_api_key) && nchar(youtube_api_key) > 1) {
-    # command_str <- paste0("api key: ", youtube_api_key, "\n")
-    command_str <- trimws(paste0("api key: ", strtrim(youtube_api_key, 6), "...", sep = ""))
-    command_str <- paste0(command_str, "\n")
+    commands_list <- append(commands_list, trimws(paste0("api key: ", strtrim(youtube_api_key, 6), "...", sep = "")))
     collect_state <- 1
   }
   
   if (!is.null(youtube_video_id_list) && length(youtube_video_id_list) > 0) {
-    command_str_2 <- paste0("videos: ", trimws(paste0(youtube_video_id_list, collapse = ', ')))
+    commands_list <- append(commands_list, paste0("videos: ", trimws(paste0(youtube_video_id_list, collapse = ', '))))
     
     if (collect_state == 1) {
       collect_state <- 2
     }
   }
+  
+  if (!is.null(youtube_max_comments) && youtube_max_comments > 0) {
+    commands_list <- append(commands_list, paste0("max comments: ", youtube_max_comments))
+  }
+  
+  commands_list <- sapply(commands_list, function(x) { if (trimws(x) != "") return(trimws(x)) })
+  
+  command_str_out <- paste0(commands_list, collapse = "\n")
   
   # if api key and video ids have been inputed enable collect button
   if (collect_state == 2) {
@@ -308,5 +319,5 @@ youtubeArgumentsOutput <- function() {
     shinyjs::disable("youtube_collect_button")
   }
   
-  paste0(command_str, command_str_2, sep='\n')
+  return(command_str_out)
 }

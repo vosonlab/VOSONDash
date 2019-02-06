@@ -1073,8 +1073,10 @@ resetEnableTextAnalysisControls <- function() {
 enablePlotControls <- function() {
   shinyjs::disable("graph_download_button")
   
+  # added "graph_multi_edge_check", "graph_loops_edge_check" for bug switching back to plot from visnetwork
+  # and multi, loops checkbox remaining disabled
   ui_controls <- c("graph_names_check", "graph_reseed_button", "graph_layout_select", "graph_node_size_degree_select",
-                   "graph_node_size_slider", "graph_spread_slider")
+                   "graph_node_size_slider", "graph_spread_slider", "graph_multi_edge_check", "graph_loops_edge_check")
   
   sapply(ui_controls, function(x) { shinyjs::enable(x) })
 }
