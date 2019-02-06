@@ -112,16 +112,32 @@ createTwitterActorNetwork <- function(data) {
 #' 
 #' @param youtube_api_key youtube api key as character string
 #' @param youtube_video_id_list vector of youtube video ids to collect comments from
-#'
+#' @param youtube_max_comments maximum number of comments to collect
+#' 
 #' @return data as vosonSML youtube collection dataframe
 #'
-collectYoutubeData <- function(youtube_api_key, youtube_video_id_list) {
-  data <- NULL
+collectYoutubeData <- function(youtube_api_key, youtube_video_id_list, youtube_max_comments) {
   
-  if ((!is.null(youtube_api_key) && nchar(youtube_api_key) > 1) && (length(youtube_video_id_list) > 0)){
-    data <- Authenticate("youtube", apiKey = youtube_api_key) %>% 
-      Collect(videoIDs = youtube_video_id_list, writeToFile = FALSE, verbose = FALSE)
+  if (is.null(youtube_api_key) || (length(youtube_video_id_list) < 1)) {
+    return(NULL)
   }
+  
+  collect_parameters <- list()
+
+  cred <- Authenticate("youtube", apiKey = youtube_api_key)
+  
+  collect_parameters[['credential']] <- cred
+  collect_parameters[['videoIDs']] <- youtube_video_id_list
+  
+  if (is.numeric(youtube_max_comments) && youtube_max_comments > 1) {
+    collect_parameters['maxComments'] <- youtube_max_comments
+  }
+  
+  collect_parameters['writeToFile'] <- FALSE
+  collect_parameters['verbose'] <- FALSE
+  
+  data <- NULL
+  data <- do.call(Collect, collect_parameters)
   
   return(data)
 }

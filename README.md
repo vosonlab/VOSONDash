@@ -20,3 +20,7 @@ The app can be run by typing `runApp()` in the RStudio Console (optionally with 
 `VOSONDash` features an intuitive web interface with a section for analysis of graph data in `graphml` format and a section for collecting social media data with [vosonSML](https://github.com/vosonlab/vosonSML).
 
 ![VOSONDash Interface](VOSONDash/www/VOSONDash-NetworkGraphs-1400x990.jpg)
+
+## Special thanks
+
+This application would not be possible without key packages by other authors in the R community, particularly the [shiny](https://github.com/rstudio/shiny), [shinydashboard](https://github.com/rstudio/shinydashboard), [DT](https://github.com/rstudio/DT) and [shinyjs](https://github.com/daattali/shinyjs) packages. Graph visualisations created with [igraph](https://github.com/igraph/rigraph), [networkD3](https://github.com/christophergandrud/networkD3) and [visNetwork](https://github.com/datastorm-open/visNetwork), and text analysis with support from [tm](https://cran.r-project.org/web/packages/tm/index.html), [SnowballC](https://cran.r-project.org/web/packages/SnowballC/index.html) and [wordcloud](https://cran.r-project.org/web/packages/wordcloud/index.html) packages.
