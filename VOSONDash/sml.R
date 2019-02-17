@@ -95,7 +95,13 @@ createTwitterActorNetwork <- function(data) {
   network <- NULL
   
   network <- data %>% Create("actor", verbose = TRUE)
-  network <- network$g
+  # latest version uses named lists
+  # if (getVosonSMLVersion("0.26.0")) {
+    network <- network$graph
+  # } else {
+  #  network <- network$g
+  # }
+  
   network <- set.graph.attribute(network,"type", "twitter")
   
   networkWT <- network # with text data
@@ -152,8 +158,13 @@ createYoutubeNetwork <- function(data) {
   network <- NULL
   
   network <- data %>% Create('actor', writeToFile = FALSE)
-  
-  network <- set.graph.attribute(network, "type", "youtube")
+  # latest version uses named lists
+  if (getVosonSMLVersion("0.26.0")) {
+    network <- network$graph
+  }
+
+  # network <- set.graph.attribute(network, "type", "youtube")
+  network <- igraph::set_graph_attr(network, "type", "youtube")
   
   # Rob started work on getting text data into network, but needs to make change to vosonSML (comment id as edge attribute)
   networkWT <- network # with text data
@@ -193,6 +204,12 @@ createRedditActorNetwork <- function(data) {
   
   network <- data %>% Create("actor", writeToFile = FALSE)
   networkWT <- data %>% Create("actor", textData = TRUE, writeToFile = FALSE)
+  
+  # latest version uses named lists
+  if (getVosonSMLVersion("0.26.0")) {
+    network <- network$graph
+    networkWT <- networkWT$graph 
+  }  
   
   return(list(network = network, networkWT = networkWT))
 }
@@ -238,11 +255,14 @@ getInfo <- function() {
   return(info)
 }
 
-getVosonSMLVersion <- function() {
-  info <- NULL
+getVosonSMLVersion <- function(compare_ver) {
   if ("vosonSML" %in% loadedNamespaces()) {
-    info <- packageVersion("vosonSML")
+    if (missing(compare_ver)) {
+      return(packageVersion("vosonSML"))
+    } else {
+      return(packageVersion("vosonSML") >= compare_ver)
+    }
+  } else {
+    return(NULL)
   }
-  
-  return(info)
 }
