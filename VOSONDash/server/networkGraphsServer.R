@@ -589,7 +589,7 @@ visNetworkData <- reactive({
   }
 
   verts$id <- verts$name
-  verts$label <- verts$name
+  # verts$label <- verts$name
   
   # if (input$graph_names_check == FALSE) {
   #   verts <- subset(verts, select = -c(label))
@@ -663,6 +663,9 @@ dt_vertices_df <- reactive({
   df_parameters <- list()
   
   df_parameters[['name']] <- V(g)$name
+  if (!(is.null(vertex_attr(g, "label")))) {
+    df_parameters[['label']] <- V(g)$label
+  }  
   df_parameters[['degree']] <- V(g)$Degree
   df_parameters[['indegree']] <- V(g)$Indegree
   df_parameters[['outdegree']] <- V(g)$Outdegree
@@ -726,7 +729,7 @@ standardPlotData <- reactive({
   })
   selected_rows <- input$dt_vertices_rows_selected
   # graph_vertices <- as_data_frame(g, what = c("vertices"))
-  df <- data.frame(name = V(g)$name, degree = V(g)$Degree, indegree = V(g)$Indegree, outdegree = V(g)$Outdegree, betweenness = V(g)$Betweenness, closeness = V(g)$Closeness)
+  df <- data.frame(label = V(g)$label, name = V(g)$name, degree = V(g)$Degree, indegree = V(g)$Indegree, outdegree = V(g)$Outdegree, betweenness = V(g)$Betweenness, closeness = V(g)$Closeness)
   row.names(df) <- V(g)$id
   graph_vertices <- df
   # g <- graph.data.frame(relations, directed=TRUE, vertices=actorsNames)
@@ -795,10 +798,23 @@ standardPlotData <- reactive({
   plot_parameters['vertex.label.cex'] <- 0.9
   plot_parameters['vertex.label.dist'] <- 1.4
 
+  labels <- FALSE
+  if (!(is.null(vertex_attr(g, "label")))) {
+    labels <- TRUE
+  }
+  
   if (input$graph_names_check == FALSE) {
-    plot_parameters[['vertex.label']] = ifelse(V(g)$id %in% selected_row_names, ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
+    if (labels) {
+      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
+    } else {
+      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
+    }
   } else {
-    plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
+    if (labels) {
+      plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$label) > 0, V(g)$label, "-")
+    } else {
+      plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
+    }
   }
   plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, g_plot_selected_vertex_color, g_plot_default_label_color)
 

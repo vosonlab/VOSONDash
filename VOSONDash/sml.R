@@ -96,11 +96,11 @@ createTwitterActorNetwork <- function(data) {
   
   network <- data %>% Create("actor", verbose = TRUE)
   # latest version uses named lists
-  if (getVosonSMLVersion("0.26.0")) {
+  # if (getVosonSMLVersion("0.26.0")) {
     network <- network$graph
-  } else {
-    network <- network$g
-  }
+  # } else {
+  #  network <- network$g
+  # }
   
   network <- set.graph.attribute(network,"type", "twitter")
   
