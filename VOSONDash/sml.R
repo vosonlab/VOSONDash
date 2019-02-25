@@ -188,6 +188,11 @@ collectRedditData <- function(reddit_url_list) {
   if (length(reddit_url_list) > 0) {
     data <- Authenticate("reddit") %>% 
       Collect(threadUrls = reddit_url_list, waitTime = 5, writeToFile = FALSE)
+    
+    # attempt to fix any encoding issues in text data, from = "WINDOWS-1252"
+    # reddit text was creating DT encoding warnings when using search
+    data[, sapply(data, is.character)] <- sapply(data[, sapply(data, is.character)], 
+                                                 iconv, to = ifelse(isMac(), "utf-8-mac", "utf-8"))
   }
   
   return(data)
@@ -203,7 +208,7 @@ createRedditActorNetwork <- function(data) {
   network <- networkWT <- NULL
   
   network <- data %>% Create("actor", writeToFile = FALSE)
-  networkWT <- data %>% Create("actor", textData = TRUE, writeToFile = FALSE)
+  networkWT <- data %>% Create("actor", textData = TRUE, cleanText = FALSE, writeToFile = FALSE)
   
   # latest version uses named lists
   if (getVosonSMLVersion("0.26.0")) {

@@ -127,3 +127,14 @@ getYoutubeVideoId <- function(url) {
   
   return(video_id)
 }
+
+# check if R is running on macos
+isMac <- function() {
+  macMatch <- grep("darwin", R.Version()$os)
+  
+  if (length(macMatch) != 0) {
+    return(TRUE)
+  }
+  
+  return(FALSE)
+}
