@@ -14,6 +14,10 @@ library(httr)
 source("utils.R", local = TRUE)
 source("sml.R", local = TRUE)
 
+# increase maximum file upload size to 128MB
+# decrease for server deployment
+options(shiny.maxRequestSize = 128*1024^2)
+
 #### shiny server ----------------------------------------------------------------------------------------------------- #
 shinyServer(function(input, output, session) {
   #### network graphs ####
