@@ -20,6 +20,7 @@ tabItem(tabName = "twitter_collection_tab",
                                               cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
                                 
                                 checkboxInput("twitter_retweets_check", "Include retweets", TRUE),
+                                checkboxInput("twitter_retry_check", "Retry on rate limit", TRUE),
                                 
                                 div(div("Results", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"), 
                                     div(selectInput("twitter_search_type_select", label = NULL, choices = c("recent", "mixed", "popular"),

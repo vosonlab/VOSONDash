@@ -22,6 +22,7 @@ twitter_search_term <- NULL
 twitter_search_type <- NULL
 
 twitter_retweets <- NULL
+twitter_retry <- NULL
 twitter_tweet_count <- NULL
 twitter_language <- NULL
 twitter_date_until <- NULL
@@ -51,6 +52,7 @@ observeEvent({input$twitter_api_key_input
 # set twitter parameters on input
 observeEvent({input$twitter_search_term_input
   input$twitter_retweets_check
+  input$twitter_retry_check
   input$twitter_search_type_select
   input$twitter_date_until_input
   input$twitter_since_id_input
@@ -99,6 +101,8 @@ observeEvent(input$twitter_collect_button, {
   withProgress(message = 'Collecting tweets', value = 0.5, {
     
     withConsoleRedirect("twitter_console", {
+      collect_error <- FALSE
+      
       # collect twitter data and print any output to console
       tryCatch({
         search_term <- twitter_search_term
@@ -136,11 +140,12 @@ observeEvent(input$twitter_collect_button, {
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
         twitter_rvalues$twitter_data <<- collectTwitterData(twitter_api_keyring, search_term, search_type,
-                                                            twitter_tweet_count, twitter_retweets, TRUE, 
+                                                            twitter_tweet_count, twitter_retweets, twitter_retry, 
                                                             twitter_language, twitter_date_until,
                                                             twitter_since_id, twitter_max_id)
         
       }, error = function(err) {
+        collect_error <<- TRUE
         incProgress(1, detail = "Error")
         cat(paste("twitter collection error: ", err))
         return(NULL)
@@ -149,7 +154,7 @@ observeEvent(input$twitter_collect_button, {
       incProgress(0.5, detail = "Creating network")
       
       # if twitter data collected create graphml object
-      if (!is.null(twitter_rvalues$twitter_data)) {
+      if (!is.null(twitter_rvalues$twitter_data) & !collect_error) {
         tryCatch({
           # twitter_rvalues$twitter_graphml <<- createTwitterActorNetwork(twitter_rvalues$twitter_data)
           netList <- createTwitterActorNetwork(twitter_rvalues$twitter_data)
@@ -262,6 +267,7 @@ output$twitter_arguments_output <- renderText({
   input$twitter_search_term_input
   input$twitter_search_type_select
   input$twitter_retweets_check
+  input$twitter_retry_check
   input$twitter_tweet_count_input
   input$twitter_language_input
   input$twitter_date_until_input
@@ -338,6 +344,7 @@ setTwitterParams <- reactive({
   
   twitter_search_type <<- input$twitter_search_type_select
   twitter_retweets <<- input$twitter_retweets_check
+  twitter_retry <<- input$twitter_retry_check
   twitter_tweet_count <<- input$twitter_tweet_count_input
   twitter_language <<- input$twitter_language_input
   
@@ -409,6 +416,7 @@ twitterArgumentsOutput <- function() {
   }
   
   output <- append(output, paste0("include retweets: ", ifelse(twitter_retweets, "yes", "no")))
+  output <- append(output, paste0("retry on rate limit: ", ifelse(twitter_retry, "yes", "no")))
   
   # if (search_term_flag) {
   output <- append(output, paste0("results type: ", trimws(twitter_search_type)))

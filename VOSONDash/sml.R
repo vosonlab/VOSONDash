@@ -43,7 +43,7 @@ collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tw
   collect_parameters['searchTerm'] <- search_term
   
   if (!isNullOrEmpty(search_type)) {
-    collect_parameters['searchType '] <- search_type
+    collect_parameters['searchType'] <- search_type
   }
   
   if (is.numeric(tweet_count) && tweet_count > 0) {
@@ -191,8 +191,8 @@ collectRedditData <- function(reddit_url_list) {
     
     # attempt to fix any encoding issues in text data, from = "WINDOWS-1252"
     # reddit text was creating DT encoding warnings when using search
-    data[, sapply(data, is.character)] <- sapply(data[, sapply(data, is.character)], 
-                                                 iconv, to = ifelse(isMac(), "utf-8-mac", "utf-8"))
+    # data[, sapply(data, is.character)] <- sapply(data[, sapply(data, is.character)], 
+    #                                              iconv, to = ifelse(isMac(), "utf-8-mac", "utf-8"))
   }
   
   return(data)
@@ -208,7 +208,7 @@ createRedditActorNetwork <- function(data) {
   network <- networkWT <- NULL
   
   network <- data %>% Create("actor", writeToFile = FALSE)
-  networkWT <- data %>% Create("actor", textData = TRUE, cleanText = FALSE, writeToFile = FALSE)
+  networkWT <- data %>% Create("actor", textData = TRUE, cleanText = TRUE, writeToFile = FALSE)
   
   # latest version uses named lists
   if (getVosonSMLVersion("0.26.0")) {
