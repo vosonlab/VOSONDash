@@ -98,10 +98,11 @@ observeEvent(input$twitter_collect_button, {
   # disable button so it is not pushed again
   shinyjs::disable("twitter_collect_button")
   
+  collect_status <<- 2
+  
   withProgress(message = 'Collecting tweets', value = 0.5, {
     
     withConsoleRedirect("twitter_console", {
-      collect_error <- FALSE
       
       # collect twitter data and print any output to console
       tryCatch({
@@ -139,22 +140,23 @@ observeEvent(input$twitter_collect_button, {
         # twitter_api_keyring, search_term, search_type, tweet_count, 
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
-        twitter_rvalues$twitter_data <<- collectTwitterData(twitter_api_keyring, search_term, search_type,
-                                                            twitter_tweet_count, twitter_retweets, twitter_retry, 
-                                                            twitter_language, twitter_date_until,
-                                                            twitter_since_id, twitter_max_id)
+        twitter_rvalues$twitter_data <<- suppressWarnings({
+                                           collectTwitterData(twitter_api_keyring, search_term, search_type,
+                                             twitter_tweet_count, twitter_retweets, twitter_retry, 
+                                             twitter_language, twitter_date_until,
+                                             twitter_since_id, twitter_max_id) })
         
+        collect_status <<- 0
       }, error = function(err) {
-        collect_error <<- TRUE
         incProgress(1, detail = "Error")
         cat(paste("twitter collection error: ", err))
-        return(NULL)
+        collect_status <<- 1
       })
       
-      incProgress(0.5, detail = "Creating network")
-      
       # if twitter data collected create graphml object
-      if (!is.null(twitter_rvalues$twitter_data) & !collect_error) {
+      if (!is.null(twitter_rvalues$twitter_data) && nrow(twitter_rvalues$twitter_data) > 0 &&
+          collect_status == 0) {
+        incProgress(0.5, detail = "Creating network")
         tryCatch({
           # twitter_rvalues$twitter_graphml <<- createTwitterActorNetwork(twitter_rvalues$twitter_data)
           netList <- createTwitterActorNetwork(twitter_rvalues$twitter_data)
@@ -163,12 +165,12 @@ observeEvent(input$twitter_collect_button, {
         }, error = function(err) {
           incProgress(1, detail = "Error")
           cat(paste("twitter graphml error: ", err))
-          return(NULL)
         })
       }
       
       incProgress(1, detail = "Finished")
-    })
+      
+    }) # withConsoleRedirect
     
   }) # withProgress
   

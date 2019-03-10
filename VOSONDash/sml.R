@@ -102,7 +102,7 @@ createTwitterActorNetwork <- function(data) {
   #  network <- network$g
   # }
   
-  network <- set.graph.attribute(network,"type", "twitter")
+  network <- set.graph.attribute(network, "type", "twitter")
   
   networkWT <- network # with text data
   
