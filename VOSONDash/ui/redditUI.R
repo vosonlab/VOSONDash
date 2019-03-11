@@ -21,7 +21,13 @@ tabItem(tabName = "reddit_collection_tab",
           
           column(width = 9, offset = 0,
                  fluidRow(
-                   tabBox(width = 12, title = span(icon("reddit", class = "reddit_red"), "Reddit Thread Collection"),
+                   tabBox(width = 12, 
+                          # title = span(icon("reddit", class = "reddit_red"), "Reddit Thread Collection"),
+                          title = div(
+                            span(actionButton("clear_reddit_console", label = icon("erase", lib = "glyphicon"), 
+                                              style = "padding: 2px 8px;", title = "Clear console"), style = "padding-right: 10px;"),
+                            span(icon("reddit", class = "reddit_red"), "Reddit Network Collection")
+                          ),                          
                           tabPanel("Console", width = 12,
                                    verbatimTextOutput("reddit_arguments_output"),
                                    

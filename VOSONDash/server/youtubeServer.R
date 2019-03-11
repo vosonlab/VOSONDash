@@ -52,8 +52,8 @@ observeEvent(input$youtube_collect_button, {
   withProgress(message = 'Collecting comments', value = 0.5, {
     
     withConsoleRedirect("youtube_console", {
-      #withCallingHandlers({
-      shinyjs::html(id = "youtube_console", html = "")
+      # withCallingHandlers({
+      # shinyjs::html(id = "youtube_console", html = "")
       
       youtube_video_id_list <- sapply(youtube_video_id_list, 
                                       function(x) gsub("^v=", "", x, ignore.case = TRUE, perl = TRUE))
@@ -174,6 +174,10 @@ observeEvent(input$view_youtube_graphWT_button, {
     # change to graphs tab
     updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
   }
+})
+
+observeEvent(input$clear_youtube_console, {
+  resetConsole("youtube_console")
 })
 #### output ----------------------------------------------------------------------------------------------------------- #
 

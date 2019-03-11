@@ -45,16 +45,21 @@ shinyServer(function(input, output, session) {
   source("server/apiKeysServer.R", local = TRUE)
   
   #### vosonSML version ####
-  vosonsml_version <- getVosonSMLVersion()
-  if (!is.null(vosonsml_version)) {
-    vosonsml_version <- paste0("vosonSML v", vosonsml_version)  
-  } else {
-    vosonsml_version <- ""
-  }
-  
-  output$vosonSML_version_field <- renderMenu({
-    sidebarMenu(
-      menuItem(vosonsml_version)
-    )
-  })
+  observeEvent(input$sidebar_menu, {
+    resetConsole("twitter_console", FALSE)
+    resetConsole("youtube_console", FALSE)
+    resetConsole("reddit_console", FALSE)
+  }, once = TRUE, ignoreInit = FALSE)  
+  # vosonsml_version <- getVosonSMLVersion()
+  # if (!is.null(vosonsml_version)) {
+  #   vosonsml_version <- paste0("vosonSML v", vosonsml_version)  
+  # } else {
+  #   vosonsml_version <- ""
+  # }
+  # 
+  # output$vosonSML_version_field <- renderMenu({
+  #   sidebarMenu(
+  #     menuItem(vosonsml_version)
+  #   )
+  # })
 }) #### end shinyServer
