@@ -41,8 +41,8 @@ observeEvent(input$reddit_collect_button, {
   withProgress(message = 'Collecting threads', value = 0.5, {
     
     withConsoleRedirect("reddit_console", {
-      #withCallingHandlers({
-      shinyjs::html(id = "reddit_console", html = "")
+      # withCallingHandlers({
+      # shinyjs::html(id = "reddit_console", html = "")
       
       url_list <- sapply(reddit_url_list, function(x) paste0("https://reddit.com/", x))
       
@@ -162,6 +162,9 @@ observeEvent(input$view_reddit_graphWT_button, {
   }
 })
 
+observeEvent(input$clear_reddit_console, {
+  resetConsole("reddit_console")
+})
 #### output ----------------------------------------------------------------------------------------------------------- #
 
 # render reddit collection arguments

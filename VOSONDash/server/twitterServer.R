@@ -92,19 +92,22 @@ observeEvent(input$twitter_tweet_count_input, {
   setTwitterParams()
 })
 
+observeEvent(input$clear_twitter_console, {
+  resetConsole("twitter_console")
+})
+
 # twitter collection button pushed
 observeEvent(input$twitter_collect_button, {
   
   # disable button so it is not pushed again
   shinyjs::disable("twitter_collect_button")
   
-  collect_status <<- 2
-  
   withProgress(message = 'Collecting tweets', value = 0.5, {
     
     withConsoleRedirect("twitter_console", {
       
       # collect twitter data and print any output to console
+      withCallingHandlers(
       tryCatch({
         search_term <- twitter_search_term
         search_type <- twitter_search_type
@@ -141,21 +144,24 @@ observeEvent(input$twitter_collect_button, {
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
         twitter_rvalues$twitter_data <<- suppressWarnings({
-                                           collectTwitterData(twitter_api_keyring, search_term, search_type,
+                          collectTwitterData(twitter_api_keyring, search_term, search_type,
                                              twitter_tweet_count, twitter_retweets, twitter_retry, 
                                              twitter_language, twitter_date_until,
                                              twitter_since_id, twitter_max_id) })
         
-        collect_status <<- 0
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste("twitter collection error: ", err))
-        collect_status <<- 1
+        NULL
+      }, warning = function(w) {
+        incProgress(1, detail = "Warning")
+        cat(paste("twitter collection warning: ", w))
+        # invokeRestart("muffleWarning")
       })
+      )
       
       # if twitter data collected create graphml object
-      if (!is.null(twitter_rvalues$twitter_data) && nrow(twitter_rvalues$twitter_data) > 0 &&
-          collect_status == 0) {
+      if (!is.null(twitter_rvalues$twitter_data) && nrow(twitter_rvalues$twitter_data) > 0) {
         incProgress(0.5, detail = "Creating network")
         tryCatch({
           # twitter_rvalues$twitter_graphml <<- createTwitterActorNetwork(twitter_rvalues$twitter_data)
@@ -372,11 +378,11 @@ datatableTwitterData <- reactive({
   
   data <- twitter_rvalues$twitter_data
   
-  if (is.null(data)) {
+  if (is.null(data) || nrow(data) < 1) {
     return(NULL)
   }
   
-  data <- select(data, "status_id", "text", "user_id", "screen_name", "reply_to_status_id", "reply_to_user_id",
+  data <- dplyr::select(data, "status_id", "text", "user_id", "screen_name", "reply_to_status_id", "reply_to_user_id",
                  "reply_to_screen_name", "is_quote", "is_retweet", "hashtags")
   
   data$hashtags <- vapply(data$hashtags, paste, collapse = ", ", character(1L))

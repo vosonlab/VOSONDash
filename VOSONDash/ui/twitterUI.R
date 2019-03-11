@@ -64,9 +64,16 @@ tabItem(tabName = "twitter_collection_tab",
                  )
           ),
           
+          # div(actionButton("clear_console", label = icon("erase", lib = "glyphicon"), 
+          # style = "padding: 2px 8px;"), style = "position:relative; top:-40px; right:385px;")
           column(width = 9, offset = 0,
                  fluidRow(
-                   tabBox(width = 12, title = span(icon("twitter", class = "twitter_blue"), "Twitter Network Collection"),
+                   tabBox(width = 12, 
+                          title = div(
+                            span(actionButton("clear_twitter_console", label = icon("erase", lib = "glyphicon"), 
+                                              style = "padding: 2px 8px;", title = "Clear console"), style = "padding-right: 10px;"),
+                            span(icon("twitter", class = "twitter_blue"), "Twitter Network Collection")
+                          ),
                           tabPanel("Console", width = 12,
                                    verbatimTextOutput("twitter_arguments_output"),
                                    

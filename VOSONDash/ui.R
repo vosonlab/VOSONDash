@@ -20,7 +20,7 @@ dashboardPage(
                                menuItem("Text Analysis", tabName = "text_analysis_tab", icon = icon("bar-chart")),
                                menuItem("Assortativity", tabName = "assortativity_tab", icon = icon("bar-chart")),
                                h4("Collection", style = "padding-left:20px;"),
-                               sidebarMenuOutput("vosonSML_version_field"),
+                               # sidebarMenuOutput("vosonSML_version_field"),
                                menuItem("Twitter", tabName = "twitter_collection_tab", icon = icon("twitter")),
                                menuItem("Youtube", tabName = "youtube_collection_tab", icon = icon("youtube")),
                                menuItem("Reddit", tabName = "reddit_collection_tab", icon = icon("reddit")),
