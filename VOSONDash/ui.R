@@ -2,11 +2,11 @@
 
 #### shiny ui --------------------------------------------------------------------------------------------------------- #
 dashboardPage(
-  skin = "blue",
+  skin = "green",
   title = paste0("VOSON Dashboard ", app_version, sep = ""),
   
   dashboardHeader(title = span(icon("share-alt"), "VOSON Dashboard", 
-                               span("(", app_date, span(app_version, class = 'social_green'), ")", class = "version")), 
+                               span("(", app_version, ")", class = "version")), # span(app_version, class = 'social_green')
                   titleWidth = 400),
   
   # sidebar menu items

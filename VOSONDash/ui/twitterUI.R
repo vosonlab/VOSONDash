@@ -27,7 +27,7 @@ tabItem(tabName = "twitter_collection_tab",
                                                     multiple = FALSE, width = "90px"), class = "div_inline")),
                                 
                                 div(div("Count", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;margin-right:22px;"),
-                                    div(numericInput("twitter_tweet_count_input", label = NULL, value = 100, min = 1, width = "90px"), class = "div_inline")),
+                                    div(numericInput("twitter_tweet_count_input", label = NULL, value = g_default_tweet_count, min = 1, width = "90px"), class = "div_inline")),
                                 
                                 div(div("Language", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
                                     div(textInput("twitter_language_input", label = NULL, value = "", width = "45px"), class = "div_inline")),

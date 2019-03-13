@@ -582,7 +582,7 @@ visNetworkData <- reactive({
       categories <- categorical_attributes[[selected_categorical_attribute]]
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
-        df$color <- g_plot_palette[1:nrow(df)]
+        df$color <- g_plot_palette()[1:nrow(df)]
         verts$color.background <- df$color[match(verts[[selected_categorical_attribute]], df$cat)]
       }
     }
@@ -751,7 +751,7 @@ standardPlotData <- reactive({
       categories <- categorical_attributes[[selected_categorical_attribute]]
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
-        df$color <- g_plot_palette[1:nrow(df)]
+        df$color <- g_plot_palette()[1:nrow(df)]
         
         va <- paste0('vosonCA_', selected_categorical_attribute)
         V(g)$color <- df$color[match(vertex_attr(g, va), df$cat)]

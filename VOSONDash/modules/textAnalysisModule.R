@@ -154,12 +154,39 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
       }
     }) })
   })
+
+  wordSentPlotList <- reactive({
+    plot_ids <- names(sapply(data, names))
+    
+    isolate({ withProgress(message = "Processing sentiment plots...", {
+      
+      for (i in seq_along(data)) {
+        local({
+          local_i <- i
+          plot_id <- plot_ids[local_i]
+          output[[plot_id]] <- renderPlot({
+            wordSentChart(data[[local_i]], categories)
+          })
+        })
+      }
+      
+      # renders empty plot to namespace id "no-data" placeholder
+      if (length(data) < 1) {
+        output[["no-data"]] <- renderPlot({
+          emptyPlotMessage("No text data.")
+        })
+      }
+      
+    }) })
+  })
   
   # determine type of plots to generate
   if (type == "wf") {
     wordFreqPlotList()
   } else if (type == "wc") {
     wordCloudPlotList()
+  } else if (type == "ws") {
+    wordSentPlotList()
   }
 }
 
@@ -202,7 +229,7 @@ wordFreqChart <- function(data, categories, min_freq, top_count) {
   freq_terms <- colSums(as.matrix(dtm_sparse_removed))
   order_terms <- order(freq_terms, decreasing = TRUE)
   
-  colx <- getColors(categories, plot_category, plot_category_attrs, "white")
+  colx <- getColors(categories, plot_category, plot_category_attrs, "azure2")
   
   # returns empty plot with message if no data to chart
   if (is.null(corp) || length(corp) < 1) {
@@ -210,6 +237,37 @@ wordFreqChart <- function(data, categories, min_freq, top_count) {
   }
   par(mar = rep(0, 4))
   return(barchart(freq_terms[order_terms[1:top_count]], col = colx, xlab = "Frequency"))
+}
+
+wordSentChart <- function(data, categories) {
+  graph_attr <- data[[1]]
+  corp <- data[[2]]
+  
+  ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
+  
+  plot_category <- plot_category_attrs <- ""
+  plot_category <- graph_attr[[1]]
+  plot_category_attrs <- graph_attr[[2]] # can be a list
+
+  nrc_sent_df <- get_nrc_sentiment(unlist(ws_df[, 1]))
+  nrc_sent_df$neutral <- ifelse(nrc_sent_df$negative + nrc_sent_df$positive == 0, 1, 0)
+  chart_data <- 100 * colSums(nrc_sent_df) / sum(nrc_sent_df)
+  
+  colx <- getColors(categories, plot_category, plot_category_attrs, "azure2")
+  colx[seq(1, 8)] <- colx
+  colx[9] <- "firebrick1"
+  colx[10] <- "steelblue"
+  colx[11] <- "gainsboro"
+  
+  # returns empty plot with message if no data to chart
+  if (is.null(corp) || length(corp) < 1) {
+    return(emptyPlotMessage("No text data."))
+  }
+
+  sent_plot <- barplot(chart_data, las = 2, col = colx, ylab = "Percentage")
+  text(sent_plot, ifelse(chart_data <= 1, 2, chart_data - 1), labels = round(chart_data, digits = 2), col = "black")
+  
+  return(sent_plot)
 }
 
 #' Creates a Word Cloud plot

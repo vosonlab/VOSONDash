@@ -21,7 +21,7 @@ tabItem(tabName = "youtube_collection_tab",
                                 selectInput("youtube_video_id_list_output", "", c(), multiple = TRUE, selectize = FALSE, size = 3),
                                 actionButton("youtube_remove_video_id_button", label = "Remove"),
                                 div(div("Max Comments", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
-                                    div(numericInput("youtube_max_comments_input", label = NULL, value = 200, min = 1, width = "90px"), class = "div_inline")),
+                                    div(numericInput("youtube_max_comments_input", label = NULL, value = g_default_youtube_count, min = 1, width = "90px"), class = "div_inline")),
                                 p(""),
                                 disabled(actionButton("youtube_collect_button", label = "Collect Comments", icon = icon("cloud-download")))
                    )
