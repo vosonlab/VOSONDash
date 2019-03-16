@@ -77,8 +77,8 @@ tabItem(tabName = "network_graphs_tab",
                    tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), selected = "Plot",
                           id = "selected_graph_tab",
                           tabPanel("Plot", plotOutput("standardPlot", width = "100%", height = "500px")),
-                          tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
-                          tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px")),
+                          #tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
+                          #tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px")),
                           tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%", height = "500px"))
                    ),
                    

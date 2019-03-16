@@ -99,10 +99,14 @@ tabItem(tabName = "twitter_collection_tab",
         fluidRow(
           # twitter collection data table
           tabBox(width = 12, title = "Twitter Data",
-                 tabPanel("Results", 
+                 tabPanel("Results",
                           fluidRow(
-                            div(checkboxInput("dt_twitter_truncate_text_check", "Truncate text", TRUE), style = "margin-left:12px; margin-right:5px;", class = "div_inline")
+                            div(checkboxInput('expand_show_twitter_cols', 'Column filters', FALSE),
+                                style = "margin-left:12px; margin-right:5px;", class = "div_inline"),
+                            div(checkboxInput("dt_twitter_truncate_text_check", "Truncate text", TRUE), 
+                                class = "div_inline")
                           ),
+                          uiOutput("twitter_data_cols_ui"),
                           DT::dataTableOutput("dt_twitter_data"))
           )
         )

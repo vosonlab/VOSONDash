@@ -23,6 +23,8 @@ g_plot_selected_vertex_color <- "#be29ec"
 g_plot_palette <- function(n = 8) brewer.pal(n, "Dark2")
 
 # data tables
+options(htmlwidgets.TOJSON_ARGS = list(na = 'string'))
+
 g_dt_length_menu <- list(c(10, 50, -1), c('10', '50', 'All'))
 g_dt_page_length <- 10
 g_dt_horiz_scroll <- TRUE

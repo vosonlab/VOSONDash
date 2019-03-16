@@ -9,6 +9,8 @@ twitter_rvalues <- reactiveValues()
 twitter_rvalues$twitter_data <- NULL      # dataframe returned by vosonSML collection
 twitter_rvalues$twitter_graphml <- NULL   # graphml object returned from collection
 
+twitter_rvalues$data_cols <- NULL
+
 # twitter api keys
 twitter_api_keyring <- list(
   twitter_api_key = "",
@@ -149,6 +151,7 @@ observeEvent(input$twitter_collect_button, {
                                              twitter_language, twitter_date_until,
                                              twitter_since_id, twitter_max_id) })
         
+        twitter_rvalues$data_cols <- names(twitter_rvalues$twitter_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste("twitter collection error: ", err))
@@ -262,6 +265,9 @@ observeEvent(input$view_twitter_graphWT_button, {
   }
 })
 
+# observeEvent(input$show_twitter_cols, {
+#   twitter_rvalues$twitter_data <- twitter_rvalues$twitter_data[, input$show_twitter_cols, drop = FALSE]
+# })
 #### output ----------------------------------------------------------------------------------------------------------- #
 
 # render twitter collection arguments
@@ -298,6 +304,22 @@ output$twitter_arguments_output <- renderText({
 # render twitter data table
 output$dt_twitter_data <- DT::renderDataTable({
   datatableTwitterData()
+})
+
+output$twitter_data_cols_ui <- renderUI({
+  data <- twitter_rvalues$data_cols
+  
+  if (is.null(data)) {
+    return(NULL)
+  }
+  
+  conditionalPanel(condition = 'input.expand_show_twitter_cols',
+    checkboxGroupInput("show_twitter_cols", label = NULL,
+                       choices = twitter_rvalues$data_cols,
+                       selected = c("user_id", "status_id", "created_at", "screen_name", "text",
+                                    "is_retweet"), 
+                       inline = TRUE, width = '98%')
+  )
 })
 
 # set file name and content for twitter data download
@@ -375,17 +397,34 @@ setTwitterParams <- reactive({
 
 # create data table from collected twitter data
 datatableTwitterData <- reactive({
-  
   data <- twitter_rvalues$twitter_data
   
-  if (is.null(data) || nrow(data) < 1) {
+  if (is.null(data)) {
     return(NULL)
   }
   
-  data <- dplyr::select(data, "status_id", "text", "user_id", "screen_name", "reply_to_status_id", "reply_to_user_id",
-                 "reply_to_screen_name", "is_quote", "is_retweet", "hashtags")
+  if (!is.null(input$show_twitter_cols)) {
+    # data <- twitter_rvalues$twitter_data[, input$show_twitter_cols, drop = FALSE]
+    if (length(input$show_twitter_cols) > 0) {
+      data <- dplyr::select(twitter_rvalues$twitter_data, input$show_twitter_cols)
+    } else {
+      return(NULL)
+    }
+  } else {
+    return(NULL)
+  }
   
-  data$hashtags <- vapply(data$hashtags, paste, collapse = ", ", character(1L))
+  if (nrow(data) < 1) {
+    return(NULL)
+  }
+  
+  #data <- dplyr::select(data, "status_id", "text", "user_id", "screen_name", "reply_to_status_id", "reply_to_user_id",
+  #               "reply_to_screen_name", "is_quote", "is_retweet", "hashtags")
+  # also coords
+  if ("hashtags" %in% names(data)) {
+    data$hashtags <- vapply(data$hashtags, paste, collapse = ", ", character(1L))  
+  }
+  
   # data$symbols <- vapply(data$symbols, paste, collapse = ", ", character(1L))
   # data$urls_url <- vapply(data$symbols, paste, collapse = ", ", character(1L))
   
@@ -393,7 +432,8 @@ datatableTwitterData <- reactive({
     col_defs <- NULL
     if (input$dt_twitter_truncate_text_check == TRUE) {
       col_defs <- g_dt_col_defs
-      col_defs[[1]]$targets <- c(2)
+      # col_defs[[1]]$targets <- c(2)
+      col_defs[[1]]$targets = "_all"
     }
     DT::datatable(data, extensions = 'Buttons', 
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
