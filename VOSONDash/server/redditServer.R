@@ -344,7 +344,7 @@ datatableRedditData <- reactive({
       col_defs <- g_dt_col_defs
       col_defs[[1]]$targets = "_all"
     }
-    DT::datatable(data, extensions = 'Buttons', 
+    DT::datatable(data, extensions = 'Buttons', filter = "top",
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
