@@ -151,7 +151,7 @@ observeEvent(input$twitter_collect_button, {
                                              twitter_language, twitter_date_until,
                                              twitter_since_id, twitter_max_id) })
         
-        twitter_rvalues$data_cols <- names(twitter_rvalues$twitter_data)
+        twitter_rvalues$data_cols <<- names(twitter_rvalues$twitter_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste("twitter collection error: ", err))
@@ -306,6 +306,28 @@ output$dt_twitter_data <- DT::renderDataTable({
   datatableTwitterData()
 })
 
+observeEvent(input$select_all_twitter_dt_columns, {
+  updateCheckboxGroupInput(session, "show_twitter_cols", label = NULL,
+                           choices = isolate(twitter_rvalues$data_cols),
+                           selected = isolate(twitter_rvalues$data_cols),
+                           inline = TRUE)
+})
+
+observeEvent(input$clear_all_twitter_dt_columns, {
+  updateCheckboxGroupInput(session, "show_twitter_cols", label = NULL,
+                           choices = isolate(twitter_rvalues$data_cols),
+                           selected = character(0),
+                           inline = TRUE)
+})
+
+observeEvent(input$reset_twitter_dt_columns, {
+  updateCheckboxGroupInput(session, "show_twitter_cols", label = NULL,
+                           choices = isolate(twitter_rvalues$data_cols),
+                           selected = c("user_id", "status_id", "created_at", "screen_name", "text",
+                                        "is_retweet"),
+                           inline = TRUE)
+})
+
 output$twitter_data_cols_ui <- renderUI({
   data <- twitter_rvalues$data_cols
   
@@ -314,6 +336,9 @@ output$twitter_data_cols_ui <- renderUI({
   }
   
   conditionalPanel(condition = 'input.expand_show_twitter_cols',
+    div(actionButton("select_all_twitter_dt_columns", "Select all"), 
+        actionButton("clear_all_twitter_dt_columns", "Clear all"),
+        actionButton("reset_twitter_dt_columns", "Reset")),
     checkboxGroupInput("show_twitter_cols", label = NULL,
                        choices = twitter_rvalues$data_cols,
                        selected = c("user_id", "status_id", "created_at", "screen_name", "text",
@@ -421,12 +446,20 @@ datatableTwitterData <- reactive({
   #data <- dplyr::select(data, "status_id", "text", "user_id", "screen_name", "reply_to_status_id", "reply_to_user_id",
   #               "reply_to_screen_name", "is_quote", "is_retweet", "hashtags")
   # also coords
-  if ("hashtags" %in% names(data)) {
-    data$hashtags <- vapply(data$hashtags, paste, collapse = ", ", character(1L))  
-  }
+  # if ("hashtags" %in% names(data)) {
+  #   data$hashtags <- vapply(data$hashtags, paste, collapse = ", ", character(1L))  
+  # }
   
   # data$symbols <- vapply(data$symbols, paste, collapse = ", ", character(1L))
   # data$urls_url <- vapply(data$symbols, paste, collapse = ", ", character(1L))
+  
+  col_classes <- sapply(data, class)
+  for (i in seq(1, length(col_classes))) {
+    if ("list" %in% col_classes[i]) {
+      var <- names(col_classes)[i]
+      data[var] <- lapply(data[var], function(x) sapply(x, paste, collapse = ", ", character(1L)))
+    }
+  }
   
   if (!is.null(twitter_rvalues$twitter_data)) {
     col_defs <- NULL

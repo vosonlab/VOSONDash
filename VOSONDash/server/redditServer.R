@@ -10,6 +10,8 @@ reddit_rvalues$reddit_data <- NULL      # dataframe returned by vosonSML collect
 reddit_rvalues$reddit_graphml <- NULL   # graphml object returned from collection
 reddit_rvalues$redditWT_graphml <- NULL
 
+reddit_rvalues$data_cols <- NULL
+
 reddit_url_list <- c()   # list of reddit threads to collect on
 
 #### events ----------------------------------------------------------------------------------------------------------- #
@@ -49,6 +51,7 @@ observeEvent(input$reddit_collect_button, {
       # collect reddit data and print any output to console
       tryCatch({
         reddit_rvalues$reddit_data <<- collectRedditData(url_list)
+        reddit_rvalues$data_cols <<- names(reddit_rvalues$reddit_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('reddit collection error:', err))
@@ -218,6 +221,47 @@ output$download_reddit_graphWT_button <- downloadHandler(
   }
 )
 
+observeEvent(input$select_all_reddit_dt_columns, {
+  updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
+                           choices = isolate(reddit_rvalues$data_cols),
+                           selected = isolate(reddit_rvalues$data_cols),
+                           inline = TRUE)
+})
+
+observeEvent(input$clear_all_reddit_dt_columns, {
+  updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
+                           choices = isolate(reddit_rvalues$data_cols),
+                           selected = character(0),
+                           inline = TRUE)
+})
+
+observeEvent(input$reset_reddit_dt_columns, {
+  updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
+                           choices = isolate(reddit_rvalues$data_cols),
+                           selected = c("structure", "comm_date", "subreddit", "user", "comment_score", 
+                                        "comment", "thread_id"),
+                           inline = TRUE)
+})
+
+output$reddit_data_cols_ui <- renderUI({
+  data <- reddit_rvalues$data_cols
+  
+  if (is.null(data)) {
+    return(NULL)
+  }
+  
+  conditionalPanel(condition = 'input.expand_show_reddit_cols',
+                   div(actionButton("select_all_reddit_dt_columns", "Select all"), 
+                       actionButton("clear_all_reddit_dt_columns", "Clear all"),
+                       actionButton("reset_reddit_dt_columns", "Reset")),
+                   checkboxGroupInput("show_reddit_cols", label = NULL,
+                                      choices = reddit_rvalues$data_cols,
+                                      selected = c("structure", "comm_date", "subreddit", "user", "comment_score", 
+                                                   "comment", "thread_id"),
+                                      inline = TRUE, width = '98%')
+  )
+})
+
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 # add to the list of reddit thread urls to collect on
@@ -250,15 +294,57 @@ urlListRemove <- reactive({
 })
 
 # create data table from collected reddit data
+# datatableRedditData <- reactive({
+#   if (!is.null(reddit_rvalues$reddit_data)) {
+#     col_defs <- NULL
+#     if (input$dt_reddit_truncate_text_check == TRUE) {
+#       col_defs <- g_dt_col_defs
+#       # col_defs[[1]]$targets <- c(3, 4, 5, 6)
+#       col_defs[[1]]$targets = "_all"
+#     }
+#     DT::datatable(reddit_rvalues$reddit_data, extensions = 'Buttons', 
+#                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
+#                                  columnDefs = col_defs, dom = 'lBfrtip',
+#                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
+#   }
+# })
+
 datatableRedditData <- reactive({
+  data <- reddit_rvalues$reddit_data
+  
+  if (is.null(data)) {
+    return(NULL)
+  }
+  
+  if (!is.null(input$show_reddit_cols)) {
+    if (length(input$show_reddit_cols) > 0) {
+      data <- dplyr::select(reddit_rvalues$reddit_data, input$show_reddit_cols)
+    } else {
+      return(NULL)
+    }
+  } else {
+    return(NULL)
+  }
+  
+  if (nrow(data) < 1) {
+    return(NULL)
+  }
+  
+  col_classes <- sapply(data, class)
+  for (i in seq(1, length(col_classes))) {
+    if ("list" %in% col_classes[i]) {
+      var <- names(col_classes)[i]
+      data[var] <- lapply(data[var], function(x) sapply(x, paste, collapse = ", ", character(1L)))
+    }
+  }
+  
   if (!is.null(reddit_rvalues$reddit_data)) {
     col_defs <- NULL
     if (input$dt_reddit_truncate_text_check == TRUE) {
       col_defs <- g_dt_col_defs
-      # col_defs[[1]]$targets <- c(3, 4, 5, 6)
       col_defs[[1]]$targets = "_all"
     }
-    DT::datatable(reddit_rvalues$reddit_data, extensions = 'Buttons', 
+    DT::datatable(data, extensions = 'Buttons', 
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')

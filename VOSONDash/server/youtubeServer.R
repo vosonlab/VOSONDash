@@ -10,6 +10,8 @@ youtube_rvalues$youtube_data <- NULL      # dataframe returned by vosonSML colle
 youtube_rvalues$youtube_graphml <- NULL   # graphml object returned from collection
 youtube_rvalues$youtubeWT_graphml <- NULL
 
+youtube_rvalues$data_cols <- NULL
+
 youtube_api_key <- NULL        # youtube api key
 youtube_video_id_list <- c()   # list of youtube video ids to collect on
 youtube_max_comments <- 200
@@ -62,6 +64,8 @@ observeEvent(input$youtube_collect_button, {
       tryCatch({
         youtube_rvalues$youtube_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
                                                             youtube_max_comments)
+        
+        youtube_rvalues$data_cols <<- names(youtube_rvalues$youtube_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('youtube collection error:', err))
@@ -234,6 +238,45 @@ output$download_youtube_graphWT_button <- downloadHandler(
   }
 )
 
+observeEvent(input$select_all_youtube_dt_columns, {
+  updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
+                           choices = isolate(youtube_rvalues$data_cols),
+                           selected = isolate(youtube_rvalues$data_cols),
+                           inline = TRUE)
+})
+
+observeEvent(input$clear_all_youtube_dt_columns, {
+  updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
+                           choices = isolate(youtube_rvalues$data_cols),
+                           selected = character(0),
+                           inline = TRUE)
+})
+
+observeEvent(input$reset_youtube_dt_columns, {
+  updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
+                           choices = isolate(youtube_rvalues$data_cols),
+                           selected = c("Comment", "User", "PublishTime"),
+                           inline = TRUE)
+})
+
+output$youtube_data_cols_ui <- renderUI({
+  data <- youtube_rvalues$data_cols
+  
+  if (is.null(data)) {
+    return(NULL)
+  }
+  
+  conditionalPanel(condition = 'input.expand_show_youtube_cols',
+                   div(actionButton("select_all_youtube_dt_columns", "Select all"), 
+                       actionButton("clear_all_youtube_dt_columns", "Clear all"),
+                       actionButton("reset_youtube_dt_columns", "Reset")),
+                   checkboxGroupInput("show_youtube_cols", label = NULL,
+                                      choices = youtube_rvalues$data_cols,
+                                      selected = c("Comment", "User", "PublishTime"),
+                                      inline = TRUE, width = '98%')
+  )
+})
+
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 setYoutubeAPIKey <- reactive({
@@ -274,14 +317,56 @@ videoListRemove <- reactive({
 })
 
 # create data table from collected youtube data
+# datatableYoutubeData <- reactive({
+#   if (!is.null(youtube_rvalues$youtube_data)) {
+#     col_defs <- NULL
+#     if (input$dt_youtube_truncate_text_check == TRUE) {
+#       col_defs <- g_dt_col_defs
+#       col_defs[[1]]$targets <- c(1)
+#     }
+#     DT::datatable(youtube_rvalues$youtube_data, extensions = 'Buttons', 
+#                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
+#                                  columnDefs = col_defs, dom = 'lBfrtip',
+#                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
+#   }
+# })
+
 datatableYoutubeData <- reactive({
+  data <- youtube_rvalues$youtube_data
+  
+  if (is.null(data)) {
+    return(NULL)
+  }
+  
+  if (!is.null(input$show_youtube_cols)) {
+    if (length(input$show_youtube_cols) > 0) {
+      data <- dplyr::select(youtube_rvalues$youtube_data, input$show_youtube_cols)
+    } else {
+      return(NULL)
+    }
+  } else {
+    return(NULL)
+  }
+  
+  if (nrow(data) < 1) {
+    return(NULL)
+  }
+
+  col_classes <- sapply(data, class)
+  for (i in seq(1, length(col_classes))) {
+    if ("list" %in% col_classes[i]) {
+      var <- names(col_classes)[i]
+      data[var] <- lapply(data[var], function(x) sapply(x, paste, collapse = ", ", character(1L)))
+    }
+  }
+  
   if (!is.null(youtube_rvalues$youtube_data)) {
     col_defs <- NULL
     if (input$dt_youtube_truncate_text_check == TRUE) {
       col_defs <- g_dt_col_defs
-      col_defs[[1]]$targets <- c(1)
+      col_defs[[1]]$targets = "_all"
     }
-    DT::datatable(youtube_rvalues$youtube_data, extensions = 'Buttons', 
+    DT::datatable(data, extensions = 'Buttons', 
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')

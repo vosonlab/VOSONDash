@@ -56,9 +56,12 @@ tabItem(tabName = "reddit_collection_tab",
           tabBox(width = 12, title = "Reddit Data",
                  tabPanel("Results", 
                           fluidRow(
+                            div(checkboxInput('expand_show_reddit_cols', 'Column filters', FALSE),
+                                style = "margin-left:12px; margin-right:5px;", class = "div_inline"),                            
                             div(checkboxInput("dt_reddit_truncate_text_check", "Truncate text", TRUE), 
-                                style = "margin-left:12px; margin-right:5px;", class = "div_inline")
+                                class = "div_inline")
                           ),
+                          uiOutput("reddit_data_cols_ui"),                          
                           DT::dataTableOutput("dt_reddit_data"))
           )
         )

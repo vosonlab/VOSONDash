@@ -65,8 +65,12 @@ tabItem(tabName = "youtube_collection_tab",
           tabBox(width = 12, title = "Youtube Data",
                  tabPanel("Results", 
                           fluidRow(
-                            div(checkboxInput("dt_youtube_truncate_text_check", "Truncate text", TRUE), style = "margin-left:12px; margin-right:5px;", class = "div_inline")
+                            div(checkboxInput('expand_show_youtube_cols', 'Column filters', FALSE),
+                                style = "margin-left:12px; margin-right:5px;", class = "div_inline"),                            
+                            div(checkboxInput("dt_youtube_truncate_text_check", "Truncate text", TRUE), 
+                                class = "div_inline")
                           ),
+                          uiOutput("youtube_data_cols_ui"),                          
                           DT::dataTableOutput("dt_youtube_data"))
           )
         )
