@@ -21,11 +21,11 @@ tabItem(tabName = "reddit_collection_tab",
           
           column(width = 9, offset = 0,
                  fluidRow(
-                   tabBox(width = 12, 
-                          # title = span(icon("reddit", class = "reddit_red"), "Reddit Thread Collection"),
+                   tabBox(width = 12,
                           title = div(
                             span(actionButton("clear_reddit_console", label = icon("erase", lib = "glyphicon"), 
-                                              style = "padding: 2px 8px;", title = "Clear console"), style = "padding-right: 10px;"),
+                                              style = "padding: 2px 8px;", title = "Clear Console"), 
+                                 style = "padding-right: 10px;"),
                             span(icon("reddit", class = "reddit_red"), "Reddit Network Collection")
                           ),                          
                           tabPanel("Console", width = 12,
@@ -38,13 +38,16 @@ tabItem(tabName = "reddit_collection_tab",
                    
                    sidebarPanel(width = 12, class = "custom_well_for_buttons",
                                 fluidRow(
-                                  disabled(downloadButton("download_reddit_data_button", label = "Download Data")),
-                                  disabled(downloadButton("download_reddit_graph_button", label = "Download Graphml")),
-                                  disabled(downloadButton("download_reddit_graphWT_button", 
-                                                          label = "Download Graphml (+text)")),
-                                  disabled(actionButton("view_reddit_graph_button", label = "View Graph", icon("eye"))),
-                                  disabled(actionButton("view_reddit_graphWT_button", label = "View Graph (+text)", 
-                                                        icon("eye")))
+                                  disabled(downloadButton("download_reddit_data_button", label = "Data", 
+                                                          title = "Download Raw Data File")),
+                                  disabled(downloadButton("download_reddit_graph_button", label = "Graphml", 
+                                                          title = "Download Network Graphml File")),
+                                  disabled(downloadButton("download_reddit_graphWT_button", label = "Graphml (+text)", 
+                                                          title = "Download Network Graphml File with Text")),
+                                  disabled(actionButton("view_reddit_graph_button", label = "Graph", 
+                                                        title = "View Network Graphml File", icon("eye"))),
+                                  disabled(actionButton("view_reddit_graphWT_button", label = "Graph (+text)", 
+                                                        title = "View Network Graphml File with Text", icon("eye")))
                                 )
                    )
                  )

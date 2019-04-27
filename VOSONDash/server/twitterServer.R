@@ -443,16 +443,6 @@ datatableTwitterData <- reactive({
     return(NULL)
   }
   
-  #data <- dplyr::select(data, "status_id", "text", "user_id", "screen_name", "reply_to_status_id", "reply_to_user_id",
-  #               "reply_to_screen_name", "is_quote", "is_retweet", "hashtags")
-  # also coords
-  # if ("hashtags" %in% names(data)) {
-  #   data$hashtags <- vapply(data$hashtags, paste, collapse = ", ", character(1L))  
-  # }
-  
-  # data$symbols <- vapply(data$symbols, paste, collapse = ", ", character(1L))
-  # data$urls_url <- vapply(data$symbols, paste, collapse = ", ", character(1L))
-  
   col_classes <- sapply(data, class)
   for (i in seq(1, length(col_classes))) {
     if ("list" %in% col_classes[i]) {
@@ -465,7 +455,6 @@ datatableTwitterData <- reactive({
     col_defs <- NULL
     if (input$dt_twitter_truncate_text_check == TRUE) {
       col_defs <- g_dt_col_defs
-      # col_defs[[1]]$targets <- c(2)
       col_defs[[1]]$targets = "_all"
     }
     DT::datatable(data, extensions = 'Buttons', filter = "top",
