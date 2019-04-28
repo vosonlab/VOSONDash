@@ -74,20 +74,27 @@ tabItem(tabName = "network_graphs_tab",
           column(width = 9, offset = 0,
                  fluidRow(
                    # graph type tabs
-                   tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), selected = "Plot",
-                          id = "selected_graph_tab",
-                          tabPanel("Plot", plotOutput("standardPlot", width = "100%", height = "500px")),
+                   tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
+                          selected = "Plot", id = "selected_graph_tab",
+                          tabPanel("igraph Plot", plotOutput("standardPlot", width = "100%", height = "500px"), 
+                                   value = "Plot"),
                           #tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
                           #tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px")),
-                          tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%", height = "500px"))
+                          tabPanel("visNetwork Plot", visNetworkOutput("visNetworkPlot", width = "100%", 
+                                                                       height = "500px"), value = "visNetwork")
                    ),
                    
                    # graph info and download buttons
                    sidebarPanel(id = "graph_info_well", width = 12, class = "custom_well_for_buttons",
                                 fluidRow(
-                                  div(textOutput("graphml_desc1_text"), textOutput("graphml_desc2_text"), class = "div_inline"),
-                                  div(disabled(downloadButton("graph_download_button", label = "Save Graph")), style = "float:right; margin-right:10px;", class = "div_inline"),
-                                  div(disabled(downloadButton("analysis_graphml_download_button", label = "Download Graphml")), style = "float:right; margin-right:10px;", class = "div_inline")
+                                  div(textOutput("graphml_desc1_text"), textOutput("graphml_desc2_text"), 
+                                      class = "div_inline"),
+                                  div(disabled(downloadButton("graph_download_button", label = "Plot HTML",
+                                                              title = "Download Plot as HTML File")), 
+                                      style = "float:right; margin-right:10px;", class = "div_inline"),
+                                  div(disabled(downloadButton("analysis_graphml_download_button", label = "Graphml", 
+                                                              title = "Download Plot Graphml File")), 
+                                      style = "float:right; margin-right:10px;", class = "div_inline")
                                 )
                    )
                  ),

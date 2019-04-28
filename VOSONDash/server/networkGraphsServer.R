@@ -44,9 +44,11 @@ observeEvent(ng_rvalues$graph_data, {
   }
 
   if ("label" %in% attr_v) {
-    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$label) > 0, V(ng_rvalues$graph_data)$label, "-")
+    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$label) > 0, 
+                                             V(ng_rvalues$graph_data)$label, "-")
   } else {
-    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$name) > 0, V(ng_rvalues$graph_data)$name, "-")
+    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$name) > 0, 
+                                             V(ng_rvalues$graph_data)$name, "-")
   }
 })
 
@@ -336,7 +338,8 @@ filedata <- reactive({
     ng_rvalues$graph_data <<- read_graph(infile$datapath, format = c('graphml'))
     
     ng_rvalues$graph_name <<- infile$name
-    ng_rvalues$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rvalues$graph_data), graph_attr(ng_rvalues$graph_data, "type"), "not set")
+    ng_rvalues$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rvalues$graph_data), 
+                                     graph_attr(ng_rvalues$graph_data, "type"), "not set")
     ng_rvalues$graph_desc <<- "Network loaded from file"
     
     createGraphCategoryList()
@@ -616,10 +619,21 @@ saveGraphFileName <- reactive({
 
 # network graph data based on selected network graph tab
 saveGraphFileData <- reactive({
-  switch(input$selected_graph_tab,
+  data <- switch(input$selected_graph_tab,
          "D3 Simple" = simpleNetworkData(),
          "D3 Force" = forceNetworkData(),
          "visNetwork" = visNetworkData())
+  
+  if (input$selected_graph_tab == "visNetwork") {
+    data$height <- "1000px"
+    data$sizingPolicy$defaultWidth <- "100%"
+    
+    data$sizingPolicy$browser$fill <- TRUE
+    data$sizingPolicy$viewer$suppress <- TRUE
+    data$sizingPolicy$knitr$figure <- FALSE    
+  }
+
+  data
 })
 
 # add selected data table row name values to pruned vertices list
