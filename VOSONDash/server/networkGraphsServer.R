@@ -602,11 +602,14 @@ visNetworkData <- reactive({
     summarise(width = n()) %>% 
     ungroup()
   
-  visNetwork::visNetwork(verts, edges, main = NULL, height = "500px") %>% 
-    visNetwork::visEdges(arrows = 'to, from') %>%
+  visNetwork::visNetwork(verts, edges, main = NULL) %>% # height = "500px"
     visIgraphLayout(layout = graph_layout, randomSeed = graph_seed) %>%
+    visNetwork::visEdges(arrows = 'to',
+                         # smooth = list(enabled = TRUE, type = "continuous", roundness = 0.1)
+                         color = list(color = "#b0b0b0")) %>% # arrows = 'to, from'
     visOptions(collapse = TRUE, highlightNearest = list(enabled = TRUE, hover = TRUE),
-               nodesIdSelection = TRUE)
+               nodesIdSelection = TRUE) %>%
+    visInteraction(navigationButtons = TRUE)
 })
 
 # network graph save file name based on selected network graph tab
@@ -625,14 +628,14 @@ saveGraphFileData <- reactive({
          "visNetwork" = visNetworkData())
   
   if (input$selected_graph_tab == "visNetwork") {
-    data$height <- "1000px"
+    data$height <- "800px"
     data$sizingPolicy$defaultWidth <- "100%"
     
     data$sizingPolicy$browser$fill <- TRUE
     data$sizingPolicy$viewer$suppress <- TRUE
     data$sizingPolicy$knitr$figure <- FALSE    
   }
-
+  
   data
 })
 
