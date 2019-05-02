@@ -9,6 +9,8 @@ twitter_rvalues <- reactiveValues()
 twitter_rvalues$twitter_data <- NULL      # dataframe returned by vosonSML collection
 twitter_rvalues$twitter_graphml <- NULL   # graphml object returned from collection
 
+test_data <- NULL
+
 twitter_rvalues$data_cols <- NULL
 
 # twitter api keys
@@ -97,7 +99,7 @@ observeEvent(input$twitter_tweet_count_input, {
 observeEvent(input$clear_twitter_console, {
   resetConsole("twitter_console")
 })
-
+  
 # twitter collection button pushed
 observeEvent(input$twitter_collect_button, {
   
@@ -145,11 +147,13 @@ observeEvent(input$twitter_collect_button, {
         # twitter_api_keyring, search_term, search_type, tweet_count, 
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
-        twitter_rvalues$twitter_data <<- suppressWarnings({
+        test_data <<- suppressWarnings({
                           collectTwitterData(twitter_api_keyring, search_term, search_type,
                                              twitter_tweet_count, twitter_retweets, twitter_retry, 
                                              twitter_language, twitter_date_until,
                                              twitter_since_id, twitter_max_id) })
+        
+        twitter_rvalues$twitter_data <<- test_data
         
         twitter_rvalues$data_cols <<- names(twitter_rvalues$twitter_data)
       }, error = function(err) {
@@ -187,87 +191,24 @@ observeEvent(input$twitter_collect_button, {
   twitterArgumentsOutput()
 })
 
-# enable twitter download data button when there is twitter data
-observeEvent(twitter_rvalues$twitter_data, {
-  if (!is.null(twitter_rvalues$twitter_data) && nrow(twitter_rvalues$twitter_data) > 0) {
-    shinyjs::enable("download_twitter_data_button")
-  } else {
-    shinyjs::disable("download_twitter_data_button")
-  }
-})
+# download and view actions
+callModule(collectDataButtons, "twitter", data = reactive({ twitter_rvalues$twitter_data }), file_prefix = "twitter")
 
-# enable twitter download graphml button when there is twitter graphml data
-observeEvent(twitter_rvalues$twitter_graphml, {
-  if (!is.null(twitter_rvalues$twitter_graphml)) {
-    shinyjs::enable("download_twitter_graph_button")
-    shinyjs::enable("download_twitter_graphWT_button")
-    shinyjs::enable("view_twitter_graph_button")
-    shinyjs::enable("view_twitter_graphWT_button")
-  } else {
-    shinyjs::disable("download_twitter_graph_button")
-    shinyjs::disable("download_twitter_graphWT_button")
-    shinyjs::disable("view_twitter_graph_button")
-    shinyjs::disable("view_twitter_graphWT_button")
-  }
-})
+callModule(collectGraphButtons, "twitter", graph_data = reactive({ twitter_rvalues$twitter_graphml }), 
+           graph_wt_data = reactive({ twitter_rvalues$twitterWT_graphml }), file_prefix = "twitter")
 
-observeEvent(input$view_twitter_graph_button, {
-  
-  if (!is.null(isolate(twitter_rvalues$twitter_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(twitter_rvalues$twitter_graphml)
-    
-    ng_rvalues$graph_desc <<- paste0("Twitter network for search term: ", twitter_search_term, sep = "")
-    ng_rvalues$graph_type <<- "twitter"
-    ng_rvalues$graph_name <<- "" # only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", 
+                                   graph_data = reactive({ twitter_rvalues$twitter_graphml }), 
+                                   graph_wt_data = reactive({ twitter_rvalues$twitterWT_graphml }))
 
-observeEvent(input$view_twitter_graphWT_button, {
-  
-  if (!is.null(isolate(twitter_rvalues$twitterWT_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(twitter_rvalues$twitterWT_graphml)
-    
-    ng_rvalues$graph_desc <<- paste0("Twitter network for search term: ", twitter_search_term, sep = "")
-    ng_rvalues$graph_type <<- "twitter"
-    ng_rvalues$graph_name <<- "" # only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+observeEvent(twitter_view_rvalues$data, {
+  setGraphView(data = isolate(twitter_view_rvalues$data), 
+               desc = paste0("Twitter network for search term: ", twitter_search_term, sep = ""),
+               type = "twitter",
+               name = "",
+               seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+}, ignoreInit = TRUE)
 
-# observeEvent(input$show_twitter_cols, {
-#   twitter_rvalues$twitter_data <- twitter_rvalues$twitter_data[, input$show_twitter_cols, drop = FALSE]
-# })
 #### output ----------------------------------------------------------------------------------------------------------- #
 
 # render twitter collection arguments
@@ -346,42 +287,6 @@ output$twitter_data_cols_ui <- renderUI({
                        inline = TRUE, width = '98%')
   )
 })
-
-# set file name and content for twitter data download
-output$download_twitter_data_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("twitter-data", "rds")
-  },
-  
-  content = function(file) {
-    saveRDS(isolate(twitter_rvalues$twitter_data), file)
-    # data <- isolate(twitter_rvalues$twitter_data)
-    # data$users_mentioned <- vapply(data$users_mentioned, paste, collapse = ", ", character(1L))
-    # write.csv(data, file)
-  }
-)
-
-# set file name and content for twitter graphml download
-output$download_twitter_graph_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("twitter", "graphml")
-  },
-  
-  content = function(file) {
-    write_graph(isolate(twitter_rvalues$twitter_graphml), file, format=c("graphml"))
-  }
-)
-
-# set file name and content for twitter graphml (with text) download
-output$download_twitter_graphWT_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("twitter-with-text", "graphml")
-  },
-  
-  content = function(file) {
-    write_graph(isolate(twitter_rvalues$twitterWT_graphml), file, format=c("graphml"))
-  }
-)
 
 #### reactives -------------------------------------------------------------------------------------------------------- #
 

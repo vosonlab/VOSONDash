@@ -83,87 +83,23 @@ observeEvent(input$reddit_collect_button, {
   redditArgumentsOutput()
 })
 
-# enable reddit download data button when there is reddit data
-observeEvent(reddit_rvalues$reddit_data, {
-  if (!is.null(reddit_rvalues$reddit_data) && nrow(reddit_rvalues$reddit_data) > 0) {
-    shinyjs::enable("download_reddit_data_button")
-  } else {
-    shinyjs::disable("download_reddit_data_button")
-  }
-})
+# download and view actions
+callModule(collectDataButtons, "reddit", data = reactive({ reddit_rvalues$reddit_data }), file_prefix = "reddit")
 
-# enable reddit download graphml button when there is reddit graphml data
-observeEvent(reddit_rvalues$reddit_graphml, {
-  if (!is.null(reddit_rvalues$reddit_graphml)) {
-    shinyjs::enable("download_reddit_graph_button")
-    shinyjs::enable("download_reddit_graphWT_button")
-    shinyjs::enable("view_reddit_graph_button")
-    shinyjs::enable("view_reddit_graphWT_button")
-  } else {
-    shinyjs::disable("download_reddit_graph_button")
-    shinyjs::disable("download_reddit_graphWT_button")
-    shinyjs::disable("view_reddit_graph_button")
-    shinyjs::disable("view_reddit_graphWT_button")
-  }
-})
+callModule(collectGraphButtons, "reddit", graph_data = reactive({ reddit_rvalues$reddit_graphml }), 
+           graph_wt_data = reactive({ reddit_rvalues$redditWT_graphml }), file_prefix = "reddit")
 
-observeEvent(input$view_reddit_graph_button, {
-  
-  if (!is.null(isolate(reddit_rvalues$reddit_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(reddit_rvalues$reddit_graphml)
-    
-    url_list_text <- paste0(reddit_url_list, collapse = ', ')
-    
-    ng_rvalues$graph_desc <<- paste0("Reddit actor network for threads: ", url_list_text, sep = "")
-    ng_rvalues$graph_type <<- "reddit"
-    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+reddit_view_rvalues <- callModule(collectViewGraphButtons, "reddit", 
+                                   graph_data = reactive({ reddit_rvalues$reddit_graphml }), 
+                                   graph_wt_data = reactive({ reddit_rvalues$redditWT_graphml }))
 
-observeEvent(input$view_reddit_graphWT_button, {
-  
-  if (!is.null(isolate(reddit_rvalues$redditWT_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(reddit_rvalues$redditWT_graphml)
-    
-    url_list_text <- paste0(reddit_url_list, collapse = ', ')
-    
-    ng_rvalues$graph_desc <<- paste0("Reddit actor network for threads: ", url_list_text, sep = "")
-    ng_rvalues$graph_type <<- "reddit"
-    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+observeEvent(reddit_view_rvalues$data, {
+  setGraphView(data = isolate(reddit_view_rvalues$data), 
+               desc = paste0("Reddit actor network for threads: ", paste0(reddit_url_list, collapse = ', '), sep = ""),
+               type = "reddit",
+               name = "",
+               seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+}, ignoreInit = TRUE)
 
 observeEvent(input$clear_reddit_console, {
   resetConsole("reddit_console")

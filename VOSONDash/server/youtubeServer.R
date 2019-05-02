@@ -98,91 +98,29 @@ observeEvent(input$youtube_collect_button, {
   youtubeArgumentsOutput()
 })
 
-# enable youtube download data button when there is youtube data
-observeEvent(youtube_rvalues$youtube_data, {
-  if (!is.null(youtube_rvalues$youtube_data) && nrow(youtube_rvalues$youtube_data) > 0) {
-    shinyjs::enable("download_youtube_data_button")
-  } else {
-    shinyjs::disable("download_youtube_data_button")
-  }
-})
+# download and view actions
+callModule(collectDataButtons, "youtube", data = reactive({ youtube_rvalues$youtube_data }), file_prefix = "youtube")
 
-# enable youtube download graphml button when there is youtube graphml data
-observeEvent(youtube_rvalues$youtube_graphml, {
-  if (!is.null(youtube_rvalues$youtube_graphml)) {
-    shinyjs::enable("download_youtube_graph_button")
-    shinyjs::enable("download_youtube_graphWT_button")
-    shinyjs::enable("view_youtube_graph_button")
-    shinyjs::enable("view_youtube_graphWT_button")
-  } else {
-    shinyjs::disable("download_youtube_graph_button")
-    shinyjs::disable("download_youtube_graphWT_button")
-    shinyjs::disable("view_youtube_graph_button")
-    shinyjs::disable("view_youtube_graphWT_button")
-  }
-})
+callModule(collectGraphButtons, "youtube", graph_data = reactive({ youtube_rvalues$youtube_graphml }), 
+           graph_wt_data = reactive({ youtube_rvalues$youtubeWT_graphml }), file_prefix = "youtube")
 
-observeEvent(input$view_youtube_graph_button, {
-  
-  if (!is.null(isolate(youtube_rvalues$youtube_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(youtube_rvalues$youtube_graphml)
-    
-    video_id_list_text <- paste0(youtube_video_id_list, collapse = ', ')
-    
-    ng_rvalues$graph_desc <<- paste0("Youtube actor network for videos: ", video_id_list_text, sep = "")
-    ng_rvalues$graph_type <<- "youtube"
-    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", 
+                                   graph_data = reactive({ youtube_rvalues$youtube_graphml }), 
+                                   graph_wt_data = reactive({ youtube_rvalues$youtubeWT_graphml }))
 
-observeEvent(input$view_youtube_graphWT_button, {
-  
-  if (!is.null(isolate(youtube_rvalues$youtubeWT_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(youtube_rvalues$youtubeWT_graphml)
-    
-    video_id_list_text <- paste0(youtube_video_id_list, collapse = ', ')
-    
-    ng_rvalues$graph_desc <<- paste0("Youtube actor network for videos: ", video_id_list_text, sep = "")
-    ng_rvalues$graph_type <<- "youtube"
-    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+observeEvent(youtube_view_rvalues$data, {
+  setGraphView(data = isolate(youtube_view_rvalues$data), 
+               desc = paste0("Youtube actor network for videos: ", paste0(youtube_video_id_list, collapse = ', '), 
+                             sep = ""),
+               type = "twitter",
+               name = "",
+               seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+}, ignoreInit = TRUE)
 
 observeEvent(input$clear_youtube_console, {
   resetConsole("youtube_console")
 })
+
 #### output ----------------------------------------------------------------------------------------------------------- #
 
 # render youtube collection arguments

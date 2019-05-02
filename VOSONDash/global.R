@@ -46,4 +46,5 @@ g_default_youtube_count <- 200
 g_api_keys_path <- paste0(getwd(), "/voson_keys.rds", sep = "")
 
 # modules
+source("modules/collectionModule.R", local = TRUE)
 source("modules/textAnalysisModule.R", local = TRUE)

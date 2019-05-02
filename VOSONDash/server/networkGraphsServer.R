@@ -174,7 +174,8 @@ observeEvent(input$prune_unselected_rows_button, {
 observeEvent(input$prune_return_button, {
   if (length(input$pruned_vertices_select) > 0) { prune_flag <<- TRUE }
   
-  pruning_rvalues$prune_verts <<- pruning_rvalues$prune_verts[!(pruning_rvalues$prune_verts %in% input$pruned_vertices_select)]
+  pruning_rvalues$prune_verts <<- pruning_rvalues$prune_verts[!(pruning_rvalues$prune_verts %in% 
+                                                                  input$pruned_vertices_select)]
   
   # update prune list select box
   prune_list <- isolate(pruning_rvalues$prune_verts)
@@ -323,6 +324,7 @@ output$simple <- renderSimpleNetwork({
 output$visNetworkPlot <- renderVisNetwork({
   visNetworkData()
 })
+
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 # set file data when a file is uploaded
@@ -426,16 +428,7 @@ setGraphFilterControls <- reactive({
     shinyjs::enable("analysis_graphml_download_button")
     shinyjs::enable("graph_reseed_button")
     shinyjs::enable("graph_component_slider")
-    
-    # set component slider
-    # graph_clusters <- components(g, mode = isolate(input$graph_component_type_select))
-    # 
-    # # suppress no non-missing arguments to min; returning Inf warning
-    # min_cluster_size <- suppressWarnings(min(graph_clusters$csize))
-    # max_cluster_size <- suppressWarnings(max(graph_clusters$csize))
-    # 
-    # updateSliderInput(session, inputId = "graph_component_slider", min = min_cluster_size,
-    #                   max = max_cluster_size, value = c(min_cluster_size, max_cluster_size))
+
     updateComponentSlider(g, isolate(input$graph_component_type_select))
     
     # update the categorical attribute select box
@@ -592,11 +585,6 @@ visNetworkData <- reactive({
   }
 
   verts$id <- verts$name
-  # verts$label <- verts$name
-  
-  # if (input$graph_names_check == FALSE) {
-  #   verts <- subset(verts, select = -c(label))
-  # }
 
   edges <- edges %>% group_by(to, from) %>%
     summarise(width = n()) %>% 
@@ -649,7 +637,9 @@ pruneListAddNames <- reactive({
   # selected_rows <- dt_vertices$name[c(dt_selected_rows)]
   
   # add name if not already in list
-  lapply(selected_rows, function(x) {if (!x %in% pruning_rvalues$prune_verts) pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)})
+  lapply(selected_rows, function(x) {
+                          if (!x %in% pruning_rvalues$prune_verts)
+                            pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)})
 })
 
 # add deselected data table row name values to pruned vertices list
@@ -667,7 +657,9 @@ pruneListAddOtherNames <- reactive({
     selected_rows <- row.names(sdf)
     
     # add name if not already in list
-    lapply(selected_rows, function(x) {if (!x %in% pruning_rvalues$prune_verts) pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)}) 
+    lapply(selected_rows, function(x) {
+                            if (!x %in% pruning_rvalues$prune_verts) 
+                              pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)}) 
   }
 })
 
@@ -707,14 +699,6 @@ dt_vertices_df <- reactive({
   }
 
   df <- do.call(data.frame, df_parameters)
-  
-  # igraph::as_data_frame(g, what = c("vertices"))
-  # df <- data.frame(name = V(g)$name, 
-  #                  degree = V(g)$Degree, 
-  #                  indegree = V(g)$Indegree, 
-  #                  outdegree = V(g)$Outdegree, 
-  #                  betweenness = V(g)$Betweenness, 
-  #                  closeness = V(g)$Closeness)
   
   row.names(df) <- V(g)$id
   
@@ -933,6 +917,22 @@ graphDetailsOutput <- reactive({
 })
 
 #### functions -------------------------------------------------------------------------------------------------------- #
+
+# set graph manually
+setGraphView <- function(data, desc = "None", type = "None", name = "None", seed = 1) {
+  shinyjs::reset("graphml_data_file")
+  
+  ng_rvalues$graph_data <<- data
+  ng_rvalues$graph_desc <<- desc
+  ng_rvalues$graph_type <<- type
+  ng_rvalues$graph_name <<- ""
+  ng_rvalues$graph_seed <<- seed
+  ng_rvalues$graph_CA <<- c()
+  ng_rvalues$graph_CA_selected <<- ""
+  
+  setGraphFilterControls()
+  updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
+}
 
 # return empty plot with message
 emptyGraphPlotMessage <- function(message) {

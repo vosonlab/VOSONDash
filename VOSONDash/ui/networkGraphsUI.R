@@ -76,12 +76,12 @@ tabItem(tabName = "network_graphs_tab",
                    # graph type tabs
                    tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
                           selected = "Plot", id = "selected_graph_tab",
-                          tabPanel("igraph Plot", plotOutput("standardPlot", width = "100%", height = "500px"), 
+                          tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "500px"), 
                                    value = "Plot"),
-                          #tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
-                          #tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px")),
-                          tabPanel("visNetwork Plot", visNetworkOutput("visNetworkPlot", width = "100%", 
-                                                                       height = "500px"), value = "visNetwork")
+                          tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%", 
+                                                                       height = "500px"), value = "visNetwork"),
+                          tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
+                          tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
                    ),
                    
                    # graph info and download buttons

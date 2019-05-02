@@ -82,18 +82,9 @@ tabItem(tabName = "twitter_collection_tab",
                    ),
                    # download twitter data and graphml button
                    sidebarPanel(width = 12, class = "custom_well_for_buttons",
-                                fluidRow(
-                                  disabled(downloadButton("download_twitter_data_button", label = "Data", 
-                                                          title = "Download Raw Data File")),
-                                  disabled(downloadButton("download_twitter_graph_button", label = "Graphml", 
-                                                          title = "Download Network Graphml File")),
-                                  disabled(downloadButton("download_twitter_graphWT_button", label = "Graphml (+text)",
-                                                          title = "Download Network Graphml File with Text")),
-                                  disabled(actionButton("view_twitter_graph_button", label = "Graph", 
-                                                        title = "View Network Graph", icon("eye"))),
-                                  disabled(actionButton("view_twitter_graphWT_button", label = "Graph (+text)", 
-                                                        title = "View Network Graph with Text", icon("eye")))
-                                )
+                                fluidRow(collectDataButtonsUI("twitter"),
+                                         collectGraphButtonsUI("twitter"),
+                                         collectViewGraphButtonsUI("twitter"))
                    )
                  )
           )
