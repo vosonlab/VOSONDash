@@ -286,11 +286,10 @@ youtubeArgumentsOutput <- function() {
     output <- append(output, paste0("videos: ", trimws(paste0(youtube_video_id_list, collapse = ', '))))
   }
   
-  if (!is.null(youtube_max_comments) && youtube_max_comments > 0) {
+  if (!isNullOrEmpty(youtube_max_comments) && is.numeric(youtube_max_comments)) {
     count_flag <- TRUE
     output <- append(output, paste0("max comments: ", youtube_max_comments))
   }
-  
   
   if (key_flag && video_id_flag && count_flag) {
     shinyjs::enable("youtube_collect_button")
