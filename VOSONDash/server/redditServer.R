@@ -124,39 +124,6 @@ output$dt_reddit_data <- DT::renderDataTable({
   datatableRedditData()
 })
 
-# set file name and content for reddit data download
-output$download_reddit_data_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("reddit-data", "csv")
-  },
-  
-  content = function(file) {
-    write.csv(reddit_rvalues$reddit_data, file)
-  }
-)
-
-# set file name and content for reddit graphml download
-output$download_reddit_graph_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("reddit", "graphml")
-  },
-  
-  content = function(file) {
-    write_graph(reddit_rvalues$reddit_graphml, file, format=c("graphml"))
-  }
-)
-
-# set file name and content for reddit graphml (with text) download
-output$download_reddit_graphWT_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("reddit-with-text", "graphml")
-  },
-  
-  content = function(file) {
-    write_graph(isolate(reddit_rvalues$redditWT_graphml), file, format=c("graphml"))
-  }
-)
-
 observeEvent(input$select_all_reddit_dt_columns, {
   updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
                            choices = isolate(reddit_rvalues$data_cols),
@@ -229,22 +196,6 @@ urlListRemove <- reactive({
   return(reddit_url_list)
 })
 
-# create data table from collected reddit data
-# datatableRedditData <- reactive({
-#   if (!is.null(reddit_rvalues$reddit_data)) {
-#     col_defs <- NULL
-#     if (input$dt_reddit_truncate_text_check == TRUE) {
-#       col_defs <- g_dt_col_defs
-#       # col_defs[[1]]$targets <- c(3, 4, 5, 6)
-#       col_defs[[1]]$targets = "_all"
-#     }
-#     DT::datatable(reddit_rvalues$reddit_data, extensions = 'Buttons', 
-#                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
-#                                  columnDefs = col_defs, dom = 'lBfrtip',
-#                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
-#   }
-# })
-
 datatableRedditData <- reactive({
   data <- reddit_rvalues$reddit_data
   
@@ -291,25 +242,21 @@ datatableRedditData <- reactive({
 
 # format reddit collection arguments output
 redditArgumentsOutput <- function() {
-  command_str <- ""
-  command_str_2 <- ""
+  output <- c()
   
-  collect_state <- 1
+  thread_flag <- FALSE
   
   if (!is.null(reddit_url_list) && length(reddit_url_list) > 0) {
-    command_str_2 <- paste0("threads: ", trimws(paste0(reddit_url_list, collapse = ", ")))
-    
-    if (collect_state == 1) {
-      collect_state <- 2
-    }
+    thread_flag <- TRUE
+    output <- append(output, paste0("threads: ", trimws(paste0(reddit_url_list, collapse = ", "))))
   }
   
-  # if api key and video ids have been inputed enable collect button
-  if (collect_state == 2) {
+  # if thread urls have been inputed enable collect button
+  if (thread_flag) {
     shinyjs::enable("reddit_collect_button")
   } else {
     shinyjs::disable("reddit_collect_button")
   }
   
-  paste0(command_str, command_str_2, sep='\n')
+  paste0(output, collapse = '\n')
 }
