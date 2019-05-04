@@ -30,6 +30,7 @@ observeEvent(ta_rvalues$has_text, {
 observeEvent(input$selected_text_analysis_tab, {
   plotWordFrequencies()
   plotWordClouds()
+  plotSentiments()
 }, ignoreInit = TRUE)
 
 # enter text analysis section or controls toggled
@@ -44,6 +45,7 @@ observeEvent({ input$sidebar_menu
     taPlotListData()
     plotWordFrequencies()
     plotWordClouds()
+    plotSentiments()
   }
 }, ignoreInit = TRUE)
 
@@ -69,7 +71,8 @@ observeEvent(input$text_analysis_user_stopwords_check, {
   } else {
     taPlotListData()
     plotWordFrequencies()
-    plotWordClouds()      
+    plotWordClouds()
+    plotSentiments()
   }
 }, ignoreInit = TRUE)
 
@@ -98,7 +101,17 @@ plotWordFrequencies <- reactive({
   # create placeholders and plot word frequency charts from list of base text corpus data
   withProgress(message = "Processing word frequencies...", {
     callModule(taPlotPlaceholders, "word_freqs", ta_rvalues$plot_list_data)
-    callModule(taPlotList, "word_freqs", ta_rvalues$plot_list_data, NULL, isolate(ng_rvalues$graph_CA), min_freq, NULL, top_count, "wf")
+    callModule(taPlotList, "word_freqs", ta_rvalues$plot_list_data, NULL, isolate(ng_rvalues$graph_CA), 
+               min_freq, NULL, top_count, "wf")
+  })
+})
+
+plotSentiments <- reactive({
+  # create placeholders and plot charts from list of base text corpus data
+  withProgress(message = "Processing sentiment...", {
+    callModule(taPlotPlaceholders, "word_sentiments", ta_rvalues$plot_list_data)
+    callModule(taPlotList, "word_sentiments", ta_rvalues$plot_list_data, NULL, isolate(ng_rvalues$graph_CA), 
+               NULL, NULL, NULL, "ws")
   })
 })
 
@@ -110,7 +123,8 @@ plotWordClouds <- reactive({
   # create placeholders and plot word clouds from list of base text corpus data
   withProgress(message = "Processing word clouds...", {      
     callModule(taPlotPlaceholders, "word_clouds", ta_rvalues$plot_list_data)
-    callModule(taPlotList, "word_clouds", ta_rvalues$plot_list_data, isolate(ng_rvalues$graph_seed), isolate(ng_rvalues$graph_CA), min_freq, max_words, NULL, "wc")
+    callModule(taPlotList, "word_clouds", ta_rvalues$plot_list_data, isolate(ng_rvalues$graph_seed), 
+               isolate(ng_rvalues$graph_CA), min_freq, max_words, NULL, "wc")
   })
 })
 
@@ -149,7 +163,8 @@ comparisonCloudPlotData <- reactive({
       emptyPlotMessage("No comparison plot: only one categorical variable.")
     } else {
       # colour seems to be correct but may need to revisit...
-      comparison.cloud(tdm, max.words = max_words, random.order = FALSE, use.r.layout = FALSE, title.size = 2, colors = g_plot_palette)       
+      comparison.cloud(tdm, max.words = max_words, random.order = FALSE, use.r.layout = FALSE, title.size = 2, 
+                       colors = g_plot_palette())       
     }
   }
 })
@@ -294,7 +309,7 @@ taPlotListData <- reactive({
 
 # return base text corpus data for category and attributes
 # todo: parameters passed to function or add to module
-taTextCorpusData <- function(graph_attr) {
+taTextCorpusData <- function(graph_attr, simple = FALSE) {
   # g <- graphFiltersNoCategorical()
   g <- graphFilters()
   
@@ -343,7 +358,7 @@ taTextCorpusData <- function(graph_attr) {
       words <- edge_attr(g, attr[1])
     }
     
-    ta_rvalues$attr_type <<- attr[2] 
+    ta_rvalues$attr_type <<- attr[2]
     ta_rvalues$attr_name <<- gsub("vosonTxt_", "", attr[1])
     
     toRemove <- which(words == "")
@@ -351,19 +366,15 @@ taTextCorpusData <- function(graph_attr) {
       words <- words[-toRemove]
     }
     
-    words <- iconv(words, to = 'utf-8')
-
-    # helper functions
-    removeURL <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https
-    # removeURL <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url
-    removeHashTags <- function(x) gsub("#\\S+", "", x)
-    removeTwitterHandles <- function(x) gsub("@\\S+", "", x)
+    if (isMac()) {
+      words <- iconv(words, to = 'utf-8-mac')
+    } else {
+      words <- iconv(words, to = 'utf-8')
+    }
     
-    # various other to clean up twitter text
-    removeOther1 <- function(x) gsub("&apos;", "\'", x)
-    removeOther2 <- function(x) gsub("&quot;", "\"", x)
-    removeOther3 <- function(x) gsub("&amp;", "&", x)
-    removeOther4 <- function(x) gsub("amp;|gt;", "", x)
+    if (simple) {
+      return(list(graph_attr, words))
+    }
     
     corp <- VCorpus(VectorSource(words))
     corp <- tm_map(corp, content_transformer(tolower))

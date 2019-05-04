@@ -44,9 +44,11 @@ observeEvent(ng_rvalues$graph_data, {
   }
 
   if ("label" %in% attr_v) {
-    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$label) > 0, V(ng_rvalues$graph_data)$label, "-")
+    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$label) > 0, 
+                                             V(ng_rvalues$graph_data)$label, "-")
   } else {
-    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$name) > 0, V(ng_rvalues$graph_data)$name, "-")
+    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$name) > 0, 
+                                             V(ng_rvalues$graph_data)$name, "-")
   }
 })
 
@@ -172,7 +174,8 @@ observeEvent(input$prune_unselected_rows_button, {
 observeEvent(input$prune_return_button, {
   if (length(input$pruned_vertices_select) > 0) { prune_flag <<- TRUE }
   
-  pruning_rvalues$prune_verts <<- pruning_rvalues$prune_verts[!(pruning_rvalues$prune_verts %in% input$pruned_vertices_select)]
+  pruning_rvalues$prune_verts <<- pruning_rvalues$prune_verts[!(pruning_rvalues$prune_verts %in% 
+                                                                  input$pruned_vertices_select)]
   
   # update prune list select box
   prune_list <- isolate(pruning_rvalues$prune_verts)
@@ -272,7 +275,7 @@ output$dt_vertices <- DT::renderDataTable({
   }
   
   if (!is.null(data)) {
-    dt <- DT::datatable(data, extensions = 'Buttons',
+    dt <- DT::datatable(data, extensions = 'Buttons', filter = "top",
                         options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
                         columnDefs = col_defs, dom = 'lBfrtip', buttons = c('copy', 'csv', 'excel', 'print')),
                         class = 'cell-border stripe compact hover')
@@ -296,7 +299,7 @@ output$dt_edges <- DT::renderDataTable({
   }
   
   if (!is.null(data)) {
-    DT::datatable(data, extensions = 'Buttons',
+    DT::datatable(data, extensions = 'Buttons', filter = "top",
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
                   columnDefs = col_defs, dom = 'lBfrtip',
                   buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
@@ -321,6 +324,7 @@ output$simple <- renderSimpleNetwork({
 output$visNetworkPlot <- renderVisNetwork({
   visNetworkData()
 })
+
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 # set file data when a file is uploaded
@@ -336,7 +340,8 @@ filedata <- reactive({
     ng_rvalues$graph_data <<- read_graph(infile$datapath, format = c('graphml'))
     
     ng_rvalues$graph_name <<- infile$name
-    ng_rvalues$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rvalues$graph_data), graph_attr(ng_rvalues$graph_data, "type"), "not set")
+    ng_rvalues$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rvalues$graph_data), 
+                                     graph_attr(ng_rvalues$graph_data, "type"), "not set")
     ng_rvalues$graph_desc <<- "Network loaded from file"
     
     createGraphCategoryList()
@@ -423,16 +428,7 @@ setGraphFilterControls <- reactive({
     shinyjs::enable("analysis_graphml_download_button")
     shinyjs::enable("graph_reseed_button")
     shinyjs::enable("graph_component_slider")
-    
-    # set component slider
-    # graph_clusters <- components(g, mode = isolate(input$graph_component_type_select))
-    # 
-    # # suppress no non-missing arguments to min; returning Inf warning
-    # min_cluster_size <- suppressWarnings(min(graph_clusters$csize))
-    # max_cluster_size <- suppressWarnings(max(graph_clusters$csize))
-    # 
-    # updateSliderInput(session, inputId = "graph_component_slider", min = min_cluster_size,
-    #                   max = max_cluster_size, value = c(min_cluster_size, max_cluster_size))
+
     updateComponentSlider(g, isolate(input$graph_component_type_select))
     
     # update the categorical attribute select box
@@ -582,28 +578,26 @@ visNetworkData <- reactive({
       categories <- categorical_attributes[[selected_categorical_attribute]]
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
-        df$color <- g_plot_palette[1:nrow(df)]
+        df$color <- g_plot_palette()[1:nrow(df)]
         verts$color.background <- df$color[match(verts[[selected_categorical_attribute]], df$cat)]
       }
     }
   }
 
   verts$id <- verts$name
-  # verts$label <- verts$name
-  
-  # if (input$graph_names_check == FALSE) {
-  #   verts <- subset(verts, select = -c(label))
-  # }
 
   edges <- edges %>% group_by(to, from) %>%
     summarise(width = n()) %>% 
     ungroup()
   
-  visNetwork::visNetwork(verts, edges, main = NULL, height = "500px") %>% 
-    visNetwork::visEdges(arrows = 'to, from') %>%
+  visNetwork::visNetwork(verts, edges, main = NULL) %>% # height = "500px"
     visIgraphLayout(layout = graph_layout, randomSeed = graph_seed) %>%
+    visNetwork::visEdges(arrows = 'to',
+                         # smooth = list(enabled = TRUE, type = "continuous", roundness = 0.1)
+                         color = list(color = "#b0b0b0")) %>% # arrows = 'to, from'
     visOptions(collapse = TRUE, highlightNearest = list(enabled = TRUE, hover = TRUE),
-               nodesIdSelection = TRUE)
+               nodesIdSelection = TRUE) %>%
+    visInteraction(navigationButtons = TRUE)
 })
 
 # network graph save file name based on selected network graph tab
@@ -616,10 +610,21 @@ saveGraphFileName <- reactive({
 
 # network graph data based on selected network graph tab
 saveGraphFileData <- reactive({
-  switch(input$selected_graph_tab,
+  data <- switch(input$selected_graph_tab,
          "D3 Simple" = simpleNetworkData(),
          "D3 Force" = forceNetworkData(),
          "visNetwork" = visNetworkData())
+  
+  if (input$selected_graph_tab == "visNetwork") {
+    data$height <- "800px"
+    data$sizingPolicy$defaultWidth <- "100%"
+    
+    data$sizingPolicy$browser$fill <- TRUE
+    data$sizingPolicy$viewer$suppress <- TRUE
+    data$sizingPolicy$knitr$figure <- FALSE    
+  }
+  
+  data
 })
 
 # add selected data table row name values to pruned vertices list
@@ -632,7 +637,9 @@ pruneListAddNames <- reactive({
   # selected_rows <- dt_vertices$name[c(dt_selected_rows)]
   
   # add name if not already in list
-  lapply(selected_rows, function(x) {if (!x %in% pruning_rvalues$prune_verts) pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)})
+  lapply(selected_rows, function(x) {
+                          if (!x %in% pruning_rvalues$prune_verts)
+                            pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)})
 })
 
 # add deselected data table row name values to pruned vertices list
@@ -650,7 +657,9 @@ pruneListAddOtherNames <- reactive({
     selected_rows <- row.names(sdf)
     
     # add name if not already in list
-    lapply(selected_rows, function(x) {if (!x %in% pruning_rvalues$prune_verts) pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)}) 
+    lapply(selected_rows, function(x) {
+                            if (!x %in% pruning_rvalues$prune_verts) 
+                              pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)}) 
   }
 })
 
@@ -691,14 +700,6 @@ dt_vertices_df <- reactive({
 
   df <- do.call(data.frame, df_parameters)
   
-  # igraph::as_data_frame(g, what = c("vertices"))
-  # df <- data.frame(name = V(g)$name, 
-  #                  degree = V(g)$Degree, 
-  #                  indegree = V(g)$Indegree, 
-  #                  outdegree = V(g)$Outdegree, 
-  #                  betweenness = V(g)$Betweenness, 
-  #                  closeness = V(g)$Closeness)
-  
   row.names(df) <- V(g)$id
   
   return(df)
@@ -729,10 +730,16 @@ standardPlotData <- reactive({
   })
   selected_rows <- input$dt_vertices_rows_selected
   # graph_vertices <- as_data_frame(g, what = c("vertices"))
-  df <- data.frame(label = V(g)$label, name = V(g)$name, degree = V(g)$Degree, indegree = V(g)$Indegree, outdegree = V(g)$Outdegree, betweenness = V(g)$Betweenness, closeness = V(g)$Closeness)
+  #browser()
+  df <- data.frame(label = V(g)$label,
+                   name = V(g)$name, 
+                   degree = V(g)$Degree, 
+                   indegree = V(g)$Indegree, 
+                   outdegree = V(g)$Outdegree, 
+                   betweenness = V(g)$Betweenness, 
+                   closeness = V(g)$Closeness)
   row.names(df) <- V(g)$id
   graph_vertices <- df
-  # g <- graph.data.frame(relations, directed=TRUE, vertices=actorsNames)
   
   node_degree_type <- input$graph_node_size_degree_select
   node_size_multiplier <- input$graph_node_size_slider  
@@ -751,7 +758,7 @@ standardPlotData <- reactive({
       categories <- categorical_attributes[[selected_categorical_attribute]]
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
-        df$color <- g_plot_palette[1:nrow(df)]
+        df$color <- g_plot_palette()[1:nrow(df)]
         
         va <- paste0('vosonCA_', selected_categorical_attribute)
         V(g)$color <- df$color[match(vertex_attr(g, va), df$cat)]
@@ -767,7 +774,6 @@ standardPlotData <- reactive({
   plot_parameters <- list(g, vertex.frame.color = "gray", edge.arrow.size = 0.4)
   
   # set vertex color for vertices selected in graph data table
-  # plot_parameters[['vertex.color']] = ifelse(V(g)$name %in% selected_row_names, g_plot_selected_vertex_color, V(g)$color)
   plot_parameters[['vertex.color']] = ifelse(V(g)$id %in% selected_row_names, g_plot_selected_vertex_color, V(g)$color)
   
   base_vertex_size <- 4
@@ -781,11 +787,11 @@ standardPlotData <- reactive({
   } else {
     # todo: needs to calculate average values to better adjust scale
     plot_parameters[['vertex.size']] <- switch(node_degree_type,
-                                               "Degree" = (V(g)$Degree / 4 * node_size_multiplier) + base_vertex_size,
-                                               "Indegree" = (V(g)$Indegree / 2 * node_size_multiplier) + base_vertex_size,
-                                               "Outdegree" = (V(g)$Outdegree / 2 * node_size_multiplier) + base_vertex_size,
-                                               "Betweenness" = (V(g)$Betweenness / 100 * node_size_multiplier) + base_vertex_size,
-                                               "Closeness" = (V(g)$Closeness * 100 * node_size_multiplier) + base_vertex_size
+                                   "Degree" = (V(g)$Degree / 4 * node_size_multiplier) + base_vertex_size,
+                                   "Indegree" = (V(g)$Indegree / 2 * node_size_multiplier) + base_vertex_size,
+                                   "Outdegree" = (V(g)$Outdegree / 2 * node_size_multiplier) + base_vertex_size,
+                                   "Betweenness" = (V(g)$Betweenness / 100 * node_size_multiplier) + base_vertex_size,
+                                   "Closeness" = (V(g)$Closeness * 100 * node_size_multiplier) + base_vertex_size
     )
   }
   
@@ -805,9 +811,11 @@ standardPlotData <- reactive({
   
   if (input$graph_names_check == FALSE) {
     if (labels) {
-      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
+      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
+                                                  ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
     } else {
-      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
+      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
+                                                  ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
     }
   } else {
     if (labels) {
@@ -816,7 +824,8 @@ standardPlotData <- reactive({
       plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
     }
   }
-  plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, g_plot_selected_vertex_color, g_plot_default_label_color)
+  plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, g_plot_selected_vertex_color, 
+                                                   g_plot_default_label_color)
 
   # reproduce same graph with same seed
   # must be set before graph layout
@@ -917,6 +926,22 @@ graphDetailsOutput <- reactive({
 
 #### functions -------------------------------------------------------------------------------------------------------- #
 
+# set graph manually
+setGraphView <- function(data, desc = "None", type = "None", name = "None", seed = 1) {
+  shinyjs::reset("graphml_data_file")
+  
+  ng_rvalues$graph_data <<- data
+  ng_rvalues$graph_desc <<- desc
+  ng_rvalues$graph_type <<- type
+  ng_rvalues$graph_name <<- ""
+  ng_rvalues$graph_seed <<- seed
+  ng_rvalues$graph_CA <<- c()
+  ng_rvalues$graph_CA_selected <<- ""
+  
+  setGraphFilterControls()
+  updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
+}
+
 # return empty plot with message
 emptyGraphPlotMessage <- function(message) {
   return({ plot(1:10, 1:10, type = "n", axes = F, xlab = "", ylab = "")
@@ -955,8 +980,8 @@ updateComponentSlider <- function(g, component_type) {
 applyComponentFilter <- function(g, component_type, component_range) {
   graph_clusters <- components(g, mode = component_type)
   
-  min_cluster_size <- suppressWarnings(min(graph_clusters$csize)) # suppress no non-missing arguments to min; returning Inf warning
-  max_cluster_size <- suppressWarnings(max(graph_clusters$csize))
+  min_cluster_size <- suppressWarnings(min(graph_clusters$csize)) # suppress no non-missing arguments to min;
+  max_cluster_size <- suppressWarnings(max(graph_clusters$csize)) # returning Inf warning
   
   component_slider_min_value <- component_range[1]
   component_slider_max_value <- component_range[2]
@@ -1047,18 +1072,34 @@ addAdditionalMeasures <- function(g) {
 
 #### batch reset, enable and disable graph contols ####
 
+# need to modularize
 disableGraphFilterControls <- function() {
-  ui_controls <- c("graph_isolates_check", "graph_multi_edge_check", "graph_loops_edge_check", "graph_names_check",
-                   "graph_catAttr_select", "graph_catAttr_attr_select", "graph_node_size_degree_select", "analysis_graphml_download_button",
-                   "graph_reseed_button", "graph_layout_select", "graph_spread_slider",
-                   "graph_component_type_select", "graph_component_slider")
+  ui_controls <- c("graph_isolates_check",
+                   "graph_multi_edge_check",
+                   "graph_loops_edge_check",
+                   "graph_names_check",
+                   "graph_catAttr_select",
+                   "graph_catAttr_attr_select",
+                   "graph_node_size_degree_select", 
+                   "analysis_graphml_download_button",
+                   "graph_reseed_button",
+                   "graph_layout_select", 
+                   "graph_spread_slider",
+                   "graph_component_type_select",
+                   "graph_component_slider")
   
   sapply(ui_controls, function(x) { shinyjs::disable(x) })  
 }
 
 resetEnableGraphFilterControls <- function() {
-  ui_controls <- c("graph_isolates_check", "graph_multi_edge_check", "graph_loops_edge_check", "graph_names_check", 
-                   "graph_node_size_degree_select", "graph_catAttr_attr_select", "graph_layout_select", "graph_spread_slider",
+  ui_controls <- c("graph_isolates_check", 
+                   "graph_multi_edge_check", 
+                   "graph_loops_edge_check", 
+                   "graph_names_check", 
+                   "graph_node_size_degree_select", 
+                   "graph_catAttr_attr_select", 
+                   "graph_layout_select", 
+                   "graph_spread_slider",
                    "graph_component_type_select")
   
   sapply(ui_controls, function(x) { shinyjs::reset(x)
@@ -1066,20 +1107,32 @@ resetEnableGraphFilterControls <- function() {
 }
 
 disableTextAnalysisControls <- function() {
-  ui_controls <- c("text_analysis_stopwords_check", "text_analysis_user_stopwords_input", "text_analysis_user_stopwords_check",
-                   "text_analysis_twitter_hashtags_check", "text_analysis_twitter_usernames_check", "text_analysis_stem_check",
-                   "text_analysis_wf_top_count", "text_analysis_wf_min_word_freq",
-                   "text_analysis_wc_min_word_freq", "text_analysis_wc_max_word_count",
+  ui_controls <- c("text_analysis_stopwords_check",
+                   "text_analysis_user_stopwords_input", 
+                   "text_analysis_user_stopwords_check",
+                   "text_analysis_twitter_hashtags_check", 
+                   "text_analysis_twitter_usernames_check",
+                   "text_analysis_stem_check",
+                   "text_analysis_wf_top_count",
+                   "text_analysis_wf_min_word_freq",
+                   "text_analysis_wc_min_word_freq",
+                   "text_analysis_wc_max_word_count",
                    "text_analysis_cc_max_word_count")
   
   sapply(ui_controls, function(x) { shinyjs::disable(x) })
 }
 
 resetEnableTextAnalysisControls <- function() {
-  ui_controls <- c("text_analysis_stopwords_check", "text_analysis_user_stopwords_input", "text_analysis_user_stopwords_check",
-                   "text_analysis_twitter_hashtags_check", "text_analysis_twitter_usernames_check", "text_analysis_stem_check",
-                   "text_analysis_wf_top_count", "text_analysis_wf_min_word_freq",
-                   "text_analysis_wc_min_word_freq", "text_analysis_wc_max_word_count",
+  ui_controls <- c("text_analysis_stopwords_check",
+                   "text_analysis_user_stopwords_input", 
+                   "text_analysis_user_stopwords_check",
+                   "text_analysis_twitter_hashtags_check",
+                   "text_analysis_twitter_usernames_check", 
+                   "text_analysis_stem_check",
+                   "text_analysis_wf_top_count",
+                   "text_analysis_wf_min_word_freq",
+                   "text_analysis_wc_min_word_freq",
+                   "text_analysis_wc_max_word_count",
                    "text_analysis_cc_max_word_count")
   
   sapply(ui_controls, function(x) { shinyjs::reset(x)
@@ -1091,8 +1144,14 @@ enablePlotControls <- function() {
   
   # added "graph_multi_edge_check", "graph_loops_edge_check" for bug switching back to plot from visnetwork
   # and multi, loops checkbox remaining disabled
-  ui_controls <- c("graph_names_check", "graph_reseed_button", "graph_layout_select", "graph_node_size_degree_select",
-                   "graph_node_size_slider", "graph_spread_slider", "graph_multi_edge_check", "graph_loops_edge_check")
+  ui_controls <- c("graph_names_check",
+                   "graph_reseed_button",
+                   "graph_layout_select",
+                   "graph_node_size_degree_select",
+                   "graph_node_size_slider",
+                   "graph_spread_slider",
+                   "graph_multi_edge_check",
+                   "graph_loops_edge_check")
   
   sapply(ui_controls, function(x) { shinyjs::enable(x) })
 }
@@ -1100,8 +1159,12 @@ enablePlotControls <- function() {
 enableD3Controls <- function() {
   shinyjs::enable("graph_download_button")
   
-  ui_controls <- c("graph_names_check", "graph_reseed_button", "graph_layout_select", "graph_node_size_degree_select",
-                   "graph_node_size_slider", "graph_spread_slider")
+  ui_controls <- c("graph_names_check",
+                   "graph_reseed_button",
+                   "graph_layout_select",
+                   "graph_node_size_degree_select",
+                   "graph_node_size_slider",
+                   "graph_spread_slider")
   
   sapply(ui_controls, function(x) { shinyjs::disable(x) })
 }
@@ -1109,7 +1172,10 @@ enableD3Controls <- function() {
 enableVisNetworkControls <- function() {
   shinyjs::enable("graph_download_button")
   
-  ui_controls <- c("graph_names_check", "graph_multi_edge_check", "graph_loops_edge_check", "graph_spread_slider")
+  ui_controls <- c("graph_names_check", 
+                   "graph_multi_edge_check", 
+                   "graph_loops_edge_check", 
+                   "graph_spread_slider")
   
   sapply(ui_controls, function(x) { shinyjs::disable(x) })
 }

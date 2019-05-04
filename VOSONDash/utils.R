@@ -116,7 +116,7 @@ getRedditUrlSubreddit <- function(url) {
 
 getYoutubeVideoId <- function(url) {
   # already an id
-  if (grepl("^[0-9A-Za-z_\\-]+$", url, ignore.case = TRUE, perl = TRUE)) {
+  if (grepl("^[0-9A-Za-z_\\-]{11}$", url, ignore.case = TRUE, perl = TRUE)) {
     return(url)
   }  
   
@@ -141,7 +141,8 @@ getYoutubeVideoId <- function(url) {
     }
   }
   
-  if (!grepl("^[0-9A-Za-z_\\-]+$", video_id, ignore.case = TRUE, perl = TRUE)) {
+  # check extracted id
+  if (!grepl("^[0-9A-Za-z_\\-]{11}$", video_id, ignore.case = TRUE, perl = TRUE)) {
     return(NULL)
   }
   
@@ -158,3 +159,15 @@ isMac <- function() {
   
   return(FALSE)
 }
+
+# helper functions
+removeURL <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https
+# removeURL <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url
+removeHashTags <- function(x) gsub("#\\S+", "", x)
+removeTwitterHandles <- function(x) gsub("@\\S+", "", x)
+
+# various other to clean up twitter text
+removeOther1 <- function(x) gsub("&apos;", "\'", x)
+removeOther2 <- function(x) gsub("&quot;", "\"", x)
+removeOther3 <- function(x) gsub("&amp;", "&", x)
+removeOther4 <- function(x) gsub("amp;|gt;", "", x)

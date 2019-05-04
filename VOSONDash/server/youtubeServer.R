@@ -10,6 +10,8 @@ youtube_rvalues$youtube_data <- NULL      # dataframe returned by vosonSML colle
 youtube_rvalues$youtube_graphml <- NULL   # graphml object returned from collection
 youtube_rvalues$youtubeWT_graphml <- NULL
 
+youtube_rvalues$data_cols <- NULL
+
 youtube_api_key <- NULL        # youtube api key
 youtube_video_id_list <- c()   # list of youtube video ids to collect on
 youtube_max_comments <- 200
@@ -39,7 +41,13 @@ observeEvent(input$youtube_remove_video_id_button, {
                     choices = youtube_video_id_list)
 })
 
+# set count parameter and reset if not numeric or less than one
 observeEvent(input$youtube_max_comments_input, {
+  if (!is.na(input$youtube_max_comments_input)) {
+    if (!is.numeric(input$youtube_max_comments_input) ||input$youtube_max_comments_input < 1) {
+      updateNumericInput(session, "youtube_max_comments_input", value = g_default_youtube_count)
+    }
+  }
   youtube_max_comments <<- input$youtube_max_comments_input
 })
 
@@ -62,6 +70,8 @@ observeEvent(input$youtube_collect_button, {
       tryCatch({
         youtube_rvalues$youtube_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
                                                             youtube_max_comments)
+        
+        youtube_rvalues$data_cols <<- names(youtube_rvalues$youtube_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('youtube collection error:', err))
@@ -94,91 +104,29 @@ observeEvent(input$youtube_collect_button, {
   youtubeArgumentsOutput()
 })
 
-# enable youtube download data button when there is youtube data
-observeEvent(youtube_rvalues$youtube_data, {
-  if (!is.null(youtube_rvalues$youtube_data) && nrow(youtube_rvalues$youtube_data) > 0) {
-    shinyjs::enable("download_youtube_data_button")
-  } else {
-    shinyjs::disable("download_youtube_data_button")
-  }
-})
+# download and view actions
+callModule(collectDataButtons, "youtube", data = reactive({ youtube_rvalues$youtube_data }), file_prefix = "youtube")
 
-# enable youtube download graphml button when there is youtube graphml data
-observeEvent(youtube_rvalues$youtube_graphml, {
-  if (!is.null(youtube_rvalues$youtube_graphml)) {
-    shinyjs::enable("download_youtube_graph_button")
-    shinyjs::enable("download_youtube_graphWT_button")
-    shinyjs::enable("view_youtube_graph_button")
-    shinyjs::enable("view_youtube_graphWT_button")
-  } else {
-    shinyjs::disable("download_youtube_graph_button")
-    shinyjs::disable("download_youtube_graphWT_button")
-    shinyjs::disable("view_youtube_graph_button")
-    shinyjs::disable("view_youtube_graphWT_button")
-  }
-})
+callModule(collectGraphButtons, "youtube", graph_data = reactive({ youtube_rvalues$youtube_graphml }), 
+           graph_wt_data = reactive({ youtube_rvalues$youtubeWT_graphml }), file_prefix = "youtube")
 
-observeEvent(input$view_youtube_graph_button, {
-  
-  if (!is.null(isolate(youtube_rvalues$youtube_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(youtube_rvalues$youtube_graphml)
-    
-    video_id_list_text <- paste0(youtube_video_id_list, collapse = ', ')
-    
-    ng_rvalues$graph_desc <<- paste0("Youtube actor network for videos: ", video_id_list_text, sep = "")
-    ng_rvalues$graph_type <<- "youtube"
-    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", 
+                                   graph_data = reactive({ youtube_rvalues$youtube_graphml }), 
+                                   graph_wt_data = reactive({ youtube_rvalues$youtubeWT_graphml }))
 
-observeEvent(input$view_youtube_graphWT_button, {
-  
-  if (!is.null(isolate(youtube_rvalues$youtubeWT_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(youtube_rvalues$youtubeWT_graphml)
-    
-    video_id_list_text <- paste0(youtube_video_id_list, collapse = ', ')
-    
-    ng_rvalues$graph_desc <<- paste0("Youtube actor network for videos: ", video_id_list_text, sep = "")
-    ng_rvalues$graph_type <<- "youtube"
-    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+observeEvent(youtube_view_rvalues$data, {
+  setGraphView(data = isolate(youtube_view_rvalues$data), 
+               desc = paste0("Youtube actor network for videos: ", paste0(youtube_video_id_list, collapse = ', '), 
+                             sep = ""),
+               type = "twitter",
+               name = "",
+               seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+}, ignoreInit = TRUE)
 
 observeEvent(input$clear_youtube_console, {
   resetConsole("youtube_console")
 })
+
 #### output ----------------------------------------------------------------------------------------------------------- #
 
 # render youtube collection arguments
@@ -189,8 +137,8 @@ output$youtube_arguments_output <- renderText({
   input$youtube_max_comments_input
   
   # do not update arguments text on input field or list changes
-  isolate({input$youtube_video_id_input
-    input$youtube_video_id_list_output})
+  isolate({ input$youtube_video_id_input
+            input$youtube_video_id_list_output })
   
   # get youtube collection arguments output
   youtubeArgumentsOutput()
@@ -201,38 +149,44 @@ output$dt_youtube_data <- DT::renderDataTable({
   datatableYoutubeData()
 })
 
-# set file name and content for youtube data download
-output$download_youtube_data_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("youtube-data", "csv")
-  },
-  
-  content = function(file) {
-    write.csv(youtube_rvalues$youtube_data, file)
-  }
-)
+observeEvent(input$select_all_youtube_dt_columns, {
+  updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
+                           choices = isolate(youtube_rvalues$data_cols),
+                           selected = isolate(youtube_rvalues$data_cols),
+                           inline = TRUE)
+})
 
-# set file name and content for youtube graphml download
-output$download_youtube_graph_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("youtube", "graphml")
-  },
-  
-  content = function(file) {
-    write_graph(youtube_rvalues$youtube_graphml, file, format=c("graphml"))
-  }
-)
+observeEvent(input$clear_all_youtube_dt_columns, {
+  updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
+                           choices = isolate(youtube_rvalues$data_cols),
+                           selected = character(0),
+                           inline = TRUE)
+})
 
-# set file name and content for youtube graphml (with text) download
-output$download_youtube_graphWT_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("youtube-with-text", "graphml")
-  },
+observeEvent(input$reset_youtube_dt_columns, {
+  updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
+                           choices = isolate(youtube_rvalues$data_cols),
+                           selected = c("Comment", "User", "PublishTime"),
+                           inline = TRUE)
+})
+
+output$youtube_data_cols_ui <- renderUI({
+  data <- youtube_rvalues$data_cols
   
-  content = function(file) {
-    write_graph(isolate(youtube_rvalues$youtubeWT_graphml), file, format=c("graphml"))
+  if (is.null(data)) {
+    return(NULL)
   }
-)
+  
+  conditionalPanel(condition = 'input.expand_show_youtube_cols',
+                   div(actionButton("select_all_youtube_dt_columns", "Select all"), 
+                       actionButton("clear_all_youtube_dt_columns", "Clear all"),
+                       actionButton("reset_youtube_dt_columns", "Reset")),
+                   checkboxGroupInput("show_youtube_cols", label = NULL,
+                                      choices = youtube_rvalues$data_cols,
+                                      selected = c("Comment", "User", "PublishTime"),
+                                      inline = TRUE, width = '98%')
+  )
+})
 
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
@@ -253,7 +207,7 @@ videoListAdd <- reactive({
     return(NULL)
   }
   
-  video_id <- paste0("v=", video_id)
+  # video_id <- paste0("id:", video_id)
   # only add if not already in list
   if (!(trimws(video_id) %in% youtube_video_id_list)) {
     youtube_video_id_list <<- append(youtube_video_id_list, trimws(video_id))
@@ -273,15 +227,42 @@ videoListRemove <- reactive({
   return(youtube_video_id_list)
 })
 
-# create data table from collected youtube data
 datatableYoutubeData <- reactive({
+  data <- youtube_rvalues$youtube_data
+  
+  if (is.null(data)) {
+    return(NULL)
+  }
+  
+  if (!is.null(input$show_youtube_cols)) {
+    if (length(input$show_youtube_cols) > 0) {
+      data <- dplyr::select(youtube_rvalues$youtube_data, input$show_youtube_cols)
+    } else {
+      return(NULL)
+    }
+  } else {
+    return(NULL)
+  }
+  
+  if (nrow(data) < 1) {
+    return(NULL)
+  }
+
+  col_classes <- sapply(data, class)
+  for (i in seq(1, length(col_classes))) {
+    if ("list" %in% col_classes[i]) {
+      var <- names(col_classes)[i]
+      data[var] <- lapply(data[var], function(x) sapply(x, paste, collapse = ", ", character(1L)))
+    }
+  }
+  
   if (!is.null(youtube_rvalues$youtube_data)) {
     col_defs <- NULL
     if (input$dt_youtube_truncate_text_check == TRUE) {
       col_defs <- g_dt_col_defs
-      col_defs[[1]]$targets <- c(1)
+      col_defs[[1]]$targets = "_all"
     }
-    DT::datatable(youtube_rvalues$youtube_data, extensions = 'Buttons', 
+    DT::datatable(data, extensions = 'Buttons', filter = "top",
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
@@ -292,36 +273,30 @@ datatableYoutubeData <- reactive({
 
 # format youtube collection arguments output
 youtubeArgumentsOutput <- function() {
-  commands_list <- c()
-  collect_state <- 0
+  output <- c()
+  key_flag <- video_id_flag <- count_flag <- FALSE
   
   if (!is.null(youtube_api_key) && nchar(youtube_api_key) > 1) {
-    commands_list <- append(commands_list, trimws(paste0("api key: ", strtrim(youtube_api_key, 6), "...", sep = "")))
-    collect_state <- 1
+    key_flag <- TRUE
+    output <- append(output, trimws(paste0("api key: ", strtrim(youtube_api_key, 6), "...", sep = "")))
   }
   
   if (!is.null(youtube_video_id_list) && length(youtube_video_id_list) > 0) {
-    commands_list <- append(commands_list, paste0("videos: ", trimws(paste0(youtube_video_id_list, collapse = ', '))))
-    
-    if (collect_state == 1) {
-      collect_state <- 2
-    }
+    video_id_flag <- TRUE
+    output <- append(output, paste0("videos: ", trimws(paste0(youtube_video_id_list, collapse = ', '))))
   }
   
-  if (!is.null(youtube_max_comments) && youtube_max_comments > 0) {
-    commands_list <- append(commands_list, paste0("max comments: ", youtube_max_comments))
+  if (!isNullOrEmpty(youtube_max_comments) && is.numeric(youtube_max_comments)) {
+    count_flag <- TRUE
+    output <- append(output, paste0("max comments: ", youtube_max_comments))
   }
   
-  commands_list <- sapply(commands_list, function(x) { if (trimws(x) != "") return(trimws(x)) })
-  
-  command_str_out <- paste0(commands_list, collapse = "\n")
-  
-  # if api key and video ids have been inputed enable collect button
-  if (collect_state == 2) {
+  if (key_flag && video_id_flag && count_flag) {
     shinyjs::enable("youtube_collect_button")
   } else {
     shinyjs::disable("youtube_collect_button")
   }
   
-  return(command_str_out)
+  paste0(output, collapse = '\n')
 }
+

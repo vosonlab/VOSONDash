@@ -1,23 +1,5 @@
 # voson dashboard shiny app server
 
-# server libraries
-suppressMessages(library(igraph))
-library(SnowballC)
-library(tm)
-library(lattice)
-library(wordcloud)
-library(vosonSML)
-suppressMessages(library(dplyr))
-library(httr)
-
-# server helper files
-source("utils.R", local = TRUE)
-source("sml.R", local = TRUE)
-
-# increase maximum file upload size to 128MB
-# decrease for server deployment
-options(shiny.maxRequestSize = 128*1024^2)
-
 #### shiny server ----------------------------------------------------------------------------------------------------- #
 shinyServer(function(input, output, session) {
   #### network graphs ####
@@ -44,22 +26,17 @@ shinyServer(function(input, output, session) {
   #### api keys ####
   source("server/apiKeysServer.R", local = TRUE)
   
-  #### vosonSML version ####
   observeEvent(input$sidebar_menu, {
     resetConsole("twitter_console", FALSE)
     resetConsole("youtube_console", FALSE)
     resetConsole("reddit_console", FALSE)
-  }, once = TRUE, ignoreInit = FALSE)  
-  # vosonsml_version <- getVosonSMLVersion()
-  # if (!is.null(vosonsml_version)) {
-  #   vosonsml_version <- paste0("vosonSML v", vosonsml_version)  
-  # } else {
-  #   vosonsml_version <- ""
-  # }
-  # 
-  # output$vosonSML_version_field <- renderMenu({
-  #   sidebarMenu(
-  #     menuItem(vosonsml_version)
-  #   )
-  # })
+  }, once = TRUE, ignoreInit = FALSE)
+  
+  # stop app when browser closes
+  session$onSessionEnded(function() {
+    if (isLocal) {
+      cat("Session ended or browser closed. Exiting.\n")
+      stopApp()
+    }
+  })  
 }) #### end shinyServer

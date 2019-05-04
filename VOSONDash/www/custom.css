@@ -166,3 +166,7 @@ pre.shiny-text-output {
   font-weight:bold;
   margin-bottom:5px;
 }
+
+#graphvisNetworkPlot {
+  height:98% !important;
+}

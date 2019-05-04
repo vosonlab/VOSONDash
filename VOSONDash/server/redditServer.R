@@ -10,6 +10,8 @@ reddit_rvalues$reddit_data <- NULL      # dataframe returned by vosonSML collect
 reddit_rvalues$reddit_graphml <- NULL   # graphml object returned from collection
 reddit_rvalues$redditWT_graphml <- NULL
 
+reddit_rvalues$data_cols <- NULL
+
 reddit_url_list <- c()   # list of reddit threads to collect on
 
 #### events ----------------------------------------------------------------------------------------------------------- #
@@ -49,6 +51,7 @@ observeEvent(input$reddit_collect_button, {
       # collect reddit data and print any output to console
       tryCatch({
         reddit_rvalues$reddit_data <<- collectRedditData(url_list)
+        reddit_rvalues$data_cols <<- names(reddit_rvalues$reddit_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('reddit collection error:', err))
@@ -80,87 +83,23 @@ observeEvent(input$reddit_collect_button, {
   redditArgumentsOutput()
 })
 
-# enable reddit download data button when there is reddit data
-observeEvent(reddit_rvalues$reddit_data, {
-  if (!is.null(reddit_rvalues$reddit_data) && nrow(reddit_rvalues$reddit_data) > 0) {
-    shinyjs::enable("download_reddit_data_button")
-  } else {
-    shinyjs::disable("download_reddit_data_button")
-  }
-})
+# download and view actions
+callModule(collectDataButtons, "reddit", data = reactive({ reddit_rvalues$reddit_data }), file_prefix = "reddit")
 
-# enable reddit download graphml button when there is reddit graphml data
-observeEvent(reddit_rvalues$reddit_graphml, {
-  if (!is.null(reddit_rvalues$reddit_graphml)) {
-    shinyjs::enable("download_reddit_graph_button")
-    shinyjs::enable("download_reddit_graphWT_button")
-    shinyjs::enable("view_reddit_graph_button")
-    shinyjs::enable("view_reddit_graphWT_button")
-  } else {
-    shinyjs::disable("download_reddit_graph_button")
-    shinyjs::disable("download_reddit_graphWT_button")
-    shinyjs::disable("view_reddit_graph_button")
-    shinyjs::disable("view_reddit_graphWT_button")
-  }
-})
+callModule(collectGraphButtons, "reddit", graph_data = reactive({ reddit_rvalues$reddit_graphml }), 
+           graph_wt_data = reactive({ reddit_rvalues$redditWT_graphml }), file_prefix = "reddit")
 
-observeEvent(input$view_reddit_graph_button, {
-  
-  if (!is.null(isolate(reddit_rvalues$reddit_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(reddit_rvalues$reddit_graphml)
-    
-    url_list_text <- paste0(reddit_url_list, collapse = ', ')
-    
-    ng_rvalues$graph_desc <<- paste0("Reddit actor network for threads: ", url_list_text, sep = "")
-    ng_rvalues$graph_type <<- "reddit"
-    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+reddit_view_rvalues <- callModule(collectViewGraphButtons, "reddit", 
+                                   graph_data = reactive({ reddit_rvalues$reddit_graphml }), 
+                                   graph_wt_data = reactive({ reddit_rvalues$redditWT_graphml }))
 
-observeEvent(input$view_reddit_graphWT_button, {
-  
-  if (!is.null(isolate(reddit_rvalues$redditWT_graphml))) {
-    # clear graph file data
-    shinyjs::reset("graphml_data_file")
-    
-    # set graph data
-    ng_rvalues$graph_data <<- isolate(reddit_rvalues$redditWT_graphml)
-    
-    url_list_text <- paste0(reddit_url_list, collapse = ', ')
-    
-    ng_rvalues$graph_desc <<- paste0("Reddit actor network for threads: ", url_list_text, sep = "")
-    ng_rvalues$graph_type <<- "reddit"
-    ng_rvalues$graph_name <<- ""                 # unset - only used when graph loaded from file
-    
-    # get a random number to seed graphs - experimental
-    ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
-    
-    ng_rvalues$graph_CA <- c()
-    ng_rvalues$graph_CA_selected <- ""
-    
-    # until reactivity issue
-    setGraphFilterControls()
-    
-    # change to graphs tab
-    updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
-  }
-})
+observeEvent(reddit_view_rvalues$data, {
+  setGraphView(data = isolate(reddit_view_rvalues$data), 
+               desc = paste0("Reddit actor network for threads: ", paste0(reddit_url_list, collapse = ', '), sep = ""),
+               type = "reddit",
+               name = "",
+               seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+}, ignoreInit = TRUE)
 
 observeEvent(input$clear_reddit_console, {
   resetConsole("reddit_console")
@@ -185,38 +124,46 @@ output$dt_reddit_data <- DT::renderDataTable({
   datatableRedditData()
 })
 
-# set file name and content for reddit data download
-output$download_reddit_data_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("reddit-data", "csv")
-  },
-  
-  content = function(file) {
-    write.csv(reddit_rvalues$reddit_data, file)
-  }
-)
+observeEvent(input$select_all_reddit_dt_columns, {
+  updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
+                           choices = isolate(reddit_rvalues$data_cols),
+                           selected = isolate(reddit_rvalues$data_cols),
+                           inline = TRUE)
+})
 
-# set file name and content for reddit graphml download
-output$download_reddit_graph_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("reddit", "graphml")
-  },
-  
-  content = function(file) {
-    write_graph(reddit_rvalues$reddit_graphml, file, format=c("graphml"))
-  }
-)
+observeEvent(input$clear_all_reddit_dt_columns, {
+  updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
+                           choices = isolate(reddit_rvalues$data_cols),
+                           selected = character(0),
+                           inline = TRUE)
+})
 
-# set file name and content for reddit graphml (with text) download
-output$download_reddit_graphWT_button <- downloadHandler(
-  filename = function() {
-    systemTimeFilename("reddit-with-text", "graphml")
-  },
+observeEvent(input$reset_reddit_dt_columns, {
+  updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
+                           choices = isolate(reddit_rvalues$data_cols),
+                           selected = c("structure", "comm_date", "subreddit", "user", "comment_score", 
+                                        "comment", "thread_id"),
+                           inline = TRUE)
+})
+
+output$reddit_data_cols_ui <- renderUI({
+  data <- reddit_rvalues$data_cols
   
-  content = function(file) {
-    write_graph(isolate(reddit_rvalues$redditWT_graphml), file, format=c("graphml"))
+  if (is.null(data)) {
+    return(NULL)
   }
-)
+  
+  conditionalPanel(condition = 'input.expand_show_reddit_cols',
+                   div(actionButton("select_all_reddit_dt_columns", "Select all"), 
+                       actionButton("clear_all_reddit_dt_columns", "Clear all"),
+                       actionButton("reset_reddit_dt_columns", "Reset")),
+                   checkboxGroupInput("show_reddit_cols", label = NULL,
+                                      choices = reddit_rvalues$data_cols,
+                                      selected = c("structure", "comm_date", "subreddit", "user", "comment_score", 
+                                                   "comment", "thread_id"),
+                                      inline = TRUE, width = '98%')
+  )
+})
 
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
@@ -249,16 +196,42 @@ urlListRemove <- reactive({
   return(reddit_url_list)
 })
 
-# create data table from collected reddit data
 datatableRedditData <- reactive({
+  data <- reddit_rvalues$reddit_data
+  
+  if (is.null(data)) {
+    return(NULL)
+  }
+  
+  if (!is.null(input$show_reddit_cols)) {
+    if (length(input$show_reddit_cols) > 0) {
+      data <- dplyr::select(reddit_rvalues$reddit_data, input$show_reddit_cols)
+    } else {
+      return(NULL)
+    }
+  } else {
+    return(NULL)
+  }
+  
+  if (nrow(data) < 1) {
+    return(NULL)
+  }
+  
+  col_classes <- sapply(data, class)
+  for (i in seq(1, length(col_classes))) {
+    if ("list" %in% col_classes[i]) {
+      var <- names(col_classes)[i]
+      data[var] <- lapply(data[var], function(x) sapply(x, paste, collapse = ", ", character(1L)))
+    }
+  }
+  
   if (!is.null(reddit_rvalues$reddit_data)) {
     col_defs <- NULL
     if (input$dt_reddit_truncate_text_check == TRUE) {
       col_defs <- g_dt_col_defs
-      # col_defs[[1]]$targets <- c(3, 4, 5, 6)
       col_defs[[1]]$targets = "_all"
     }
-    DT::datatable(reddit_rvalues$reddit_data, extensions = 'Buttons', 
+    DT::datatable(data, extensions = 'Buttons', filter = "top",
                   options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
@@ -269,25 +242,21 @@ datatableRedditData <- reactive({
 
 # format reddit collection arguments output
 redditArgumentsOutput <- function() {
-  command_str <- ""
-  command_str_2 <- ""
+  output <- c()
   
-  collect_state <- 1
+  thread_flag <- FALSE
   
   if (!is.null(reddit_url_list) && length(reddit_url_list) > 0) {
-    command_str_2 <- paste0("threads: ", trimws(paste0(reddit_url_list, collapse = ", ")))
-    
-    if (collect_state == 1) {
-      collect_state <- 2
-    }
+    thread_flag <- TRUE
+    output <- append(output, paste0("threads: ", trimws(paste0(reddit_url_list, collapse = ", "))))
   }
   
-  # if api key and video ids have been inputed enable collect button
-  if (collect_state == 2) {
+  # if thread urls have been inputed enable collect button
+  if (thread_flag) {
     shinyjs::enable("reddit_collect_button")
   } else {
     shinyjs::disable("reddit_collect_button")
   }
   
-  paste0(command_str, command_str_2, sep='\n')
+  paste0(output, collapse = '\n')
 }

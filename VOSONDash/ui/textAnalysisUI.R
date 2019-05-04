@@ -59,7 +59,12 @@ tabItem(tabName="text_analysis_tab",
                                               ), style = "margin-right:10px;"))
                                      )
                                    )
-                          )
+                          ),
+                          tabPanel("Sentiment",
+                                   fluidRow(
+                                     column(width = 12, taPlotContainerUI("word_sentiments"))
+                                   )
+                          )                          
                    )
                  )
           )

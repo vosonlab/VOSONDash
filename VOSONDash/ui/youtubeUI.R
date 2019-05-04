@@ -13,15 +13,14 @@ tabItem(tabName = "youtube_collection_tab",
                    
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                                 # youtube video ids input
-                                # textInput("youtube_video_id_input", label = "Add Video ID", value = ""),
-                                textAreaInput("youtube_video_id_input", label = "Add Youtube URL / Video ID", value = "",
+                                textAreaInput("youtube_video_id_input", label = "Add Youtube URL", value = "",
                                               width = NULL, height = NULL,
                                               cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
                                 actionButton("youtube_add_video_id_button", label = "Add"),
                                 selectInput("youtube_video_id_list_output", "", c(), multiple = TRUE, selectize = FALSE, size = 3),
                                 actionButton("youtube_remove_video_id_button", label = "Remove"),
                                 div(div("Max Comments", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
-                                    div(numericInput("youtube_max_comments_input", label = NULL, value = 200, min = 1, width = "90px"), class = "div_inline")),
+                                    div(numericInput("youtube_max_comments_input", label = NULL, value = g_default_youtube_count, min = 1, width = "90px"), class = "div_inline")),
                                 p(""),
                                 disabled(actionButton("youtube_collect_button", label = "Collect Comments", icon = icon("cloud-download")))
                    )
@@ -30,11 +29,11 @@ tabItem(tabName = "youtube_collection_tab",
           
           column(width = 9, offset = 0,
                  fluidRow(
-                   tabBox(width = 12, 
-                          # title = span(icon("youtube", class = "youtube_red"), "Youtube Network Collection"),
+                   tabBox(width = 12,
                           title = div(
                             span(actionButton("clear_youtube_console", label = icon("erase", lib = "glyphicon"), 
-                                              style = "padding: 2px 8px;", title = "Clear console"), style = "padding-right: 10px;"),
+                                              style = "padding: 2px 8px;", title = "Clear Console"), 
+                                 style = "padding-right: 10px;"),
                             span(icon("youtube", class = "youtube_red"), "Youtube Network Collection")
                           ),
                           tabPanel("Console", width = 12,
@@ -46,15 +45,9 @@ tabItem(tabName = "youtube_collection_tab",
                    ),
                    
                    sidebarPanel(width = 12, class = "custom_well_for_buttons",
-                                fluidRow(
-                                  disabled(downloadButton("download_youtube_data_button", label = "Download Data")),
-                                  disabled(downloadButton("download_youtube_graph_button", label = "Download Graphml")),
-                                  disabled(downloadButton("download_youtube_graphWT_button", 
-                                                          label = "Download Graphml (+text)")),                    
-                                  disabled(actionButton("view_youtube_graph_button", label = "View Graph", icon("eye"))),
-                                  disabled(actionButton("view_youtube_graphWT_button", label = "View Graph (+text)", 
-                                                        icon("eye")))
-                                )
+                                fluidRow(collectDataButtonsUI("youtube"),
+                                         collectGraphButtonsUI("youtube"),
+                                         collectViewGraphButtonsUI("youtube"))
                    )
                  )
           )
@@ -65,8 +58,12 @@ tabItem(tabName = "youtube_collection_tab",
           tabBox(width = 12, title = "Youtube Data",
                  tabPanel("Results", 
                           fluidRow(
-                            div(checkboxInput("dt_youtube_truncate_text_check", "Truncate text", TRUE), style = "margin-left:12px; margin-right:5px;", class = "div_inline")
+                            div(checkboxInput('expand_show_youtube_cols', 'Column filters', FALSE),
+                                style = "margin-left:12px; margin-right:5px;", class = "div_inline"),                            
+                            div(checkboxInput("dt_youtube_truncate_text_check", "Truncate text", TRUE), 
+                                class = "div_inline")
                           ),
+                          uiOutput("youtube_data_cols_ui"),                          
                           DT::dataTableOutput("dt_youtube_data"))
           )
         )
