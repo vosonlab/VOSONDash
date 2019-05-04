@@ -5,6 +5,7 @@ app_version <- "v0.3.8"
 app_date <- "04May19"
 
 isLocal <- Sys.getenv('SHINY_PORT') == ""
+suppressLibraryMessages <- TRUE
 
 source("packages.R", local = TRUE)
 

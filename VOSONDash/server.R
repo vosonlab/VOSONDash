@@ -2,14 +2,6 @@
 
 #### shiny server ----------------------------------------------------------------------------------------------------- #
 shinyServer(function(input, output, session) {
-  # stop app if missing packages
-  observe({
-    if (isMissingPackages & isLocal) {
-      cat("Missing packages. Exiting.\n")
-      stopApp()
-    }
-  }, priority = 1)
-  
   #### network graphs ####
   source("server/networkGraphsServer.R", local = TRUE)
   
@@ -43,8 +35,6 @@ shinyServer(function(input, output, session) {
   # stop app when browser closes
   session$onSessionEnded(function() {
     if (isLocal) {
-      # restore shiny launch option
-      # options(shiny.launch.browser = shinyLaunchOption)
       cat("Session ended or browser closed. Exiting.\n")
       stopApp()
     }
