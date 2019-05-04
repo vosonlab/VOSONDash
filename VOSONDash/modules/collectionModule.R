@@ -45,7 +45,7 @@ collectDataButtons <- function(input, output, session, data, file_prefix = "") {
   )
   
   collectData <- reactive({
-    cat(paste0("Updated collectData: ", nrow(data()), " rows.\n"))
+    # cat(paste0("Updated collectData: ", nrow(data()), " rows.\n"))
     data()
   })
   
@@ -81,13 +81,13 @@ collectGraphButtons <- function(input, output, session, graph_data, graph_wt_dat
   
   collectGraphData <- reactive({
     g <- graph_data()
-    cat(paste0("Updated collectGraphData: ", vcount(g), " vertices.\n"))
+    # cat(paste0("Updated collectGraphData: ", vcount(g), " vertices.\n"))
     g
   })
   
   collectGraphWTData <- reactive({
     g <- graph_wt_data()
-    cat(paste0("Updated collectGraphWTData: ", vcount(g), " vertices.\n"))
+    # cat(paste0("Updated collectGraphWTData: ", vcount(g), " vertices.\n"))
     g
   })
   
@@ -124,23 +124,4 @@ collectViewGraphButtons <- function(input, output, session, graph_data, graph_wt
   })
   
   return(view_rvalues)
-}
-
-#### functions --------------------------------------------------------------------------------------------------------
-
-systemTimeFilename <- function(name_suffix, name_ext, clean = FALSE) {
-  current_time <- Sys.time()
-  
-  if (!missing(clean) && clean == TRUE) {
-    name_suffix <- gsub("\\s+", "_", name_suffix, perl = TRUE)
-    name_suffix <- gsub(":", "_", name_suffix, perl = TRUE)
-    
-    name_ext <- gsub("\\s+", "", name_ext, perl = TRUE)
-    name_ext <- gsub(":", "", name_ext, perl = TRUE)  
-    name_ext <- gsub("\\.", "", name_ext, perl = TRUE)    
-  }
-  
-  file_name <- paste0(format(current_time, "%Y-%m-%d_%H-%M-%S"), 
-                      "_", name_suffix, ".", name_ext, sep = "")
-  return(file_name)
 }

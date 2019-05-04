@@ -229,7 +229,7 @@ wordFreqChart <- function(data, categories, min_freq, top_count) {
   freq_terms <- colSums(as.matrix(dtm_sparse_removed))
   order_terms <- order(freq_terms, decreasing = TRUE)
   
-  colx <- getColors(categories, plot_category, plot_category_attrs, "azure2")
+  colx <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5")
   
   # returns empty plot with message if no data to chart
   if (is.null(corp) || length(corp) < 1) {
@@ -253,7 +253,7 @@ wordSentChart <- function(data, categories) {
   nrc_sent_df$neutral <- ifelse(nrc_sent_df$negative + nrc_sent_df$positive == 0, 1, 0)
   chart_data <- 100 * colSums(nrc_sent_df) / sum(nrc_sent_df)
   
-  colx <- getColors(categories, plot_category, plot_category_attrs, "azure2")
+  colx <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5")
   colx[seq(1, 8)] <- colx
   colx[9] <- "firebrick1"
   colx[10] <- "steelblue"

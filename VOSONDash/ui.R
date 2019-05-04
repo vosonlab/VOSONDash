@@ -6,7 +6,8 @@ dashboardPage(
   title = paste0("VOSON Dashboard ", app_version, sep = ""),
   
   dashboardHeader(title = span(icon("project-diagram"), "VOSON Dashboard", 
-                               span(app_version, class = "version")), titleWidth = 325),
+                               span(app_version, class = "version")), 
+                  titleWidth = 325),
   
   # sidebar menu items
   dashboardSidebar(useShinyjs(), width = 180,
@@ -29,19 +30,23 @@ dashboardPage(
     
   # page body
   dashboardBody(
-    # custom ui stylesheet
-    tags$head(
-      tags$link(rel="stylesheet", type="text/css", href="custom.css"),
-      tags$link(rel="icon", type="image/png", sizes="16x16", href="favicon/favicon-16x16.png"),
-      tags$link(rel="icon", type="image/png", sizes="32x32", href="favicon/favicon-32x32.png"),
-      tags$link(rel="apple-touch-icon", type="image/png", sizes="180x180", href="favicon/apple-touch-icon.png"),
-      tags$link(rel="apple-touch-icon", type="image/png", sizes="120x120", href="favicon/apple-touch-icon-120x120.png"),
-      tags$link(rel="apple-touch-icon", type="image/png", sizes="76x76", href="favicon/apple-touch-icon-76x76.png"),
-      tags$link(rel="apple-touch-icon", type="image/png", sizes="60x60", href="favicon/apple-touch-icon-60x60.png")
-    ),
-    
     # additional js features
     useShinyjs(),
+    
+    # custom ui stylesheet
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+      tags$link(rel = "icon", type = "image/png", sizes = "16x16", href = "favicon/favicon-16x16.png"),
+      tags$link(rel = "icon", type = "image/png", sizes = "32x32", href = "favicon/favicon-32x32.png"),
+      tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "180x180", 
+                href = "favicon/apple-touch-icon.png"),
+      tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "120x120", 
+                href = "favicon/apple-touch-icon-120x120.png"),
+      tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "76x76", 
+                href = "favicon/apple-touch-icon-76x76.png"),
+      tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "60x60", 
+                href = "favicon/apple-touch-icon-60x60.png")
+    ),    
     
     tabItems(
       
