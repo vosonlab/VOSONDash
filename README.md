@@ -6,7 +6,7 @@
 
 ## Installation
 
-Installation simply requires [downloading](https://github.com/vosonlab/VOSONDash/archive/master.zip) the `VOSONDash` files and unzipping them to a folder. The app is opened in [RStudio](https://www.rstudio.com/) by either creating a new project using the `VOSONDash` directory or navigating to the folder using the RStudio File browser tab.
+Installation simply requires [downloading](https://github.com/vosonlab/VOSONDash/releases/download/v0.3.8/VOSONDash-0.3.8.zip) the `VOSONDash` files and unzipping them to a folder. The app is opened in [RStudio](https://www.rstudio.com/) by either creating a new project using the `VOSONDash` directory or navigating to the folder using the RStudio File browser tab.
 
 The latest `VOSONDash` can be downloaded from the [VOSON lab](https://github.com/vosonlab) on github using the following link: 
 https://github.com/vosonlab/VOSONDash/releases/download/v0.3.8/VOSONDash-0.3.8.zip
