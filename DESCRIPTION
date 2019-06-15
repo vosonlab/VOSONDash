@@ -1,0 +1,19 @@
+Package: VOSONDash
+Version: 0.4.0
+Title: User Interface for Collecting and Analysing Social Media Data
+Description: R Shiny application that provides a web interface for collecting
+    social media data via the vosonSML package and interactive analysis using
+    shiny components.
+Type: Package
+Imports: 
+Depends: R (>= 3.2.0), shiny, htmlwidgets, shinydashboard, shinyjs, DT, igraph, 
+    visNetwork, networkD3, SnowballC, tm, lattice, RColorBrewer, wordcloud, 
+    syuzhet, dplyr, httr, vosonSML
+Encoding: UTF-8
+Author: Robert Ackland, Bryan Gertzel
+Maintainer: Bryan Gertzel <bryan.gertzel@anu.edu.au>
+License: GPL (>= 3)
+RoxygenNote: 6.1.1
+NeedsCompilation: no
+URL: https://github.com/vosonlab/VOSONDash
+BugReports: https://github.com/vosonlab/VOSONDash/issues

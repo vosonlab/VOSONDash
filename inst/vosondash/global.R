@@ -1,8 +1,8 @@
 # voson dashboard shiny app globals
 
 # app version
-app_version <- "v0.3.8"
-app_date <- "04May19"
+app_version <- "v0.4.0"
+app_date <- "16June19"
 
 isLocal <- Sys.getenv('SHINY_PORT') == ""
 suppressLibraryMessages <- TRUE
@@ -47,7 +47,8 @@ g_default_tweet_count <- 100
 g_default_youtube_count <- 200
 
 # api keys
-g_api_keys_path <- paste0(getwd(), "/voson_keys.rds", sep = "")
+# g_api_keys_path <- paste0(getwd(), "/voson_keys.rds", sep = "")
+g_api_keys_path <- "~/vosondash_keys.rds"
 
 # helpers
 source("utils.R", local = TRUE)

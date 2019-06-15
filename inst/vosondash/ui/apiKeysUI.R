@@ -5,6 +5,8 @@ tabItem(tabName = "keys_tab",
                  fluidRow(
                    sidebarPanel(width = 12, class = "custom_well_for_controls", style = "padding-bottom: 10px",
                                 h3("Social Media API Keys"),
+                                p("These are saved in the users home directory:"),
+                                p(paste0(dirname("~"), "/vosondash_keys.rds")),                                
                                 checkboxInput('load_and_use_keys_check', 'Load and Use API Keys on app start', FALSE),
                                 actionButton("keys_load_button", label = "Load Keys", style = "margin-right: 10px"),
                                 disabled(actionButton("keys_save_button", label = "Save Keys"))

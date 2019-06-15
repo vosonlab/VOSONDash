@@ -11,15 +11,32 @@ Installation simply requires [downloading](https://github.com/vosonlab/VOSONDash
 The latest `VOSONDash` can be downloaded from the [VOSON lab](https://github.com/vosonlab) on github using the following link: 
 https://github.com/vosonlab/VOSONDash/releases/download/v0.3.8/VOSONDash-0.3.8.zip
 
+### Github
+Using the devtools package the latest version of VOSON Dashboard can be downloaded and installed directly from github.
+
+```R
+install.packages("devtools")
+
+library(devtools)
+
+install_github("vosonlab/VOSONDash")
+```
+
 ## Getting started
 
-The app can be run by typing `runApp()` in the RStudio Console (optionally with a path `appDir = '~/my/voson/dash/folder/path/'`) or alternatively by clicking on the `Run App` button that appears in the top right of the RStudio file viewer frame when either the `ui.R` or `server.R` files are open.
+Once the VOSON Dashboard package and its dependencies are installed the Shiny web application can be run from the RStudio console using the `launchVOSONDash()` function. This function will open the application using the users default web browser.
+
+```R
+library(VOSONDash)
+
+launchVOSONDash()
+```
 
 ### VOSONDash app interface
 
 `VOSONDash` features an intuitive web interface with a section for analysis of graph data in `graphml` format and a section for collecting social media data with [vosonSML](https://github.com/vosonlab/vosonSML).
 
-![VOSONDash Interface](VOSONDash/www/VOSONDash-NetworkGraphs-1400x990.jpg)
+![VOSONDash Interface](inst/images/VOSONDash-NetworkGraphs-1400x990.jpg)
 
 ## Special thanks
 
