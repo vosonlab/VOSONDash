@@ -32,7 +32,9 @@ collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tw
   
   collect_parameters <- list()
   
-  cred <- Authenticate("twitter", apiKey = twitter_api_keyring$twitter_api_key, 
+  cred <- Authenticate("twitter",
+                       appName = twitter_api_keyring$twitter_app_name,
+                       apiKey = twitter_api_keyring$twitter_api_key, 
                        apiSecret = twitter_api_keyring$twitter_api_secret,
                        accessToken = twitter_api_keyring$twitter_access_token, 
                        accessTokenSecret = twitter_api_keyring$twitter_access_token_secret, 

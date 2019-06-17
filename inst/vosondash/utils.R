@@ -3,48 +3,6 @@
 #' Helper functions. 
 #'
 
-#' Writes captured R console output to a shiny app ui element.
-#' Output is written upon completion not in real time.
-#' 
-#' @param ui_id shiny ui element id as character string
-#' @param value code block with console output
-#'
-#' @return results as captured output
-#' 
-withConsoleRedirect <- function(ui_id, value) {
-  
-  input_text <- capture.output(results <- value, type = "output")
-  
-  if (length(input_text) > 0) {
-    output <- gsub("\n{2,}", "\n", input_text)
-    insertUI(paste0("#", ui_id), where = "beforeEnd",
-             ui = div(id = paste0("_", ui_id), paste0(output, "\n", collapse = ""))
-    )
-  }
-  return(results)
-}
-
-addToConsole <- function(ui_id, value) {
-  insertUI(paste0("#", ui_id), where = "beforeEnd",
-           ui = div(id = paste0("_", ui_id), paste0(value, "\n", collapse = ""))
-  )  
-}
-
-resetConsole <- function(ui_id, remove_ui = TRUE) {
-  if (remove_ui) {
-    removeUI(selector = paste0("div#_", ui_id), multiple = TRUE)  
-  }
-  # reset_message <- paste0("vosonSML console ", Sys.time(), "\n")
-  vosonsml_version <- getVosonSMLVersion()
-  if (!is.null(vosonsml_version)) {
-    vosonsml_version <- paste0("vosonSML v", vosonsml_version)  
-  } else {
-    vosonsml_version <- "vosonSML unknown"
-  }  
-  reset_message <- paste0(vosonsml_version, " - ", Sys.time(), "\n")
-  addToConsole(ui_id, reset_message)
-}
-
 #' Check a shiny app input value for a range of empty conditions.
 #' 
 #' @param x shiny input value

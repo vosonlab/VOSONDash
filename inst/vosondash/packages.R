@@ -36,9 +36,8 @@ if (isLocal) {
     cat("Required Packages Missing:\n")
     packageStr <- sapply(missingPackages, function(x) paste0("- ", x))
     cat(paste0(packageStr, collapse = "\n"))
-    cat("\n\n")
-    
-    cat("Please install required packages before using VOSONDash:\n\n")
+
+    cat("\n\nPlease install required packages before using VOSONDash:\n\n")
   
     packageStr <- sapply(missingPackages, function(x) paste0("\"", x, "\""))
     cat(paste0("install.packages(c(", paste0(packageStr, collapse = ","), "), dependencies = TRUE)\n"))
@@ -49,8 +48,7 @@ if (isLocal) {
     cat("Found all required packages.\n")
     packageStr <- sapply(requiredPackages, function(x) paste0("- ", x, " [", packageVersion(x), "]"))
     cat(paste0(packageStr, collapse = "\n"))
-    cat("\n\n")
-    cat("Starting VOSONDash...\n")
+    cat("\n\nStarting VOSONDash...\n")
   }
 }
 

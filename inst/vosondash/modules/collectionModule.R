@@ -5,6 +5,15 @@
 
 #### ui ---------------------------------------------------------------------------------------------------------------
 
+# consoleUI <- function(id) {
+#   ns <- NS(id)
+#   
+#   tagList(
+#     verbatimTextOutput(ns("args_output")),
+#     pre(id = ns("console"), style = "height: 300px; overflow-y: scroll")
+#   )
+# }
+
 collectDataButtonsUI <- function(id) {
   ns <- NS(id)
   
@@ -33,6 +42,71 @@ collectViewGraphButtonsUI <- function(id) {
 
 #### server -----------------------------------------------------------------------------------------------------------
 
+# withConsoleRedirectMod <- function(input, output, session, value) {
+#   input_text <- capture.output(results <- value, type = "output")
+#   
+#   id <- session$ns("console")
+#          
+#   if (length(input_text) > 0) {
+#     output <- gsub("\n{2,}", "\n", input_text)
+#     insertUI(paste0("#", id), where = "beforeEnd",
+#              ui = div(id = paste0("_", id), paste0(output, "\n", collapse = ""))
+#     )
+#   }
+#   return(results)
+# }
+# 
+# resetConsoleMod <- function(input, output, session, remove_ui = TRUE) {
+#   id <- session$ns("console")
+#   
+#   if (remove_ui) {
+#     removeUI(selector = paste0("div#_", id), multiple = TRUE)  
+#   }
+#   vosonsml_version <- getVosonSMLVersion()
+#   if (!is.null(vosonsml_version)) {
+#     vosonsml_version <- paste0("vosonSML v", vosonsml_version)  
+#   } else {
+#     vosonsml_version <- "vosonSML unknown"
+#   }  
+#   reset_message <- paste0(vosonsml_version, " - ", Sys.time(), "\n")
+#   
+#   insertUI(paste0("#", id), where = "beforeEnd",
+#            ui = div(id = paste0("_", id), paste0(reset_message, "\n", collapse = ""))
+#   )
+# }
+
+withConsoleRedirect <- function(id, value) {
+  input_text <- capture.output(results <- value, type = "output")
+
+  if (length(input_text) > 0) {
+    output <- gsub("\n{2,}", "\n", input_text)
+    insertUI(paste0("#", id), where = "beforeEnd",
+             ui = div(id = paste0("_", id), paste0(output, "\n", collapse = ""))
+    )
+  }
+  return(results)
+}
+
+addToConsole <- function(id, value) {
+  insertUI(paste0("#", id), where = "beforeEnd",
+           ui = div(id = paste0("_", id), paste0(value, "\n", collapse = ""))
+  )
+}
+
+resetConsole <- function(id, remove_ui = TRUE) {
+  if (remove_ui) {
+    removeUI(selector = paste0("div#_", id), multiple = TRUE)
+  }
+  vosonsml_version <- getVosonSMLVersion()
+  if (!is.null(vosonsml_version)) {
+    vosonsml_version <- paste0("vosonSML v", vosonsml_version)
+  } else {
+    vosonsml_version <- "vosonSML unknown"
+  }
+  reset_message <- paste0(vosonsml_version, " - ", Sys.time(), "\n")
+  addToConsole(id, reset_message)
+}
+
 collectDataButtons <- function(input, output, session, data, file_prefix = "") {
   output$dl_data <- downloadHandler(
     filename = function() {
@@ -45,7 +119,6 @@ collectDataButtons <- function(input, output, session, data, file_prefix = "") {
   )
   
   collectData <- reactive({
-    # cat(paste0("Updated collectData: ", nrow(data()), " rows.\n"))
     data()
   })
   
@@ -81,14 +154,10 @@ collectGraphButtons <- function(input, output, session, graph_data, graph_wt_dat
   
   collectGraphData <- reactive({
     g <- graph_data()
-    # cat(paste0("Updated collectGraphData: ", vcount(g), " vertices.\n"))
-    g
   })
   
   collectGraphWTData <- reactive({
     g <- graph_wt_data()
-    # cat(paste0("Updated collectGraphWTData: ", vcount(g), " vertices.\n"))
-    g
   })
   
   observeEvent(graph_data(), {

@@ -20,6 +20,7 @@ tabItem(tabName = "keys_tab",
                         fluidRow(
                           sidebarPanel(width = 12, class = "custom_well_for_keys",
                                        h4(icon("twitter", class = "twitter_blue"), "Twitter"),
+                                       textInput("keys_twitter_app_name_input", label = "App Name", value = ""),
                                        textInput("keys_twitter_api_key_input", label = "API Key", value = ""),
                                        textInput("keys_twitter_api_secret_input", label = "API Secret", value = ""),
                                        textInput("keys_twitter_access_token_input", label = "Access Token", value = ""),

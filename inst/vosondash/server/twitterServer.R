@@ -15,6 +15,7 @@ twitter_rvalues$data_cols <- NULL
 
 # twitter api keys
 twitter_api_keyring <- list(
+  twitter_app_name = "",
   twitter_api_key = "",
   twitter_api_secret = "",
   twitter_access_token = "",
@@ -45,7 +46,9 @@ twitter_filter_positive <- NULL
 #### events ----------------------------------------------------------------------------------------------------------- #
 
 # set twitter api keys on input
-observeEvent({input$twitter_api_key_input
+observeEvent({
+  input$twitter_app_name_input
+  input$twitter_api_key_input
   input$twitter_api_secret_input
   input$twitter_access_token_input
   input$twitter_access_token_secret_input}, {
@@ -97,7 +100,8 @@ observeEvent(input$twitter_tweet_count_input, {
 })
 
 observeEvent(input$clear_twitter_console, {
-  resetConsole("twitter_console")
+  resetConsole("twitter-console")
+  # callModule(resetConsoleMod, "twitter")
 })
   
 # twitter collection button pushed
@@ -108,6 +112,7 @@ observeEvent(input$twitter_collect_button, {
   
   withProgress(message = 'Collecting tweets', value = 0.5, {
     
+    # callModule(withConsoleRedirectMod, "twitter", value = {
     withConsoleRedirect("twitter_console", {
       
       # collect twitter data and print any output to console
@@ -214,6 +219,7 @@ observeEvent(twitter_view_rvalues$data, {
 # render twitter collection arguments
 output$twitter_arguments_output <- renderText({
   # dependencies
+  input$twitter_app_name_input
   input$twitter_api_key_input
   input$twitter_api_secret_input
   input$twitter_access_token_input
@@ -291,6 +297,7 @@ output$twitter_data_cols_ui <- renderUI({
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 setTwitterAPIKeys <- reactive({
+  twitter_api_keyring$twitter_app_name <<- input$twitter_app_name_input
   twitter_api_keyring$twitter_api_key <<- trimws(input$twitter_api_key_input)
   twitter_api_keyring$twitter_api_secret <<- trimws(input$twitter_api_secret_input)
   twitter_api_keyring$twitter_access_token <<- trimws(input$twitter_access_token_input)

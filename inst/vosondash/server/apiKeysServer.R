@@ -23,6 +23,7 @@ observeEvent(check_keys_startup, {
       if (load_and_use_keys) {
         readKeysFile()
         
+        updateTextInput(session, "twitter_app_name_input", label = NULL, value = api_keys$twitter_app_name)
         updateTextInput(session, "twitter_api_key_input", label = NULL, value = api_keys$twitter_api_key)
         updateTextInput(session, "twitter_api_secret_input", label = NULL, value = api_keys$twitter_api_secret)
         updateTextInput(session, "twitter_access_token_input", label = NULL, value = api_keys$twitter_access_token)
@@ -68,7 +69,8 @@ output$keys_file_output <- renderText({
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 saveButtonStatus <- reactive({
-  key_values <- c(input$keys_twitter_api_key_input,
+  key_values <- c(input$keys_twitter_app_name_input,
+                  input$keys_twitter_api_key_input,
                   input$keys_twitter_api_secret_input,
                   input$keys_twitter_access_token_input,
                   input$keys_twitter_access_token_secret_input,
@@ -99,6 +101,7 @@ writeKeysFile <- function() {
   
   api_keys <<- list(
     load_and_use_keys = input$load_and_use_keys_check,
+    twitter_app_name = input$keys_twitter_app_name_input,
     twitter_api_key = input$keys_twitter_api_key_input,
     twitter_api_secret = input$keys_twitter_api_secret_input,
     twitter_access_token = input$keys_twitter_access_token_input,
@@ -131,6 +134,7 @@ readKeysFile <- function() {
   
   updateCheckboxInput(session, "load_and_use_keys_check", label = NULL, value = api_keys$load_and_use_keys)
   
+  updateTextInput(session, "keys_twitter_app_name_input", label = NULL, value = api_keys$twitter_app_name)
   updateTextInput(session, "keys_twitter_api_key_input", label = NULL, value = api_keys$twitter_api_key)
   updateTextInput(session, "keys_twitter_api_secret_input", label = NULL, value = api_keys$twitter_api_secret)
   updateTextInput(session, "keys_twitter_access_token_input", label = NULL, value = api_keys$twitter_access_token)
@@ -143,6 +147,7 @@ readKeysFile <- function() {
 
 # copy keys input field values to twitter section api keys fields
 populateTwitterKeys <- function() {
+  updateTextInput(session, "twitter_app_name_input", label = NULL, value = input$keys_twitter_app_name_input)
   updateTextInput(session, "twitter_api_key_input", label = NULL, value = input$keys_twitter_api_key_input)
   updateTextInput(session, "twitter_api_secret_input", label = NULL, value = input$keys_twitter_api_secret_input)
   updateTextInput(session, "twitter_access_token_input", label = NULL, value = input$keys_twitter_access_token_input)

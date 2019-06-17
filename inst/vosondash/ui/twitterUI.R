@@ -8,6 +8,7 @@ tabItem(tabName = "twitter_collection_tab",
                                 conditionalPanel(condition = 'input.expand_twitter_keys_panel_check',
                                                  
                                                  # twitter api keys input
+                                                 textInput("twitter_app_name_input", label = "App Name", value = ""),
                                                  textInput("twitter_api_key_input", label = "API Key", value = ""),
                                                  textInput("twitter_api_secret_input", label = "API Secret", value = ""),
                                                  textInput("twitter_access_token_input", label = "Access Token", value = ""),
@@ -73,9 +74,12 @@ tabItem(tabName = "twitter_collection_tab",
                                  style = "padding-right: 10px;"),
                             span(icon("twitter", class = "twitter_blue"), "Twitter Network Collection")
                           ),
+                          # tabPanel("Console", width = 12,
+                          #       consoleUI("twitter")
+                          # )
                           tabPanel("Console", width = 12,
                                    verbatimTextOutput("twitter_arguments_output"),
-                                   
+
                                    # twitter collect console
                                    pre(id = "twitter_console", style = "height: 300px; overflow-y: scroll")
                           )
