@@ -16,7 +16,7 @@ tabItem(tabName = "keys_tab",
                    sidebarPanel(width = 12, class = "custom_well_for_controls", style = "padding-bottom: 10px",
                                 h4("Tokens"),
                                 p(g_api_tokens_path),                                
-                                checkboxInput('load_and_use_tokens_check', 'Load and Use API Tokens on app start', FALSE),
+                                # checkboxInput('load_and_use_tokens_check', 'Load and Use API Tokens on app start', FALSE),
                                 actionButton("tokens_load_button", label = "Load Tokens", style = "margin-right: 10px"),
                                 disabled(actionButton("tokens_save_button", label = "Save Tokens"))
                    )

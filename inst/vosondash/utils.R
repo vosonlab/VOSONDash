@@ -118,31 +118,41 @@ isMac <- function() {
   return(FALSE)
 }
 
-# simple log
-logMessage <- function(messages, add_message, count = 25) {
+# simple output text aggregation
+addLine <- function(lines, add_line, txt = FALSE) {
+  
+  if (isNullOrEmpty(lines)) { lines <- c() }
+  lines <- append(lines, add_line)
+  
+  if (txt) { return(paste0(lines, collapse = '\n')) }
+  return(lines)
+}
+
+# simple logging queue with count FIFO
+logMessage <- function(messages, add_message, txt = FALSE, count = 20) {
   
   add_message <- c(paste(format(Sys.time(), "%Y-%m-%d %H:%M:%S"), add_message))
   log_messages <- c(add_message, messages)
 
-  if (length(log_messages) > count) {
-    return(log_messages[1:count])
-  }
-  
+  if (length(log_messages) > count) { log_messages <- log_messages[1:count] }
+  if (txt) { return(paste0(log_messages, collapse = '\n')) }
   return(log_messages)
 }
 
+# format for auth token id
 createTokenId <- function(token) {
   token_id <- paste0(token$created, " ", token$auth$app$appname, " (", token$type ,")")
 }
 
-# helper functions
-removeURL <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https
-# removeURL <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url
+# text analysis helpers
+remHTTP <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https tokens
+# remHTTP <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url
+
 removeHashTags <- function(x) gsub("#\\S+", "", x)
 removeTwitterHandles <- function(x) gsub("@\\S+", "", x)
 
-# various other to clean up twitter text
-removeOther1 <- function(x) gsub("&apos;", "\'", x)
-removeOther2 <- function(x) gsub("&quot;", "\"", x)
-removeOther3 <- function(x) gsub("&amp;", "&", x)
-removeOther4 <- function(x) gsub("amp;|gt;", "", x)
+# replace html encoding with escaped characters in twitter text
+repHTMLApos <- function(x) gsub("&apos;", "\'", x)    # apostrophe
+repHTMLQuote <- function(x) gsub("&quot;", "\"", x)   # quote
+repHTMLAmper <- function(x) gsub("&amp;", "&", x)     # ampersand
+remPartAmpGt <- function(x) gsub("amp;|gt;", "", x)   # 

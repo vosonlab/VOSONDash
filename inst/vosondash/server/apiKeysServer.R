@@ -38,18 +38,16 @@ observeEvent(check_creds_startup, {
         creds_rv$msg_log <<- logMessage(creds_rv$msg_log, "loaded and populated api keys")
       }
     }
+    
+    if (file.exists(g_api_tokens_path)) {
+      creds_rv$tokens <- readRDS(file = g_api_tokens_path)
+      creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", g_api_tokens_path))
+      ids <- getTokenIds()
+      updateSelectInput(session, "twitter_token_select", label = NULL, choices = ids, selected = ids[length(ids)])
+    } else {
+      creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("no tokens file found", g_api_tokens_path))
+    }    
   })
-  
-  if (file.exists(g_api_tokens_path)) {
-    creds_rv$tokens <- readRDS(file = g_api_tokens_path)
-    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", g_api_tokens_path))
-
-    updateSelectInput(session, "twitter_token_select", label = NULL, choices = getTokenIds(), selected = NULL)
-  } else {
-    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("no tokens file found", g_api_tokens_path))
-  }
-  
-  shinyjs::disable("save_token")  
 }, once = TRUE)
 
 observeEvent(input$create_app_token, {
@@ -84,6 +82,31 @@ observeEvent(input$keys_load_button, {
   readKeysFile()
 })
 
+observeEvent(saveTokensButtonStatus(), {
+  if (saveButtonStatus()) {
+    shinyjs::enable("tokens_save_button")
+  } else {
+    shinyjs::disable("tokens_save_button")
+  }
+})
+
+observeEvent(input$tokens_save_button, {
+  # save tokens
+  saveRDS(creds_rv$tokens, g_api_tokens_path)
+  creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste0("saved tokens to file (", length(creds_rv$tokens), ")"))  
+})
+
+observeEvent(input$tokens_load_button, {
+  if (file.exists(g_api_tokens_path)) {
+    creds_rv$tokens <- readRDS(file = g_api_tokens_path)
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", g_api_tokens_path))
+    ids <- getTokenIds()
+    updateSelectInput(session, "twitter_token_select", label = NULL, choices = ids, selected = ids[length(ids)])
+  } else {
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("no tokens file found", g_api_tokens_path))
+  }  
+})
+
 observeEvent(creds_rv$created_token, {
   if (is.null(creds_rv$created_token) || rtweet:::is.token(creds_rv$created_token$auth) == FALSE) {
     creds_rv$msg_log <- logMessage(isolate(creds_rv$msg_log), "created invalid token")
@@ -103,12 +126,12 @@ observeEvent(input$save_token, {
     creds_rv$tokens[[token_id]] <- token
     
     # save tokens
-    saveRDS(creds_rv$tokens, g_api_tokens_path)
-    creds_rv$msg_log <- logMessage(creds_rv$msg_log, "saved tokens to file")
+    # saveRDS(creds_rv$tokens, g_api_tokens_path)
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, "saved token to list")
     
     creds_rv$selected_token_id <- token_id
   } else {
-    creds_rv$msg_log <- logMessage(creds_rv$msg_log, "unable to save token")
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, "unable to save token to list")
   }
 })
 
@@ -130,13 +153,9 @@ observeEvent(input$use_selected_token, {
 observeEvent(input$delete_selected_token, {
   if (input$twitter_token_select %in% names(creds_rv$tokens)) {
     
-    # if (length(creds_rv$tokens) == 1) {
-    #   creds_rv$tokens <- list()
-    # } else {
     creds_rv$tokens <- creds_rv$tokens[!grepl(input$twitter_token_select, names(creds_rv$tokens), fixed = TRUE)]
-    # }
     
-    saveRDS(creds_rv$tokens, g_api_tokens_path)
+    # saveRDS(creds_rv$tokens, g_api_tokens_path)
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("deleted", input$twitter_token_select))
 
     if (!is.null(creds_rv$use_token)) {
@@ -214,6 +233,13 @@ saveButtonStatus <- reactive({
   check_keys <- sapply(key_values, isNullOrEmpty)
   
   if (any(check_keys != TRUE)) { 
+    return(TRUE)
+  }
+  return(FALSE)
+})
+
+saveTokensButtonStatus <- reactive({
+  if (length(creds_rv$tokens) > 0) {
     return(TRUE)
   }
   return(FALSE)

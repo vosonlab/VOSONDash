@@ -180,32 +180,25 @@ textAnalysisDetailsOutput <- reactive({
   if (!is.null(gnc)) {
     graph_clusters_nc <- components(gnc, mode = input$graph_component_type_select)
     
-    output <- append(output, "All Categories")
-    output <- append(output, paste0("Components (", input$graph_component_type_select, "): ", graph_clusters_nc$no))
-    output <- append(output, paste0("Nodes: ", vcount(gnc)))
-    output <- append(output, paste0("Edges: ", ecount(gnc)))
-    output <- append(output, "")
+    output <- append(output, c("All Categories",
+                               paste0("Components (", input$graph_component_type_select, "): ", graph_clusters_nc$no),
+                               paste("Nodes:", vcount(gnc)),
+                               paste("Edges:", ecount(gnc)), ""))
     
     if (length(list_data) > 1) {
       graph_clusters <- components(g, mode = input$graph_component_type_select)
-      output <- append(output, "Selected Categories")
-      output <- append(output, paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no))
-      output <- append(output, paste0("Nodes: ", vcount(g)))
-      output <- append(output, paste0("Edges: ", ecount(g)))
-      output <- append(output, "")
+      output <- append(output, c("Selected Categories",
+                                 paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no),
+                                 paste("Nodes:", vcount(g)),
+                                 paste("Edges:", ecount(g)), ""))
     }
     
     if (ta_rvalues$has_text) {
-      output <- append(output, paste0("Text attribute type: ", ta_rvalues$attr_type))
-      output <- append(output, paste0("Text attribute name: ", ta_rvalues$attr_name))
-      output <- append(output, "")
-      
-      output <- append(output, paste0("Stopwords: ", input$text_analysis_stopwords_check, sep = ""))
-      output <- append(output, paste0("Seed: ", isolate(ng_rvalues$graph_seed), sep = ""))
-      output <- append(output, "")
-      
-      output <- append(output, "Word Counts")
-      output <- append(output, "-----------")
+      output <- append(output, c(paste("Text attribute type:", ta_rvalues$attr_type),
+                                 paste("Text attribute name:", ta_rvalues$attr_name), "",
+                                 paste("Stopwords:", input$text_analysis_stopwords_check),
+                                 paste("Seed:", isolate(ng_rvalues$graph_seed)), "",
+                                 "Word Counts", "-----------"))
       
       if (length(list_data) > 0) {
         data_names <- names(sapply(list_data, names))
@@ -223,7 +216,7 @@ textAnalysisDetailsOutput <- reactive({
           # dtmx <- DocumentTermMatrix(list_data[[i]][[2]], control = list(wordLengths=c(3, 20)))
           dtmx <- DocumentTermMatrix(list_data[[i]][[2]])
           freq_terms <- colSums(as.matrix(dtmx))
-          output <- append(output, paste0("Words: ", sum(freq_terms)))
+          output <- append(output, paste("Words:", sum(freq_terms)))
           output <- append(output, "")
         }
       }
@@ -231,7 +224,7 @@ textAnalysisDetailsOutput <- reactive({
       output <- append(output, "There is no text data.")
     }
   }else {
-    output <- append(output, paste0("No data."))
+    output <- append(output, "No data.")
   }
   
   paste0(output, collapse = '\n')
@@ -378,7 +371,7 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
     
     corp <- VCorpus(VectorSource(words))
     corp <- tm_map(corp, content_transformer(tolower))
-    corp <- tm_map(corp, content_transformer(removeURL))
+    corp <- tm_map(corp, content_transformer(remHTTP))
     
     if (input$text_analysis_twitter_hashtags_check == TRUE) {
       corp <- tm_map(corp, content_transformer(removeHashTags))
@@ -389,10 +382,10 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
 
     if (!is.null(get.graph.attribute(g, "type"))) {
       if (get.graph.attribute(g, "type") == "twitter") {
-        corp <- tm_map(corp, content_transformer(removeOther1))
-        corp <- tm_map(corp, content_transformer(removeOther2))
-        corp <- tm_map(corp, content_transformer(removeOther3))
-        corp <- tm_map(corp, content_transformer(removeOther4))
+        corp <- tm_map(corp, content_transformer(repHTMLApos))
+        corp <- tm_map(corp, content_transformer(repHTMLQuote))
+        corp <- tm_map(corp, content_transformer(repHTMLAmper))
+        corp <- tm_map(corp, content_transformer(remPartAmpGt))
       }      
     }
 
