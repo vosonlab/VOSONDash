@@ -3,9 +3,64 @@
 #' Helper functions to interact with the vosonSML package. 
 #'
 
+createTwitterToken <- function() {
+  cred <- list(socialmedia = "twitter", auth = NULL)
+  class(cred) <- append(class(cred), c("credential", "twitter")) 
+  
+  cred$auth <- rtweet:::rstats2twitter_client()
+  
+  cred$type <- "web"
+  cred$created <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
+  
+  return(cred)
+}
+
+createTwitterDevToken <- function(app_name, keys) {
+  check_keys <- sapply(keys, isNullOrEmpty)
+  
+  if (any(check_keys == TRUE)) { 
+    return(NULL) 
+  }
+  
+  cred <- vosonSML::Authenticate("twitter", 
+                                 appName = app_name, 
+                                 apiKey = keys$apiKey, 
+                                 apiSecret = keys$apiSecret,
+                                 accessToken = keys$accessToken,
+                                 accessTokenSecret = keys$accessTokenSecret, 
+                                 useCachedToken = FALSE)
+  
+  cred$type <- "dev"
+  cred$created <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
+  
+  return(cred)
+}
+
+createTwitterWebToken <- function(app_name, keys) {
+  check_keys <- sapply(keys, isNullOrEmpty)
+  
+  if (any(check_keys == TRUE)) { 
+    return(NULL) 
+  }
+  
+  cred <- list(socialmedia = "twitter", auth = NULL)
+  class(cred) <- append(class(cred), c("credential", "twitter")) 
+  
+  cred$auth <- rtweet::create_token(
+    app = app_name,
+    consumer_key = keys$apiKey,
+    consumer_secret = keys$apiSecret,
+    set_renv = FALSE)
+  
+  cred$type <- "web"
+  cred$created <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
+  
+  return(cred)
+}
+
 #' Collect tweets using vosonSML.
 #' 
-#' @param twitter_api_keyring named list of twitter api keys as character strings
+#' @param token twitter auth api token
 #' @param search_term twitter search term as character string
 #' @param search_type search type as character string - mixed, recent, popular
 #' @param tweet_count number of tweets to collect
@@ -18,13 +73,11 @@
 #' 
 #' @return data as vosonSML twitter collection dataframe
 #'
-collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tweet_count, 
+collectTwitterData <- function(token, search_term, search_type, tweet_count, 
                                include_retweets, retry_on_rate_limit,
                                language, date_until, since_id, max_id) {
   
-  check_keys <- sapply(twitter_api_keyring, isNullOrEmpty)
-  
-  if (any(check_keys == TRUE) || isNullOrEmpty(search_term)) { return(NULL) }
+  if (is.null(token) || isNullOrEmpty(search_term)) { return(NULL) }
   
   # vosonSML twitter collection parameters:
   # searchTerm, numTweets, verbose, writeToFile, language, since, until
@@ -32,15 +85,15 @@ collectTwitterData <- function(twitter_api_keyring, search_term, search_type, tw
   
   collect_parameters <- list()
   
-  cred <- Authenticate("twitter",
-                       appName = twitter_api_keyring$twitter_app_name,
-                       apiKey = twitter_api_keyring$twitter_api_key, 
-                       apiSecret = twitter_api_keyring$twitter_api_secret,
-                       accessToken = twitter_api_keyring$twitter_access_token, 
-                       accessTokenSecret = twitter_api_keyring$twitter_access_token_secret, 
-                       useCachedToken = FALSE)
+  # cred <- Authenticate("twitter",
+  #                      appName = twitter_api_keyring$twitter_app_name,
+  #                      apiKey = twitter_api_keyring$twitter_api_key, 
+  #                      apiSecret = twitter_api_keyring$twitter_api_secret,
+  #                      accessToken = twitter_api_keyring$twitter_access_token, 
+  #                      accessTokenSecret = twitter_api_keyring$twitter_access_token_secret, 
+  #                      useCachedToken = FALSE)
   
-  collect_parameters[['credential']] <- cred
+  collect_parameters[['credential']] <- token
   
   collect_parameters['searchTerm'] <- search_term
   

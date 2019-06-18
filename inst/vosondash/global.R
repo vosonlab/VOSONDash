@@ -48,7 +48,8 @@ g_default_youtube_count <- 200
 
 # api keys
 # g_api_keys_path <- paste0(getwd(), "/voson_keys.rds", sep = "")
-g_api_keys_path <- "~/vosondash_keys.rds"
+g_api_keys_path <- paste0(Sys.getenv("HOME"), "/vosondash_keys.rds", sep = "")
+g_api_tokens_path <- paste0(Sys.getenv("HOME"), "/vosondash_tokens.rds", sep = "")
 
 # helpers
 source("utils.R", local = TRUE)

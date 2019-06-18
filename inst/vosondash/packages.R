@@ -14,17 +14,21 @@ requiredPackages <- c("htmlwidgets",
                       "syuzhet",
                       "dplyr",
                       "httr",
+                      "httpuv",
                       "vosonSML")
 
 # if app is local print package information
 if (isLocal) {
   cat("=================================================\n")
-  cat(paste0("VOSONDash ", app_version, " ", app_date, "\n"))
+  cat(paste("VOSONDash", app_version, app_date, "\n"))
   cat(paste0(format(Sys.time(), "%d %b %Y %H:%M"), "\n\n"))
   
-  cat(paste0(trimws(Sys.getenv("os")), " ", R.Version()$platform, "\n"))
+  cat(paste(trimws(Sys.getenv("os")), R.Version()$platform, "\n"))
   cat(paste0(R.version.string, "\n"))
-  cat(paste0("R shiny ", packageVersion("shiny"), "\n"))
+  cat(paste("R shiny", packageVersion("shiny"), "\n"))
+  
+  cat(paste("\nHome:", Sys.getenv("HOME"), "\n"))
+  
   # cat("Locales:\n")
   # cat(paste0(as.list(strsplit(Sys.getlocale(), ";")[[1]]), collapse = "\n"), "\n")
   cat("\n")

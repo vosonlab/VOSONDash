@@ -118,6 +118,23 @@ isMac <- function() {
   return(FALSE)
 }
 
+# simple log
+logMessage <- function(messages, add_message, count = 25) {
+  
+  add_message <- c(paste(format(Sys.time(), "%Y-%m-%d %H:%M:%S"), add_message))
+  log_messages <- c(add_message, messages)
+
+  if (length(log_messages) > count) {
+    return(log_messages[1:count])
+  }
+  
+  return(log_messages)
+}
+
+createTokenId <- function(token) {
+  token_id <- paste0(token$created, " ", token$auth$app$appname, " (", token$type ,")")
+}
+
 # helper functions
 removeURL <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https
 # removeURL <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url

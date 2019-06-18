@@ -46,15 +46,15 @@ twitter_filter_positive <- NULL
 #### events ----------------------------------------------------------------------------------------------------------- #
 
 # set twitter api keys on input
-observeEvent({
-  input$twitter_app_name_input
-  input$twitter_api_key_input
-  input$twitter_api_secret_input
-  input$twitter_access_token_input
-  input$twitter_access_token_secret_input}, {
-    
-    setTwitterAPIKeys()
-  })
+# observeEvent({
+#   input$twitter_app_name_input
+#   input$twitter_api_key_input
+#   input$twitter_api_secret_input
+#   input$twitter_access_token_input
+#   input$twitter_access_token_secret_input}, {
+#     
+#     setTwitterAPIKeys()
+#   })
 
 # set twitter parameters on input
 observeEvent({input$twitter_search_term_input
@@ -153,7 +153,7 @@ observeEvent(input$twitter_collect_button, {
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
         test_data <<- suppressWarnings({
-                          collectTwitterData(twitter_api_keyring, search_term, search_type,
+                          collectTwitterData(creds_rv$use_token, search_term, search_type,
                                              twitter_tweet_count, twitter_retweets, twitter_retry, 
                                              twitter_language, twitter_date_until,
                                              twitter_since_id, twitter_max_id) })
@@ -215,6 +215,14 @@ observeEvent(twitter_view_rvalues$data, {
 }, ignoreInit = TRUE)
 
 #### output ----------------------------------------------------------------------------------------------------------- #
+
+output$twitter_collect_token_output <- renderText({
+  if (!is.null(creds_rv$use_token)) {
+    createTokenId(creds_rv$use_token)
+  } else {
+    "No token set"
+  }
+})
 
 # render twitter collection arguments
 output$twitter_arguments_output <- renderText({
@@ -384,11 +392,11 @@ twitterArgumentsOutput <- function() {
   output <- c()
   check_keys <- sapply(twitter_api_keyring, isNullOrEmpty)
   
-  if (any(check_keys == FALSE)) {
-    output <- append(output, paste0("api keys: ", 
-                                    trimws(paste0(sapply(strtrim(twitter_api_keyring, 6), 
-                                                         function(x) paste0(x, "...", sep = "")), collapse = ', '))))
-  }
+  # if (any(check_keys == FALSE)) {
+  #   output <- append(output, paste0("api keys: ", 
+  #                                   trimws(paste0(sapply(strtrim(twitter_api_keyring, 6), 
+  #                                                        function(x) paste0(x, "...", sep = "")), collapse = ', '))))
+  # }
   
   search_term_flag <- FALSE
   if (!isNullOrEmpty(twitter_search_term)) {
@@ -453,7 +461,7 @@ twitterArgumentsOutput <- function() {
   }
   
   # if api key and video ids have been inputed enable collect button
-  if (!any(check_keys == TRUE) && search_term_flag) {
+  if (!is.null(creds_rv$use_token) && search_term_flag) {
     shinyjs::enable("twitter_collect_button")
   } else {
     shinyjs::disable("twitter_collect_button")

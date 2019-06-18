@@ -4,16 +4,9 @@ tabItem(tabName = "twitter_collection_tab",
           column(width = 3, offset = 0,
                  fluidRow(
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                checkboxInput('expand_twitter_keys_panel_check', 'Show API Keys', FALSE),
-                                conditionalPanel(condition = 'input.expand_twitter_keys_panel_check',
-                                                 
-                                                 # twitter api keys input
-                                                 textInput("twitter_app_name_input", label = "App Name", value = ""),
-                                                 textInput("twitter_api_key_input", label = "API Key", value = ""),
-                                                 textInput("twitter_api_secret_input", label = "API Secret", value = ""),
-                                                 textInput("twitter_access_token_input", label = "Access Token", value = ""),
-                                                 textInput("twitter_access_token_secret_input", label = "Access Token Secret", value = "")
-                                )),
+                                p(tags$b("Auth Token")),
+                                verbatimTextOutput("twitter_collect_token_output", placeholder = TRUE)
+                                ),
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                                 # twitter search term input
                                 textAreaInput("twitter_search_term_input", label = "Search Terms", value = "",
