@@ -255,17 +255,21 @@ wordSentChart <- function(data, categories) {
   
   colx <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5")
   colx[seq(1, 8)] <- colx
-  colx[9] <- "firebrick1"
-  colx[10] <- "steelblue"
+  colx[9] <- "lightcoral"
+  colx[10] <- "mediumaquamarine"
   colx[11] <- "gainsboro"
   
   # returns empty plot with message if no data to chart
   if (is.null(corp) || length(corp) < 1) {
     return(emptyPlotMessage("No text data."))
   }
+  par(las = 2)
+  par(mar = c(4, 6, 0, 4))
 
-  sent_plot <- barplot(chart_data, las = 2, col = colx, ylab = "Percentage")
-  text(sent_plot, ifelse(chart_data <= 1, 2, chart_data - 1), labels = round(chart_data, digits = 2), col = "black")
+  sent_plot <- barplot(chart_data, col = colx, xlab = "Percentage %", horiz = TRUE, xlim = c(0, 100), xpd = FALSE, axes=TRUE)
+
+  text(x = ifelse(chart_data <= 1, 1, chart_data+2.5), sent_plot, labels = round(chart_data, digits = 2), col = "black")
+  # legend("topright", "Syuzhet Package\nNRC Emotion Lexicon\n(Saif Mohammad)", bty = "n") 
   
   return(sent_plot)
 }

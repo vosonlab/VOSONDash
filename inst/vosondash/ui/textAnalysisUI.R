@@ -62,6 +62,9 @@ tabItem(tabName="text_analysis_tab",
                           ),
                           tabPanel("Sentiment",
                                    fluidRow(
+                                     column(width = 12, div("Analysis uses the Syuzhet Package - NRC Emotion Lexicon (Saif Mohammad)", style = "margin-left:15px;"))
+                                   ),
+                                   fluidRow(
                                      column(width = 12, taPlotContainerUI("word_sentiments"))
                                    )
                           )                          
