@@ -40,15 +40,20 @@ tabItem(tabName = "keys_tab",
                                        textInput("keys_twitter_app_name_input", label = "App Name", value = ""),
                                        textInput("keys_twitter_api_key_input", label = "Consumer Key", value = ""),
                                        textInput("keys_twitter_api_secret_input", label = "Consumer Secret", value = ""),
-                                       fluidRow(actionButton("create_web_auth_token", "Create Web Auth Token", icon("drafting-compass"), style = "float:right;margin-right:10px;padding-bottom:3px")),
+                                       
+                                       fluidRow(
+                                       div(disabled(actionButton("create_web_auth_token", "Create Web Auth Token", icon("drafting-compass"))), style = "display:inline-block;float:right;margin-right:15px;margin-left:5px;"),
+                                       div(checkboxInput("web_auth_check", "Experimental (aborting will end app session)", value = FALSE, width = NULL), style = "display:inline-block;float:right;"),
+                                       style = "padding-bottom:0px; margin-bottom:0px"),
+                                       
                                        textInput("keys_twitter_access_token_input", label = "Access Token", value = ""),
                                        textInput("keys_twitter_access_token_secret_input", label = "Access Token Secret", value = ""),
-                                       fluidRow(actionButton("create_app_token", "Create Dev App Token", icon("drafting-compass"), style = "float:right;margin-right:10px;padding-bottom:3px"))
+                                       fluidRow(div(actionButton("create_app_token", "Create Dev App Token", icon("drafting-compass"), style = "float:right;margin-right:15px;padding-bottom:2px")))
                           ),
                           sidebarPanel(width = 12, class = "custom_well_for_keys",
                                   h4("Created Token"),
                                   verbatimTextOutput("save_token_output"),
-                                  actionButton("save_token", "Save Token")
+                                  disabled(actionButton("save_token", "Add Token to Select List"))
                           )                           
                         )
                  ),

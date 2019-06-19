@@ -56,14 +56,30 @@ observeEvent(input$create_app_token, {
                accessToken = input$keys_twitter_access_token_input, 
                accessTokenSecret = input$keys_twitter_access_token_secret_input)
   
-  creds_rv$created_token <- createTwitterDevToken(input$keys_twitter_app_name_input, keys)
+  # not caught if httpuv aborted as it as ends shiny session
+  tryCatch({
+    creds_rv$created_token <- createTwitterDevToken(input$keys_twitter_app_name_input, keys)
+  }, error = function(err) {
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation error:", err))
+    creds_rv$created_token <- NULL
+  }, warning = function(w) {
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation warning:", w))
+  })    
 })
 
 observeEvent(input$create_web_auth_token, {
   keys <- list(apiKey = input$keys_twitter_api_key_input, 
                apiSecret = input$keys_twitter_api_secret_input)
   
-  creds_rv$created_token <- createTwitterWebToken(input$keys_twitter_app_name_input, keys)
+  # not caught if httpuv aborted as it as ends shiny session
+  tryCatch({  
+    creds_rv$created_token <- createTwitterWebToken(input$keys_twitter_app_name_input, keys)
+  }, error = function(err) {
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation error:", err))
+    creds_rv$created_token <- NULL
+  }, warning = function(w) {
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation warning:", w))
+  })    
 })
 
 observeEvent(saveButtonStatus(), {
@@ -83,7 +99,7 @@ observeEvent(input$keys_load_button, {
 })
 
 observeEvent(saveTokensButtonStatus(), {
-  if (saveButtonStatus()) {
+  if (saveTokensButtonStatus()) {
     shinyjs::enable("tokens_save_button")
   } else {
     shinyjs::disable("tokens_save_button")
@@ -174,6 +190,14 @@ observeEvent(input$keys_youtube_populate_button, {
 
 observeEvent(input$twitter_token_select, {
   creds_rv$selected_token_id <- input$twitter_token_select 
+})
+
+observeEvent(input$web_auth_check, {
+  if (input$web_auth_check) {
+    shinyjs::enable("create_web_auth_token")
+  } else {
+    shinyjs::disable("create_web_auth_token")
+  }
 })
 
 observe({
