@@ -78,7 +78,7 @@ observeEvent({ input$graph_component_type_select
 
   updateComponentSlider(g, input$graph_component_type_select)
 }, ignoreInit = TRUE)
-
+  
 # selected vertex category updates select box with its attribute values
 observeEvent(input$graph_catAttr_select, {
   ng_rvalues$graph_CA_selected <<- input$graph_catAttr_select

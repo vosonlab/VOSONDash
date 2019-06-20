@@ -169,36 +169,67 @@ comparisonCloudPlotData <- reactive({
   }
 })
 
+# added 2019-06-20
+getFiltersDesc <- reactive({
+  output <- c()
+  
+  if (ng_rvalues$graph_CA_selected != "All") {
+    if (!("All" %in% input$graph_catAttr_attr_select)) {
+      output <- append(output, paste0(input$graph_catAttr_attr_select, collapse = ', '))
+    }
+  }
+
+  output <- append(output, paste0("Filter Component Size: ", input$graph_component_slider[1], " - ", input$graph_component_slider[2]))
+  
+  # paste0(output, collapse = '\n')
+})
+
 # text analysis summary
+# 2019-06-20 need to review this behavior as to what is expected
 textAnalysisDetailsOutput <- reactive({
   g <- graphFilters()
-  gnc <- g # graphFiltersNoCategorical()
+  # gnc <- g # graphFiltersNoCategorical() # 2019-06-20 this wasn't being used as from g not graphFiltersNoCategorical()
   list_data <- ta_rvalues$plot_list_data
   
   output <- c()
   
-  if (!is.null(gnc)) {
-    graph_clusters_nc <- components(gnc, mode = input$graph_component_type_select)
+  if (!is.null(g)) { # 2019-06-20 !is.null(gnc)
+    # graph_clusters_nc <- components(gnc, mode = input$graph_component_type_select) # 2019-06-20 this wasn't being used as from g not graphFiltersNoCategorical()
+    graph_clusters <- components(g, mode = input$graph_component_type_select) # moved here from below
     
-    output <- append(output, c("All Categories",
-                               paste0("Components (", input$graph_component_type_select, "): ", graph_clusters_nc$no),
-                               paste("Nodes:", vcount(gnc)),
-                               paste("Edges:", ecount(gnc)), ""))
+    # added if statement 2019-06-20 this may not be working as intended (duplicated)
+    selected_attr <- input$graph_catAttr_attr_select # added 2019-06-20
+    if (length(selected_attr) == 1 && selected_attr == "All") {
+      output <- append(output, c("All Categories"))
+    # output <- append(output, c("All Categories",
+    #                            paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no), # graph_clusters_nc$no
+    #                            paste("Nodes:", vcount(g)), # gnc
+    #                            paste("Edges:", ecount(g)), "")) # gnc
     
-    if (length(list_data) > 1) {
-      graph_clusters <- components(g, mode = input$graph_component_type_select)
-      output <- append(output, c("Selected Categories",
-                                 paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no),
-                                 paste("Nodes:", vcount(g)),
-                                 paste("Edges:", ecount(g)), ""))
+    } else {
+      output <- append(output, c(paste0("Filter Categories (", ng_rvalues$graph_CA_selected, "):")))
     }
+    
+    output <- append(output, getFiltersDesc())
+    
+    #if (length(list_data) > 1 { # added } && length(selected_attr) > 1) {
+      # graph_clusters <- components(g, mode = input$graph_component_type_select) # moved up
+      # output <- append(output, c("Selected Categories",
+      #                            paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no),
+      #                            paste("Nodes:", vcount(g)),
+      #                            paste("Edges:", ecount(g)), ""))
+    #}
+    
+    output <- append(output, c(paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no),
+                               paste("Nodes:", vcount(g)),
+                               paste("Edges:", ecount(g)), ""))
     
     if (ta_rvalues$has_text) {
       output <- append(output, c(paste("Text attribute type:", ta_rvalues$attr_type),
                                  paste("Text attribute name:", ta_rvalues$attr_name), "",
-                                 paste("Stopwords:", input$text_analysis_stopwords_check),
-                                 paste("Seed:", isolate(ng_rvalues$graph_seed)), "",
-                                 "Word Counts", "-----------"))
+                                 # paste("Seed:", isolate(ng_rvalues$graph_seed)), "",
+                                 "Word Counts", "-----------",
+                                 paste("Stopwords:", input$text_analysis_stopwords_check)))
       
       if (length(list_data) > 0) {
         data_names <- names(sapply(list_data, names))
@@ -255,24 +286,35 @@ taPlotListData <- reactive({
   
   withProgress(message = "Processing corpus...", {
     
-    # if no categories then one corpus for text data
-    # if categories present then first corpus is for all categories
-    # first corpus id in plot_list_data is "plot-all"
-    all_plot_title <- list("", c("Non-categorical Text"))
-    if (length(names(category_list)) > 0) {
-      all_plot_title <- list("", c("All Categories"))
+    # added if statement 2019-06-20 this may not be working as intended (plot duplicated)
+    if (length(selected_attr) == 1 && selected_attr == "All") {
+      
+      # if no categories then one corpus for text data
+      # if categories present then first corpus is for all categories
+      # first corpus id in plot_list_data is "plot-all"
+      all_plot_title <- list("", c("Non-categorical Text"))
+      if (length(names(category_list)) > 0) {
+        all_plot_title <- list("", c("All Categories"))
+      }
+      ta_rvalues$plot_list_data[["plot-all"]] <<- taTextCorpusData(graph_attr = all_plot_title)
+    
     }
-    ta_rvalues$plot_list_data[["plot-all"]] <<- taTextCorpusData(graph_attr = all_plot_title)
     
     # create plot id and corpus for each category
     # id in plot_list_data is numbered "plot-1", "plot-2"
     # corpus is created by the taTextCorpusData for each selected attribute in graph category
+    # if (length(names(category_list)) > 0 && selected_value != "All") {
     if (length(names(category_list)) > 0 && selected_value != "All") {
       value_list <- category_list[[selected_value]]
       plot_counter <- 1
       
+      # 2019-06-21 remove All if other values selected
+      if ("All" %in% selected_attr && length(selected_attr) > 1) {
+        selected_attr <- selected_attr[selected_attr != "All"]
+      }
+      
       # corpus created for all attributes in graph category
-      if ("All" %in% selected_attr) {
+      if ("All" %in% selected_attr && length(selected_attr) == 1) { # 2019-06-21 length check
         for (i in 1:length(value_list)) {
           local({
             local_i <- i

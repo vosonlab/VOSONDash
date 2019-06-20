@@ -13,7 +13,8 @@ tabItem(tabName="text_analysis_tab",
                                 disabled(checkboxInput("text_analysis_stem_check", "Apply word stemming", FALSE))
                    ),
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                div("Summary", style = "font-weight: bold;", style = "margin-bottom:5px;"),
+                                div("Current Network Graph", style = "font-weight: bold;", style = "margin-bottom:5px;"),
+                                div("These values summarise the current state of the network graph including any filtering by category and component controls.", style = "margin-bottom:5px;"),
                                 verbatimTextOutput("text_analysis_details_output", placeholder = TRUE)
                    )
                  )
@@ -43,8 +44,8 @@ tabItem(tabName="text_analysis_tab",
                                      column(width = 3,
                                             fluidRow(
                                               div(sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                                               sliderInput("text_analysis_wc_min_word_freq", "Minimum Frequency:", min = 1, max = 50, value = 10),
-                                                               sliderInput("text_analysis_wc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 100)
+                                                               sliderInput("text_analysis_wc_min_word_freq", "Minimum Frequency:", min = 1, max = 50, value = 1),
+                                                               sliderInput("text_analysis_wc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 50)
                                               ), style = "margin-right:10px;"))
                                      )
                                    )
@@ -55,7 +56,7 @@ tabItem(tabName="text_analysis_tab",
                                      column(width = 3,
                                             fluidRow(
                                               div(sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                                               sliderInput("text_analysis_cc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 80)
+                                                               sliderInput("text_analysis_cc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 50)
                                               ), style = "margin-right:10px;"))
                                      )
                                    )
