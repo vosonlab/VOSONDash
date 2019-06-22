@@ -14,7 +14,8 @@ creds_rv <- reactiveValues(
   created_token = NULL,
   selected_token_id = NULL,
   use_token = NULL,
-  msg_log = c())
+  msg_log = c()
+)
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 

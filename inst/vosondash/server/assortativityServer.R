@@ -5,8 +5,9 @@
 
 #### values ----------------------------------------------------------------------------------------------------------- #
 
-assort_rvalues <- reactiveValues()
-assort_rvalues$mixmat_message <- NULL   # displays a message if problem with mixing matrix
+assort_rvalues <- reactiveValues(
+  mixmat_message = NULL            # displays a message if problem with mixing matrix
+)
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 

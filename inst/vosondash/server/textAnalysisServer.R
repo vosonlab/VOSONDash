@@ -5,12 +5,12 @@
 
 #### values ----------------------------------------------------------------------------------------------------------- #
 
-ta_rvalues <- reactiveValues()
-ta_rvalues$plot_list_data <- list()   # list of base text corpus data sets
-
-ta_rvalues$has_text <- FALSE   # graph object has voson text data
-ta_rvalues$attr_type <- ""     # vertex or edge
-ta_rvalues$attr_name <- ""     # text attribute name
+ta_rvalues <- reactiveValues(
+  plot_list_data = list(),          # list of base text corpus data sets
+  has_text = FALSE,                 # does graphml have voson text data
+  attr_type = "",                   # is text atttribute a vertex or edge
+  attr_name = ""                    # text attribute name in graphml
+)
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 
@@ -180,8 +180,6 @@ getFiltersDesc <- reactive({
   }
 
   output <- append(output, paste0("Filter Component Size: ", input$graph_component_slider[1], " - ", input$graph_component_slider[2]))
-  
-  # paste0(output, collapse = '\n')
 })
 
 # text analysis summary
@@ -201,24 +199,11 @@ textAnalysisDetailsOutput <- reactive({
     selected_attr <- input$graph_catAttr_attr_select # added 2019-06-20
     if (length(selected_attr) == 1 && selected_attr == "All") {
       output <- append(output, c("All Categories"))
-    # output <- append(output, c("All Categories",
-    #                            paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no), # graph_clusters_nc$no
-    #                            paste("Nodes:", vcount(g)), # gnc
-    #                            paste("Edges:", ecount(g)), "")) # gnc
-    
     } else {
       output <- append(output, c(paste0("Filter Categories (", ng_rvalues$graph_CA_selected, "):")))
     }
     
     output <- append(output, getFiltersDesc())
-    
-    #if (length(list_data) > 1 { # added } && length(selected_attr) > 1) {
-      # graph_clusters <- components(g, mode = input$graph_component_type_select) # moved up
-      # output <- append(output, c("Selected Categories",
-      #                            paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no),
-      #                            paste("Nodes:", vcount(g)),
-      #                            paste("Edges:", ecount(g)), ""))
-    #}
     
     output <- append(output, c(paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no),
                                paste("Nodes:", vcount(g)),
@@ -275,7 +260,7 @@ textAnalysisDetailsOutput <- reactive({
 #     ...
 #
 taPlotListData <- reactive({
-  graphFiltersNoCategorical()
+  # graphFiltersNoCategorical() # 2019-06-22 commented out
   # input$text_analysis_stopwords_check
   
   category_list <- ng_rvalues$graph_CA
@@ -284,10 +269,18 @@ taPlotListData <- reactive({
   
   ta_rvalues$plot_list_data <<- NULL
   
+  # 2019-06-21 remove All if other values selected
+  if ("All" %in% selected_attr && length(selected_attr) > 1) {
+    selected_attr <- selected_attr[selected_attr != "All"]
+  }
+  
   withProgress(message = "Processing corpus...", {
     
     # added if statement 2019-06-20 this may not be working as intended (plot duplicated)
-    if (length(selected_attr) == 1 && selected_attr == "All") {
+    # if (length(selected_attr) == 1 && selected_attr == "All") {
+    
+    # added 2019-06-22
+    if (selected_value == "All" || selected_attr == "All") {
       
       # if no categories then one corpus for text data
       # if categories present then first corpus is for all categories
@@ -304,14 +297,9 @@ taPlotListData <- reactive({
     # id in plot_list_data is numbered "plot-1", "plot-2"
     # corpus is created by the taTextCorpusData for each selected attribute in graph category
     # if (length(names(category_list)) > 0 && selected_value != "All") {
-    if (length(names(category_list)) > 0 && selected_value != "All") {
+    if (!(selected_value %in% c("All", ""))) {
       value_list <- category_list[[selected_value]]
       plot_counter <- 1
-      
-      # 2019-06-21 remove All if other values selected
-      if ("All" %in% selected_attr && length(selected_attr) > 1) {
-        selected_attr <- selected_attr[selected_attr != "All"]
-      }
       
       # corpus created for all attributes in graph category
       if ("All" %in% selected_attr && length(selected_attr) == 1) { # 2019-06-21 length check
@@ -455,3 +443,15 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
     return(NULL)
   }
 }
+
+remHTTP <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https tokens
+# remHTTP <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url
+
+removeHashTags <- function(x) gsub("#\\S+", "", x)
+removeTwitterHandles <- function(x) gsub("@\\S+", "", x)
+
+# replace html encoding with escaped characters in twitter text
+repHTMLApos <- function(x) gsub("&apos;", "\'", x)    # apostrophe
+repHTMLQuote <- function(x) gsub("&quot;", "\"", x)   # quote
+repHTMLAmper <- function(x) gsub("&amp;", "&", x)     # ampersand
+remPartAmpGt <- function(x) gsub("amp;|gt;", "", x)   # 

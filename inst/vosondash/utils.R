@@ -143,16 +143,3 @@ logMessage <- function(messages, add_message, txt = FALSE, count = 20) {
 createTokenId <- function(token) {
   token_id <- paste0(token$created, " ", token$auth$app$appname, " (", token$type ,")")
 }
-
-# text analysis helpers
-remHTTP <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https tokens
-# remHTTP <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url
-
-removeHashTags <- function(x) gsub("#\\S+", "", x)
-removeTwitterHandles <- function(x) gsub("@\\S+", "", x)
-
-# replace html encoding with escaped characters in twitter text
-repHTMLApos <- function(x) gsub("&apos;", "\'", x)    # apostrophe
-repHTMLQuote <- function(x) gsub("&quot;", "\"", x)   # quote
-repHTMLAmper <- function(x) gsub("&amp;", "&", x)     # ampersand
-remPartAmpGt <- function(x) gsub("amp;|gt;", "", x)   # 

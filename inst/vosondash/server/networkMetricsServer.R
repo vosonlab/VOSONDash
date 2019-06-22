@@ -34,7 +34,6 @@ componentDistPlotData <- reactive({
   
   if (is.null(g)) {
     return(emptyMetricsPlotMessage("No graph data."))
-    # return(NULL)
   }
   
   cc <- components(g, mode = input$graph_component_type_select)
@@ -46,7 +45,6 @@ degreeDistPlotData <- reactive({
   
   if (is.null(g)) {
     return(emptyMetricsPlotMessage("No graph data."))
-    # return(NULL)
   }
   
   if (is.directed(g)) {
@@ -61,7 +59,6 @@ indegreeDistPlotData <- reactive({
   
   if (is.null(g)) {
     return(emptyMetricsPlotMessage("No graph data."))
-    # return(NULL)
   }
   
   if (is.directed(g)){
@@ -76,7 +73,6 @@ outdegreeDistPlotData <- reactive({
   
   if (is.null(g)) {
     return(emptyMetricsPlotMessage("No graph data."))
-    # return(NULL)
   }
   
   if (is.directed(g)){
@@ -94,31 +90,37 @@ networkMetricsDetailsOutput <- reactive({
   if (!is.null(g)) {
     graph_clusters <- components(g, mode = input$graph_component_type_select)
     
-    output <- append(output, paste0("Number of nodes (network size): ", vcount(g)))
-    output <- append(output, paste0("Number of edges: ", ecount(g)))
-    output <- append(output, paste0("Number of components (", input$graph_component_type_select, "): ", graph_clusters$no))
-    output <- append(output, paste0("Number of isolates: ", length(which(degree(g)==0))))
-    output <- append(output, paste0("Density: ", sprintf("%.3f", graph.density(g))))
-    output <- append(output, paste0("Average geodesic distance: ", sprintf("%.3f", mean_distance(g))))
-    output <- append(output, "")
-    output <- append(output, paste0("(Global) clustering coefficient: ", sprintf("%.3f", transitivity(g))))
-    output <- append(output, "  Proportion of connected triples that close to form triangles")
-    output <- append(output, paste0("Reciprocity - 1: ", sprintf("%.3f", reciprocity(g, mode="default"))))
-    output <- append(output, "  Ratio of number of dyads with reciprocated (mutual) edges to number of dyads with single edge")
-    output <- append(output, paste0("Reciprocity - 2: ", sprintf("%.3f", reciprocity(g, mode="ratio"))))
-    output <- append(output, "  Ratio of total number of reciprocated edges to total number of edges")
-    output <- append(output, "")
+    output <- append(output, c(
+      paste("Number of nodes (network size):", vcount(g)),
+      paste("Number of edges:", ecount(g)),
+      paste0("Number of components (", input$graph_component_type_select, "): ", graph_clusters$no),
+      paste("Number of isolates:", length(which(degree(g) == 0))),
+      paste("Density:", sprintf("%.3f", graph.density(g))),
+      paste("Average geodesic distance:", sprintf("%.3f", mean_distance(g))), "",
+      paste("(Global) clustering coefficient:", sprintf("%.3f", transitivity(g))),
+      "  Proportion of connected triples that close to form triangles",
+      paste("Reciprocity - 1:", sprintf("%.3f", reciprocity(g, mode = "default"))),
+      "  Ratio of number of dyads with reciprocated (mutual) edges to number of dyads with single edge",
+      paste("Reciprocity - 2:", sprintf("%.3f", reciprocity(g, mode = "ratio"))),
+      "  Ratio of total number of reciprocated edges to total number of edges", ""
+    ))
+    
     if (is.directed(g)){
-      output <- append(output, paste0("Indegree centralization: ", sprintf("%.3f", centr_degree(g, mode="in")$centralization)))
-      output <- append(output, paste0("Outdegree centralization: ", sprintf("%.3f", centr_degree(g, mode="out")$centralization)))
+      output <- append(output, c(
+        paste("Indegree centralization:", sprintf("%.3f", centr_degree(g, mode = "in")$centralization)),
+        paste("Outdegree centralization:", sprintf("%.3f", centr_degree(g, mode = "out")$centralization))
+      ))
     }else{
-      output <- append(output, paste0("Degree centralization: ", sprintf("%.3f", centr_degree(g)$centralization)))
+      output <- append(output, paste("Degree centralization:", sprintf("%.3f", centr_degree(g)$centralization)))
     }
-    output <- append(output, paste0("Betweenness centralization: ", sprintf("%.3f", centr_betw(g)$centralization)))
-    output <- append(output, paste0("Closeness centralization: ", sprintf("%.3f", suppressWarnings(centr_clo(g)$centralization))))
+    
+    output <- append(output, c(
+      paste("Betweenness centralization:", sprintf("%.3f", centr_betw(g)$centralization)),
+      paste("Closeness centralization:", sprintf("%.3f", suppressWarnings(centr_clo(g)$centralization)))
+    ))
     
   } else {
-    output <- append(output, paste0("No graph data."))
+    output <- append(output, "No graph data.")
   }
   
   paste0(output, collapse = '\n')

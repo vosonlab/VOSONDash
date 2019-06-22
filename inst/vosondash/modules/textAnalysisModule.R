@@ -217,6 +217,11 @@ getColors <- function(categories, plot_category, plot_category_attrs, default_co
 wordFreqChart <- function(data, categories, min_freq, top_count) {
   graph_attr <- data[[1]]
   corp <- data[[2]]
+
+  # returns empty plot with message if no data to chart
+  if (is.null(corp) || length(corp) < 1) {
+    return(emptyPlotMessage("No text data."))
+  }
   
   plot_category <- plot_category_attrs <- ""
   plot_category <- graph_attr[[1]]
@@ -231,10 +236,6 @@ wordFreqChart <- function(data, categories, min_freq, top_count) {
   
   colx <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5")
   
-  # returns empty plot with message if no data to chart
-  if (is.null(corp) || length(corp) < 1) {
-    return(emptyPlotMessage("No text data."))
-  }
   par(mar = rep(0, 4))
   return(barchart(freq_terms[order_terms[1:top_count]], col = colx, xlab = "Frequency"))
 }
@@ -242,6 +243,11 @@ wordFreqChart <- function(data, categories, min_freq, top_count) {
 wordSentChart <- function(data, categories) {
   graph_attr <- data[[1]]
   corp <- data[[2]]
+  
+  # returns empty plot with message if no data to chart
+  if (is.null(corp) || length(corp) < 1) {
+    return(emptyPlotMessage("No text data."))
+  }
   
   ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
   
@@ -259,10 +265,6 @@ wordSentChart <- function(data, categories) {
   colx[10] <- "mediumaquamarine"
   colx[11] <- "gainsboro"
   
-  # returns empty plot with message if no data to chart
-  if (is.null(corp) || length(corp) < 1) {
-    return(emptyPlotMessage("No text data."))
-  }
   par(las = 2)
   par(mar = c(4, 6, 0, 4))
 
@@ -288,16 +290,16 @@ wordCloudPlot <- function(data, seed, categories, min_freq, max_words) {
   graph_attr <- data[[1]]
   corp <- data[[2]]
   
+  # returns empty plot with message if no data to plot
+  if (is.null(corp) || length(corp) < 1) {
+    return(emptyPlotMessage("No text data."))
+  }
+  
   plot_category <- plot_category_attrs <- ""
   plot_category <- graph_attr[[1]]
   plot_category_attrs <- graph_attr[[2]]
   
   colx <- getColors(categories, plot_category, plot_category_attrs, "black")
-  
-  # returns empty plot with message if no data to plot
-  if (is.null(corp) || length(corp) < 1) {
-    return(emptyPlotMessage("No text data."))
-  }
   
   if (!is.null(seed)) {
     set.seed(seed)

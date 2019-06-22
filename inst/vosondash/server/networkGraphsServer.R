@@ -6,38 +6,23 @@
 #### values ----------------------------------------------------------------------------------------------------------- #
 
 ng_rvalues <- reactiveValues(
-  data = NULL,
-  graph_data = NULL,
+  data = NULL,                  # vosonsml df
+  graph_data = NULL,            # graphml object
   graph_seed = NULL,
   
   graph_desc = "",
   graph_name = "",
   graph_type = "",
   
-  graph_CA = c(),
-  graph_CA_selected = ""
+  graph_CA = c(),               # list of categories in the data
+  graph_CA_selected = ""        # list of chosen attributes for selected category
 )
 
-# ng_rvalues$data <- NULL         # dataframe returned by vosonSML collection
-# ng_rvalues$graph_data <- NULL   # graphml object loaded from file or vosonSML
-# 
-# ng_rvalues$graph_seed <- NULL   # seed value used to generate plots
-# 
-# ng_rvalues$graph_desc <- ""     # graph descriptors
-# ng_rvalues$graph_name <- ""
-# ng_rvalues$graph_type <- ""
-# 
-# ng_rvalues$graph_CA <- c()            # list with meta data on categorical (vertex) attributes
-# ng_rvalues$graph_CA_selected <- ""    # categorical attribute chosen via select box
-
 # list of user selected graph vertices to prune
+prune_flag <- FALSE
 pruning_rvalues <- reactiveValues(
   prune_verts = c()
 )
-# pruning_rvalues$prune_verts <- c()
-prune_flag <- FALSE
-
-check_demo_files <- TRUE
 
 # proxy for vertices data table used for row manipulation
 dt_vertices_proxy = dataTableProxy('dt_vertices')
@@ -48,7 +33,8 @@ dt_vertices_proxy = dataTableProxy('dt_vertices')
 addCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
 addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
 
-# startup
+# do once at startup
+check_demo_files <- TRUE
 observeEvent(check_demo_files, {
   tryCatch({
     demo_files_list <- list.files(path = system.file("extdata", "", package = "VOSONDash", mustWork = TRUE),
@@ -119,7 +105,7 @@ observeEvent(ng_rvalues$graph_data, {
   }
 })
 
-# enable assortativity tab when vertex category selected
+# enable assortativity tab when category selected
 observeEvent(ng_rvalues$graph_CA_selected, {
   if (ng_rvalues$graph_CA_selected %in% c("", "All")) {
     addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
@@ -128,7 +114,7 @@ observeEvent(ng_rvalues$graph_CA_selected, {
   }
 })
 
-# update component slider when graph component type changed
+# update component slider when graph component or category changed
 observeEvent({ input$graph_component_type_select
                input$graph_catAttr_attr_select
                input$reset_on_change_check }, {
@@ -136,17 +122,14 @@ observeEvent({ input$graph_component_type_select
   g <- ng_rvalues$graph_data
                  
   if (input$reset_on_change_check == TRUE) {
-    # g <- graphFilters()
     g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
     g <- applyCategoricalFilters(g, input$graph_catAttr_select, input$graph_catAttr_attr_select)
-  } # else {
-  #   g <- ng_rvalues$graph_data
-  # }
+  }
 
   updateComponentSlider(g, input$graph_component_type_select)
 }, ignoreInit = TRUE)
   
-# selected vertex category updates select box with its attribute values
+# selected category updates select box with its attribute values
 observeEvent(input$graph_catAttr_select, {
   ng_rvalues$graph_CA_selected <<- input$graph_catAttr_select
   
@@ -420,7 +403,7 @@ filedata <- reactive({
 # apply filters except categorical to graph data and return modified graph
 graphFiltersNoCategorical <- reactive({
   g <- NULL
-  
+
   if (!is.null(ng_rvalues$graph_data)) {
     g <- ng_rvalues$graph_data
     g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
@@ -429,7 +412,7 @@ graphFiltersNoCategorical <- reactive({
     g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, input$graph_loops_edge_check)
     g <- addAdditionalMeasures(g)
   }
-  
+
   return(g)
 })
 
@@ -450,7 +433,7 @@ graphFilters <- reactive({
   return(g)
 })
 
-# create a list of vertex categories from voson category field names in data
+# create a list of categories from voson category field names in data
 createGraphCategoryList <- reactive({
   g <- ng_rvalues$graph_data
   
