@@ -12,7 +12,7 @@ dashboardPage(
   # sidebar menu items
   dashboardSidebar(useShinyjs(), width = 180,
                    sidebarMenu(id = "sidebar_menu",
-                               menuItem("Home", tabName = "home_tab", icon = icon("university")),
+                               # menuItem("Home", tabName = "home_tab", icon = icon("university")),
                                h4("Analysis", style = "padding-left:20px;"),
                                menuItem("Network Graphs", tabName = "network_graphs_tab", icon = icon("share-alt"), 
                                         selected = TRUE),
@@ -51,11 +51,11 @@ dashboardPage(
     tabItems(
       
       #### home tab
-      tabItem(tabName="home_tab",
-              fluidRow(
-                box(width=12, includeHTML("www/home.html"))
-              )
-      ),
+      # tabItem(tabName="home_tab",
+      #         fluidRow(
+      #           box(width=12, includeHTML("www/home.html"))
+      #         )
+      # ),
       
       #### network graphs tab
       source("ui/networkGraphsUI.R")$value,

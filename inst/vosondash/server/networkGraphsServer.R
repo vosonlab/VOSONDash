@@ -5,23 +5,39 @@
 
 #### values ----------------------------------------------------------------------------------------------------------- #
 
-ng_rvalues <- reactiveValues()
-ng_rvalues$data <- NULL         # dataframe returned by vosonSML collection
-ng_rvalues$graph_data <- NULL   # graphml object loaded from file or vosonSML
+ng_rvalues <- reactiveValues(
+  data = NULL,
+  graph_data = NULL,
+  graph_seed = NULL,
+  
+  graph_desc = "",
+  graph_name = "",
+  graph_type = "",
+  
+  graph_CA = c(),
+  graph_CA_selected = ""
+)
 
-ng_rvalues$graph_seed <- NULL   # seed value used to generate plots
-
-ng_rvalues$graph_desc <- ""     # graph descriptors
-ng_rvalues$graph_name <- ""
-ng_rvalues$graph_type <- ""
-
-ng_rvalues$graph_CA <- c()            # list with meta data on categorical (vertex) attributes
-ng_rvalues$graph_CA_selected <- ""    # categorical attribute chosen via select box
+# ng_rvalues$data <- NULL         # dataframe returned by vosonSML collection
+# ng_rvalues$graph_data <- NULL   # graphml object loaded from file or vosonSML
+# 
+# ng_rvalues$graph_seed <- NULL   # seed value used to generate plots
+# 
+# ng_rvalues$graph_desc <- ""     # graph descriptors
+# ng_rvalues$graph_name <- ""
+# ng_rvalues$graph_type <- ""
+# 
+# ng_rvalues$graph_CA <- c()            # list with meta data on categorical (vertex) attributes
+# ng_rvalues$graph_CA_selected <- ""    # categorical attribute chosen via select box
 
 # list of user selected graph vertices to prune
-pruning_rvalues <- reactiveValues()
-pruning_rvalues$prune_verts <- c()
+pruning_rvalues <- reactiveValues(
+  prune_verts = c()
+)
+# pruning_rvalues$prune_verts <- c()
 prune_flag <- FALSE
+
+check_demo_files <- TRUE
 
 # proxy for vertices data table used for row manipulation
 dt_vertices_proxy = dataTableProxy('dt_vertices')
@@ -31,6 +47,57 @@ dt_vertices_proxy = dataTableProxy('dt_vertices')
 # disable network metrics and assortativity tabs when app loads
 addCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
 addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
+
+# startup
+observeEvent(check_demo_files, {
+  tryCatch({
+    demo_files_list <- list.files(path = system.file("extdata", "", package = "VOSONDash", mustWork = TRUE),
+                                  pattern = "\\.graphml$")
+    
+    if (length(demo_files_list) > 0) {
+      updateSelectInput(session, "demo_data_select", label = NULL, choices = demo_files_list,
+                        selected = NULL)
+      shinyjs::enable("demo_data_select")
+      shinyjs::enable("demo_data_select_button")
+    }    
+  }, error = function(err) {
+    # cat(paste("error loading demo files:", err))
+  }, warning = function(w) {
+    # cat(paste("warning loading demo files:", w))
+  })
+}, once = TRUE)
+
+observeEvent(input$demo_data_select_button, {
+  load_file <- system.file("extdata", input$demo_data_select, package = "VOSONDash")
+
+  if (load_file != "") {
+    file_desc <- "Description not found."
+    tryCatch({
+      file_desc <- paste(readLines(paste0(load_file, ".txt")), collapse = "<br>")
+    }, error = function(err) {
+      # cat(paste("error loading demo files:", err))
+    }, warning = function(w) {
+      # cat(paste("warning loading demo files:", w))
+    })
+    
+    tryCatch({
+      data <- igraph::read_graph(load_file, format = c('graphml'))
+      
+      type <- ifelse("type" %in% graph_attr_names(data), 
+                                       graph_attr(data, "type"), "")
+      
+      setGraphView(data = data, 
+                   desc = file_desc,
+                   type = type,
+                   name = input$demo_data_select,
+                   seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+    }, error = function(err) {
+      # cat(paste("error loading demo files:", err))
+    }, warning = function(w) {
+      # cat(paste("warning loading demo files:", w))
+    })
+  }
+})
 
 # enable network metrics tab when graph data loaded
 observeEvent(ng_rvalues$graph_data, {
@@ -208,35 +275,34 @@ observeEvent(input$prune_deselect_rows_button, {
 
 #### output ----------------------------------------------------------------------------------------------------------- #
 
-output$graph_details_top_output <- renderText({
-  graphDetailsOutput()
+output$graph_summary_output <- renderText({
+  graphSummaryOutput()
 })
 
-output$graph_details_bottom_output <- renderText({
-  output <- c()
+output$graph_name <- renderText({
+  output <- ifelse(nchar(ng_rvalues$graph_name), ng_rvalues$graph_name, "Not set")
+  output <- paste("Name: ", output)
   
-  if (!is.null(ng_rvalues$graph_seed)) {
-    output <- append(output, paste0("Layout: ", input$graph_layout_select))
-    output <- append(output, paste0("Graph Seed: ", ng_rvalues$graph_seed))
+  if (nchar(ng_rvalues$graph_type)) {
+    output <- paste0(output, "  (Type: ", ng_rvalues$graph_type, ")")
   }
   
-  paste0(output, collapse = '\n')
+  return(output)
 })
 
-output$graphml_desc_text <- renderText({
-  ng_rvalues$graph_name
-})
-
-output$graphml_desc1_text <- renderText({
-  g_name <- ifelse(nchar(ng_rvalues$graph_name), ng_rvalues$graph_name, "not set")
-  if (nchar(ng_rvalues$graph_desc) || nchar(ng_rvalues$graph_name)) {
-    paste0("Name: ", g_name, " (Type: ", ng_rvalues$graph_type,")")
-  }
-})
-
-output$graphml_desc2_text <- renderText({
+output$graph_desc <- renderText({
   if (nchar(ng_rvalues$graph_desc)) {
-    paste("Description:", ng_rvalues$graph_desc)
+    return(HTML(ng_rvalues$graph_desc))
+  }
+  
+  return(HTML("No description."))
+})
+
+observeEvent(ng_rvalues$graph_desc, {
+  if (!isNullOrEmpty(ng_rvalues$graph_desc)) {
+    shinyjs::enable("expand_data_desc_check")
+  } else {
+    shinyjs::disable("expand_data_desc_check")
   }
 })
 
@@ -258,7 +324,7 @@ output$analysis_graphml_download_button <- downloadHandler(
   filename = function() { systemTimeFilename("analysis-graph", "graphml") },
   
   content = function(file) {
-    print(graphFilters())
+    # print(graphFilters())
     write_graph(graphFilters(), file, format = c("graphml"))
   }
 )
@@ -337,12 +403,12 @@ filedata <- reactive({
   
   # reads file as graphml and fails gracefully
   tryCatch({
-    ng_rvalues$graph_data <<- read_graph(infile$datapath, format = c('graphml'))
+    ng_rvalues$graph_data <<- igraph::read_graph(infile$datapath, format = c('graphml'))
     
     ng_rvalues$graph_name <<- infile$name
     ng_rvalues$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rvalues$graph_data), 
-                                     graph_attr(ng_rvalues$graph_data, "type"), "not set")
-    ng_rvalues$graph_desc <<- "Network loaded from file"
+                                     graph_attr(ng_rvalues$graph_data, "type"), "")
+    ng_rvalues$graph_desc <<- "Network loaded from file."
     
     createGraphCategoryList()
     
@@ -887,7 +953,7 @@ forceNetworkData <- reactive({
 })
 
 # graph summary
-graphDetailsOutput <- reactive({
+graphSummaryOutput <- reactive({
   g <- graphFilters()
   
   output <- c()
@@ -927,18 +993,20 @@ graphDetailsOutput <- reactive({
 #### functions -------------------------------------------------------------------------------------------------------- #
 
 # set graph manually
-setGraphView <- function(data, desc = "None", type = "None", name = "None", seed = 1) {
+setGraphView <- function(data, desc = "", type = "", name = "", seed = 1) {
   shinyjs::reset("graphml_data_file")
   
   ng_rvalues$graph_data <<- data
   ng_rvalues$graph_desc <<- desc
   ng_rvalues$graph_type <<- type
-  ng_rvalues$graph_name <<- ""
+  ng_rvalues$graph_name <<- name
   ng_rvalues$graph_seed <<- seed
   ng_rvalues$graph_CA <<- c()
   ng_rvalues$graph_CA_selected <<- ""
   
+  createGraphCategoryList()
   setGraphFilterControls()
+  #createGraphCategoryList()
   updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
 }
 

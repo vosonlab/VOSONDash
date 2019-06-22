@@ -1,0 +1,7 @@
+WWW hyperlink network of 40 A-list political bloggers from:
+
+Adamic, L. and Glance, N. (2005). The political blogosphere and the 2004 U.S. election: Divided they blog. In Proceedings of the 3rd International Workshop on Link Discovery (LINKDD 2005), pages 6-43.
+Available at: http://doi.acm.org/10.1145/1134271.1134277.
+
+- Node attribute "Stance" coded as conservative/liberal
+- No text data

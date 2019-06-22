@@ -5,11 +5,23 @@ tabItem(tabName = "network_graphs_tab",
                  fluidRow(
                    # graph controls
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                fileInput('graphml_data_file', 'Choose graphml file', accept = c('.graphml'))
+                                fileInput('graphml_data_file', 'Choose graphml file', accept = c('.graphml')),
+                                checkboxInput('expand_demo_data_check', div("Demonstration Data"), FALSE),
+                                conditionalPanel(condition = 'input.expand_demo_data_check',
+                                                 fluidRow(
+                                                         column(width = 12,
+                                                                div(shinyjs::disabled(selectInput("demo_data_select", 
+                                                                                              label = NULL, 
+                                                                                              choices = c("No Demo Dataset Files Found"), selected = NULL, multiple = FALSE))),
+                                                                div(shinyjs::disabled(actionButton("demo_data_select_button", label = "Load graphml")))
+                                                         )
+                                                 )
+                                                 
+                                )
                    ),
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
                                 div("Graph Filters", style = "font-weight: bold;", class = "div_inline"),
-                                div(disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding: 2px 8px;")), style = "float:right; margin-top:5px;"),
+                                div("re-seed ", disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding: 2px 8px;")), style = "float:right; margin-top:5px;"),
                                 disabled(checkboxInput("graph_names_check", "Node Names", FALSE)),
                                 div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_loops_edge_check", "Loops", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
@@ -47,8 +59,6 @@ tabItem(tabName = "network_graphs_tab",
                                                    )
                                                  )
                                 ),
-                                
-                                #div("Components", style = "font-weight: bold;"),
                                 checkboxInput('expand_component_filter_check', div("Component Filter", style = "font-weight: bold;"), FALSE),
                                 conditionalPanel(condition = 'input.expand_component_filter_check',
                                                  disabled(checkboxInput('reset_on_change_check', div("Recalculate for category change", style = "font-weight: normal;"), TRUE)),
@@ -63,9 +73,10 @@ tabItem(tabName = "network_graphs_tab",
                                                  
                                 )
                    ),
+                   # graph summary info
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
                                 div("Summary", style = "font-weight: bold;", style = "margin-bottom:5px;"),
-                                verbatimTextOutput("graph_details_top_output", placeholder = TRUE)
+                                verbatimTextOutput("graph_summary_output", placeholder = TRUE)
                    )
                    
                  )
@@ -87,20 +98,22 @@ tabItem(tabName = "network_graphs_tab",
                    # graph info and download buttons
                    sidebarPanel(id = "graph_info_well", width = 12, class = "custom_well_for_buttons",
                                 fluidRow(
-                                  div(textOutput("graphml_desc1_text"), textOutput("graphml_desc2_text"), 
-                                      class = "div_inline"),
-                                  div(disabled(downloadButton("graph_download_button", label = "Plot HTML",
-                                                              title = "Download Plot as HTML File")), 
-                                      style = "float:right; margin-right:10px;", class = "div_inline"),
-                                  div(disabled(downloadButton("analysis_graphml_download_button", label = "Graphml", 
-                                                              title = "Download Plot Graphml File")), 
-                                      style = "float:right; margin-right:10px;", class = "div_inline")
+                                        div(shinyjs::disabled(checkboxInput('expand_data_desc_check', label = NULL, FALSE)), class = "div_inline"),
+                                        div(textOutput("graph_name"), class = "div_inline", style = "margin-bottom:10px;"),
+                                        div(disabled(downloadButton("analysis_graphml_download_button", label = "Graphml", 
+                                                                    title = "Download Plot Graphml File")), 
+                                            style = "float:right; margin-right:10px;", class = "div_inline"),
+                                        div(disabled(downloadButton("graph_download_button", label = "Plot HTML",
+                                                                    title = "Download Plot as HTML File")), 
+                                            style = "float:right; margin-right:10px;", class = "div_inline")
+                                ),
+                                
+                                fluidRow(        
+                                        conditionalPanel(condition = 'input.expand_data_desc_check',
+                                            div(htmlOutput("graph_desc"))
+                                        )
                                 )
-                   )
-                 ),
-                 fluidRow(
-                   column(width = 12,
-                          verbatimTextOutput("graph_details_bottom_output")
+                                
                    )
                  )
           )
