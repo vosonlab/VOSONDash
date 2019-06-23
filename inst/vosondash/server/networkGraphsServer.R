@@ -675,8 +675,8 @@ visNetworkData <- reactive({
                          # smooth = list(enabled = TRUE, type = "continuous", roundness = 0.1)
                          color = list(color = "#b0b0b0")) %>% # arrows = 'to, from'
     visOptions(collapse = TRUE, highlightNearest = list(enabled = TRUE, hover = TRUE),
-               nodesIdSelection = TRUE) %>%
-    visInteraction(navigationButtons = TRUE)
+               nodesIdSelection = TRUE) #%>%
+    # visInteraction(navigationButtons = TRUE)
 })
 
 # network graph save file name based on selected network graph tab
