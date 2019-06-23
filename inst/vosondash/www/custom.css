@@ -99,6 +99,10 @@ pre.shiny-text-output {
   font-size:65%;
 }
 
+.nav-tabs>li>a {
+ line-height: 1.0 !important;
+}
+
 .dataTables_length {
   margin-right:10px;
 }

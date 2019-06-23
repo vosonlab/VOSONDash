@@ -381,8 +381,19 @@ output$simple <- renderSimpleNetwork({
 })
 
 output$visNetworkPlot <- renderVisNetwork({
-  visNetworkData()
+  data <- visNetworkData() 
+  if (!is.null(data)) {
+    data %>% 
+    visEvents(select = 
+    "function(nodes) {
+      Shiny.onInputChange('visnetwork_vertex_selection', nodes.nodes);
+    }")
+  }
 })
+
+# observeEvent(input$visnetwork_vertex_selection, {
+#   cat(paste0("selected: ", input$visnetwork_vertex_selection, "\n"))
+# })
 
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
@@ -644,8 +655,15 @@ visNetworkData <- reactive({
       }
     }
   }
-
+  
   verts$id <- verts$name
+  
+  verts$font.color <- "#000000"
+  if (length(input$dt_vertices_rows_selected) > 0) {
+    selected_row_names <- row.names(verts)[c(input$dt_vertices_rows_selected)]
+    verts$color.background[row.names(verts) %in% selected_row_names] <- g_plot_selected_vertex_color
+    verts$font.color[row.names(verts) %in% selected_row_names] <- g_plot_selected_vertex_color
+  }
 
   edges <- edges %>% group_by(to, from) %>%
     summarise(width = n()) %>% 
@@ -846,7 +864,15 @@ standardPlotData <- reactive({
   plot_parameters <- list(g, vertex.frame.color = "gray", edge.arrow.size = 0.4)
   
   # set vertex color for vertices selected in graph data table
-  plot_parameters[['vertex.color']] = ifelse(V(g)$id %in% selected_row_names, g_plot_selected_vertex_color, V(g)$color)
+  plot_parameters[['vertex.color']] <- ifelse(V(g)$id %in% selected_row_names, g_plot_selected_vertex_color, V(g)$color)
+  plot_parameters[['vertex.label.font']] <- ifelse(V(g)$id %in% selected_row_names, 2, 1)
+  # plot_parameters[['vertex.label.cex']] = ifelse(V(g)$id %in% selected_row_names, 4, 1)
+  
+  # E(g)$weight <- 1
+  # g <- simplify(g, edge.attr.comb = list(weight = "sum"), 
+  #               remove.loops = FALSE, # !input$graph_loops_edge_check,
+  #               remove.multiple = FALSE) # !input$graph_multi_edge_check)
+  # plot_parameters[['edge.width']] <- E(g)$weight
   
   base_vertex_size <- 4
   
@@ -990,7 +1016,7 @@ graphSummaryOutput <- reactive({
     isolate_count <- sum(degree(g) == 0)
     output <- append(output, paste0("Isolates: ", isolate_count))
   }else {
-    output <- append(output, paste0("No data."))
+    output <- append(output, paste0(""))
   }
   
   paste0(output, collapse = '<br>') # \n

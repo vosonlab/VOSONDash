@@ -90,9 +90,9 @@ tabItem(tabName = "network_graphs_tab",
                           tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "500px"), 
                                    value = "Plot"),
                           tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%", 
-                                                                       height = "500px"), value = "visNetwork") # ,
-                          # tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
-                          # tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
+                                                                       height = "500px"), value = "visNetwork"),
+                          tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
+                          tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
                    ),
                    uiOutput("test_graph_summary"),
                    
