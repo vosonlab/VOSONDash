@@ -2,6 +2,10 @@
 
 #### shiny server ----------------------------------------------------------------------------------------------------- #
 shinyServer(function(input, output, session) {
+  # if (isLocal) {
+  #   options(encoding = "UTF-8")
+  # }
+  
   #### network graphs ####
   source("server/networkGraphsServer.R", local = TRUE)
   
@@ -36,6 +40,7 @@ shinyServer(function(input, output, session) {
   session$onSessionEnded(function() {
     if (isLocal) {
       cat("Session ended or browser closed. Exiting.\n")
+      # options(encoding = save_enc)
       stopApp()
     }
   })  

@@ -29,6 +29,15 @@ dt_vertices_proxy = dataTableProxy('dt_vertices')
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 
+output$test_graph_summary <- renderUI({
+  tagList(
+    div(
+      div(HTML(graphSummaryOutput()), 
+          style = "position:absolute; z-index:1; top:60px; right:40px; font-size:0.97em;"),
+    style = "position:relative; z-index:0;")
+  )
+})
+
 # disable network metrics and assortativity tabs when app loads
 addCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
 addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
@@ -191,7 +200,7 @@ observeEvent(input$prune_selected_rows_button, {
   } else {
     temp <- list()
     for (i in prune_list) {
-      n_value <- V(isolate(ng_rvalues$graph_data))[which(V(isolate(ng_rvalues$graph_data))$id == i)]$name
+      n_value <- V(isolate(ng_rvalues$graph_data))[which(V(isolate(ng_rvalues$graph_data))$id == i)]$label # name
       temp[paste0(i, " - ", n_value)] <- i
     }
     prune_list <- temp
@@ -420,6 +429,8 @@ graphFiltersNoCategorical <- reactive({
 graphFilters <- reactive({
   g <- NULL
 
+  # during a plot this is triggered 3 times - need to fix at some stage
+  
   if (!is.null(ng_rvalues$graph_data)) {
     g <- ng_rvalues$graph_data
     g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
@@ -779,14 +790,19 @@ standardPlotData <- reactive({
   })
   selected_rows <- input$dt_vertices_rows_selected
   # graph_vertices <- as_data_frame(g, what = c("vertices"))
-  #browser()
+  
+  if (is.null(V(g)$label)) {
+    V(g)$label <- V(g)$name
+  }
+  
   df <- data.frame(label = V(g)$label,
                    name = V(g)$name, 
                    degree = V(g)$Degree, 
                    indegree = V(g)$Indegree, 
                    outdegree = V(g)$Outdegree, 
                    betweenness = V(g)$Betweenness, 
-                   closeness = V(g)$Closeness)
+                   closeness = V(g)$Closeness,
+                   stringsAsFactors = FALSE)
   row.names(df) <- V(g)$id
   graph_vertices <- df
   
@@ -970,7 +986,7 @@ graphSummaryOutput <- reactive({
     output <- append(output, paste0("No data."))
   }
   
-  paste0(output, collapse = '\n')
+  paste0(output, collapse = '<br>') # \n
 })
 
 #### functions -------------------------------------------------------------------------------------------------------- #

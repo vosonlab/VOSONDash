@@ -194,12 +194,15 @@ getColors <- function(categories, plot_category, plot_category_attrs, default_co
   if (plot_category != "") {
     df <- data.frame("cat" = categories[[plot_category]])
     
-    # is this needed?
-    ncats <- ifelse(nrow(df) == 0, 1, nrow(df))
-    df$color <- tamod_palette[1:ncats]
-    
-    match_t <- match(plot_category_attrs, df$cat)
-    colx <- ifelse(!is.na(match_t), df$color[match_t], default_col)
+    # not sure about this
+    if (nrow(df)) {
+      # is this needed?
+      ncats <- ifelse(nrow(df) == 0, 1, nrow(df))
+      df$color <- tamod_palette[1:ncats]
+      
+      match_t <- match(plot_category_attrs, df$cat)
+      colx <- ifelse(!is.na(match_t), df$color[match_t], default_col)      
+    }
   } else {
     colx <- default_col
   }

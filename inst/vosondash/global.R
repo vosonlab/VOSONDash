@@ -7,6 +7,8 @@ app_date <- "16June19"
 isLocal <- Sys.getenv('SHINY_PORT') == ""
 suppressLibraryMessages <- TRUE
 
+save_enc <- getOption("encoding")
+
 source("packages.R", local = TRUE)
 
 # set to launch in browser so download buttons work correctly

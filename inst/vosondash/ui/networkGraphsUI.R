@@ -21,8 +21,8 @@ tabItem(tabName = "network_graphs_tab",
                    ),
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
                                 div("Graph Filters", style = "font-weight: bold;", class = "div_inline"),
-                                div("re-seed ", disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding: 2px 8px;")), style = "float:right; margin-top:5px;"),
-                                disabled(checkboxInput("graph_names_check", "Node Names", FALSE)),
+                                div("re-seed ", disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding:2px 8px;")), style = "float:right; margin-top:5px; font-size:0.98em;"),
+                                disabled(checkboxInput("graph_names_check", "Node Labels", FALSE)),
                                 div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_loops_edge_check", "Loops", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_isolates_check", "Isolates", TRUE)), class = "div_inline"),
@@ -72,12 +72,12 @@ tabItem(tabName = "network_graphs_tab",
                                                  )
                                                  
                                 )
-                   ),
+                   ) # ,
                    # graph summary info
-                   sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                div("Summary", style = "font-weight: bold;", style = "margin-bottom:5px;"),
-                                verbatimTextOutput("graph_summary_output", placeholder = TRUE)
-                   )
+                   # sidebarPanel(width = 12, class = "custom_well_for_controls",
+                   #              div("Summary", style = "font-weight: bold;", style = "margin-bottom:5px;"),
+                   #              verbatimTextOutput("graph_summary_output", placeholder = TRUE)
+                   # )
                    
                  )
           ),
@@ -90,10 +90,11 @@ tabItem(tabName = "network_graphs_tab",
                           tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "500px"), 
                                    value = "Plot"),
                           tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%", 
-                                                                       height = "500px"), value = "visNetwork"),
-                          tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
-                          tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
+                                                                       height = "500px"), value = "visNetwork") # ,
+                          # tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
+                          # tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
                    ),
+                   uiOutput("test_graph_summary"),
                    
                    # graph info and download buttons
                    sidebarPanel(id = "graph_info_well", width = 12, class = "custom_well_for_buttons",

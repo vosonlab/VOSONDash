@@ -139,7 +139,7 @@ comparisonCloudPlotData <- reactive({
   if (is.null(data)) { return(emptyPlotMessage("No text data.")) }
   
   if (length(data) == 1) {
-    emptyPlotMessage("No comparison plot: need categorical variables.")
+    emptyPlotMessage("No comparison plot: need to select a Categorical variable and select View as \"All\".")
   } else {
     # to get a comparison cloud, need new corpus with N documents where N is the number of categories
     #    i.e. collapse all content for each category into single document
@@ -160,7 +160,7 @@ comparisonCloudPlotData <- reactive({
     colnames(tdm) <- df$catval
     
     if (ncol(tdm) < 2) {
-      emptyPlotMessage("No comparison plot: only one categorical variable.")
+      emptyPlotMessage("No comparison plot: only one categorical variable present.")
     } else {
       # colour seems to be correct but may need to revisit...
       comparison.cloud(tdm, max.words = max_words, random.order = FALSE, use.r.layout = FALSE, title.size = 2, 

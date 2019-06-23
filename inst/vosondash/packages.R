@@ -28,6 +28,7 @@ if (isLocal) {
   cat(paste("R shiny", packageVersion("shiny"), "\n"))
   
   cat(paste("\nHome:", Sys.getenv("HOME"), "\n"))
+  cat(paste("Encoding:", save_enc, "\n"))
   
   # cat("Locales:\n")
   # cat(paste0(as.list(strsplit(Sys.getlocale(), ";")[[1]]), collapse = "\n"), "\n")
