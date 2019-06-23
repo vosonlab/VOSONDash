@@ -26,7 +26,8 @@ ifelse(isLocal, options(shiny.maxRequestSize = 128*1024^2), # 128 MB
 g_random_number_range <- c(1, 5000)
 g_plot_default_label_color <- "#333333"
 g_plot_default_vertex_color <- "orange"
-g_plot_selected_vertex_color <- "#be29ec"
+g_plot_selected_vertex_color <- "#006cb7" # #be29ec
+
 g_plot_palette <- function(n = 8) brewer.pal(n, "Dark2")
 
 # data tables

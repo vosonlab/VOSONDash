@@ -26,6 +26,7 @@ pruning_rvalues <- reactiveValues(
 
 # proxy for vertices data table used for row manipulation
 dt_vertices_proxy = dataTableProxy('dt_vertices')
+# dt_edges_proxy = dataTableProxy('dt_edges')
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 
@@ -791,6 +792,8 @@ standardPlotData <- reactive({
   selected_rows <- input$dt_vertices_rows_selected
   # graph_vertices <- as_data_frame(g, what = c("vertices"))
   
+  selected_edge_rows <- input$dt_edges_rows_selected
+  
   if (is.null(V(g)$label)) {
     V(g)$label <- V(g)$name
   }
@@ -835,6 +838,10 @@ standardPlotData <- reactive({
   if (length(selected_rows) > 0) {
     selected_row_names <- row.names(graph_vertices)[c(selected_rows)]
   }
+  
+  # if (length(selected_edge_rows) > 0) {
+  #   E(g)$color g_plot_selected_vertex_color
+  # }
   
   plot_parameters <- list(g, vertex.frame.color = "gray", edge.arrow.size = 0.4)
   

@@ -57,9 +57,15 @@ h1, h2, h3 {
     padding-left:10px;
 }
 
+/* #e1b3fdb0 */
 #dt_vertices table.dataTable tr.selected td, 
 #dt_vertices table.dataTable td.selected {
-  background-color:#e1b3fdb0 !important;
+  background-color:#51a5e0 !important;
+}
+
+#dt_edges table.dataTable tr.selected td, 
+#dt_edges table.dataTable td.selected {
+  background-color:#51a5e0 !important;
 }
 
 pre.shiny-text-output {
