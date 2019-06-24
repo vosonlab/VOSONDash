@@ -37,13 +37,25 @@ output$test_graph_summary <- renderUI({
     div(
       div(
           div(selectInput("plot_height", label = NULL, 
-                          choices = c("400px" = 300, "400px" = 400, "500px" = 500, "600px" = 600, "700px" = 700, "800px" = 800, "900px" = 900, "1000px" = 1000), 
+                          choices = c("300px" = 300, "400px" = 400, "500px" = 500, "600px" = 600, "700px" = 700, "800px" = 800, "900px" = 900, "1000px" = 1000), 
                           multiple = FALSE, selectize = FALSE, selected = ng_rvalues$plot_height), 
               style = "width:100%;", align = "right"),
           
           HTML(graphSummaryOutput()),
             style = "position:absolute; z-index:1; top:60px; right:40px; font-size:0.97em;"),
     style = "position:relative; z-index:0;")
+  )
+})
+
+output$test_vis_graph <- renderUI({
+  tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
+         selected = input$selected_graph_tab, id = "selected_graph_tab",
+         tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), # 500px
+                  value = "Plot"),
+         tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",
+                                                 height = paste0(ng_rvalues$plot_height, "px")), value = "visNetwork") # ,
+         # tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
+         # tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
   )
 })
 
@@ -687,7 +699,7 @@ visNetworkData <- reactive({
                          # smooth = list(enabled = TRUE, type = "continuous", roundness = 0.1)
                          color = list(color = "#b0b0b0")) %>% # arrows = 'to, from'
     visOptions(collapse = TRUE, highlightNearest = list(enabled = TRUE, hover = TRUE),
-               nodesIdSelection = TRUE) #%>%
+               nodesIdSelection = TRUE, height = ng_rvalues$plot_height) #%>%
     # visInteraction(navigationButtons = TRUE)
 })
 

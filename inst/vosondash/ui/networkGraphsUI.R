@@ -86,15 +86,16 @@ tabItem(tabName = "network_graphs_tab",
           column(width = 9, offset = 0,
                  fluidRow(
                    # graph type tabs
-                   tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
-                          selected = "Plot", id = "selected_graph_tab",
-                          tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), # 500px
-                                   value = "Plot"),
-                          tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%", 
-                                                                       height = "500px"), value = "visNetwork"),
-                          tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
-                          tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
-                   ),
+                   # tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
+                   #        selected = "Plot", id = "selected_graph_tab",
+                   #        tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), # 500px
+                   #                 value = "Plot"),
+                   #        tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",
+                   #                                                height = "auto"), value = "visNetwork"),
+                   #        tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
+                   #        tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
+                   # ),
+                   uiOutput("test_vis_graph"),
                    uiOutput("test_graph_summary"),
                    
                    # graph info and download buttons
