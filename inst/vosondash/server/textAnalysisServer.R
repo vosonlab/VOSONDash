@@ -139,7 +139,7 @@ comparisonCloudPlotData <- reactive({
   if (is.null(data)) { return(emptyPlotMessage("No text data.")) }
   
   if (length(data) == 1) {
-    emptyPlotMessage("No comparison plot: need to select a Categorical variable and select View as \"All\".")
+    emptyPlotMessage("No comparison plot: requires a Categorical variable and selected View as \"All\".")
   } else {
     # to get a comparison cloud, need new corpus with N documents where N is the number of categories
     #    i.e. collapse all content for each category into single document

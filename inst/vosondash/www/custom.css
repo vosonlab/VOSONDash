@@ -167,6 +167,13 @@ pre.shiny-text-output {
   width:400px;
 }
 
+select#plot_height.form-control {
+  height: 30px !important;
+  width: 78px;
+  font-size: 12px;
+  line-height: 1.0;
+}
+
 .div_inline {
   display:inline-block;
   vertical-align:middle;

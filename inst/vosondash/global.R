@@ -30,6 +30,8 @@ g_plot_selected_vertex_color <- "#006cb7" # #be29ec
 
 g_plot_palette <- function(n = 8) brewer.pal(n, "Dark2")
 
+g_plot_height <- 500
+
 # data tables
 options(htmlwidgets.TOJSON_ARGS = list(na = 'string'))
 

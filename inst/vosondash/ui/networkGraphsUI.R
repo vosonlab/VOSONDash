@@ -72,6 +72,7 @@ tabItem(tabName = "network_graphs_tab",
                                                  )
                                                  
                                 )
+                                
                    ) # ,
                    # graph summary info
                    # sidebarPanel(width = 12, class = "custom_well_for_controls",
@@ -87,7 +88,7 @@ tabItem(tabName = "network_graphs_tab",
                    # graph type tabs
                    tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
                           selected = "Plot", id = "selected_graph_tab",
-                          tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "500px"), 
+                          tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), # 500px
                                    value = "Plot"),
                           tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%", 
                                                                        height = "500px"), value = "visNetwork"),

@@ -15,7 +15,9 @@ ng_rvalues <- reactiveValues(
   graph_type = "",
   
   graph_CA = c(),               # list of categories in the data
-  graph_CA_selected = ""        # list of chosen attributes for selected category
+  graph_CA_selected = "",        # list of chosen attributes for selected category
+  
+  plot_height = g_plot_height
 )
 
 # list of user selected graph vertices to prune
@@ -33,11 +35,21 @@ dt_vertices_proxy = dataTableProxy('dt_vertices')
 output$test_graph_summary <- renderUI({
   tagList(
     div(
-      div(HTML(graphSummaryOutput()), 
-          style = "position:absolute; z-index:1; top:60px; right:40px; font-size:0.97em;"),
+      div(
+          div(selectInput("plot_height", label = NULL, 
+                          choices = c("400px" = 300, "400px" = 400, "500px" = 500, "600px" = 600, "700px" = 700, "800px" = 800, "900px" = 900, "1000px" = 1000), 
+                          multiple = FALSE, selectize = FALSE, selected = ng_rvalues$plot_height), 
+              style = "width:100%;", align = "right"),
+          
+          HTML(graphSummaryOutput()),
+            style = "position:absolute; z-index:1; top:60px; right:40px; font-size:0.97em;"),
     style = "position:relative; z-index:0;")
   )
 })
+
+observeEvent(input$plot_height, {
+  ng_rvalues$plot_height <- input$plot_height
+}, ignoreInit = TRUE)
 
 # disable network metrics and assortativity tabs when app loads
 addCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
@@ -368,7 +380,7 @@ output$dt_edges <- DT::renderDataTable({
 # standard network plot
 output$standardPlot <- renderPlot({
   standardPlotData()
-})
+}, height = function() { as.numeric(ng_rvalues$plot_height) })
 
 # d3 force network graph
 output$force <- renderForceNetwork({
