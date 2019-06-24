@@ -27,6 +27,14 @@ h1, h2, h3 {
   border-top:1px solid #d2d6de;
 }
 
+.nav-tabs-custom>.nav-tabs>li.active {
+  border-top-color:#2ECC71 !important;
+}
+
+.sidebar-menu>li.active>a, .sidebar-menu>li:hover>a {
+  border-left-color:#2ECC71 !important;
+}
+
 .content {
   padding-top:5px;
 }

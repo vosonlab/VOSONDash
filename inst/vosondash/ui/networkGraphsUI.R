@@ -69,6 +69,10 @@ tabItem(tabName = "network_graphs_tab",
                                                    column(width = 8,
                                                           disabled(sliderInput("graph_component_slider", div("Size", style = "font-weight: normal;"), min = 1, max = 500, value = c(1, 500), ticks = FALSE))
                                                    )
+                                                 ),
+                                                 fluidRow(
+                                                         column(width = 12,
+                                                                verbatimTextOutput("component_summary_ui"))
                                                  )
                                                  
                                 )
@@ -96,7 +100,8 @@ tabItem(tabName = "network_graphs_tab",
                    #        tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
                    # ),
                    uiOutput("test_vis_graph"),
-                   uiOutput("test_graph_summary"),
+                   uiOutput("plot_height_ui"),
+                   uiOutput("graph_summary_ui"),
                    
                    # graph info and download buttons
                    sidebarPanel(id = "graph_info_well", width = 12, class = "custom_well_for_buttons",

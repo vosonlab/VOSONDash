@@ -32,7 +32,7 @@ dt_vertices_proxy = dataTableProxy('dt_vertices')
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 
-output$test_graph_summary <- renderUI({
+output$plot_height_ui <- renderUI({
   tagList(
     div(
       div(
@@ -40,10 +40,18 @@ output$test_graph_summary <- renderUI({
                           choices = c("300px" = 300, "400px" = 400, "500px" = 500, "600px" = 600, "700px" = 700, "800px" = 800, "900px" = 900, "1000px" = 1000), 
                           multiple = FALSE, selectize = FALSE, selected = ng_rvalues$plot_height), 
               style = "width:100%;", align = "right"),
-          
-          HTML(graphSummaryOutput()),
             style = "position:absolute; z-index:1; top:60px; right:40px; font-size:0.97em;"),
     style = "position:relative; z-index:0;")
+  )
+})
+
+output$graph_summary_ui <- renderUI({
+  tagList(
+    div(
+      div(
+        HTML(graphSummaryOutput()),
+        style = paste0("position:absolute; z-index:1; top:", (as.numeric(ng_rvalues$plot_height)-5), "px; left:18px; font-size:0.97em;")),
+      style = "position:relative; z-index:0;")
   )
 })
 
@@ -57,6 +65,10 @@ output$test_vis_graph <- renderUI({
          # tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
          # tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
   )
+})
+
+output$component_summary_ui <- renderText({
+  graphComponentSummary()
 })
 
 observeEvent(input$plot_height, {
@@ -761,6 +773,24 @@ graphSummaryOutput <- reactive({
   output <- c()
   
   if (!is.null(g)) {
+    output <- append(output, paste0("Nodes: ", vcount(g)))
+    output <- append(output, paste0("Edges: ", ecount(g)))
+    
+    isolate_count <- sum(degree(g) == 0)
+    output <- append(output, paste0("Isolates: ", isolate_count))
+  }else {
+    output <- append(output, paste0(""))
+  }
+  
+  paste0(output, collapse = '<br>') # \n
+})
+
+graphComponentSummary <- reactive({
+  g <- graphFilters()
+  
+  output <- c()
+  
+  if (!is.null(g)) {
     graph_clusters <- components(g, mode = input$graph_component_type_select)
     
     output <- append(output, paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no))
@@ -777,19 +807,11 @@ graphSummaryOutput <- reactive({
     } else {
       output <- append(output, paste0("Size min: ", min_value, " max: ", max_value, sep = ""))
     }
-    
-    output <- append(output, "")
-    
-    output <- append(output, paste0("Nodes: ", vcount(g)))
-    output <- append(output, paste0("Edges: ", ecount(g)))
-    
-    isolate_count <- sum(degree(g) == 0)
-    output <- append(output, paste0("Isolates: ", isolate_count))
   }else {
     output <- append(output, paste0(""))
   }
   
-  paste0(output, collapse = '<br>') # \n
+  paste0(output, collapse = '\n')
 })
 
 #### functions -------------------------------------------------------------------------------------------------------- #
