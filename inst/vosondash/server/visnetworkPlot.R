@@ -84,7 +84,7 @@ visNetworkData <- reactive({
     ungroup()
   
   category_selection <- NULL
-  if (!is.null(ng_rvalues$graph_CA_selected) || ng_rvalues$graph_CA_selected != "All") {
+  if (!is.null(ng_rvalues$graph_CA_selected) && (!(ng_rvalues$graph_CA_selected %in% c("All", "")))) {
     category_selection <- list(variable = ng_rvalues$graph_CA_selected, multiple = TRUE)
   }
   
