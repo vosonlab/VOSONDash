@@ -100,7 +100,7 @@ visNetworkData <- reactive({
                highlightNearest = list(enabled = TRUE, hover = TRUE),
                selectedBy = category_selection,
                nodesIdSelection = TRUE,
-               height = ng_rvalues$plot_height)
+               height = ng_rvalues$plot_height) # ng_rvalues$plot_height
   
   # visInteraction(navigationButtons = TRUE)
 })

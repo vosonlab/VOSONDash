@@ -39,11 +39,21 @@ h1, h2, h3 {
   position: absolute;
   top: 50px;
   left: 180px;
+  z-index:1;
 }
 
 #nodeSelectvisNetworkPlot.dropdown {
   position: absolute;
   top: 50px;
+  z-index:1;
+}
+
+/* not sure of its purpose but element throws out the height 
+   of the canvas and tab panel */
+
+#visNetworkPlot > hr:nth-child(4) {
+  margin-top: -1px;
+  z-index:1;
 }
 
 .content {
