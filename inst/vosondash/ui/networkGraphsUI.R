@@ -99,7 +99,7 @@ tabItem(tabName = "network_graphs_tab",
                    #        tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
                    #        tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
                    # ),
-                   uiOutput("test_vis_graph"),
+                   uiOutput("vis_plot_ui"),
                    uiOutput("plot_height_ui"),
                    uiOutput("graph_summary_ui"),
                    

@@ -8,14 +8,14 @@
 ng_rvalues <- reactiveValues(
   data = NULL,                  # vosonsml df
   graph_data = NULL,            # graphml object
-  graph_seed = NULL,
+  graph_seed = NULL,            # plot seed value
   
-  graph_desc = "",
+  graph_desc = "",              # some graph attributes
   graph_name = "",
   graph_type = "",
   
   graph_CA = c(),               # list of categories in the data
-  graph_CA_selected = "",        # list of chosen attributes for selected category
+  graph_CA_selected = "",       # selected category
   
   plot_height = g_plot_height
 )
@@ -27,58 +27,21 @@ pruning_rvalues <- reactiveValues(
 )
 
 # proxy for vertices data table used for row manipulation
-dt_vertices_proxy = dataTableProxy('dt_vertices')
-# dt_edges_proxy = dataTableProxy('dt_edges')
-
-#### events ----------------------------------------------------------------------------------------------------------- #
-
-output$plot_height_ui <- renderUI({
-  tagList(
-    div(
-      div(
-          div(selectInput("plot_height", label = NULL, 
-                          choices = c("300px" = 300, "400px" = 400, "500px" = 500, "600px" = 600, "700px" = 700, "800px" = 800, "900px" = 900, "1000px" = 1000), 
-                          multiple = FALSE, selectize = FALSE, selected = ng_rvalues$plot_height), 
-              style = "width:100%;", align = "right"),
-            style = "position:absolute; z-index:1; top:60px; right:40px; font-size:0.97em;"),
-    style = "position:relative; z-index:0;")
-  )
-})
-
-output$graph_summary_ui <- renderUI({
-  tagList(
-    div(
-      div(
-        HTML(graphSummaryOutput()),
-        style = paste0("position:absolute; z-index:1; top:", (as.numeric(ng_rvalues$plot_height)-5), "px; left:18px; font-size:0.97em;")),
-      style = "position:relative; z-index:0;")
-  )
-})
-
-output$test_vis_graph <- renderUI({
-  tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
-         selected = input$selected_graph_tab, id = "selected_graph_tab",
-         tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), # 500px
-                  value = "Plot"),
-         tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",
-                                                 height = paste0(ng_rvalues$plot_height, "px")), value = "visNetwork") # ,
-         # tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
-         # tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
-  )
-})
-
-output$component_summary_ui <- renderText({
-  graphComponentSummary()
-})
-
-observeEvent(input$plot_height, {
-  ng_rvalues$plot_height <- input$plot_height
-}, ignoreInit = TRUE)
+dt_vertices_proxy <- dataTableProxy('dt_vertices')
+# dt_edges_proxy <- dataTableProxy('dt_edges')
 
 # disable network metrics and assortativity tabs when app loads
 addCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
 addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
 
+#### events ----------------------------------------------------------------------------------------------------------- #
+
+# set reactive value plot height when height input changes
+observeEvent(input$plot_height, {
+  ng_rvalues$plot_height <- input$plot_height
+}, ignoreInit = TRUE)
+
+# create list of demo files found in extdata
 # do once at startup
 check_demo_files <- TRUE
 observeEvent(check_demo_files, {
@@ -99,6 +62,7 @@ observeEvent(check_demo_files, {
   })
 }, once = TRUE)
 
+# load demo data button event
 observeEvent(input$demo_data_select_button, {
   load_file <- system.file("extdata", input$demo_data_select, package = "VOSONDash")
 
@@ -114,11 +78,9 @@ observeEvent(input$demo_data_select_button, {
     
     tryCatch({
       data <- igraph::read_graph(load_file, format = c('graphml'))
+      type <- ifelse("type" %in% graph_attr_names(data), graph_attr(data, "type"), "")
       
-      type <- ifelse("type" %in% graph_attr_names(data), 
-                                       graph_attr(data, "type"), "")
-      
-      setGraphView(data = data, 
+      setGraphView(data = data,
                    desc = file_desc,
                    type = type,
                    name = input$demo_data_select,
@@ -131,27 +93,32 @@ observeEvent(input$demo_data_select_button, {
   }
 })
 
-# enable network metrics tab when graph data loaded
+# when graphml data loaded or changed
 observeEvent(ng_rvalues$graph_data, {
   if (!is.null(ng_rvalues$graph_data)) {
+    
+    # add vertex ids and labels if not present
+    attr_v <- vertex_attr_names(ng_rvalues$graph_data)
+    if (!("id" %in% attr_v)) {
+      V(ng_rvalues$graph_data)$id <- paste0("n", as.numeric(V(ng_rvalues$graph_data))-1) # n0, n1 ..
+    }
+    
+    if ("label" %in% attr_v) {
+      # replace empty string labels
+      V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$label) > 0, 
+                                               V(ng_rvalues$graph_data)$label, "-")
+    } else {
+      # if no labels set label to vertex name
+      V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$name) > 0,
+                                               V(ng_rvalues$graph_data)$name, "-")
+    }    
+    
+    # enable network metrics tab
     removeCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
-  }
-  
-  attr_v <- vertex_attr_names(ng_rvalues$graph_data)
-  if (!("id" %in% attr_v)) {
-    V(ng_rvalues$graph_data)$id <- paste0("n", as.numeric(V(ng_rvalues$graph_data))-1)
-  }
-
-  if ("label" %in% attr_v) {
-    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$label) > 0, 
-                                             V(ng_rvalues$graph_data)$label, "-")
-  } else {
-    V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$name) > 0, 
-                                             V(ng_rvalues$graph_data)$name, "-")
   }
 })
 
-# enable assortativity tab when category selected
+# enable assortativity tab when a category other than "all" selected
 observeEvent(ng_rvalues$graph_CA_selected, {
   if (ng_rvalues$graph_CA_selected %in% c("", "All")) {
     addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
@@ -160,6 +127,7 @@ observeEvent(ng_rvalues$graph_CA_selected, {
   }
 })
 
+# check this is not redundant
 # update component slider when graph component or category changed
 observeEvent({ input$graph_component_type_select
                input$graph_catAttr_attr_select
@@ -177,7 +145,7 @@ observeEvent({ input$graph_component_type_select
   
 # selected category updates select box with its attribute values
 observeEvent(input$graph_catAttr_select, {
-  ng_rvalues$graph_CA_selected <<- input$graph_catAttr_select
+  ng_rvalues$graph_CA_selected <- input$graph_catAttr_select
   
   if (!is.null(ng_rvalues$graph_data)) {
     attr_choices <- c("All")
@@ -187,8 +155,7 @@ observeEvent(input$graph_catAttr_select, {
     }
     
     # update list of values in select box
-    updateSelectInput(session, "graph_catAttr_attr_select",
-                      choices = attr_choices, selected = "All")
+    updateSelectInput(session, "graph_catAttr_attr_select", choices = attr_choices, selected = "All")
     
     # enable select box control
     shinyjs::enable("graph_catAttr_attr_select")
@@ -204,19 +171,20 @@ observeEvent(input$selected_graph_tab, {
 observeEvent(input$graphml_data_file, {
   filedata()
   
-  # get a random number to seed graphs
-  ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
+  # set a random number to seed plots
+  ng_rvalues$graph_seed <- sample(g_random_number_range[1]:g_random_number_range[2], 1)
   
   # reset controls and filters
   setGraphTabControls()
   setGraphFilterControls()
 })
 
-# generate a new random seed
+# generate a new random seed on reseed button event
 observeEvent(input$graph_reseed_button, {
-  ng_rvalues$graph_seed <<- sample(g_random_number_range[1]:g_random_number_range[2], 1)
+  ng_rvalues$graph_seed <- sample(g_random_number_range[1]:g_random_number_range[2], 1)
 })
 
+# check for redundancy
 # reset graph spread when a new layout is selected
 observeEvent(input$graph_layout_select, {
   shinyjs::reset("graph_spread_slider")
@@ -243,6 +211,9 @@ observeEvent(input$prune_selected_rows_button, {
     prune_list <- temp
   }
   updateSelectInput(session, "pruned_vertices_select", choices = prune_list)
+  
+  # added to address bug with disappearing plot on pruning
+  updateComponentSlider(ng_rvalues$graph_data, input$graph_component_type_select)
 })
 
 # add unselected data table rows to pruned vertices list
@@ -295,6 +266,9 @@ observeEvent(input$prune_reset_button, {
   pruning_rvalues$prune_verts <<- c()
   
   updateSelectInput(session, "pruned_vertices_select", choices = character(0))
+  
+  # added to address bug with disappearing plot on pruning
+  updateComponentSlider(ng_rvalues$graph_data, input$graph_component_type_select)  
 })
 
 # deselect all data table selected rows
@@ -303,6 +277,41 @@ observeEvent(input$prune_deselect_rows_button, {
 })
 
 #### output ----------------------------------------------------------------------------------------------------------- #
+
+output$plot_height_ui <- renderUI({
+  tagList(div(div(
+    div(selectInput("plot_height", label = NULL, 
+                    choices = c("300px" = 300, "400px" = 400, "500px" = 500, "600px" = 600, "700px" = 700, 
+                                "800px" = 800, "900px" = 900, "1000px" = 1000), 
+                    multiple = FALSE, selectize = FALSE, selected = ng_rvalues$plot_height), 
+        style = "width:100%;", align = "right"),
+    style = "position:absolute; z-index:1; top:60px; right:40px; font-size:0.97em;"),
+    style = "position:relative; z-index:0;"))
+})
+
+output$graph_summary_ui <- renderUI({
+  tagList(div(div(
+    HTML(graphSummaryOutput()),
+    style = paste0("position:absolute; z-index:1; top:", (as.numeric(ng_rvalues$plot_height)-5), 
+                   "px; left:18px; font-size:0.97em;")),
+    style = "position:relative; z-index:0;"))
+})
+
+output$vis_plot_ui <- renderUI({
+  tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
+         selected = input$selected_graph_tab, id = "selected_graph_tab",
+         tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), value = "Plot"),
+         tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",
+                                                 height = paste0(ng_rvalues$plot_height, "px")), value = "visNetwork")
+         
+         # tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
+         # tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
+  )
+})
+
+output$component_summary_ui <- renderText({
+  graphComponentSummary()
+})
 
 output$graph_summary_output <- renderText({
   graphSummaryOutput()
