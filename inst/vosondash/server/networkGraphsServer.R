@@ -791,9 +791,9 @@ graphComponentSummary <- reactive({
   output <- c()
   
   if (!is.null(g)) {
-    graph_clusters <- components(g, mode = input$graph_component_type_select)
+    graph_clusters <- components(g, mode = isolate(input$graph_component_type_select))
     
-    output <- append(output, paste0("Components (", input$graph_component_type_select, "): ", graph_clusters$no))
+    output <- append(output, paste0("Components (", isolate(input$graph_component_type_select), "): ", graph_clusters$no))
     
     min_value <- max_value <- 0
     if (graph_clusters$no > 0) {

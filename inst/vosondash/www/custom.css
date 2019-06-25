@@ -35,6 +35,17 @@ h1, h2, h3 {
   border-left-color:#2ECC71 !important;
 }
 
+#selectedByvisNetworkPlot.dropdown {
+  position: absolute;
+  top: 50px;
+  left: 180px;
+}
+
+#nodeSelectvisNetworkPlot.dropdown {
+  position: absolute;
+  top: 50px;
+}
+
 .content {
   padding-top:5px;
 }

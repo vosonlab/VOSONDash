@@ -53,9 +53,10 @@ visNetworkData <- reactive({
     selected_categorical_attribute <- input$graph_catAttr_select
   })
   
-  # set default vertex color
   if (nrow(verts) > 0) {
     verts$color.background <- as.character(g_plot_default_vertex_color)
+    verts$font.color <- g_plot_default_label_color
+    verts$id <- verts$name
   }
   
   # vertex colours (only if cat attr selected)
@@ -72,9 +73,6 @@ visNetworkData <- reactive({
     }
   }
   
-  verts$id <- verts$name
-  
-  verts$font.color <- "#000000"
   if (length(input$dt_vertices_rows_selected) > 0) {
     selected_row_names <- row.names(verts)[c(input$dt_vertices_rows_selected)]
     verts$color.background[row.names(verts) %in% selected_row_names] <- g_plot_selected_vertex_color
@@ -85,12 +83,24 @@ visNetworkData <- reactive({
     summarise(width = n()) %>% 
     ungroup()
   
+  category_selection <- NULL
+  if (!is.null(ng_rvalues$graph_CA_selected) || ng_rvalues$graph_CA_selected != "All") {
+    category_selection <- list(variable = ng_rvalues$graph_CA_selected, multiple = TRUE)
+  }
+  
   visNetwork::visNetwork(verts, edges, main = NULL) %>% # height = "500px"
-    visIgraphLayout(layout = graph_layout, randomSeed = graph_seed) %>%
+    visIgraphLayout(layout = graph_layout, 
+                    randomSeed = graph_seed) %>%
+    
     visNetwork::visEdges(arrows = 'to',
                          # smooth = list(enabled = TRUE, type = "continuous", roundness = 0.1)
                          color = list(color = "#b0b0b0")) %>% # arrows = 'to, from'
-    visOptions(collapse = TRUE, highlightNearest = list(enabled = TRUE, hover = TRUE),
-               nodesIdSelection = TRUE, height = ng_rvalues$plot_height) #%>%
+    
+    visOptions(collapse = TRUE, 
+               highlightNearest = list(enabled = TRUE, hover = TRUE),
+               selectedBy = category_selection,
+               nodesIdSelection = TRUE,
+               height = ng_rvalues$plot_height)
+  
   # visInteraction(navigationButtons = TRUE)
 })
