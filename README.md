@@ -74,7 +74,16 @@ install.packages(c("visNetwork","syuzhet"))
 
 After installing required packages and running again the `VOSONDash` Shiny app will open up in the default web browser.
 
-## Notes
+## Changes & Notes
+
+#### Demonstration Data
+
+The `Network Graphs` section now contains a select box for loading demonstration data as the data is installed as part 
+of the package in the package library and can be difficult to locate or directly inaccessible. As such if `VOSONDash` 
+is run from a folder instead of the package then the list of demonstration files wont be found and populated into the 
+select box (unless the package is also installed). The files can be opened manually however by browsing to the `inst/extdata` sub-folder in the `VOSONDash` root.
+
+<img src="/inst/images/VOSONDash-Demo-Data.png">
 
 #### Changes to API Keys & Tokens
 
@@ -97,9 +106,22 @@ When API keys or tokens are saved they will be saved to the following files:
 /Users/voson_user/vosondash_tokens.rds
 ```
 
-#### Demonstration Data
+A twitter web auth token can now be created and used for API access without the need for a Developer account. This still requires a twitter app and `Consumer` API keys to initially generate and authorize the token for a users twitter account but the keys are then no longer required once the token has been created.
 
-The `Network Graphs` section now contains a select box for loading demonstration data as the data is installed as part 
-of the package in the package library and can be difficult to locate or directly inaccessible. As such if `VOSONDash` 
-is run from a folder instead of the package then the list of demonstration files wont be found and populated into the 
-select box (unless the package is also installed). The files can be opened manually however by browsing to the `inst/extdata` sub-folder in the `VOSONDash` root.
+Enter the app name and consumer keys and click on the `Create Web Auth Token` button.
+<img src="/inst/images/VOSONDash-Twitter-Token-1.png">
+
+A new browser tab will open asking you to Log into twitter with your user account and to authorize the twitter app.
+<img src="/inst/images/VOSONDash-Twitter-Token-2.png">
+
+When the authentication complete message appears the new browser tab can be closed.
+<img src="/inst/images/VOSONDash-Twitter-Token-3.png">
+
+If successful details of the created token will be displayed and the token should then be added to the twitter token select list by clicking on `Add Token to Select List` button.
+<img src="/inst/images/VOSONDash-Twitter-Token-4.png">
+
+The token can then be used for twitter collection by clicking on the 'Use Token' button. It should be saved for future use by clicking on the `Save Tokens` button.
+<img src="/inst/images/VOSONDash-Twitter-Token-5.png">
+
+The token being used for collection will then appear in the `Twitter` section of the app.
+<img src="/inst/images/VOSONDash-Twitter-Token-6.png">
