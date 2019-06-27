@@ -45,7 +45,7 @@ if (isLocal) {
     cat("\n\nPlease install required packages before using VOSONDash:\n\n")
   
     packageStr <- sapply(missingPackages, function(x) paste0("\"", x, "\""))
-    cat(paste0("install.packages(c(", paste0(packageStr, collapse = ","), "), dependencies = TRUE)\n"))
+    cat(paste0("install.packages(c(", paste0(packageStr, collapse = ","), "))\n"))
     cat("\n")
     
     stop("Missing packages.", call. = FALSE)
