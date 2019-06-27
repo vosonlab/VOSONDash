@@ -19,6 +19,6 @@
 ^\.httr-oauth$
 ^\.twitter-oauth$
 ^.*\.rds$
-^.*\.graphml$
+^Test.*\.graphml$
 ^.*\.csv$
 ^.*\.pdf$
