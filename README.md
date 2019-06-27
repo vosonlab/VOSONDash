@@ -30,6 +30,7 @@ The `VOSONDash` package zip file can be directly downloaded from github using th
 The app can then be opened in [RStudio](https://www.rstudio.com/) by either creating a new project in the existing 
 downloaded `VOSONDash` root folder or by navigating to the folder using the RStudio File browser tab. 
 
+The app can be run using the following Shiny function:
 ```R
 shiny::runApp(appDir = "./inst/vosondash")
 ```
@@ -38,7 +39,7 @@ shiny::runApp(appDir = "./inst/vosondash")
 
 When run the `VOSONDash` app will check that all of the R packages that are required to make it work are installed. If 
 run for the first time it is likely that some packages will be missing and the app will print a message indicating the
-missing packages and a command that can be used to install them.
+missing packages and a function command that can be used to install them.
 
 For example:
 
@@ -65,7 +66,7 @@ Please install required packages before using VOSONDash:
 install.packages(c("visNetwork","syuzhet"))
 ```
 
-The missing `visNetwork` and `syuzhet` package can be installed using the provided package install command.
+The missing `visNetwork` and `syuzhet` packages can be installed using the provided package install command.
 
 ```R
 install.packages(c("visNetwork","syuzhet"))
@@ -76,7 +77,7 @@ After installing required packages and running again the `VOSONDash` Shiny app w
 ## Notes
 
 - `VOSONDash` now loads and saves social media keys and tokens to files in the users home directory as specified by the environment variable `HOME`. This location can be found in the `VOSONDash` start up information, in the apps `API Keys` 
-tab or by using the following R command in RStudio:
+tab or by using the following R function in RStudio:
 
 ```R
 > Sys.getenv("HOME")
