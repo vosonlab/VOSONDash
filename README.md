@@ -76,7 +76,9 @@ After installing required packages and running again the `VOSONDash` Shiny app w
 
 ## Notes
 
-- `VOSONDash` now loads and saves social media keys and tokens to files in the users home directory as specified by the environment variable `HOME`. This location can be found in the `VOSONDash` start up information, in the apps `API Keys` 
+#### Changes to API Keys & Tokens
+
+`VOSONDash` now loads and saves social media keys and tokens to files in the users home directory as specified by the environment variable `HOME`. This location can be found in the `VOSONDash` start up information, in the apps `API Keys` 
 tab or by using the following R function in RStudio:
 
 ```R
@@ -87,5 +89,17 @@ tab or by using the following R function in RStudio:
 This is a system environment variable and will likely be used by the OS and other software so it is highly inadvisable 
 to change its value.
 
-- If `VOSONDash` is run from a folder instead of a package the list of demonstration files in `Network Graphs` wont be
-loaded. These can be opened manually by browsing to the `inst/extdata` sub-folder in the `VOSONDash` root.
+When API keys or tokens are saved they will be saved to the following files:
+
+```R
+# if HOME is /Users/voson_user
+/Users/voson_user/vosondash_keys.rds
+/Users/voson_user/vosondash_tokens.rds
+```
+
+#### Demonstration Data
+
+The `Network Graphs` section now contains a select box for loading demonstration data as the data is installed as part 
+of the package in the package library and can be difficult to locate or directly inaccessible. As such if `VOSONDash` 
+is run from a folder instead of the package then the list of demonstration files wont be found and populated into the 
+select box (unless the package is also installed). The files can be opened manually however by browsing to the `inst/extdata` sub-folder in the `VOSONDash` root.
