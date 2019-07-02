@@ -2,8 +2,8 @@
 standardPlotData <- reactive({
   g <- graphFilters()
   
-  if (is.null(g)) { return(emptyGraphPlotMessage("No graph data.")) }
-  if (vcount(g) <= 0) { return(emptyGraphPlotMessage("No vertices to plot.")) }
+  if (is.null(g)) { return(VOSONDash::emptyPlotMessage("No graph data.")) }
+  if (vcount(g) <= 0) { return(VOSONDash::emptyPlotMessage("No vertices to plot.")) }
   
   # reactive dependencies
   isolate({
@@ -156,5 +156,4 @@ standardPlotData <- reactive({
   
   par(mar = rep(0, 4))
   do.call(plot, plot_parameters)
-  
 })

@@ -61,15 +61,15 @@ assortativityMMOutput <- reactive({
   if (!is.null(g)) {
     CA_sel <- ng_rvalues$graph_CA_selected
     if (nchar(CA_sel) && CA_sel != "All") {  # eventually will have cat attr selected by default...
-      assort_rvalues$mixmat_message <<- NULL
-      df <- mixmat(g, paste0("vosonCA_", CA_sel), use.density = FALSE)
+      assort_rvalues$mixmat_message <- NULL
+      df <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use.density = FALSE)
       return(df)
     } else {
-      assort_rvalues$mixmat_message <<- "Categorical attribute not present, or not selected."
+      assort_rvalues$mixmat_message <- "Categorical attribute not present, or not selected."
       return(NULL)      
     }
   } else {
-    assort_rvalues$mixmat_message <<- "No Data."
+    assort_rvalues$mixmat_message <- "No Data."
     return(NULL)
   }
 })
@@ -85,7 +85,7 @@ homophilyOutput <- reactive({
     if (nchar(CA_sel) && CA_sel != "All") {   # eventually will have cat attr selected by default...
       # output <- append(output, paste0("Selected categorical attribute is: ", CA_sel))
       vattr <- paste0('vosonCA_', CA_sel)
-      mm <- mixmat(g, paste0("vosonCA_", CA_sel), use.density = FALSE)
+      mm <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use.density = FALSE)
       
       attr_list <- ng_rvalues$graph_CA[[CA_sel]]
       
@@ -117,37 +117,3 @@ homophilyOutput <- reactive({
   
   paste0(output, collapse = '\n')
 })
-
-#### functions -------------------------------------------------------------------------------------------------------- #
-
-# mixing matrix original function written by Gary Weissman
-# see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=351
-#
-mixmat <- function(mygraph, attrib, use.density = TRUE) {
-  # get unique list of characteristics of the attribute
-  attlist <- sort(unique(get.vertex.attribute(mygraph, attrib)))
-  
-  numatts <- length(attlist)
-  
-  # build an empty mixing matrix by attribute
-  mm <- matrix(nrow = numatts, ncol = numatts,
-               dimnames = list(attlist,attlist))
-  
-  # calculate edge density for each matrix entry by pairing type
-  # lends itself to parallel if available
-  el <- get.edgelist(mygraph, names = FALSE)
-  for (i in 1:numatts) {
-    for (j in 1:numatts) {
-      mm[i, j] <- length(which(apply(el, 1, function(x) {
-        get.vertex.attribute(mygraph, attrib, x[1] ) == attlist[i] &&
-        get.vertex.attribute(mygraph, attrib, x[2] ) == attlist[j] } )))
-    }
-  }
-  
-  # convert to proportional mixing matrix if desired (ie by edge density)
-  if (use.density) {
-    return(mm / ecount(mygraph))
-  } else {
-    return(mm)
-  }
-}

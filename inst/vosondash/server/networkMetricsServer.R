@@ -33,22 +33,23 @@ componentDistPlotData <- reactive({
   g <- graphFilters()
   
   if (is.null(g)) {
-    return(emptyMetricsPlotMessage("No graph data."))
+    return(VOSONDash::emptyPlotMessage("No graph data."))
   }
   
   cc <- components(g, mode = input$graph_component_type_select)
-  plot(table(cc$csize), type = "b", xlab = paste0("Size of component (", input$graph_component_type_select, ")"), ylab = "N")
+  plot(table(cc$csize), type = "b", xlab = paste0("Size of component (", input$graph_component_type_select, ")"), 
+       ylab = "N")
 }) 
 
 degreeDistPlotData <- reactive({
   g <- graphFilters()
   
   if (is.null(g)) {
-    return(emptyMetricsPlotMessage("No graph data."))
+    return(VOSONDash::emptyPlotMessage("No graph data."))
   }
   
   if (is.directed(g)) {
-    emptyMetricsPlotMessage("Not defined for undirected network.")
+    VOSONDash::emptyPlotMessage("Not defined for undirected network.")
   } else {
     plot(table(degree(g)), type = "b", xlab = "Degree", ylab = "N")
   }
@@ -58,13 +59,13 @@ indegreeDistPlotData <- reactive({
   g <- graphFilters()
   
   if (is.null(g)) {
-    return(emptyMetricsPlotMessage("No graph data."))
+    return(VOSONDash::emptyPlotMessage("No graph data."))
   }
   
   if (is.directed(g)){
     plot(table(degree(g, mode="in")), type = "b", xlab = "Indegree", ylab = "N")
   } else {
-    emptyMetricsPlotMessage("Not defined for undirected network.")
+    VOSONDash::emptyPlotMessage("Not defined for undirected network.")
   }
 }) 
 
@@ -72,13 +73,13 @@ outdegreeDistPlotData <- reactive({
   g <- graphFilters()
   
   if (is.null(g)) {
-    return(emptyMetricsPlotMessage("No graph data."))
+    return(VOSONDash::emptyPlotMessage("No graph data."))
   }
   
   if (is.directed(g)){
     plot(table(degree(g, mode="out")), type="b", xlab="Outdegree", ylab="N")
   } else {
-    emptyMetricsPlotMessage("Not defined for undirected network.")
+    VOSONDash::emptyPlotMessage("Not defined for undirected network.")
   }
 })
 
@@ -125,11 +126,3 @@ networkMetricsDetailsOutput <- reactive({
   
   paste0(output, collapse = '\n')
 })
-
-#### functions --------------------------------------------------------------------------------------------------------
-
-# return empty plot with message
-emptyMetricsPlotMessage <- function(message) {
-  return({ plot(1:10, 1:10, type = "n", axes = F, xlab = "", ylab = "")
-    text(5, 5, message, cex = 1.2) })
-}

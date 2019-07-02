@@ -136,10 +136,10 @@ comparisonCloudPlotData <- reactive({
   
   max_words <- input$text_analysis_cc_max_word_count
   
-  if (is.null(data)) { return(emptyPlotMessage("No text data.")) }
+  if (is.null(data)) { return(VOSONDash::emptyPlotMessage("No text data.")) }
   
   if (length(data) == 1) {
-    emptyPlotMessage("No comparison plot: requires a Categorical variable and selected View as \"All\".")
+    VOSONDash::emptyPlotMessage("No comparison plot: requires a Categorical variable and selected View as \"All\".")
   } else {
     # to get a comparison cloud, need new corpus with N documents where N is the number of categories
     #    i.e. collapse all content for each category into single document
@@ -160,7 +160,7 @@ comparisonCloudPlotData <- reactive({
     colnames(tdm) <- df$catval
     
     if (ncol(tdm) < 2) {
-      emptyPlotMessage("No comparison plot: only one categorical variable present.")
+      VOSONDash::emptyPlotMessage("No comparison plot: only one categorical variable present.")
     } else {
       # colour seems to be correct but may need to revisit...
       comparison.cloud(tdm, max.words = max_words, random.order = FALSE, use.r.layout = FALSE, title.size = 2, 
@@ -179,7 +179,8 @@ getFiltersDesc <- reactive({
     }
   }
 
-  output <- append(output, paste0("Filter Component Size: ", input$graph_component_slider[1], " - ", input$graph_component_slider[2]))
+  output <- append(output, paste0("Filter Component Size: ", input$graph_component_slider[1], " - ", 
+                                  input$graph_component_slider[2]))
 })
 
 # text analysis summary
@@ -192,7 +193,8 @@ textAnalysisDetailsOutput <- reactive({
   output <- c()
   
   if (!is.null(g)) { # 2019-06-20 !is.null(gnc)
-    # graph_clusters_nc <- components(gnc, mode = input$graph_component_type_select) # 2019-06-20 this wasn't being used as from g not graphFiltersNoCategorical()
+    # graph_clusters_nc <- components(gnc, mode = input$graph_component_type_select) 
+    # 2019-06-20 this wasn't being used as from g not graphFiltersNoCategorical()
     graph_clusters <- components(g, mode = input$graph_component_type_select) # moved here from below
     
     # added if statement 2019-06-20 this may not be working as intended (duplicated)
@@ -355,7 +357,7 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
     # g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, input$graph_loops_edge_check,
     #                        input$graph_component_type_select, input$graph_component_slider)
     # swapped order to place this filter last
-    g <- applyCategoricalFilters(g, plot_category, plot_category_attr)
+    g <- VOSONDash::applyCategoricalFilters(g, plot_category, plot_category_attr)
   }
   
   # voson text attributes

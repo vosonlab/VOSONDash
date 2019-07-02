@@ -137,7 +137,7 @@ observeEvent({ input$graph_component_type_select
                  
   if (input$reset_on_change_check == TRUE) {
     g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
-    g <- applyCategoricalFilters(g, input$graph_catAttr_select, input$graph_catAttr_attr_select)
+    g <- VOSONDash::applyCategoricalFilters(g, input$graph_catAttr_select, input$graph_catAttr_attr_select)
   }
 
   updateComponentSlider(g, input$graph_component_type_select)
@@ -474,9 +474,10 @@ graphFiltersNoCategorical <- reactive({
     g <- ng_rvalues$graph_data
     g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
     # isolate as graph_component_type_select has event
-    g <- applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
-    g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, input$graph_loops_edge_check)
-    g <- addAdditionalMeasures(g)
+    g <- VOSONDash::applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
+    g <- VOSONDash::applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
+                                      input$graph_loops_edge_check)
+    g <- VOSONDash::addAdditionalMeasures(g)
   }
 
   return(g)
@@ -491,11 +492,12 @@ graphFilters <- reactive({
   if (!is.null(ng_rvalues$graph_data)) {
     g <- ng_rvalues$graph_data
     g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
-    g <- applyCategoricalFilters(g, input$graph_catAttr_select, input$graph_catAttr_attr_select)
+    g <- VOSONDash::applyCategoricalFilters(g, input$graph_catAttr_select, input$graph_catAttr_attr_select)
     # isolate as graph_component_type_select has event
-    g <- applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)    
-    g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, input$graph_loops_edge_check)
-    g <- addAdditionalMeasures(g)
+    g <- VOSONDash::applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)    
+    g <- VOSONDash::applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
+                                      input$graph_loops_edge_check)
+    g <- VOSONDash::addAdditionalMeasures(g)
   }
   
   return(g)
@@ -802,7 +804,8 @@ graphComponentSummary <- reactive({
   if (!is.null(g)) {
     graph_clusters <- components(g, mode = isolate(input$graph_component_type_select))
     
-    output <- append(output, paste0("Components (", isolate(input$graph_component_type_select), "): ", graph_clusters$no))
+    output <- append(output, paste0("Components (", isolate(input$graph_component_type_select), "): ", 
+                                    graph_clusters$no))
     
     min_value <- max_value <- 0
     if (graph_clusters$no > 0) {
@@ -843,27 +846,6 @@ setGraphView <- function(data, desc = "", type = "", name = "", seed = 1) {
   updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
 }
 
-# return empty plot with message
-emptyGraphPlotMessage <- function(message) {
-  return({ plot(1:10, 1:10, type = "n", axes = F, xlab = "", ylab = "")
-    text(5, 5, message, cex = 1.2) })
-}
-
-# filter out vertices not in selected voson categories from graph object
-applyCategoricalFilters <- function(g, selected_category, selected_category_attr) {
-  # filter out all vertices that are not in category attribute
-  if (selected_category != "All") {
-    selected_category_attr <- selected_category_attr[selected_category_attr != "All"]
-    
-    if (length(selected_category_attr) > 0) {
-      vattr <- paste0('vosonCA_', selected_category)
-      g <- delete.vertices(g, V(g)[!(vertex_attr(g, vattr) %in% selected_category_attr)])
-    }
-  }
-  
-  return(g)
-}
-
 updateComponentSlider <- function(g, component_type) {
   if (!is.null(g)) {
     graph_clusters <- components(g, mode = component_type)
@@ -878,61 +860,6 @@ updateComponentSlider <- function(g, component_type) {
   }
 }
 
-applyComponentFilter <- function(g, component_type, component_range) {
-  graph_clusters <- components(g, mode = component_type)
-  
-  min_cluster_size <- suppressWarnings(min(graph_clusters$csize)) # suppress no non-missing arguments to min;
-  max_cluster_size <- suppressWarnings(max(graph_clusters$csize)) # returning Inf warning
-  
-  component_slider_min_value <- component_range[1]
-  component_slider_max_value <- component_range[2]
-  
-  filter_nodes_under <- NULL
-  filter_nodes_over <- NULL
-  rm_nodes <- c()
-  
-  # remove vertices not part of components in component size range
-  if (component_slider_min_value > min_cluster_size) {
-    filter_nodes_under <- names(which(table(graph_clusters$membership) < component_slider_min_value))
-    
-    if (length(filter_nodes_under) > 0) {
-      rm_nodes <- sapply(filter_nodes_under, function(x) append(rm_nodes, names(which(graph_clusters$membership == x))))
-    }
-  }
-  
-  if (component_slider_max_value < max_cluster_size) {
-    filter_nodes_over <- names(which(table(graph_clusters$membership) > component_slider_max_value))
-    
-    if (length(filter_nodes_over) > 0) {
-      rm_nodes <- sapply(filter_nodes_over, function(x) append(rm_nodes, names(which(graph_clusters$membership == x))))
-    }
-  }
-  
-  if (length(rm_nodes) > 0) {
-    rm_nodes <- unlist(rm_nodes)
-    g <- delete.vertices(g, rm_nodes)
-  }
-  
-  return(g)
-}
-
-# filter out vertices and edges from graph object
-applyGraphFilters <- function(g, isolates, multi_edge, loops_edge) {
-  # remove multiple edges and self loops
-  if (multi_edge == FALSE || loops_edge == FALSE) {
-    remove_multiple <- ifelse(multi_edge == FALSE, TRUE, FALSE)
-    remove_loops <- ifelse(loops_edge == FALSE, TRUE, FALSE)
-    g <- simplify(g, remove.multiple = remove_multiple, remove.loops = remove_loops)
-  }
-  
-  # remove isolates
-  if (isolates == FALSE) {
-    g <- delete.vertices(g, degree(g) == 0)
-  }
-  
-  return(g)  
-}
-
 # filter out list of vertices from graph object
 applyPruneFilter <- function(g, selected_prune_verts) {
   if (length(selected_prune_verts) > 0) {
@@ -945,138 +872,5 @@ applyPruneFilter <- function(g, selected_prune_verts) {
     prune_flag <<- FALSE
   }
   
-  return(g)
-}
-
-# add additional calculated data to graph object
-# if column already exists in the data it will be overwritten
-addAdditionalMeasures <- function(g) {
-  # add degree
-  V(g)$Degree <- degree(g, mode = "total")
-  if (is.directed(g)) {
-    V(g)$Indegree <- degree(g, mode = "in")
-    V(g)$Outdegree <- degree(g, mode = "out")
-  } else {
-    V(g)$Indegree <- V(g)$Outdegree <- 0
-  }
-  
-  # add centrality
-  if (vcount(g) > 1) {
-    V(g)$Betweenness <- as.numeric(sprintf("%.3f", betweenness(g)))
-    V(g)$Closeness <- as.numeric(sprintf("%.3f", suppressWarnings(closeness(g)))) # suppress disconnected graph warnings    
-  } else {
-    V(g)$Betweenness <- V(g)$Closeness <- 0
-  }
-
-  return(g)
-}
-
-#### batch reset, enable and disable graph contols ####
-
-# need to modularize
-disableGraphFilterControls <- function() {
-  ui_controls <- c("graph_isolates_check",
-                   "graph_multi_edge_check",
-                   "graph_loops_edge_check",
-                   "graph_names_check",
-                   "graph_catAttr_select",
-                   "graph_catAttr_attr_select",
-                   "graph_node_size_degree_select", 
-                   "analysis_graphml_download_button",
-                   "graph_reseed_button",
-                   "graph_layout_select", 
-                   "graph_spread_slider",
-                   "graph_component_type_select",
-                   "graph_component_slider")
-  
-  sapply(ui_controls, function(x) { shinyjs::disable(x) })  
-}
-
-resetEnableGraphFilterControls <- function() {
-  ui_controls <- c("graph_isolates_check", 
-                   "graph_multi_edge_check", 
-                   "graph_loops_edge_check", 
-                   "graph_names_check", 
-                   "graph_node_size_degree_select", 
-                   "graph_catAttr_attr_select", 
-                   "graph_layout_select", 
-                   "graph_spread_slider",
-                   "graph_component_type_select")
-  
-  sapply(ui_controls, function(x) { shinyjs::reset(x)
-                                    shinyjs::enable(x) })
-}
-
-disableTextAnalysisControls <- function() {
-  ui_controls <- c("text_analysis_stopwords_check",
-                   "text_analysis_user_stopwords_input", 
-                   "text_analysis_user_stopwords_check",
-                   "text_analysis_twitter_hashtags_check", 
-                   "text_analysis_twitter_usernames_check",
-                   "text_analysis_stem_check",
-                   "text_analysis_wf_top_count",
-                   "text_analysis_wf_min_word_freq",
-                   "text_analysis_wc_min_word_freq",
-                   "text_analysis_wc_max_word_count",
-                   "text_analysis_cc_max_word_count")
-  
-  sapply(ui_controls, function(x) { shinyjs::disable(x) })
-}
-
-resetEnableTextAnalysisControls <- function() {
-  ui_controls <- c("text_analysis_stopwords_check",
-                   "text_analysis_user_stopwords_input", 
-                   "text_analysis_user_stopwords_check",
-                   "text_analysis_twitter_hashtags_check",
-                   "text_analysis_twitter_usernames_check", 
-                   "text_analysis_stem_check",
-                   "text_analysis_wf_top_count",
-                   "text_analysis_wf_min_word_freq",
-                   "text_analysis_wc_min_word_freq",
-                   "text_analysis_wc_max_word_count",
-                   "text_analysis_cc_max_word_count")
-  
-  sapply(ui_controls, function(x) { shinyjs::reset(x)
-                                    shinyjs::enable(x) })
-}
-
-enablePlotControls <- function() {
-  shinyjs::disable("graph_download_button")
-  
-  # added "graph_multi_edge_check", "graph_loops_edge_check" for bug switching back to plot from visnetwork
-  # and multi, loops checkbox remaining disabled
-  ui_controls <- c("graph_names_check",
-                   "graph_reseed_button",
-                   "graph_layout_select",
-                   "graph_node_size_degree_select",
-                   "graph_node_size_slider",
-                   "graph_spread_slider",
-                   "graph_multi_edge_check",
-                   "graph_loops_edge_check")
-  
-  sapply(ui_controls, function(x) { shinyjs::enable(x) })
-}
-
-enableD3Controls <- function() {
-  shinyjs::enable("graph_download_button")
-  
-  ui_controls <- c("graph_names_check",
-                   "graph_reseed_button",
-                   "graph_layout_select",
-                   "graph_node_size_degree_select",
-                   "graph_node_size_slider",
-                   "graph_spread_slider")
-  
-  sapply(ui_controls, function(x) { shinyjs::disable(x) })
-}
-
-enableVisNetworkControls <- function() {
-  shinyjs::enable("graph_download_button")
-  
-  ui_controls <- c("graph_names_check", 
-                   "graph_multi_edge_check", 
-                   "graph_loops_edge_check", 
-                   "graph_spread_slider")
-  
-  sapply(ui_controls, function(x) { shinyjs::disable(x) })
+  g
 }

@@ -21,8 +21,8 @@ creds_rv <- reactiveValues(
 
 observeEvent(check_creds_startup, {
   isolate({
-    if (file.exists(g_api_keys_path)) {
-      api_keys <- readRDS(file = g_api_keys_path)
+    if (file.exists(u_api_keys_path)) {
+      api_keys <- readRDS(file = u_api_keys_path)
       
       load_and_use_keys <- api_keys$load_and_use_keys
       
@@ -33,20 +33,21 @@ observeEvent(check_creds_startup, {
         updateTextInput(session, "twitter_api_key_input", label = NULL, value = api_keys$twitter_api_key)
         updateTextInput(session, "twitter_api_secret_input", label = NULL, value = api_keys$twitter_api_secret)
         updateTextInput(session, "twitter_access_token_input", label = NULL, value = api_keys$twitter_access_token)
-        updateTextInput(session, "twitter_access_token_secret_input", label = NULL, value = api_keys$twitter_access_token_secret)
+        updateTextInput(session, "twitter_access_token_secret_input", label = NULL, 
+                        value = api_keys$twitter_access_token_secret)
         updateTextInput(session, "youtube_api_key_input", label = NULL, value = api_keys$youtube_api_key)
         
         creds_rv$msg_log <<- logMessage(creds_rv$msg_log, "loaded and populated api keys")
       }
     }
     
-    if (file.exists(g_api_tokens_path)) {
-      creds_rv$tokens <- readRDS(file = g_api_tokens_path)
-      creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", g_api_tokens_path))
+    if (file.exists(u_api_tokens_path)) {
+      creds_rv$tokens <- readRDS(file = u_api_tokens_path)
+      creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", u_api_tokens_path))
       ids <- getTokenIds()
       updateSelectInput(session, "twitter_token_select", label = NULL, choices = ids, selected = ids[length(ids)])
     } else {
-      creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("no tokens file found", g_api_tokens_path))
+      creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("no tokens file found", u_api_tokens_path))
     }    
   })
 }, once = TRUE)
@@ -59,7 +60,7 @@ observeEvent(input$create_app_token, {
   
   # not caught if httpuv aborted as it as ends shiny session
   tryCatch({
-    creds_rv$created_token <- createTwitterDevToken(input$keys_twitter_app_name_input, keys)
+    creds_rv$created_token <- VOSONDash::createTwitterDevToken(input$keys_twitter_app_name_input, keys)
   }, error = function(err) {
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation error:", err))
     creds_rv$created_token <- NULL
@@ -74,7 +75,7 @@ observeEvent(input$create_web_auth_token, {
   
   # not caught if httpuv aborted as it as ends shiny session
   tryCatch({  
-    creds_rv$created_token <- createTwitterWebToken(input$keys_twitter_app_name_input, keys)
+    creds_rv$created_token <- VOSONDash::createTwitterWebToken(input$keys_twitter_app_name_input, keys)
   }, error = function(err) {
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation error:", err))
     creds_rv$created_token <- NULL
@@ -109,23 +110,23 @@ observeEvent(saveTokensButtonStatus(), {
 
 observeEvent(input$tokens_save_button, {
   # save tokens
-  saveRDS(creds_rv$tokens, g_api_tokens_path)
+  saveRDS(creds_rv$tokens, u_api_tokens_path)
   creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste0("saved tokens to file (", length(creds_rv$tokens), ")"))  
 })
 
 observeEvent(input$tokens_load_button, {
-  if (file.exists(g_api_tokens_path)) {
-    creds_rv$tokens <- readRDS(file = g_api_tokens_path)
-    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", g_api_tokens_path))
+  if (file.exists(u_api_tokens_path)) {
+    creds_rv$tokens <- readRDS(file = u_api_tokens_path)
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", u_api_tokens_path))
     ids <- getTokenIds()
     updateSelectInput(session, "twitter_token_select", label = NULL, choices = ids, selected = ids[length(ids)])
   } else {
-    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("no tokens file found", g_api_tokens_path))
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("no tokens file found", u_api_tokens_path))
   }  
 })
 
 observeEvent(creds_rv$created_token, {
-  if (is.null(creds_rv$created_token) || rtweet:::is.token(creds_rv$created_token$auth) == FALSE) {
+  if (is.null(creds_rv$created_token) || rtweet::check_token(creds_rv$created_token$auth) == FALSE) {
     creds_rv$msg_log <- logMessage(isolate(creds_rv$msg_log), "created invalid token")
     shinyjs::disable("save_token")
   } else {
@@ -137,13 +138,10 @@ observeEvent(creds_rv$created_token, {
 observeEvent(input$save_token, {
   token <- creds_rv$created_token
   
-  if (!is.null(token) && rtweet:::is.token(token$auth)) {
-    # token_id <- paste0(token$created, " ", token$auth$app$appname, " (", token$type ,")")
+  if (!is.null(token) && rtweet::check_token(token$auth)) {
     token_id <- createTokenId(token)
     creds_rv$tokens[[token_id]] <- token
     
-    # save tokens
-    # saveRDS(creds_rv$tokens, g_api_tokens_path)
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, "saved token to list")
     
     creds_rv$selected_token_id <- token_id
@@ -151,12 +149,6 @@ observeEvent(input$save_token, {
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, "unable to save token to list")
   }
 })
-
-# observeEvent(creds_rv$use_token, {
-#   if (!is.null(creds_rv$use_token)) {
-#     
-#   }
-# })
 
 observeEvent(input$use_selected_token, {
   if (input$twitter_token_select == "None") {
@@ -172,7 +164,6 @@ observeEvent(input$delete_selected_token, {
     
     creds_rv$tokens <- creds_rv$tokens[!grepl(input$twitter_token_select, names(creds_rv$tokens), fixed = TRUE)]
     
-    # saveRDS(creds_rv$tokens, g_api_tokens_path)
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("deleted", input$twitter_token_select))
 
     if (!is.null(creds_rv$use_token)) {
@@ -211,16 +202,10 @@ output$api_keys_log_output <- renderText({
   paste0(creds_rv$msg_log, collapse = '\n')
 })
 
-# output$twitter_set_token <- renderText({
-#   if (!is.null(creds_rv$use_token)) {
-#     paste("Using ", createTokenId(creds_rv$use_token))
-#   }  
-# })
-
 output$save_token_output <- renderText({
   output <- c()
   token <- creds_rv$created_token
-  if (is.null(token) || rtweet:::is.token(token$auth) == FALSE) {
+  if (is.null(token) || rtweet::check_token(token$auth) == FALSE) {
     output <- append(output, "Empty or invalid token.")
   } else {
     output <- c(paste("token:", token$auth$app$appname),
@@ -239,9 +224,6 @@ getTokenIds <- reactive({
   if (length(creds_rv$tokens) > 0) {
     for (id in names(creds_rv$tokens)) {
       token_list <- append(token_list, id)
-      # show_name <- list()
-      # show_name[[paste0(id, " (", creds_rv$tokens[[id]]$type, ")")]] <- id
-      # token_list <- append(token_list, show_name)
     }            
   }
   return(token_list)
@@ -286,21 +268,21 @@ writeKeysFile <- function() {
     youtube_api_key = input$keys_youtube_api_key_input
   )
   
-  saveRDS(api_keys, g_api_keys_path)
-  creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste("wrote keys to", g_api_keys_path))
+  saveRDS(api_keys, u_api_keys_path)
+  creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste("wrote keys to", u_api_keys_path))
 }
 
 # read api_keys object from rds file and update input fields with values
 readKeysFile <- function() {
   status <- ""
   
-  if (file.exists(g_api_keys_path)) {
-    creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste("file", g_api_keys_path, "exists"))
+  if (file.exists(u_api_keys_path)) {
+    creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste("file", u_api_keys_path, "exists"))
     
-    api_keys <<- readRDS(file = g_api_keys_path)
+    api_keys <<- readRDS(file = u_api_keys_path)
     
   } else {
-    creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste("file", g_api_keys_path, "not found"))
+    creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste("file", u_api_keys_path, "not found"))
     
     return(NULL)
   }
@@ -314,7 +296,7 @@ readKeysFile <- function() {
   updateTextInput(session, "keys_twitter_access_token_secret_input", label = NULL, value = api_keys$twitter_access_token_secret)
   updateTextInput(session, "keys_youtube_api_key_input", label = NULL, value = api_keys$youtube_api_key)
   
-  creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste0("read keys from ", g_api_keys_path, " (", length(api_keys), " values)"))
+  creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste0("read keys from ", u_api_keys_path, " (", length(api_keys), " values)"))
 }
 
 # copy keys input field values to youtube section api key field

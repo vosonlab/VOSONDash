@@ -45,17 +45,6 @@ twitter_filter_positive <- NULL
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 
-# set twitter api keys on input
-# observeEvent({
-#   input$twitter_app_name_input
-#   input$twitter_api_key_input
-#   input$twitter_api_secret_input
-#   input$twitter_access_token_input
-#   input$twitter_access_token_secret_input}, {
-#     
-#     setTwitterAPIKeys()
-#   })
-
 # set twitter parameters on input
 observeEvent({input$twitter_search_term_input
   input$twitter_retweets_check
@@ -315,7 +304,6 @@ setTwitterAPIKeys <- reactive({
 setTwitterParams <- reactive({
   twitter_search_term <<- trimws(input$twitter_search_term_input)
   twitter_search_term <<- gsub("\n{1, }", " ", twitter_search_term)
-  # twitter_search_term <<- gsub(" {2, }", " ", trimws(input$twitter_search_term_input)) # too helpful
   
   twitter_search_type <<- input$twitter_search_type_select
   twitter_retweets <<- input$twitter_retweets_check
@@ -391,12 +379,6 @@ twitterArgumentsOutput <- function() {
   
   output <- c()
   check_keys <- sapply(twitter_api_keyring, isNullOrEmpty)
-  
-  # if (any(check_keys == FALSE)) {
-  #   output <- append(output, paste0("api keys: ", 
-  #                                   trimws(paste0(sapply(strtrim(twitter_api_keyring, 6), 
-  #                                                        function(x) paste0(x, "...", sep = "")), collapse = ', '))))
-  # }
   
   search_term_flag <- FALSE
   if (!isNullOrEmpty(twitter_search_term)) {

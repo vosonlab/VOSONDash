@@ -6,7 +6,7 @@ Description: R Shiny application that provides a web interface for collecting
     shiny components.
 Type: Package
 Imports: 
-Depends: R (>= 3.2.0), shiny (>= 1.3.2)
+Depends: R (>= 3.2.0), shiny (>= 1.3.2), vosonSML (>= 0.27.0), rtweet, igraph
 Encoding: UTF-8
 Author: Robert Ackland, Bryan Gertzel
 Maintainer: Bryan Gertzel <bryan.gertzel@anu.edu.au>

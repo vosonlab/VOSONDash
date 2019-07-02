@@ -1,41 +1,22 @@
 #' VOSON Dashboard Text Analysis Module
 #'
-#' Shiny module functions to create and render groups of word frequency charts or 
-#' word cloud plots dynamically.
+#' Shiny module functions to create and render groups of plots dynamically.
 #'
 
-#' Plot variables
-#' todo: pass these in some other way
-tamod_palette <- brewer.pal(8, "Dark2") # g_plot_palette
-tamod_plot_height <- "450px"
-tamod_wc_scale <- c(2, 0.5)
+#### ui ---------------------------------------------------------------------------------------------------------------
 
-#' Create empty plot with text message.
-#' 
-#' @param message text message to print in centre of empty plot
-#' 
-#' @return plot and text code block
-#' 
-emptyPlotMessage <- function(message) {
-  return({ plot(1:10, 1:10, type = "n", axes = F, xlab = "", ylab = "")
-    text(5, 5, message, cex = 1.2) })
-}
-
-#' UI container for Text Analysis plots.
-#' Creates namespaced UI output container "ta_plot".
+#' UI container for plots
 #' 
 #' @param id shiny module namespace id
 #' 
 #' @return None
-#' 
-#' @export
+#'
 taPlotContainerUI <- function(id) {
   ns <- NS(id)
   uiOutput(ns("ta_plot"))
 }
 
-#' Creates UI plot placeholders generated from VOSON Dashboard Text Analysis plot list data.
-#' Renders plot placeholders in namespace UI output container "ta_plot".
+#' Creates dynamic ui plot placeholders generated from list of data
 #' 
 #' @param input shiny module namespaced input parameter
 #' @param output shiny module namespaced output parameter
@@ -46,15 +27,12 @@ taPlotContainerUI <- function(id) {
 #'
 #' @return None
 #' 
-#' @export
 taPlotPlaceholders <- function(input, output, session, data) {
   ns <- session$ns
   
   plotPlaceholders <- reactive({
     tag_list <- tagList()
     plot_ids <- names(sapply(data, names))
-    
-    # isolate({ # withProgress(message = "Processing placeholders...", {
     
     for (i in seq_along(data)) {
       title_cat <- data[[i]][[1]][[1]]
@@ -64,19 +42,17 @@ taPlotPlaceholders <- function(input, output, session, data) {
       tag_list <- tagAppendChild(tag_list, title_tags)
       
       plot_id <- ns(plot_ids[i])
-      plot_tags <- fluidRow(column(width = 12, plotOutput(plot_id, height = tamod_plot_height)))
+      plot_tags <- fluidRow(column(width = 12, plotOutput(plot_id, height = ta_plot_height)))
       tag_list <- tagAppendChild(tag_list, plot_tags)
     }
-    
-    # }) # })
     
     # creates a plot placeholder with the namespace id "no-data"
     if (length(tag_list) == 0) {
       tag_list <- tagAppendChild(tag_list, fluidRow(column(width = 12, plotOutput(ns("no-data"),
-                                                                                  height = tamod_plot_height))))
+                                                                                  height = ta_plot_height))))
     }
     
-    return(tag_list)
+    tag_list
   })
   
   output$ta_plot <- renderUI({
@@ -84,8 +60,9 @@ taPlotPlaceholders <- function(input, output, session, data) {
   })
 }
 
-#' Renders plots to placeholders for Word Frequency or Word Cloud plots.
-#' Generated from VOSON Dashboard Text Analysis plot list data structure.
+#### server -----------------------------------------------------------------------------------------------------------
+
+#' Renders plots to placeholders
 #'
 #' @param input shiny module namespaced input parameter
 #' @param output shiny module namespaced output parameter
@@ -102,7 +79,6 @@ taPlotPlaceholders <- function(input, output, session, data) {
 #' 
 #' @return None
 #'
-#' @export
 taPlotList <- function(input, output, session, data, seed, categories, min_freq, max_words, top_count, type) {
   ns <- session$ns
   
@@ -116,7 +92,7 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           local_i <- i
           plot_id <- plot_ids[local_i]
           output[[plot_id]] <- renderPlot({
-            wordFreqChart(data[[local_i]], categories, min_freq, top_count)
+            VOSONDash::wordFreqChart(data[[local_i]], categories, min_freq, top_count)
           })
         })
       }
@@ -124,7 +100,7 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
       # renders empty plot to namespace id "no-data" placeholder
       if (length(data) < 1) {
         output[["no-data"]] <- renderPlot({
-          emptyPlotMessage("No text data.")
+          VOSONDash::emptyPlotMessage("No text data.")
         })
       }
       
@@ -141,7 +117,7 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           local_i <- i
           plot_id <- plot_ids[local_i]
           output[[plot_id]] <- renderPlot({
-            wordCloudPlot(data[[local_i]], seed, categories, min_freq, max_words)
+            VOSONDash::wordCloudPlot(data[[local_i]], seed, categories, min_freq, max_words)
           })
         })
       }
@@ -149,7 +125,7 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
       # renders empty plot to namespace id "no-data" placeholder
       if (length(data) < 1) {
         output[["no-data"]] <- renderPlot({
-          emptyPlotMessage("No text data.")
+          VOSONDash::emptyPlotMessage("No text data.")
         })
       }
     }) })
@@ -165,7 +141,7 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           local_i <- i
           plot_id <- plot_ids[local_i]
           output[[plot_id]] <- renderPlot({
-            wordSentChart(data[[local_i]], categories)
+            VOSONDash::wordSentChart(data[[local_i]], categories)
           })
         })
       }
@@ -173,7 +149,7 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
       # renders empty plot to namespace id "no-data" placeholder
       if (length(data) < 1) {
         output[["no-data"]] <- renderPlot({
-          emptyPlotMessage("No text data.")
+          VOSONDash::emptyPlotMessage("No text data.")
         })
       }
       
@@ -188,127 +164,4 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   } else if (type == "ws") {
     wordSentPlotList()
   }
-}
-
-getColors <- function(categories, plot_category, plot_category_attrs, default_col) {
-  if (plot_category != "") {
-    df <- data.frame("cat" = categories[[plot_category]])
-    
-    # not sure about this
-    if (nrow(df)) {
-      # is this needed?
-      ncats <- ifelse(nrow(df) == 0, 1, nrow(df))
-      df$color <- tamod_palette[1:ncats]
-      
-      match_t <- match(plot_category_attrs, df$cat)
-      colx <- ifelse(!is.na(match_t), df$color[match_t], default_col)      
-    }
-  } else {
-    colx <- default_col
-  }
-}
-
-#' Creates a Word Frequency chart
-#'
-#' @param data voson dashboard text analysis plot list data structure
-#' @param categories list of all categorical attribures in the data set
-#' @param min_freq minimum word frequency for word frequency charts
-#' @param top_count number of words to render in word frequency charts
-#' 
-#' @return barchart
-#' 
-wordFreqChart <- function(data, categories, min_freq, top_count) {
-  graph_attr <- data[[1]]
-  corp <- data[[2]]
-
-  # returns empty plot with message if no data to chart
-  if (is.null(corp) || length(corp) < 1) {
-    return(emptyPlotMessage("No text data."))
-  }
-  
-  plot_category <- plot_category_attrs <- ""
-  plot_category <- graph_attr[[1]]
-  plot_category_attrs <- graph_attr[[2]] # can be a list
-  
-  # min freq uses bounds control
-  dtm <- DocumentTermMatrix(corp, control = list(wordLengths = c(3, 20), bounds = list(global = c(min_freq, Inf))))
-  dtm_sparse_removed <- removeSparseTerms(dtm, 0.98)
-  
-  freq_terms <- colSums(as.matrix(dtm_sparse_removed))
-  order_terms <- order(freq_terms, decreasing = TRUE)
-  
-  colx <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5")
-  
-  par(mar = rep(0, 4))
-  return(barchart(freq_terms[order_terms[1:top_count]], col = colx, xlab = "Frequency"))
-}
-
-wordSentChart <- function(data, categories) {
-  graph_attr <- data[[1]]
-  corp <- data[[2]]
-  
-  # returns empty plot with message if no data to chart
-  if (is.null(corp) || length(corp) < 1) {
-    return(emptyPlotMessage("No text data."))
-  }
-  
-  ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
-  
-  plot_category <- plot_category_attrs <- ""
-  plot_category <- graph_attr[[1]]
-  plot_category_attrs <- graph_attr[[2]] # can be a list
-
-  nrc_sent_df <- get_nrc_sentiment(unlist(ws_df[, 1]))
-  nrc_sent_df$neutral <- ifelse(nrc_sent_df$negative + nrc_sent_df$positive == 0, 1, 0)
-  chart_data <- 100 * colSums(nrc_sent_df) / sum(nrc_sent_df)
-  
-  colx <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5")
-  colx[seq(1, 8)] <- colx
-  colx[9] <- "lightcoral"
-  colx[10] <- "mediumaquamarine"
-  colx[11] <- "gainsboro"
-  
-  par(las = 2)
-  par(mar = c(4, 6, 0, 4))
-
-  sent_plot <- barplot(chart_data, col = colx, xlab = "Percentage %", horiz = TRUE, xlim = c(0, 100), xpd = FALSE, axes=TRUE)
-
-  text(x = ifelse(chart_data <= 1, 1, chart_data+2.5), sent_plot, labels = round(chart_data, digits = 2), col = "black")
-  # legend("topright", "Syuzhet Package\nNRC Emotion Lexicon\n(Saif Mohammad)", bty = "n") 
-  
-  return(sent_plot)
-}
-
-#' Creates a Word Cloud plot
-#'
-#' @param data voson dashboard text analysis plot list data structure
-#' @param seed value to seed rendering of word clouds
-#' @param categories list of all categorical attribures in the data set
-#' @param min_freq minimum word frequency for word clouds
-#' @param max_words maximum number of words to render in word clouds
-#' 
-#' @return wordcloud
-#' 
-wordCloudPlot <- function(data, seed, categories, min_freq, max_words) {
-  graph_attr <- data[[1]]
-  corp <- data[[2]]
-  
-  # returns empty plot with message if no data to plot
-  if (is.null(corp) || length(corp) < 1) {
-    return(emptyPlotMessage("No text data."))
-  }
-  
-  plot_category <- plot_category_attrs <- ""
-  plot_category <- graph_attr[[1]]
-  plot_category_attrs <- graph_attr[[2]]
-  
-  colx <- getColors(categories, plot_category, plot_category_attrs, "black")
-  
-  if (!is.null(seed)) {
-    set.seed(seed)
-  }
-  
-  # colors = colx[factor(df$cat)]
-  par(mar = rep(0, 4))
-  return(wordcloud(corp, min.freq = min_freq, max.words = max_words, random.order = FALSE, colors = colx))
 }

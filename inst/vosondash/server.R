@@ -2,9 +2,10 @@
 
 #### shiny server ----------------------------------------------------------------------------------------------------- #
 shinyServer(function(input, output, session) {
-  # if (isLocal) {
-  #   options(encoding = "UTF-8")
-  # }
+  
+  # api keys
+  u_api_keys_path <- paste0(Sys.getenv("HOME"), "/vosondash_keys.rds", sep = "")
+  u_api_tokens_path <- paste0(Sys.getenv("HOME"), "/vosondash_tokens.rds", sep = "")
   
   #### network graphs ####
   source("server/networkGraphsServer.R", local = TRUE)
@@ -30,6 +31,7 @@ shinyServer(function(input, output, session) {
   #### api keys ####
   source("server/apiKeysServer.R", local = TRUE)
   
+  # reset collect consoles on startup
   observeEvent(input$sidebar_menu, {
     resetConsole("twitter_console", FALSE)
     resetConsole("youtube_console", FALSE)
@@ -40,7 +42,6 @@ shinyServer(function(input, output, session) {
   session$onSessionEnded(function() {
     if (isLocal) {
       cat("Session ended or browser closed. Exiting.\n")
-      # options(encoding = save_enc)
       stopApp()
     }
   })  
