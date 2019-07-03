@@ -101,7 +101,7 @@ getYoutubeVideoId <- function(url) {
     return(url)
   }  
   
-  url <- parse_url(url)
+  url <- httr::parse_url(url)
   video_id <- NULL
   
   if (is.null(url$hostname)) {

@@ -132,7 +132,7 @@ collectTwitterData <- function(token, search_term, search_type, tweet_count,
   collect_params['writeToFile'] <- FALSE
   collect_params['verbose'] <- TRUE
   
-  data <- do.call(Collect, collect_params)
+  data <- do.call(vosonSML::Collect, collect_params)
 }
 
 #' Create twitter actor networks
@@ -144,7 +144,7 @@ collectTwitterData <- function(token, search_term, search_type, tweet_count,
 #' 
 #' @export
 createTwitterActorNetwork <- function(data) {
-  network <- data %>% Create("actor", verbose = TRUE)
+  network <- data %>% vosonSML::Create("actor", verbose = TRUE)
   
   g <- igraph::set_graph_attr(network$graph, "type", "twitter")
   
@@ -172,7 +172,7 @@ collectYoutubeData <- function(youtube_api_key, youtube_video_id_list, youtube_m
   
   collect_params <- list()
 
-  cred <- Authenticate("youtube", apiKey = youtube_api_key)
+  cred <- vosonSML::Authenticate("youtube", apiKey = youtube_api_key)
   
   collect_params[['credential']] <- cred
   collect_params[['videoIDs']] <- youtube_video_id_list
@@ -184,7 +184,7 @@ collectYoutubeData <- function(youtube_api_key, youtube_video_id_list, youtube_m
   collect_params['writeToFile'] <- FALSE
   collect_params['verbose'] <- FALSE
   
-  data <- do.call(Collect, collect_params)
+  data <- do.call(vosonSML::Collect, collect_params)
 }
 
 #' Create youtube actor networks
@@ -218,8 +218,8 @@ collectRedditData <- function(reddit_url_list) {
   data <- NULL
   
   if (length(reddit_url_list) > 0) {
-    data <- Authenticate("reddit") %>% 
-      Collect(threadUrls = reddit_url_list, waitTime = 5, writeToFile = FALSE)
+    data <- vosonSML::Authenticate("reddit") %>% 
+      vosonSML::Collect(threadUrls = reddit_url_list, waitTime = 5, writeToFile = FALSE)
   }
   
   data
@@ -234,8 +234,8 @@ collectRedditData <- function(reddit_url_list) {
 #' 
 #' @export
 createRedditActorNetwork <- function(data) {
-  network <- data %>% Create("actor", writeToFile = FALSE)
-  networkWT <- data %>% Create("actor", textData = TRUE, cleanText = TRUE, writeToFile = FALSE)
+  network <- data %>% vosonSML::Create("actor", writeToFile = FALSE)
+  networkWT <- data %>% vosonSML::Create("actor", textData = TRUE, cleanText = TRUE, writeToFile = FALSE)
   
   list(network = network$graph, networkWT = networkWT$graph)
 }
@@ -267,20 +267,21 @@ hasVosonTextData <- function(g) {
   has_text
 }
 
-#' Installed vosonSML package version
+#' Loaded vosonSML package version
 #' 
 #' @return package version as character string
 #' @keywords internal
 #' 
 #' @export
-getInfo <- function() {
-  info <- version[['version.string']]
-  
+getVosonSMLVersion <- function(compare_ver) {
   if ("vosonSML" %in% loadedNamespaces()) {
-    info <- paste0(info, "\nvosonSML package v.", packageVersion("vosonSML"), sep = "")
-  } else {
-    info <- paste0(info, "\nvosonSML package not found.", sep = "")
+    if (missing(compare_ver)) {
+      return(utils::packageVersion("vosonSML"))
+    } else {
+      return(utils::packageVersion("vosonSML") >= compare_ver)
+    }
   }
   
-  info
+  NULL
 }
+

@@ -28,7 +28,7 @@ if (isLocal) {
   cat(paste("R shiny", packageVersion("shiny"), "\n"))
   
   cat(paste("\nHome:", Sys.getenv("HOME"), "\n"))
-  cat(paste("Encoding:", save_enc, "\n"))
+  # cat(paste("Encoding:", save_enc, "\n"))
   cat("\n")
   
   cat("Checking packages...\n")

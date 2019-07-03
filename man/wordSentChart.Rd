@@ -16,7 +16,7 @@ data structure is named list:
 \item{col_palette}{color palette to use in the plot}
 }
 \value{
-barchart
+barchart plot
 }
 \description{
 Creates a Sentiment Analysis chart

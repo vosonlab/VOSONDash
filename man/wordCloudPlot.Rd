@@ -23,7 +23,7 @@ data structure is named list:
 \item{col_palette}{color palette to use in the plot}
 }
 \value{
-wordcloud
+wordcloud plot
 }
 \description{
 Creates a Word Cloud plot

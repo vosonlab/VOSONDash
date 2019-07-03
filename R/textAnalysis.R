@@ -55,7 +55,7 @@ getColors <- function(categories, plot_category, plot_category_attrs, default_co
 #' @param top_count number of words to render in word frequency charts
 #' @param col_palette color palette to use in the plot
 #' 
-#' @return barchart
+#' @return barchart plot
 #' 
 #' @export
 wordFreqChart <- function(data, categories, min_freq, top_count, col_palette = NULL) {
@@ -72,14 +72,14 @@ wordFreqChart <- function(data, categories, min_freq, top_count, col_palette = N
   plot_category_attrs <- graph_attr[[2]] # can be a list
   
   # min freq uses bounds control
-  dtm <- DocumentTermMatrix(corp, control = list(wordLengths = c(3, 20), bounds = list(global = c(min_freq, Inf))))
-  dtm_sparse_removed <- removeSparseTerms(dtm, 0.98)
+  dtm <- tm::DocumentTermMatrix(corp, control = list(wordLengths = c(3, 20), bounds = list(global = c(min_freq, Inf))))
+  dtm_sparse_removed <- tm::removeSparseTerms(dtm, 0.98)
   
   freq_terms <- colSums(as.matrix(dtm_sparse_removed))
   order_terms <- order(freq_terms, decreasing = TRUE)
   
   if (is.null(col_palette)) {
-    col_palette <- brewer.pal(8, "Dark2")
+    col_palette <- RColorBrewer::brewer.pal(8, "Dark2")
   }
   colx <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5", col_palette)
   
@@ -95,7 +95,7 @@ wordFreqChart <- function(data, categories, min_freq, top_count, col_palette = N
 #' @param categories list of all categorical attribures in the data set
 #' @param col_palette color palette to use in the plot
 #' 
-#' @return barchart
+#' @return barchart plot
 #' 
 #' @export
 wordSentChart <- function(data, categories, col_palette = NULL) {
@@ -113,12 +113,12 @@ wordSentChart <- function(data, categories, col_palette = NULL) {
   plot_category <- graph_attr[[1]]
   plot_category_attrs <- graph_attr[[2]] # can be a list
 
-  nrc_sent_df <- get_nrc_sentiment(unlist(ws_df[, 1]))
+  nrc_sent_df <- syuzhet::get_nrc_sentiment(unlist(ws_df[, 1]))
   nrc_sent_df$neutral <- ifelse(nrc_sent_df$negative + nrc_sent_df$positive == 0, 1, 0)
   chart_data <- 100 * colSums(nrc_sent_df) / sum(nrc_sent_df)
   
   if (is.null(col_palette)) {
-    col_palette <- brewer.pal(8, "Dark2")
+    col_palette <- RColorBrewer::brewer.pal(8, "Dark2")
   }
   colx <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5", col_palette)
   colx[seq(1, 8)] <- colx
@@ -146,7 +146,7 @@ wordSentChart <- function(data, categories, col_palette = NULL) {
 #' @param max_words maximum number of words to render in word clouds
 #' @param col_palette color palette to use in the plot
 #' 
-#' @return wordcloud
+#' @return wordcloud plot
 #'
 #' @export
 wordCloudPlot <- function(data, seed, categories, min_freq, max_words, col_palette = NULL) {
@@ -163,7 +163,7 @@ wordCloudPlot <- function(data, seed, categories, min_freq, max_words, col_palet
   plot_category_attrs <- graph_attr[[2]]
   
   if (is.null(col_palette)) {
-    col_palette <- brewer.pal(8, "Dark2")
+    col_palette <- RColorBrewer::brewer.pal(8, "Dark2")
   }  
   colx <- getColors(categories, plot_category, plot_category_attrs, "black", col_palette)
   
@@ -171,7 +171,6 @@ wordCloudPlot <- function(data, seed, categories, min_freq, max_words, col_palet
     set.seed(seed)
   }
   
-  # colors = colx[factor(df$cat)]
   par(mar = rep(0, 4))
-  wordcloud(corp, min.freq = min_freq, max.words = max_words, random.order = FALSE, colors = colx)
+  wordcloud::wordcloud(corp, min.freq = min_freq, max.words = max_words, random.order = FALSE, colors = colx)
 }
