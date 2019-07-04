@@ -1,6 +1,6 @@
 #' @title Interface for collection and interactive analysis of social networks
 #'
-#' @description Descriptin field.
+#' @description Description field.
 #' 
 #' @name VOSONDash-package
 #' @aliases VOSONDash-package VOSONDash
@@ -8,6 +8,7 @@
 #' @author Robert Ackland and Bryan Gertzel
 #' 
 #' @import shiny
+#' @import httpuv
 #' @importFrom tm DocumentTermMatrix removeSparseTerms
 #' @importFrom igraph vertex_attr as_edgelist gsize delete_vertices components simplify vcount 
 #' betweenness closeness set_graph_attr V 'V<-' E 'E<-' degree edge_attr_names vertex_attr_names

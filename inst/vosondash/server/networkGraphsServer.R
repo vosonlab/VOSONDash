@@ -442,6 +442,9 @@ output$visNetworkPlot <- renderVisNetwork({
 
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
+source("server/igraphPlot.R", local = TRUE)
+source("server/visnetworkPlot.R", local = TRUE)
+
 # set file data when a file is uploaded
 filedata <- reactive({
   infile <- input$graphml_data_file
@@ -629,8 +632,6 @@ d3data <- reactive({
   igraph_to_networkD3(g, group = members)
 })
 
-source("server/visnetworkPlot.R", local = TRUE)
-
 # network graph save file name based on selected network graph tab
 saveGraphFileName <- reactive({
   switch(input$selected_graph_tab,
@@ -745,8 +746,6 @@ dt_edges_df <- reactive({
   igraph::as_data_frame(g, what = c("edges"))
   # data.frame(name = V(g)$name)
 })
-
-source("server/igraphPlot.R", local = TRUE)
 
 # d3 simple network graph
 simpleNetworkData <- reactive({

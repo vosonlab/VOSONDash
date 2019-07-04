@@ -102,7 +102,7 @@ plotWordFrequencies <- reactive({
   withProgress(message = "Processing word frequencies...", {
     callModule(taPlotPlaceholders, "word_freqs", ta_rvalues$plot_list_data)
     callModule(taPlotList, "word_freqs", ta_rvalues$plot_list_data, NULL, isolate(ng_rvalues$graph_CA), 
-               min_freq, NULL, top_count, "wf")
+               min_freq, NULL, top_count, "wf", col_palette = g_plot_palette())
   })
 })
 
@@ -111,7 +111,7 @@ plotSentiments <- reactive({
   withProgress(message = "Processing sentiment...", {
     callModule(taPlotPlaceholders, "word_sentiments", ta_rvalues$plot_list_data)
     callModule(taPlotList, "word_sentiments", ta_rvalues$plot_list_data, NULL, isolate(ng_rvalues$graph_CA), 
-               NULL, NULL, NULL, "ws")
+               NULL, NULL, NULL, "ws", col_palette = g_plot_palette())
   })
 })
 
@@ -124,7 +124,7 @@ plotWordClouds <- reactive({
   withProgress(message = "Processing word clouds...", {      
     callModule(taPlotPlaceholders, "word_clouds", ta_rvalues$plot_list_data)
     callModule(taPlotList, "word_clouds", ta_rvalues$plot_list_data, isolate(ng_rvalues$graph_seed), 
-               isolate(ng_rvalues$graph_CA), min_freq, max_words, NULL, "wc")
+               isolate(ng_rvalues$graph_CA), min_freq, max_words, NULL, "wc", col_palette = g_plot_palette())
   })
 })
 
@@ -361,9 +361,9 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
   }
   
   # voson text attributes
-  attr_v <- vertex_attr_names(g)
+  attr_v <- igraph::vertex_attr_names(g)
   attr_v <- attr_v[grep("^vosonTxt", attr_v, perl = T)]
-  attr_e <- edge_attr_names(g)
+  attr_e <- igraph::edge_attr_names(g)
   attr_e <- attr_e[grep("^vosonTxt", attr_e, perl = T)]
   
   ta_rvalues$has_text <<- FALSE
@@ -378,9 +378,9 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
   
   if (ta_rvalues$has_text) {
     if (attr[2] == "vertex") {
-      words <- vertex_attr(g, attr[1])
+      words <- igraph::vertex_attr(g, attr[1])
     } else {
-      words <- edge_attr(g, attr[1])
+      words <- igraph::edge_attr(g, attr[1])
     }
     
     ta_rvalues$attr_type <<- attr[2]
@@ -391,7 +391,7 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
       words <- words[-toRemove]
     }
     
-    if (isMac()) {
+    if (VOSONDash::isMac()) {
       words <- iconv(words, to = 'utf-8-mac')
     } else {
       words <- iconv(words, to = 'utf-8')
@@ -401,45 +401,46 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
       return(list(graph_attr, words))
     }
     
-    corp <- VCorpus(VectorSource(words))
-    corp <- tm_map(corp, content_transformer(tolower))
-    corp <- tm_map(corp, content_transformer(remHTTP))
+    corp <- tm::VCorpus(tm::VectorSource(words))
+    corp <- tm::tm_map(corp, tm::content_transformer(tolower))
+    corp <- tm::tm_map(corp, tm::content_transformer(remHTTP))
     
     if (input$text_analysis_twitter_hashtags_check == TRUE) {
-      corp <- tm_map(corp, content_transformer(removeHashTags))
+      corp <- tm::tm_map(corp, tm::content_transformer(removeHashTags))
     }
     if (input$text_analysis_twitter_usernames_check == TRUE) {
-      corp <- tm_map(corp, content_transformer(removeTwitterHandles))
+      corp <- tm::tm_map(corp, tm::content_transformer(removeTwitterHandles))
     }
 
-    if (!is.null(get.graph.attribute(g, "type"))) {
-      if (get.graph.attribute(g, "type") == "twitter") {
-        corp <- tm_map(corp, content_transformer(repHTMLApos))
-        corp <- tm_map(corp, content_transformer(repHTMLQuote))
-        corp <- tm_map(corp, content_transformer(repHTMLAmper))
-        corp <- tm_map(corp, content_transformer(remPartAmpGt))
+    if (!is.null(igraph::get.graph.attribute(g, "type"))) {
+      if (igraph::get.graph.attribute(g, "type") == "twitter") {
+        corp <- tm::tm_map(corp, tm::content_transformer(repHTMLApos))
+        corp <- tm::tm_map(corp, tm::content_transformer(repHTMLQuote))
+        corp <- tm::tm_map(corp, tm::content_transformer(repHTMLAmper))
+        corp <- tm::tm_map(corp, tm::content_transformer(remPartAmpGt))
       }      
     }
 
-    corp <- tm_map(corp, removeNumbers)
-    corp <- tm_map(corp, removePunctuation)
+    corp <- tm::tm_map(corp, removeNumbers)
+    corp <- tm::tm_map(corp, removePunctuation)
     
     if (input$text_analysis_stopwords_check == TRUE) {
-      corp <- tm_map(corp, removeWords, stopwords("english"), lazy = TRUE)
+      corp <- tm::tm_map(corp, removeWords, tm::stopwords("english"), lazy = TRUE)
     }
     
     if (input$text_analysis_user_stopwords_check == TRUE) {
       sw <- tolower(input$text_analysis_user_stopwords_input)
       sw <- trimws(unlist(strsplit(sw, ",")))
-      corp <- tm_map(corp, removeWords, sw)
+      corp <- tm::tm_map(corp, removeWords, sw)
     }
     
     if (input$text_analysis_stem_check == TRUE) {
-      corp <- tm_map(corp, stemDocument)
+      corp <- tm::tm_map(corp, stemDocument)
     }
     
-    corp <- tm_map(corp, stripWhitespace, lazy = TRUE)
+    corp <- tm::tm_map(corp, stripWhitespace, lazy = TRUE)
     
+    # named items
     return(list(graph_attr, corp))
   } else {
     return(NULL)

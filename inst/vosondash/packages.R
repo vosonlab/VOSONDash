@@ -3,19 +3,12 @@ requiredPackages <- c("htmlwidgets",
                       "shinydashboard",
                       "shinyjs", 
                       "DT",
+                      "igraph",
                       "networkD3",
                       "visNetwork",
-                      "igraph",
-                      "SnowballC",
                       "tm",
-                      "lattice",
-                      "RColorBrewer",
-                      "wordcloud",
-                      "syuzhet",
                       "dplyr",
-                      "httr",
-                      "httpuv",
-                      "vosonSML")
+                      "RColorBrewer")
 
 # if app is local print package information
 if (isLocal) {

@@ -6,7 +6,7 @@
 \alias{VOSONDash}
 \title{Interface for collection and interactive analysis of social networks}
 \description{
-Descriptin field.
+Description field.
 }
 \author{
 Robert Ackland and Bryan Gertzel

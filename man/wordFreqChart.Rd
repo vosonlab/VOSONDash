@@ -4,20 +4,16 @@
 \alias{wordFreqChart}
 \title{Creates a Word Frequency chart}
 \usage{
-wordFreqChart(data, categories, min_freq, top_count, col_palette = NULL)
+wordFreqChart(corp, min_freq, top_count, pcolors = NULL)
 }
 \arguments{
-\item{data}{voson dashboard text analysis plot list data structure
-data structure is named list:
-  list(graph_attr = list(attribute_name, attribute_value), VCorpus)}
-
-\item{categories}{list of all categorical attribures in the data set}
+\item{corp}{text corpus}
 
 \item{min_freq}{minimum word frequency for word frequency charts}
 
 \item{top_count}{number of words to render in word frequency charts}
 
-\item{col_palette}{color palette to use in the plot}
+\item{pcolors}{color list to use in the plot}
 }
 \value{
 barchart plot
@@ -25,3 +21,4 @@ barchart plot
 \description{
 Creates a Word Frequency chart
 }
+\keyword{internal}

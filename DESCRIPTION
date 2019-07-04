@@ -6,7 +6,7 @@ Description: R Shiny application that provides a web interface for collecting
     shiny components.
 Type: Package
 Imports: shiny (>= 1.3.2), magrittr, igraph (>= 1.2.2), rtweet (>= 0.6.8), vosonSML (>= 0.27.0), 
-    RColorBrewer, tm, wordcloud, syuzhet, httr, utils, graphics, lattice
+    RColorBrewer, tm, wordcloud, syuzhet, httr, utils, graphics, lattice, httpuv
 Depends: R (>= 3.2.0)
 Encoding: UTF-8
 Author: Robert Ackland, Bryan Gertzel

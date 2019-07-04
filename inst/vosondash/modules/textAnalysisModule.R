@@ -79,7 +79,8 @@ taPlotPlaceholders <- function(input, output, session, data) {
 #' 
 #' @return None
 #'
-taPlotList <- function(input, output, session, data, seed, categories, min_freq, max_words, top_count, type) {
+taPlotList <- function(input, output, session, data, seed, categories, min_freq, max_words, top_count, type, 
+                       col_palette) {
   ns <- session$ns
   
   wordFreqPlotList <- reactive({
@@ -92,7 +93,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           local_i <- i
           plot_id <- plot_ids[local_i]
           output[[plot_id]] <- renderPlot({
-            VOSONDash::wordFreqChart(data[[local_i]], categories, min_freq, top_count)
+            data_item <- data[[local_i]]
+            
+            graph_attr <- data_item[[1]]
+            plot_category <- graph_attr[[1]]
+            plot_category_attrs <- graph_attr[[2]]
+            pcolors <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5", col_palette)
+            
+            VOSONDash::wordFreqChart(corp = data_item[[2]], min_freq, top_count, pcolors)
           })
         })
       }
@@ -117,7 +125,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           local_i <- i
           plot_id <- plot_ids[local_i]
           output[[plot_id]] <- renderPlot({
-            VOSONDash::wordCloudPlot(data[[local_i]], seed, categories, min_freq, max_words)
+            data_item <- data[[local_i]]
+            
+            graph_attr <- data_item[[1]]
+            plot_category <- graph_attr[[1]]
+            plot_category_attrs <- graph_attr[[2]]
+            pcolors <- getColors(categories, plot_category, plot_category_attrs, "#000000", col_palette)
+            
+            VOSONDash::wordCloudPlot(corp = data_item[[2]], seed, min_freq, max_words, pcolors)
           })
         })
       }
@@ -141,7 +156,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           local_i <- i
           plot_id <- plot_ids[local_i]
           output[[plot_id]] <- renderPlot({
-            VOSONDash::wordSentChart(data[[local_i]], categories)
+            data_item <- data[[local_i]]
+            
+            graph_attr <- data_item[[1]]
+            plot_category <- graph_attr[[1]]
+            plot_category_attrs <- graph_attr[[2]]
+            pcolors <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5", col_palette)
+            
+            VOSONDash::wordSentChart(corp = data_item[[2]], pcolors)
           })
         })
       }
@@ -164,4 +186,24 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   } else if (type == "ws") {
     wordSentPlotList()
   }
+}
+
+getColors <- function(categories, plot_category, plot_category_attrs, default_col, col_palette) {
+  if (plot_category != "") {
+    df <- data.frame("cat" = categories[[plot_category]])
+    
+    if (nrow(df)) {
+      ncats <- ifelse(nrow(df) == 0, 1, nrow(df))
+      df$color <- col_palette[1:ncats]
+      
+      match_t <- match(plot_category_attrs, df$cat)
+      colx <- ifelse(!is.na(match_t), df$color[match_t], default_col)
+      
+      return(colx)
+    }
+    
+    return(default_col)
+  }
+  
+  default_col
 }

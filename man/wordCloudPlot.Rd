@@ -4,23 +4,18 @@
 \alias{wordCloudPlot}
 \title{Creates a Word Cloud plot}
 \usage{
-wordCloudPlot(data, seed, categories, min_freq, max_words,
-  col_palette = NULL)
+wordCloudPlot(corp, seed, min_freq, max_words, pcolors = NULL)
 }
 \arguments{
-\item{data}{voson dashboard text analysis plot list data structure
-data structure is named list:
-  list(graph_attr = list(attribute_name, attribute_value), VCorpus)}
+\item{corp}{text corpus}
 
 \item{seed}{value to seed rendering of word clouds}
-
-\item{categories}{list of all categorical attribures in the data set}
 
 \item{min_freq}{minimum word frequency for word clouds}
 
 \item{max_words}{maximum number of words to render in word clouds}
 
-\item{col_palette}{color palette to use in the plot}
+\item{pcolors}{color list to use in the plot}
 }
 \value{
 wordcloud plot
@@ -28,3 +23,4 @@ wordcloud plot
 \description{
 Creates a Word Cloud plot
 }
+\keyword{internal}

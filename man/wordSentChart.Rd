@@ -4,16 +4,12 @@
 \alias{wordSentChart}
 \title{Creates a Sentiment Analysis chart}
 \usage{
-wordSentChart(data, categories, col_palette = NULL)
+wordSentChart(corp, pcolors = NULL)
 }
 \arguments{
-\item{data}{voson dashboard text analysis plot list data structure
-data structure is named list:
-  list(graph_attr = list(attribute_name, attribute_value), VCorpus)}
+\item{corp}{text corpus}
 
-\item{categories}{list of all categorical attribures in the data set}
-
-\item{col_palette}{color palette to use in the plot}
+\item{pcolors}{color list to use in the plot}
 }
 \value{
 barchart plot
@@ -21,3 +17,4 @@ barchart plot
 \description{
 Creates a Sentiment Analysis chart
 }
+\keyword{internal}
