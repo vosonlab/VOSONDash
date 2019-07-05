@@ -8,7 +8,6 @@
 #' @param use.density use edge density
 #' 
 #' @return mixing matrix
-#' @keywords internal
 #' 
 #' @export
 mixmat <- function(g, attrib, use.density = TRUE) {
@@ -18,7 +17,9 @@ mixmat <- function(g, attrib, use.density = TRUE) {
   numatts <- length(attlist)
   
   # build an empty mixing matrix by attribute
-  mm <- matrix(nrow = numatts, ncol = numatts, dimnames = list(attlist, attlist))
+  mm <- matrix(nrow = numatts, 
+               ncol = numatts, 
+               dimnames = list(attlist, attlist))
   
   # calculate edge density for each matrix entry by pairing type
   # lends itself to parallel if available

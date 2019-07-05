@@ -37,7 +37,7 @@ observeEvent(check_creds_startup, {
                         value = api_keys$twitter_access_token_secret)
         updateTextInput(session, "youtube_api_key_input", label = NULL, value = api_keys$youtube_api_key)
         
-        creds_rv$msg_log <<- logMessage(creds_rv$msg_log, "loaded and populated api keys")
+        creds_rv$msg_log <- logMessage(creds_rv$msg_log, "loaded and populated api keys")
       }
     }
     

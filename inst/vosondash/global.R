@@ -44,8 +44,5 @@ g_default_tweet_count <- 100
 g_default_youtube_count <- 200
 
 # modules
-source("modules/collectionModule.R", local = TRUE)
-source("modules/textAnalysisModule.R", local = TRUE)
-
-# batch enable graph controls
-source("controls.R", local = TRUE)
+source("modules/collectionModule.R")
+source("modules/textAnalysisModule.R")

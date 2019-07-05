@@ -31,6 +31,8 @@ shinyServer(function(input, output, session) {
   #### api keys ####
   source("server/apiKeysServer.R", local = TRUE)
   
+  source("server/consoleServer.R", local = TRUE)
+  
   # reset collect consoles on startup
   observeEvent(input$sidebar_menu, {
     resetConsole("twitter_console", FALSE)
@@ -44,5 +46,5 @@ shinyServer(function(input, output, session) {
       cat("Session ended or browser closed. Exiting.\n")
       stopApp()
     }
-  })  
+  })
 }) #### end shinyServer

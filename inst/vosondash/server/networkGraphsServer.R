@@ -34,6 +34,8 @@ dt_vertices_proxy <- dataTableProxy('dt_vertices')
 addCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
 addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
 
+source("controls.R", local = TRUE)
+
 #### events ----------------------------------------------------------------------------------------------------------- #
 
 # set reactive value plot height when height input changes

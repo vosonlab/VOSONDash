@@ -7,7 +7,7 @@
 #' 
 #' @export
 emptyPlotMessage <- function(message) {
-  return({ plot(1:10, 1:10, type = "n", axes = F, xlab = "", ylab = "")
+  return({ plot(1:10, 1:10, type = "n", axes = FALSE, xlab = "", ylab = "")
     text(5, 5, message, cex = 1.2) })
 }
 
@@ -19,7 +19,6 @@ emptyPlotMessage <- function(message) {
 #' @param pcolors color list to use in the plot
 #' 
 #' @return barchart plot
-#' @keywords internal
 #' 
 #' @export
 wordFreqChart <- function(corp, min_freq, top_count, pcolors = NULL) {
@@ -30,14 +29,17 @@ wordFreqChart <- function(corp, min_freq, top_count, pcolors = NULL) {
   }
   
   # min freq uses bounds control
-  dtm <- tm::DocumentTermMatrix(corp, control = list(wordLengths = c(3, 20), bounds = list(global = c(min_freq, Inf))))
+  dtm <- tm::DocumentTermMatrix(corp, control = list(wordLengths = c(3, 20), 
+                                                     bounds = list(global = c(min_freq, Inf))))
   dtm_sparse_removed <- tm::removeSparseTerms(dtm, 0.98)
   
   freq_terms <- colSums(as.matrix(dtm_sparse_removed))
   order_terms <- order(freq_terms, decreasing = TRUE)
   
   par(mar = rep(0, 4))
-  return(barchart(freq_terms[order_terms[1:top_count]], col = pcolors, xlab = "Frequency"))
+  return(barchart(freq_terms[order_terms[1:top_count]], 
+                  col = pcolors, 
+                  xlab = "Frequency"))
 }
 
 #' Creates a Sentiment Analysis chart
@@ -46,7 +48,6 @@ wordFreqChart <- function(corp, min_freq, top_count, pcolors = NULL) {
 #' @param pcolors color list to use in the plot
 #' 
 #' @return barchart plot
-#' @keywords internal
 #' 
 #' @export
 wordSentChart <- function(corp, pcolors = NULL) {
@@ -67,15 +68,25 @@ wordSentChart <- function(corp, pcolors = NULL) {
     colx <- "f5f5f5"
   }
   colx[seq(1, 8)] <- colx
-  colx[9] <- "lightcoral"
-  colx[10] <- "mediumaquamarine"
-  colx[11] <- "gainsboro"
+  colx[9] <- "lightcoral"         # negative  
+  colx[10] <- "mediumaquamarine"  # positive
+  colx[11] <- "gainsboro"         # neutral
   
   par(las = 2)
   par(mar = c(4, 6, 0, 4))
 
-  sent_plot <- barplot(chart_data, col = colx, xlab = "Percentage %", horiz = TRUE, xlim = c(0, 100), xpd = FALSE, axes=TRUE)
-  text(x = ifelse(chart_data <= 1, 1, chart_data+2.5), sent_plot, labels = round(chart_data, digits = 2), col = "black")
+  sent_plot <- barplot(chart_data, 
+                       col = colx, 
+                       xlab = "Percentage %", 
+                       horiz = TRUE, 
+                       xlim = c(0, 100), 
+                       xpd = FALSE, 
+                       axes = TRUE)
+  
+  text(x = ifelse(chart_data <= 1, 1, chart_data + 2.5), 
+       sent_plot, # y position
+       labels = round(chart_data, digits = 2), 
+       col = "black")
   
   sent_plot
 }
@@ -89,7 +100,6 @@ wordSentChart <- function(corp, pcolors = NULL) {
 #' @param pcolors color list to use in the plot
 #' 
 #' @return wordcloud plot
-#' @keywords internal
 #' 
 #' @export
 wordCloudPlot <- function(corp, seed, min_freq, max_words, pcolors = NULL) {
@@ -104,5 +114,9 @@ wordCloudPlot <- function(corp, seed, min_freq, max_words, pcolors = NULL) {
   }
   
   par(mar = rep(0, 4))
-  wordcloud::wordcloud(corp, min.freq = min_freq, max.words = max_words, random.order = FALSE, colors = pcolors)
+  wordcloud::wordcloud(corp, 
+                       min.freq = min_freq, 
+                       max.words = max_words, 
+                       random.order = FALSE, 
+                       colors = pcolors)
 }

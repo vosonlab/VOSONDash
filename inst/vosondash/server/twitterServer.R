@@ -89,7 +89,7 @@ observeEvent(input$twitter_tweet_count_input, {
 })
 
 observeEvent(input$clear_twitter_console, {
-  resetConsole("twitter-console")
+  resetConsole("twitter_console")
   # callModule(resetConsoleMod, "twitter")
 })
   
