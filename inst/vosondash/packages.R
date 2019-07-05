@@ -8,7 +8,8 @@ requiredPackages <- c("htmlwidgets",
                       "visNetwork",
                       "tm",
                       "dplyr",
-                      "RColorBrewer")
+                      "RColorBrewer",
+                      "wordcloud")
 
 # if app is local print package information
 if (isLocal) {

@@ -17,4 +17,3 @@ barchart plot
 \description{
 Creates a Sentiment Analysis chart
 }
-\keyword{internal}

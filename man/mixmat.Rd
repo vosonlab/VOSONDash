@@ -20,4 +20,3 @@ mixing matrix
 mixing matrix original function written by Gary Weissman
 see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=351
 }
-\keyword{internal}

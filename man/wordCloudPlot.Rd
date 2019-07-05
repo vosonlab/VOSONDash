@@ -23,4 +23,3 @@ wordcloud plot
 \description{
 Creates a Word Cloud plot
 }
-\keyword{internal}

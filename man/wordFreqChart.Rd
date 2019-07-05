@@ -21,4 +21,3 @@ barchart plot
 \description{
 Creates a Word Frequency chart
 }
-\keyword{internal}
