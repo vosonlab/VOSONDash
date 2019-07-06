@@ -147,9 +147,11 @@ comparisonCloudPlotData <- reactive({
     # probably better way to do this, but for time being...
     df <- NULL
     for (i in 2:length(data)) {   # first corpus in list is "All"
-      df_t <- data.frame(text = unlist(sapply(data[[i]][[2]], `[`, "content")), stringsAsFactors = F)
-      tmp <- paste0(data[[i]][[1]][[2]], collapse = " / ")
-      df <- rbind(df, data.frame(catval = tmp, text = paste(df_t$text, collapse = " ", stringsAsFactors = F)))
+      # df_t <- data.frame(text = unlist(sapply(data[[i]][[2]], `[`, "content")), stringsAsFactors = F)
+      df_t <- data.frame(text = unlist(sapply(data[[i]]$corp, `[`, "content")), stringsAsFactors = FALSE)
+      # tmp <- paste0(data[[i]][[1]][[2]], collapse = " / ")
+      tmp <- paste0(data[[i]]$graph_attr[[2]], collapse = " / ")
+      df <- rbind(df, data.frame(catval = tmp, text = paste(df_t$text, collapse = " ", stringsAsFactors = FALSE)))
     }
     
     corp <- VCorpus(VectorSource(df$text))
@@ -163,7 +165,11 @@ comparisonCloudPlotData <- reactive({
       VOSONDash::emptyPlotMessage("No comparison plot: only one categorical variable present.")
     } else {
       # colour seems to be correct but may need to revisit...
-      comparison.cloud(tdm, max.words = max_words, random.order = FALSE, use.r.layout = FALSE, title.size = 2, 
+      comparison.cloud(tdm, 
+                       max.words = max_words, 
+                       random.order = FALSE, 
+                       use.r.layout = FALSE, 
+                       title.size = 2, 
                        colors = g_plot_palette())       
     }
   }
@@ -219,11 +225,17 @@ textAnalysisDetailsOutput <- reactive({
                                  paste("Stopwords:", input$text_analysis_stopwords_check)))
       
       if (length(list_data) > 0) {
-        data_names <- names(sapply(list_data, names))
+        # data_names <- names(sapply(list_data, names))
+        data_names <- names(list_data)
+
         for (i in seq_along(list_data)) {
           # consider naming these lists
-          title_cat <- list_data[[i]][[1]][[1]]
-          title_attr <- list_data[[i]][[1]][[2]]
+          title_cat <- unlist(list_data[[i]]$graph_attr$cat)
+          title_attr <- unlist(list_data[[i]]$graph_attr$sub_cats)
+          # title_cat <- list_data[[i]]$graph_attr[[1]]
+          # title_attr <- list_data[[i]]$graph_attr[[2]]
+          # title_cat <- list_data[[i]][[1]][[1]]
+          # title_attr <- list_data[[i]][[1]][[2]]
           title <- ""
           if (trimws(title_cat) != "") {
             title <- paste0(title, title_cat, " - ", sep = "")
@@ -232,7 +244,8 @@ textAnalysisDetailsOutput <- reactive({
           output <- append(output, title)
           # removing urls when building base corpus so do not require max word length
           # dtmx <- DocumentTermMatrix(list_data[[i]][[2]], control = list(wordLengths=c(3, 20)))
-          dtmx <- DocumentTermMatrix(list_data[[i]][[2]])
+          # dtmx <- DocumentTermMatrix(list_data[[i]][[2]])
+          dtmx <- DocumentTermMatrix(list_data[[i]]$corp)
           freq_terms <- colSums(as.matrix(dtmx))
           output <- append(output, paste("Words:", sum(freq_terms)))
           output <- append(output, "")
@@ -441,7 +454,10 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
     corp <- tm::tm_map(corp, stripWhitespace, lazy = TRUE)
     
     # named items
-    return(list(graph_attr, corp))
+    # return(list(graph_attr, corp))
+    return(list(graph_attr = list(cat = graph_attr[1], 
+                                  sub_cats = graph_attr[2]), 
+                corp = corp))
   } else {
     return(NULL)
   }

@@ -32,15 +32,22 @@ taPlotPlaceholders <- function(input, output, session, data) {
   
   plotPlaceholders <- reactive({
     tag_list <- tagList()
-    plot_ids <- names(sapply(data, names))
-    
+    # plot_ids <- names(sapply(data, names))
+    plot_ids <- names(data)
+
     for (i in seq_along(data)) {
-      title_cat <- data[[i]][[1]][[1]]
-      title_attr <- paste0(data[[i]][[1]][[2]], collapse = " / ")
+      title_cat <- unlist(data[[i]]$graph_attr$cat)
+      title_attr <- paste0(unlist(data[[i]]$graph_attr$sub_cats), collapse = " / ")          
+      
+      # title_cat <- data[[i]][[1]][[1]]
+      # title_attr <- paste0(data[[i]][[1]][[2]], collapse = " / ")
+      
+      # title_cat <- data[[i]]$graph_attr[[1]]
+      # title_attr <- paste0(data[[i]]$graph_attr[[2]], collapse = " / ")    
       
       title_tags <- fluidRow(column(width = 12, div(h4(title_cat, " ", title_attr), style = "padding-left:20px;")))
       tag_list <- tagAppendChild(tag_list, title_tags)
-      
+
       plot_id <- ns(plot_ids[i])
       plot_tags <- fluidRow(column(width = 12, plotOutput(plot_id, height = ta_plot_height)))
       tag_list <- tagAppendChild(tag_list, plot_tags)
@@ -84,7 +91,8 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   ns <- session$ns
   
   wordFreqPlotList <- reactive({
-    plot_ids <- names(sapply(data, names))
+    # plot_ids <- names(sapply(data, names))
+    plot_ids <- names(data)
     
     isolate({ withProgress(message = "Processing frequency plots...", {
       
@@ -95,12 +103,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           output[[plot_id]] <- renderPlot({
             data_item <- data[[local_i]]
             
-            graph_attr <- data_item[[1]]
-            plot_category <- graph_attr[[1]]
-            plot_category_attrs <- graph_attr[[2]]
+            # graph_attr <- data_item[[1]]
+            graph_attr <- data_item$graph_attr
+            plot_category <- unlist(graph_attr$cat)
+            plot_category_attrs <- unlist(graph_attr$sub_cats)
             pcolors <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5", col_palette)
             
-            VOSONDash::wordFreqChart(corp = data_item[[2]], min_freq, top_count, pcolors)
+            # VOSONDash::wordFreqChart(corp = data_item[[2]], min_freq, top_count, pcolors)
+            VOSONDash::wordFreqChart(corp = data_item$corp, min_freq, top_count, pcolors)
           })
         })
       }
@@ -116,7 +126,8 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   })
   
   wordCloudPlotList <- reactive({
-    plot_ids <- names(sapply(data, names))
+    # plot_ids <- names(sapply(data, names))
+    plot_ids <- names(data)
     
     isolate({ withProgress(message = "Processing cloud plots...", {
       
@@ -127,12 +138,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           output[[plot_id]] <- renderPlot({
             data_item <- data[[local_i]]
             
-            graph_attr <- data_item[[1]]
-            plot_category <- graph_attr[[1]]
-            plot_category_attrs <- graph_attr[[2]]
+            # graph_attr <- data_item[[1]]
+            graph_attr <- data_item$graph_attr
+            plot_category <- unlist(graph_attr$cat)
+            plot_category_attrs <- unlist(graph_attr$sub_cats)
             pcolors <- getColors(categories, plot_category, plot_category_attrs, "#000000", col_palette)
             
-            VOSONDash::wordCloudPlot(corp = data_item[[2]], seed, min_freq, max_words, pcolors)
+            # VOSONDash::wordCloudPlot(corp = data_item[[2]], seed, min_freq, max_words, pcolors)
+            VOSONDash::wordCloudPlot(corp = data_item$corp, seed, min_freq, max_words, pcolors)
           })
         })
       }
@@ -147,7 +160,8 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   })
 
   wordSentPlotList <- reactive({
-    plot_ids <- names(sapply(data, names))
+    # plot_ids <- names(sapply(data, names))
+    plot_ids <- names(data)
     
     isolate({ withProgress(message = "Processing sentiment plots...", {
       
@@ -158,12 +172,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           output[[plot_id]] <- renderPlot({
             data_item <- data[[local_i]]
             
-            graph_attr <- data_item[[1]]
-            plot_category <- graph_attr[[1]]
-            plot_category_attrs <- graph_attr[[2]]
+            # graph_attr <- data_item[[1]]
+            graph_attr <- data_item$graph_attr
+            plot_category <- unlist(graph_attr$cat)
+            plot_category_attrs <- unlist(graph_attr$sub_cats)
             pcolors <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5", col_palette)
             
-            VOSONDash::wordSentChart(corp = data_item[[2]], pcolors)
+            # VOSONDash::wordSentChart(corp = data_item[[2]], pcolors)
+            VOSONDash::wordSentChart(corp = data_item$corp, pcolors)
           })
         })
       }
