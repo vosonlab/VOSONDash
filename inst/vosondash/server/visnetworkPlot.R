@@ -19,7 +19,7 @@ visNetworkData <- reactive({
                          "Random" = "layout_randomly",
                          "layout_nicely")
   
-  graph_seed <- ng_rvalues$graph_seed
+  graph_seed <- ng_rv$graph_seed
   
   # node size
   
@@ -49,8 +49,8 @@ visNetworkData <- reactive({
   
   isolate({
     # already dependencies of graphFilters
-    categorical_attributes <- ng_rvalues$graph_CA
-    selected_categorical_attribute <- input$graph_catAttr_select
+    categorical_attributes <- ng_rv$graph_cats
+    selected_categorical_attribute <- input$graph_cat_select
   })
   
   if (nrow(verts) > 0) {
@@ -84,8 +84,8 @@ visNetworkData <- reactive({
     ungroup()
   
   category_selection <- NULL
-  if (!is.null(ng_rvalues$graph_CA_selected) && (!(ng_rvalues$graph_CA_selected %in% c("All", "")))) {
-    category_selection <- list(variable = ng_rvalues$graph_CA_selected, multiple = TRUE)
+  if (!is.null(ng_rv$graph_cat_selected) && (!(ng_rv$graph_cat_selected %in% c("All", "")))) {
+    category_selection <- list(variable = ng_rv$graph_cat_selected, multiple = TRUE)
   }
   
   visNetwork::visNetwork(verts, edges, main = NULL) %>% # height = "500px"
@@ -100,7 +100,7 @@ visNetworkData <- reactive({
                highlightNearest = list(enabled = TRUE, hover = TRUE),
                selectedBy = category_selection,
                nodesIdSelection = TRUE,
-               height = ng_rvalues$plot_height) # ng_rvalues$plot_height
+               height = ng_rv$plot_height) # ng_rv$plot_height
   
   # visInteraction(navigationButtons = TRUE)
 })

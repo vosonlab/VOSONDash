@@ -13,6 +13,10 @@ source("packages.R", local = TRUE)
 ifelse(isLocal, options(shiny.maxRequestSize = 128*1024^2), # 128 MB
                 options(shiny.maxRequestSize = 48*1024^2))  # 48 MB
 
+# graph data
+voson_cat_prefix <- "^vosonCA_"
+voson_txt_prefix <- "^vosonTxt_"
+
 # plots
 g_random_number_range <- c(1, 5000)
 g_plot_default_label_color <- "#333333"

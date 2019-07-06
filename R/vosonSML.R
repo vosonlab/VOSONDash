@@ -250,9 +250,9 @@ createRedditActorNetwork <- function(data) {
 #' @export
 hasVosonTextData <- function(g) {
   attr_v <- vertex_attr_names(g)
-  attr_v <- attr_v[grep("^vosonTxt", attr_v, perl = T)]
+  attr_v <- attr_v[grep("^vosonTxt_", attr_v, perl = T)]
   attr_e <- edge_attr_names(g)
-  attr_e <- attr_e[grep("^vosonTxt", attr_e, perl = T)]
+  attr_e <- attr_e[grep("^vosonTxt_", attr_e, perl = T)]
   
   has_text <- FALSE
   if (length(attr_v)) {

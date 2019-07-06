@@ -5,8 +5,8 @@ disableGraphFilterControls <- function() {
                    "graph_multi_edge_check",
                    "graph_loops_edge_check",
                    "graph_names_check",
-                   "graph_catAttr_select",
-                   "graph_catAttr_attr_select",
+                   "graph_cat_select",
+                   "graph_sub_cats_select",
                    "graph_node_size_degree_select", 
                    "analysis_graphml_download_button",
                    "graph_reseed_button",
@@ -24,7 +24,7 @@ resetEnableGraphFilterControls <- function() {
                    "graph_loops_edge_check", 
                    "graph_names_check", 
                    "graph_node_size_degree_select", 
-                   "graph_catAttr_attr_select", 
+                   "graph_sub_cats_select", 
                    "graph_layout_select", 
                    "graph_spread_slider",
                    "graph_component_type_select")
@@ -34,33 +34,33 @@ resetEnableGraphFilterControls <- function() {
 }
 
 disableTextAnalysisControls <- function() {
-  ui_controls <- c("text_analysis_stopwords_check",
-                   "text_analysis_user_stopwords_input", 
-                   "text_analysis_user_stopwords_check",
-                   "text_analysis_twitter_hashtags_check", 
-                   "text_analysis_twitter_usernames_check",
-                   "text_analysis_stem_check",
-                   "text_analysis_wf_top_count",
-                   "text_analysis_wf_min_word_freq",
-                   "text_analysis_wc_min_word_freq",
-                   "text_analysis_wc_max_word_count",
-                   "text_analysis_cc_max_word_count")
+  ui_controls <- c("ta_stopwords_check",
+                   "ta_user_stopwords_input", 
+                   "ta_user_stopwords_check",
+                   "ta_twitter_hashtags_check", 
+                   "ta_twitter_usernames_check",
+                   "ta_stem_check",
+                   "ta_wf_top_count",
+                   "ta_wf_min_word_freq",
+                   "ta_wc_min_word_freq",
+                   "ta_wc_max_word_count",
+                   "ta_cc_max_word_count")
   
   sapply(ui_controls, function(x) { shinyjs::disable(x) })
 }
 
 resetEnableTextAnalysisControls <- function() {
-  ui_controls <- c("text_analysis_stopwords_check",
-                   "text_analysis_user_stopwords_input", 
-                   "text_analysis_user_stopwords_check",
-                   "text_analysis_twitter_hashtags_check",
-                   "text_analysis_twitter_usernames_check", 
-                   "text_analysis_stem_check",
-                   "text_analysis_wf_top_count",
-                   "text_analysis_wf_min_word_freq",
-                   "text_analysis_wc_min_word_freq",
-                   "text_analysis_wc_max_word_count",
-                   "text_analysis_cc_max_word_count")
+  ui_controls <- c("ta_stopwords_check",
+                   "ta_user_stopwords_input", 
+                   "ta_user_stopwords_check",
+                   "ta_twitter_hashtags_check",
+                   "ta_twitter_usernames_check", 
+                   "ta_stem_check",
+                   "ta_wf_top_count",
+                   "ta_wf_min_word_freq",
+                   "ta_wc_min_word_freq",
+                   "ta_wc_max_word_count",
+                   "ta_cc_max_word_count")
   
   sapply(ui_controls, function(x) { shinyjs::reset(x)
     shinyjs::enable(x) })

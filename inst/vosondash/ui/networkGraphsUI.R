@@ -52,10 +52,11 @@ tabItem(tabName = "network_graphs_tab",
                                 conditionalPanel(condition = 'input.expand_categorical_filter_check',
                                                  fluidRow(
                                                    column(width = 6,
-                                                          disabled(selectInput("graph_catAttr_select", div("Category", style = "font-weight: normal;"), choices = c("All"), multiple = FALSE)) # selectize = TRUE
+                                                          disabled(selectInput("graph_cat_select", div("Category", style = "font-weight: normal;"), choices = c("All"), multiple = FALSE)) # selectize = TRUE graph_catAttr_select
                                                    ),
                                                    column(width = 6,
-                                                          disabled(selectInput("graph_catAttr_attr_select", div("View", style = "font-weight: normal;"), choices = c("All"), multiple = TRUE, selected = "All", selectize = FALSE, size = 3))
+                                                          # graph_catAttr_attr_select
+                                                          disabled(selectInput("graph_sub_cats_select", div("View", style = "font-weight: normal;"), choices = c("All"), multiple = TRUE, selected = "All", selectize = FALSE, size = 3))
                                                    )
                                                  )
                                 ),

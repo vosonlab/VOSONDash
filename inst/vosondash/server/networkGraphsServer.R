@@ -5,7 +5,7 @@
 
 #### values ----------------------------------------------------------------------------------------------------------- #
 
-ng_rvalues <- reactiveValues(
+ng_rv <- reactiveValues(   # ng_rvalues
   data = NULL,                  # vosonsml df
   graph_data = NULL,            # graphml object
   graph_seed = NULL,            # plot seed value
@@ -14,17 +14,19 @@ ng_rvalues <- reactiveValues(
   graph_name = "",
   graph_type = "",
   
-  graph_CA = c(),               # list of categories in the data
-  graph_CA_selected = "",       # selected category
+  graph_cats = c(),             # list of categories in the data # graph_CA
+  graph_cat_selected = "",       # selected category # graph_CA_selected
   
-  plot_height = g_plot_height
+  plot_height = g_plot_height,
+  
+  prune_verts = c()
 )
 
 # list of user selected graph vertices to prune
 prune_flag <- FALSE
-pruning_rvalues <- reactiveValues(
-  prune_verts = c()
-)
+# pruning_rvalues <- reactiveValues(
+#   prune_verts = c()
+# )
 
 # proxy for vertices data table used for row manipulation
 dt_vertices_proxy <- dataTableProxy('dt_vertices')
@@ -40,7 +42,7 @@ source("controls.R", local = TRUE)
 
 # set reactive value plot height when height input changes
 observeEvent(input$plot_height, {
-  ng_rvalues$plot_height <- input$plot_height
+  ng_rv$plot_height <- input$plot_height
 }, ignoreInit = TRUE)
 
 # create list of demo files found in extdata
@@ -96,23 +98,23 @@ observeEvent(input$demo_data_select_button, {
 })
 
 # when graphml data loaded or changed
-observeEvent(ng_rvalues$graph_data, {
-  if (!is.null(ng_rvalues$graph_data)) {
+observeEvent(ng_rv$graph_data, {
+  if (!is.null(ng_rv$graph_data)) {
     
     # add vertex ids and labels if not present
-    attr_v <- vertex_attr_names(ng_rvalues$graph_data)
+    attr_v <- vertex_attr_names(ng_rv$graph_data)
     if (!("id" %in% attr_v)) {
-      V(ng_rvalues$graph_data)$id <- paste0("n", as.numeric(V(ng_rvalues$graph_data))-1) # n0, n1 ..
+      V(ng_rv$graph_data)$id <- paste0("n", as.numeric(V(ng_rv$graph_data))-1) # n0, n1 ..
     }
     
     if ("label" %in% attr_v) {
       # replace empty string labels
-      V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$label) > 0, 
-                                               V(ng_rvalues$graph_data)$label, "-")
+      V(ng_rv$graph_data)$label <- ifelse(nchar(V(ng_rv$graph_data)$label) > 0, 
+                                               V(ng_rv$graph_data)$label, "-")
     } else {
       # if no labels set label to vertex name
-      V(ng_rvalues$graph_data)$label <- ifelse(nchar(V(ng_rvalues$graph_data)$name) > 0,
-                                               V(ng_rvalues$graph_data)$name, "-")
+      V(ng_rv$graph_data)$label <- ifelse(nchar(V(ng_rv$graph_data)$name) > 0,
+                                               V(ng_rv$graph_data)$name, "-")
     }    
     
     # enable network metrics tab
@@ -121,8 +123,8 @@ observeEvent(ng_rvalues$graph_data, {
 })
 
 # enable assortativity tab when a category other than "all" selected
-observeEvent(ng_rvalues$graph_CA_selected, {
-  if (ng_rvalues$graph_CA_selected %in% c("", "All")) {
+observeEvent(ng_rv$graph_cat_selected, {
+  if (ng_rv$graph_cat_selected %in% c("", "All")) {
     addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
   } else {
     removeCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_menu_link")
@@ -132,35 +134,35 @@ observeEvent(ng_rvalues$graph_CA_selected, {
 # check this is not redundant
 # update component slider when graph component or category changed
 observeEvent({ input$graph_component_type_select
-               input$graph_catAttr_attr_select
+               input$graph_sub_cats_select
                input$reset_on_change_check }, {
   
-  g <- ng_rvalues$graph_data
+  g <- ng_rv$graph_data
                  
   if (input$reset_on_change_check == TRUE) {
-    g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
-    g <- VOSONDash::applyCategoricalFilters(g, input$graph_catAttr_select, input$graph_catAttr_attr_select)
+    g <- applyPruneFilter(g, ng_rv$prune_verts)
+    g <- VOSONDash::applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
   }
 
   updateComponentSlider(g, input$graph_component_type_select)
 }, ignoreInit = TRUE)
   
 # selected category updates select box with its attribute values
-observeEvent(input$graph_catAttr_select, {
-  ng_rvalues$graph_CA_selected <- input$graph_catAttr_select
+observeEvent(input$graph_cat_select, {
+  ng_rv$graph_cat_selected <- input$graph_cat_select
   
-  if (!is.null(ng_rvalues$graph_data)) {
+  if (!is.null(ng_rv$graph_data)) {
     attr_choices <- c("All")
     
-    if (input$graph_catAttr_select != "All") {
-      attr_choices <- append(attr_choices, ng_rvalues$graph_CA[[input$graph_catAttr_select]])
+    if (input$graph_cat_select != "All") {
+      attr_choices <- append(attr_choices, ng_rv$graph_cats[[input$graph_cat_select]])
     }
     
     # update list of values in select box
-    updateSelectInput(session, "graph_catAttr_attr_select", choices = attr_choices, selected = "All")
+    updateSelectInput(session, "graph_sub_cats_select", choices = attr_choices, selected = "All")
     
     # enable select box control
-    shinyjs::enable("graph_catAttr_attr_select")
+    shinyjs::enable("graph_sub_cats_select")
   }
 })
 
@@ -174,7 +176,7 @@ observeEvent(input$graphml_data_file, {
   filedata()
   
   # set a random number to seed plots
-  ng_rvalues$graph_seed <- sample(g_random_number_range[1]:g_random_number_range[2], 1)
+  ng_rv$graph_seed <- sample(g_random_number_range[1]:g_random_number_range[2], 1)
   
   # reset controls and filters
   setGraphTabControls()
@@ -183,7 +185,7 @@ observeEvent(input$graphml_data_file, {
 
 # generate a new random seed on reseed button event
 observeEvent(input$graph_reseed_button, {
-  ng_rvalues$graph_seed <- sample(g_random_number_range[1]:g_random_number_range[2], 1)
+  ng_rv$graph_seed <- sample(g_random_number_range[1]:g_random_number_range[2], 1)
 })
 
 # check for redundancy
@@ -201,13 +203,13 @@ observeEvent(input$prune_selected_rows_button, {
   pruneListAddNames()
   
   # update prune list select box
-  prune_list <- isolate(pruning_rvalues$prune_verts)
+  prune_list <- isolate(ng_rv$prune_verts)
   if (is.null(prune_list)) { 
     prune_list <- character(0) 
   } else {
     temp <- list()
     for (i in prune_list) {
-      n_value <- V(isolate(ng_rvalues$graph_data))[which(V(isolate(ng_rvalues$graph_data))$id == i)]$label # name
+      n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$label # name
       temp[paste0(i, " - ", n_value)] <- i
     }
     prune_list <- temp
@@ -215,7 +217,7 @@ observeEvent(input$prune_selected_rows_button, {
   updateSelectInput(session, "pruned_vertices_select", choices = prune_list)
   
   # added to address bug with disappearing plot on pruning
-  updateComponentSlider(ng_rvalues$graph_data, input$graph_component_type_select)
+  updateComponentSlider(ng_rv$graph_data, input$graph_component_type_select)
 })
 
 # add unselected data table rows to pruned vertices list
@@ -225,13 +227,13 @@ observeEvent(input$prune_unselected_rows_button, {
   pruneListAddOtherNames()
   
   # update prune list select box
-  prune_list <- isolate(pruning_rvalues$prune_verts)
+  prune_list <- isolate(ng_rv$prune_verts)
   if (is.null(prune_list)) { 
     prune_list <- character(0) 
   } else {
     temp <- list()
     for (i in prune_list) {
-      n_value <- V(isolate(ng_rvalues$graph_data))[which(V(isolate(ng_rvalues$graph_data))$id == i)]$name
+      n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
       temp[paste0(i, " - ", n_value)] <- i
     }
     prune_list <- temp
@@ -243,17 +245,16 @@ observeEvent(input$prune_unselected_rows_button, {
 observeEvent(input$prune_return_button, {
   if (length(input$pruned_vertices_select) > 0) { prune_flag <<- TRUE }
   
-  pruning_rvalues$prune_verts <<- pruning_rvalues$prune_verts[!(pruning_rvalues$prune_verts %in% 
-                                                                  input$pruned_vertices_select)]
+  ng_rv$prune_verts <- ng_rv$prune_verts[!(ng_rv$prune_verts %in% input$pruned_vertices_select)]
   
   # update prune list select box
-  prune_list <- isolate(pruning_rvalues$prune_verts)
+  prune_list <- isolate(ng_rv$prune_verts)
   if (is.null(prune_list)) { 
     prune_list <- character(0) 
   } else {
     temp <- list()
     for (i in prune_list) {
-      n_value <- V(isolate(ng_rvalues$graph_data))[which(V(isolate(ng_rvalues$graph_data))$id == i)]$name
+      n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
       temp[paste0(i, " - ", n_value)] <- i
     }
     prune_list <- temp
@@ -263,14 +264,14 @@ observeEvent(input$prune_return_button, {
 
 # reset prune list
 observeEvent(input$prune_reset_button, {
-  if (length(isolate(pruning_rvalues$prune_verts)) > 0) { prune_flag <<- TRUE }
+  if (length(isolate(ng_rv$prune_verts)) > 0) { prune_flag <- TRUE }
   
-  pruning_rvalues$prune_verts <<- c()
+  ng_rv$prune_verts <- c()
   
   updateSelectInput(session, "pruned_vertices_select", choices = character(0))
   
   # added to address bug with disappearing plot on pruning
-  updateComponentSlider(ng_rvalues$graph_data, input$graph_component_type_select)  
+  updateComponentSlider(ng_rv$graph_data, input$graph_component_type_select)  
 })
 
 # deselect all data table selected rows
@@ -285,7 +286,7 @@ output$plot_height_ui <- renderUI({
     div(selectInput("plot_height", label = NULL, 
                     choices = c("300px" = 300, "400px" = 400, "500px" = 500, "600px" = 600, "700px" = 700, 
                                 "800px" = 800, "900px" = 900, "1000px" = 1000), 
-                    multiple = FALSE, selectize = FALSE, selected = ng_rvalues$plot_height), 
+                    multiple = FALSE, selectize = FALSE, selected = ng_rv$plot_height), 
         style = "width:100%;", align = "right"),
     style = "position:absolute; z-index:1; top:60px; right:40px; font-size:0.97em;"),
     style = "position:relative; z-index:0;"))
@@ -294,7 +295,7 @@ output$plot_height_ui <- renderUI({
 output$graph_summary_ui <- renderUI({
   tagList(div(div(
     HTML(graphSummaryOutput()),
-    style = paste0("position:absolute; z-index:1; top:", (as.numeric(ng_rvalues$plot_height)-5), 
+    style = paste0("position:absolute; z-index:1; top:", (as.numeric(ng_rv$plot_height)-5), 
                    "px; left:18px; font-size:0.97em;")),
     style = "position:relative; z-index:0;"))
 })
@@ -304,7 +305,7 @@ output$vis_plot_ui <- renderUI({
          selected = input$selected_graph_tab, id = "selected_graph_tab",
          tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), value = "Plot"),
          tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",
-                                                 height = paste0(ng_rvalues$plot_height, "px")), value = "visNetwork")
+                                                 height = paste0(ng_rv$plot_height, "px")), value = "visNetwork")
          
          # tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
          # tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
@@ -320,26 +321,26 @@ output$graph_summary_output <- renderText({
 })
 
 output$graph_name <- renderText({
-  output <- ifelse(nchar(ng_rvalues$graph_name), ng_rvalues$graph_name, "Not set")
+  output <- ifelse(nchar(ng_rv$graph_name), ng_rv$graph_name, "Not set")
   output <- paste("Name: ", output)
   
-  if (nchar(ng_rvalues$graph_type)) {
-    output <- paste0(output, "  (Type: ", ng_rvalues$graph_type, ")")
+  if (nchar(ng_rv$graph_type)) {
+    output <- paste0(output, "  (Type: ", ng_rv$graph_type, ")")
   }
   
   return(output)
 })
 
 output$graph_desc <- renderText({
-  if (nchar(ng_rvalues$graph_desc)) {
-    return(HTML(ng_rvalues$graph_desc))
+  if (nchar(ng_rv$graph_desc)) {
+    return(HTML(ng_rv$graph_desc))
   }
   
   return(HTML("No description."))
 })
 
-observeEvent(ng_rvalues$graph_desc, {
-  if (!isNullOrEmpty(ng_rvalues$graph_desc)) {
+observeEvent(ng_rv$graph_desc, {
+  if (!isNullOrEmpty(ng_rv$graph_desc)) {
     shinyjs::enable("expand_data_desc_check")
   } else {
     shinyjs::disable("expand_data_desc_check")
@@ -415,7 +416,7 @@ output$dt_edges <- DT::renderDataTable({
 # standard network plot
 output$standardPlot <- renderPlot({
   standardPlotData()
-}, height = function() { as.numeric(ng_rvalues$plot_height) })
+}, height = function() { as.numeric(ng_rv$plot_height) })
 
 # d3 force network graph
 output$force <- renderForceNetwork({
@@ -457,12 +458,12 @@ filedata <- reactive({
   
   # reads file as graphml and fails gracefully
   tryCatch({
-    ng_rvalues$graph_data <<- igraph::read_graph(infile$datapath, format = c('graphml'))
+    ng_rv$graph_data <<- igraph::read_graph(infile$datapath, format = c('graphml'))
     
-    ng_rvalues$graph_name <<- infile$name
-    ng_rvalues$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rvalues$graph_data), 
-                                     graph_attr(ng_rvalues$graph_data, "type"), "")
-    ng_rvalues$graph_desc <<- "Network loaded from file."
+    ng_rv$graph_name <<- infile$name
+    ng_rv$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rv$graph_data), 
+                                     graph_attr(ng_rv$graph_data, "type"), "")
+    ng_rv$graph_desc <<- "Network loaded from file."
     
     createGraphCategoryList()
     
@@ -475,9 +476,9 @@ filedata <- reactive({
 graphFiltersNoCategorical <- reactive({
   g <- NULL
 
-  if (!is.null(ng_rvalues$graph_data)) {
-    g <- ng_rvalues$graph_data
-    g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
+  if (!is.null(ng_rv$graph_data)) {
+    g <- ng_rv$graph_data
+    g <- applyPruneFilter(g, ng_rv$prune_verts)
     # isolate as graph_component_type_select has event
     g <- VOSONDash::applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
     g <- VOSONDash::applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
@@ -494,10 +495,10 @@ graphFilters <- reactive({
 
   # during a plot this is triggered 3 times - need to fix at some stage
   
-  if (!is.null(ng_rvalues$graph_data)) {
-    g <- ng_rvalues$graph_data
-    g <- applyPruneFilter(g, pruning_rvalues$prune_verts)
-    g <- VOSONDash::applyCategoricalFilters(g, input$graph_catAttr_select, input$graph_catAttr_attr_select)
+  if (!is.null(ng_rv$graph_data)) {
+    g <- ng_rv$graph_data
+    g <- applyPruneFilter(g, ng_rv$prune_verts)
+    g <- VOSONDash::applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
     # isolate as graph_component_type_select has event
     g <- VOSONDash::applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)    
     g <- VOSONDash::applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
@@ -510,32 +511,32 @@ graphFilters <- reactive({
 
 # create a list of categories from voson category field names in data
 createGraphCategoryList <- reactive({
-  g <- ng_rvalues$graph_data
+  g <- ng_rv$graph_data
   
   # metadata on categorical attributes
   # note: only vertex attributes
-  ng_rvalues$graph_CA <<- list()
+  ng_rv$graph_cats <- list()
   
   attr_v <- vertex_attr_names(g)
-  attr_v <- attr_v[grep("^vosonCA", attr_v, perl = T)]
+  attr_v <- attr_v[grep(voson_cat_prefix, attr_v, perl = T)]
   
   if (length(attr_v)) {
     for (i in attr_v) {
-      ng_rvalues$graph_CA[[sapply(strsplit(i, "_"), `[`, 2)]] <<- sort(unique(vertex_attr(g, i)))
+      ng_rv$graph_cats[[sapply(strsplit(i, "_"), `[`, 2)]] <<- sort(unique(vertex_attr(g, i)))
     }
   }
 })
 
 # only runs on file upload or when collection view graph option selected
 setGraphFilterControls <- reactive({
-  g <- ng_rvalues$graph_data
+  g <- ng_rv$graph_data
   
   # reset pruned list
-  pruning_rvalues$prune_verts <<- c()
+  ng_rv$prune_verts <- c()
   updateSelectInput(session, "pruned_vertices_select", choices = character(0))
   
   # clear text analysis plot list
-  ta_rvalues$plot_list_data <<- NULL
+  ta_rv$plot_data_list <- NULL
   
   if (is.null(g)) {
     # disable controls if no data
@@ -556,24 +557,24 @@ setGraphFilterControls <- reactive({
     updateComponentSlider(g, isolate(input$graph_component_type_select))
     
     # update the categorical attribute select box
-    if (!is.null(ng_rvalues$graph_CA) && length(ng_rvalues$graph_CA) > 0) {
-      shinyjs::reset("graph_catAttr_select")
-      shinyjs::enable("graph_catAttr_select")
+    if (!is.null(ng_rv$graph_cats) && length(ng_rv$graph_cats) > 0) {
+      shinyjs::reset("graph_cat_select")
+      shinyjs::enable("graph_cat_select")
       
       category_choices <- c("All")
-      category_choices <- append(category_choices, names(ng_rvalues$graph_CA))
+      category_choices <- append(category_choices, names(ng_rv$graph_cats))
       
-      updateSelectInput(session, "graph_catAttr_select", choices = category_choices, selected = "All")
+      updateSelectInput(session, "graph_cat_select", choices = category_choices, selected = "All")
       
       shinyjs::reset("reset_on_change_check")
       shinyjs::enable("reset_on_change_check")
       
     } else {
-      shinyjs::reset("graph_catAttr_select")
-      shinyjs::disable("graph_catAttr_select")
+      shinyjs::reset("graph_cat_select")
+      shinyjs::disable("graph_cat_select")
       
-      shinyjs::reset("graph_catAttr_attr_select")
-      shinyjs::disable("graph_catAttr_attr_select")   
+      shinyjs::reset("graph_sub_cats_select")
+      shinyjs::disable("graph_sub_cats_select")   
       
       shinyjs::reset("reset_on_change_check")
       shinyjs::disable("reset_on_change_check")      
@@ -581,21 +582,21 @@ setGraphFilterControls <- reactive({
     
     # text analysis controls
     if (hasVosonTextData(g)) {
-      ta_rvalues$has_text <<- TRUE
+      ta_rv$has_text <- TRUE
       
       # reset and enable text analysis controls
       resetEnableTextAnalysisControls()
       
       # enable or disable text analysis twitter controls
       if (!is.null(get.graph.attribute(g, "type")) && get.graph.attribute(g, "type") == "twitter") {
-        shinyjs::enable("text_analysis_twitter_hashtags_check")
-        shinyjs::enable("text_analysis_twitter_usernames_check")
+        shinyjs::enable("ta_twitter_hashtags_check")
+        shinyjs::enable("ta_twitter_usernames_check")
       } else {
-        shinyjs::disable("text_analysis_twitter_hashtags_check")
-        shinyjs::disable("text_analysis_twitter_usernames_check")
+        shinyjs::disable("ta_twitter_hashtags_check")
+        shinyjs::disable("ta_twitter_usernames_check")
       }  
     } else {
-      ta_rvalues$has_text <<- FALSE
+      ta_rv$has_text <- FALSE
       
       # disable controls if no text data
       disableTextAnalysisControls()
@@ -605,7 +606,7 @@ setGraphFilterControls <- reactive({
 
 # graph tab specific controls
 setGraphTabControls <- reactive({
-  g <- ng_rvalues$graph_data
+  g <- ng_rv$graph_data
   
   # disable controls
   if (is.null(g)) {
@@ -665,22 +666,22 @@ saveGraphFileData <- reactive({
 pruneListAddNames <- reactive({
   dt_vertices <- isolate(dt_vertices_df())
   dt_selected_rows <- input$dt_vertices_rows_selected
-  prune_list <- pruning_rvalues$prune_verts
+  prune_list <- ng_rv$prune_verts
   
   selected_rows <- row.names(dt_vertices)[c(dt_selected_rows)]
   # selected_rows <- dt_vertices$name[c(dt_selected_rows)]
   
   # add name if not already in list
   lapply(selected_rows, function(x) {
-                          if (!x %in% pruning_rvalues$prune_verts)
-                            pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)})
+                          if (!x %in% ng_rv$prune_verts)
+                            ng_rv$prune_verts <<- append(ng_rv$prune_verts, x)})
 })
 
 # add deselected data table row name values to pruned vertices list
 pruneListAddOtherNames <- reactive({
   dt_vertices <- isolate(dt_vertices_df())
   dt_selected_rows <- input$dt_vertices_rows_selected
-  prune_list <- pruning_rvalues$prune_verts
+  prune_list <- ng_rv$prune_verts
   
   # does not let user prune all data this way requires two or more selected rows
   if (length(dt_selected_rows) > 1) {
@@ -692,8 +693,8 @@ pruneListAddOtherNames <- reactive({
     
     # add name if not already in list
     lapply(selected_rows, function(x) {
-                            if (!x %in% pruning_rvalues$prune_verts) 
-                              pruning_rvalues$prune_verts <<- append(pruning_rvalues$prune_verts, x)}) 
+                            if (!x %in% ng_rv$prune_verts) 
+                              ng_rv$prune_verts <<- append(ng_rv$prune_verts, x)}) 
   }
 })
 
@@ -716,18 +717,18 @@ dt_vertices_df <- reactive({
   df_parameters[['closeness']] <- V(g)$Closeness
   
   attr_v <- vertex_attr_names(g)
-  voson_txt_attrs <- attr_v[grep("^vosonTxt", attr_v, perl = T)]
+  voson_txt_attrs <- attr_v[grep(voson_txt_prefix, attr_v, perl = T)]
   if (length(voson_txt_attrs)) {
     attr <- voson_txt_attrs[1]
-    df_txt_attr <- gsub("vosonTxt_", "", attr, perl = TRUE)
+    df_txt_attr <- gsub(voson_txt_prefix, "", attr, perl = TRUE)
     df_parameters[[df_txt_attr]] <- vertex_attr(g, attr, index = V(g))
   }
   
-  voson_cat_attrs <- attr_v[grep("^vosonCA", attr_v, perl = T)]
+  voson_cat_attrs <- attr_v[grep(voson_cat_prefix, attr_v, perl = T)]
   if (length(voson_cat_attrs) > 0) {
     for (i in 1:length(voson_cat_attrs)) {
       attr <- voson_cat_attrs[i]
-      df_txt_attr <- gsub("vosonCA_", "", attr, perl = TRUE)
+      df_txt_attr <- gsub(voson_cat_prefix, "", attr, perl = TRUE) # vosonCA_
       df_parameters[[df_txt_attr]] <- vertex_attr(g, attr, index = V(g))
     }  
   }
@@ -833,13 +834,13 @@ graphComponentSummary <- reactive({
 setGraphView <- function(data, desc = "", type = "", name = "", seed = 1) {
   shinyjs::reset("graphml_data_file")
   
-  ng_rvalues$graph_data <<- data
-  ng_rvalues$graph_desc <<- desc
-  ng_rvalues$graph_type <<- type
-  ng_rvalues$graph_name <<- name
-  ng_rvalues$graph_seed <<- seed
-  ng_rvalues$graph_CA <<- c()
-  ng_rvalues$graph_CA_selected <<- ""
+  ng_rv$graph_data <<- data
+  ng_rv$graph_desc <<- desc
+  ng_rv$graph_type <<- type
+  ng_rv$graph_name <<- name
+  ng_rv$graph_seed <<- seed
+  ng_rv$graph_cats <<- c()
+  ng_rv$graph_cat_selected <<- ""
   
   createGraphCategoryList()
   setGraphFilterControls()

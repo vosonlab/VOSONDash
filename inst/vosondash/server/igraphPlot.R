@@ -8,8 +8,8 @@ standardPlotData <- reactive({
   # reactive dependencies
   isolate({
     # already dependencies of graphFilters
-    categorical_attributes <- ng_rvalues$graph_CA
-    selected_categorical_attribute <- input$graph_catAttr_select
+    categorical_attributes <- ng_rv$graph_cats
+    selected_categorical_attribute <- input$graph_cat_select
   })
   selected_rows <- input$dt_vertices_rows_selected
   # graph_vertices <- as_data_frame(g, what = c("vertices"))
@@ -34,7 +34,7 @@ standardPlotData <- reactive({
   node_degree_type <- input$graph_node_size_degree_select
   node_size_multiplier <- input$graph_node_size_slider  
   chosen_layout <- input$graph_layout_select
-  graph_seed <- ng_rvalues$graph_seed
+  graph_seed <- ng_rv$graph_seed
   graph_spread <- input$graph_spread_slider
   
   # set default vertex color

@@ -23,7 +23,9 @@ taPlotContainerUI <- function(id) {
 #' @param session shiny module namespaced session parameter
 #' @param data voson dashboard text analysis plot list data structure
 #'   data structure is named list:
-#'     data[plot-id] <- list(graph_attr = list(attribute_name, attribute_value), VCorpus)
+#'     data[plot-id] <- list(graph_attr = list(cat = c("category name"), 
+#'                                             sub_cats = c("sub category", "sub category 2")), 
+#'                           corp = VCorpus)
 #'
 #' @return None
 #' 
@@ -32,20 +34,13 @@ taPlotPlaceholders <- function(input, output, session, data) {
   
   plotPlaceholders <- reactive({
     tag_list <- tagList()
-    # plot_ids <- names(sapply(data, names))
     plot_ids <- names(data)
 
     for (i in seq_along(data)) {
       title_cat <- unlist(data[[i]]$graph_attr$cat)
-      title_attr <- paste0(unlist(data[[i]]$graph_attr$sub_cats), collapse = " / ")          
+      title_sub_cats <- paste0(unlist(data[[i]]$graph_attr$sub_cats), collapse = " / ")          
       
-      # title_cat <- data[[i]][[1]][[1]]
-      # title_attr <- paste0(data[[i]][[1]][[2]], collapse = " / ")
-      
-      # title_cat <- data[[i]]$graph_attr[[1]]
-      # title_attr <- paste0(data[[i]]$graph_attr[[2]], collapse = " / ")    
-      
-      title_tags <- fluidRow(column(width = 12, div(h4(title_cat, " ", title_attr), style = "padding-left:20px;")))
+      title_tags <- fluidRow(column(width = 12, div(h4(title_cat, " ", title_sub_cats), style = "padding-left:20px;")))
       tag_list <- tagAppendChild(tag_list, title_tags)
 
       plot_id <- ns(plot_ids[i])
@@ -76,7 +71,9 @@ taPlotPlaceholders <- function(input, output, session, data) {
 #' @param session shiny module namespaced session parameter
 #' @param data voson dashboard text analysis plot list data structure
 #'   data structure is named list:
-#'     data[plot-id] <- list(graph_attr = list(attribute_name, attribute_value), VCorpus)
+#'     data[plot-id] <- list(graph_attr = list(cat = c("category name"), 
+#'                                             sub_cats = c("sub category", "sub category 2")), 
+#'                           corp = VCorpus)
 #' @param seed value to seed rendering of word clouds
 #' @param categories list of all categorical attribures in the data set
 #' @param min_freq minimum word frequency for word frequency charts or word clouds
@@ -91,7 +88,6 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   ns <- session$ns
   
   wordFreqPlotList <- reactive({
-    # plot_ids <- names(sapply(data, names))
     plot_ids <- names(data)
     
     isolate({ withProgress(message = "Processing frequency plots...", {
@@ -103,13 +99,11 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           output[[plot_id]] <- renderPlot({
             data_item <- data[[local_i]]
             
-            # graph_attr <- data_item[[1]]
-            graph_attr <- data_item$graph_attr
-            plot_category <- unlist(graph_attr$cat)
-            plot_category_attrs <- unlist(graph_attr$sub_cats)
-            pcolors <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5", col_palette)
-            
-            # VOSONDash::wordFreqChart(corp = data_item[[2]], min_freq, top_count, pcolors)
+            pcolors <- getColors(categories, 
+                                 unlist(data_item$graph_attr$cat), 
+                                 unlist(data_item$graph_attr$sub_cats), 
+                                 "#f5f5f5", col_palette)
+
             VOSONDash::wordFreqChart(corp = data_item$corp, min_freq, top_count, pcolors)
           })
         })
@@ -126,7 +120,6 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   })
   
   wordCloudPlotList <- reactive({
-    # plot_ids <- names(sapply(data, names))
     plot_ids <- names(data)
     
     isolate({ withProgress(message = "Processing cloud plots...", {
@@ -138,13 +131,11 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           output[[plot_id]] <- renderPlot({
             data_item <- data[[local_i]]
             
-            # graph_attr <- data_item[[1]]
-            graph_attr <- data_item$graph_attr
-            plot_category <- unlist(graph_attr$cat)
-            plot_category_attrs <- unlist(graph_attr$sub_cats)
-            pcolors <- getColors(categories, plot_category, plot_category_attrs, "#000000", col_palette)
+            pcolors <- getColors(categories, 
+                                 unlist(data_item$graph_attr$cat), 
+                                 unlist(data_item$graph_attr$sub_cats), 
+                                 "#000000", col_palette)
             
-            # VOSONDash::wordCloudPlot(corp = data_item[[2]], seed, min_freq, max_words, pcolors)
             VOSONDash::wordCloudPlot(corp = data_item$corp, seed, min_freq, max_words, pcolors)
           })
         })
@@ -160,7 +151,6 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   })
 
   wordSentPlotList <- reactive({
-    # plot_ids <- names(sapply(data, names))
     plot_ids <- names(data)
     
     isolate({ withProgress(message = "Processing sentiment plots...", {
@@ -172,13 +162,11 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           output[[plot_id]] <- renderPlot({
             data_item <- data[[local_i]]
             
-            # graph_attr <- data_item[[1]]
-            graph_attr <- data_item$graph_attr
-            plot_category <- unlist(graph_attr$cat)
-            plot_category_attrs <- unlist(graph_attr$sub_cats)
-            pcolors <- getColors(categories, plot_category, plot_category_attrs, "#f5f5f5", col_palette)
+            pcolors <- getColors(categories, 
+                                 unlist(data_item$graph_attr$cat), 
+                                 unlist(data_item$graph_attr$sub_cats), 
+                                 "#f5f5f5", col_palette)
             
-            # VOSONDash::wordSentChart(corp = data_item[[2]], pcolors)
             VOSONDash::wordSentChart(corp = data_item$corp, pcolors)
           })
         })

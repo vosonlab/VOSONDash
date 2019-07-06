@@ -38,7 +38,7 @@ assortativityPrelimOutput <- reactive({
   output <- c()
   
   if (!is.null(g)) {
-    CA_sel <- ng_rvalues$graph_CA_selected
+    CA_sel <- ng_rv$graph_cat_selected
     if (nchar(CA_sel) && CA_sel != "All") {   # eventually will have cat attr selected by default...
       output <- append(output, paste0("Selected categorical attribute is: ", CA_sel))
       output <- append(output, "")
@@ -59,7 +59,7 @@ assortativityMMOutput <- reactive({
   g <- graphFilters()
   
   if (!is.null(g)) {
-    CA_sel <- ng_rvalues$graph_CA_selected
+    CA_sel <- ng_rv$graph_cat_selected
     if (nchar(CA_sel) && CA_sel != "All") {  # eventually will have cat attr selected by default...
       assort_rvalues$mixmat_message <- NULL
       df <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use.density = FALSE)
@@ -81,20 +81,19 @@ homophilyOutput <- reactive({
   output <- c()
   
   if (!is.null(g)) {
-    CA_sel <- ng_rvalues$graph_CA_selected
+    CA_sel <- ng_rv$graph_cat_selected
     if (nchar(CA_sel) && CA_sel != "All") {   # eventually will have cat attr selected by default...
       # output <- append(output, paste0("Selected categorical attribute is: ", CA_sel))
       vattr <- paste0('vosonCA_', CA_sel)
       mm <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use.density = FALSE)
       
-      attr_list <- ng_rvalues$graph_CA[[CA_sel]]
+      attr_list <- ng_rv$graph_cats[[CA_sel]]
       
       # if subset of attributes selected
-      if (input$graph_catAttr_attr_select[1] != "All") {
-        attr_list <- input$graph_catAttr_attr_select
+      if (input$graph_sub_cats_select[1] != "All") {
+        attr_list <- input$graph_sub_cats_select
       }
       
-      # for (i in ng_rvalues$graph_CA[[CA_sel]]){
       for (i in attr_list) {
         output <- append(output, paste0("Category: ", i))
         w_i <- length(which(vertex_attr(g, vattr) == i)) / length(V(g))
