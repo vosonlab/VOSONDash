@@ -237,7 +237,7 @@ saveButtonStatus <- reactive({
                   input$keys_twitter_access_token_secret_input,
                   input$keys_youtube_api_key_input)
   
-  check_keys <- sapply(key_values, isNullOrEmpty)
+  check_keys <- sapply(key_values, VOSONDash::isNullOrEmpty)
   
   if (any(check_keys != TRUE)) { 
     return(TRUE)

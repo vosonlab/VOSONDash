@@ -98,7 +98,7 @@ observeEvent(reddit_view_rvalues$data, {
                desc = paste0("Reddit actor network for threads: ", paste0(reddit_url_list, collapse = ', '), sep = ""),
                type = "reddit",
                name = "",
-               seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+               seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))
 }, ignoreInit = TRUE)
 
 observeEvent(input$clear_reddit_console, {
@@ -228,11 +228,11 @@ datatableRedditData <- reactive({
   if (!is.null(reddit_rvalues$reddit_data)) {
     col_defs <- NULL
     if (input$dt_reddit_truncate_text_check == TRUE) {
-      col_defs <- g_dt_col_defs
+      col_defs <- gbl_dt_col_defs
       col_defs[[1]]$targets = "_all"
     }
     DT::datatable(data, extensions = 'Buttons', filter = "top",
-                  options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
+                  options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
   }

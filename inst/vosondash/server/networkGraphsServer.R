@@ -17,7 +17,7 @@ ng_rv <- reactiveValues(   # ng_rvalues
   graph_cats = c(),             # list of categories in the data # graph_CA
   graph_cat_selected = "",       # selected category # graph_CA_selected
   
-  plot_height = g_plot_height,
+  plot_height = gbl_plot_height,
   
   prune_verts = c()
 )
@@ -88,7 +88,7 @@ observeEvent(input$demo_data_select_button, {
                    desc = file_desc,
                    type = type,
                    name = input$demo_data_select,
-                   seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+                   seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))
     }, error = function(err) {
       # cat(paste("error loading demo files:", err))
     }, warning = function(w) {
@@ -176,7 +176,7 @@ observeEvent(input$graphml_data_file, {
   filedata()
   
   # set a random number to seed plots
-  ng_rv$graph_seed <- sample(g_random_number_range[1]:g_random_number_range[2], 1)
+  ng_rv$graph_seed <- sample(gbl_rng_range[1]:gbl_rng_range[2], 1)
   
   # reset controls and filters
   setGraphTabControls()
@@ -185,7 +185,7 @@ observeEvent(input$graphml_data_file, {
 
 # generate a new random seed on reseed button event
 observeEvent(input$graph_reseed_button, {
-  ng_rv$graph_seed <- sample(g_random_number_range[1]:g_random_number_range[2], 1)
+  ng_rv$graph_seed <- sample(gbl_rng_range[1]:gbl_rng_range[2], 1)
 })
 
 # check for redundancy
@@ -340,7 +340,7 @@ output$graph_desc <- renderText({
 })
 
 observeEvent(ng_rv$graph_desc, {
-  if (!isNullOrEmpty(ng_rv$graph_desc)) {
+  if (!VOSONDash::isNullOrEmpty(ng_rv$graph_desc)) {
     shinyjs::enable("expand_data_desc_check")
   } else {
     shinyjs::disable("expand_data_desc_check")
@@ -377,13 +377,13 @@ output$dt_vertices <- DT::renderDataTable({
   # truncate text in column cells
   col_defs <- NULL
   if (input$graph_dt_v_truncate_text_check == TRUE) {
-    col_defs <- g_dt_col_defs
+    col_defs <- gbl_dt_col_defs
     col_defs[[1]]$targets <- "_all"
   }
   
   if (!is.null(data)) {
     dt <- DT::datatable(data, extensions = 'Buttons', filter = "top",
-                        options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
+                        options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                         columnDefs = col_defs, dom = 'lBfrtip', buttons = c('copy', 'csv', 'excel', 'print')),
                         class = 'cell-border stripe compact hover')
 
@@ -401,13 +401,13 @@ output$dt_edges <- DT::renderDataTable({
   # truncate text in column cells
   col_defs <- NULL
   if (input$graph_dt_e_truncate_text_check == TRUE) {
-    col_defs <- g_dt_col_defs
+    col_defs <- gbl_dt_col_defs
     col_defs[[1]]$targets <- "_all"
   }
   
   if (!is.null(data)) {
     DT::datatable(data, extensions = 'Buttons', filter = "top",
-                  options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
+                  options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                   columnDefs = col_defs, dom = 'lBfrtip',
                   buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
   }

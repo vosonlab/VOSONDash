@@ -49,7 +49,7 @@ if (isLocal) {
 }
 
 # load required packages
-if (suppressLibraryMessages) {
+if (suppressLibMsgs) {
   suppressMessages({
     sapply(requiredPackages, function(x) library(x, character.only = TRUE))
   })  

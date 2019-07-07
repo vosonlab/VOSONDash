@@ -5,7 +5,11 @@
 
 #### values ----------------------------------------------------------------------------------------------------------- #
 
-youtube_rvalues <- reactiveValues()
+youtube_rvalues <- reactiveValues(
+  youtube_data = NULL,
+  youtube_graphml = NULL,
+  youtubeWT_graphml
+)
 youtube_rvalues$youtube_data <- NULL      # dataframe returned by vosonSML collection
 youtube_rvalues$youtube_graphml <- NULL   # graphml object returned from collection
 youtube_rvalues$youtubeWT_graphml <- NULL
@@ -45,7 +49,7 @@ observeEvent(input$youtube_remove_video_id_button, {
 observeEvent(input$youtube_max_comments_input, {
   if (!is.na(input$youtube_max_comments_input)) {
     if (!is.numeric(input$youtube_max_comments_input) ||input$youtube_max_comments_input < 1) {
-      updateNumericInput(session, "youtube_max_comments_input", value = g_default_youtube_count)
+      updateNumericInput(session, "youtube_max_comments_input", value = gbl_def_youtube_count)
     }
   }
   youtube_max_comments <<- input$youtube_max_comments_input
@@ -120,7 +124,7 @@ observeEvent(youtube_view_rvalues$data, {
                              sep = ""),
                type = "twitter",
                name = "",
-               seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+               seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))
 }, ignoreInit = TRUE)
 
 observeEvent(input$clear_youtube_console, {
@@ -259,11 +263,11 @@ datatableYoutubeData <- reactive({
   if (!is.null(youtube_rvalues$youtube_data)) {
     col_defs <- NULL
     if (input$dt_youtube_truncate_text_check == TRUE) {
-      col_defs <- g_dt_col_defs
+      col_defs <- gbl_dt_col_defs
       col_defs[[1]]$targets = "_all"
     }
     DT::datatable(data, extensions = 'Buttons', filter = "top",
-                  options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
+                  options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
   }
@@ -286,7 +290,7 @@ youtubeArgumentsOutput <- function() {
     output <- append(output, paste0("videos: ", trimws(paste0(youtube_video_id_list, collapse = ', '))))
   }
   
-  if (!isNullOrEmpty(youtube_max_comments) && is.numeric(youtube_max_comments)) {
+  if (!VOSONDash::isNullOrEmpty(youtube_max_comments) && is.numeric(youtube_max_comments)) {
     count_flag <- TRUE
     output <- append(output, paste0("max comments: ", youtube_max_comments))
   }

@@ -102,7 +102,7 @@ plotWordFrequencies <- reactive({
   withProgress(message = "Processing word frequencies...", {
     callModule(taPlotPlaceholders, "word_freqs", ta_rv$plot_data_list)
     callModule(taPlotList, "word_freqs", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
-               min_freq, NULL, top_count, "wf", col_palette = g_plot_palette())
+               min_freq, NULL, top_count, "wf", col_palette = gbl_plot_palette())
   })
 })
 
@@ -111,7 +111,7 @@ plotSentiments <- reactive({
   withProgress(message = "Processing sentiment...", {
     callModule(taPlotPlaceholders, "word_sentiments", ta_rv$plot_data_list)
     callModule(taPlotList, "word_sentiments", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
-               NULL, NULL, NULL, "ws", col_palette = g_plot_palette())
+               NULL, NULL, NULL, "ws", col_palette = gbl_plot_palette())
   })
 })
 
@@ -124,7 +124,7 @@ plotWordClouds <- reactive({
   withProgress(message = "Processing word clouds...", {      
     callModule(taPlotPlaceholders, "word_clouds", ta_rv$plot_data_list)
     callModule(taPlotList, "word_clouds", ta_rv$plot_data_list, isolate(ng_rv$graph_seed), 
-               isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc", col_palette = g_plot_palette())
+               isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc", col_palette = gbl_plot_palette())
   })
 })
 
@@ -168,7 +168,7 @@ comparisonCloudPlotData <- reactive({
                        random.order = FALSE, 
                        use.r.layout = FALSE, 
                        title.size = 2, 
-                       colors = g_plot_palette()) # colors may need a re-think
+                       colors = gbl_plot_palette()) # colors may need a re-think
     }
   }
 })

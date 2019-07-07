@@ -5,16 +5,17 @@
 
 #### values ----------------------------------------------------------------------------------------------------------- #
 
-twitter_rvalues <- reactiveValues()
-twitter_rvalues$twitter_data <- NULL      # dataframe returned by vosonSML collection
-twitter_rvalues$twitter_graphml <- NULL   # graphml object returned from collection
+tw_rv <- reactiveValues(
+  tw_data = NULL,        # dataframe returned by vosonSML collection
+  tw_graphml = NULL      # graphml object returned from collection
+)
 
 test_data <- NULL
 
-twitter_rvalues$data_cols <- NULL
+tw_rv$data_cols <- NULL
 
 # twitter api keys
-twitter_api_keyring <- list(
+tw_api_keyring <- list(
   twitter_app_name = "",
   twitter_api_key = "",
   twitter_api_secret = "",
@@ -81,7 +82,7 @@ observeEvent(input$twitter_language_input, {
 observeEvent(input$twitter_tweet_count_input, {
   if (!is.na(input$twitter_tweet_count_input)) {
     if (!is.numeric(input$twitter_tweet_count_input) || input$twitter_tweet_count_input < 1) {
-      updateNumericInput(session, "twitter_tweet_count_input", value = g_default_tweet_count)
+      updateNumericInput(session, "twitter_tweet_count_input", value = gbl_def_tweet_count)
     }
   }
   
@@ -128,7 +129,7 @@ observeEvent(input$twitter_collect_button, {
                      ":(" = !twitter_filter_negative)
         
         sapply(names(opts), function(x) {
-          if (!isNullOrEmpty(opts[x])) {
+          if (!VOSONDash::isNullOrEmpty(opts[x])) {
             if (opts[x] == FALSE) { twitter_search_options <<- append(twitter_search_options, x) }
           }
         })
@@ -138,7 +139,7 @@ observeEvent(input$twitter_collect_button, {
           search_term <- paste0(search_term, paste0(twitter_search_options, collapse = " "))
         }
         
-        # twitter_api_keyring, search_term, search_type, tweet_count, 
+        # tw_api_keyring, search_term, search_type, tweet_count, 
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
         test_data <<- suppressWarnings({
@@ -147,9 +148,9 @@ observeEvent(input$twitter_collect_button, {
                                              twitter_language, twitter_date_until,
                                              twitter_since_id, twitter_max_id) })
         
-        twitter_rvalues$twitter_data <<- test_data
+        tw_rv$tw_data <<- test_data
         
-        twitter_rvalues$data_cols <<- names(twitter_rvalues$twitter_data)
+        tw_rv$data_cols <<- names(tw_rv$tw_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste("twitter collection error: ", err))
@@ -162,13 +163,13 @@ observeEvent(input$twitter_collect_button, {
       )
       
       # if twitter data collected create graphml object
-      if (!is.null(twitter_rvalues$twitter_data) && nrow(twitter_rvalues$twitter_data) > 0) {
+      if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data) > 0) {
         incProgress(0.5, detail = "Creating network")
         tryCatch({
-          # twitter_rvalues$twitter_graphml <<- createTwitterActorNetwork(twitter_rvalues$twitter_data)
-          netList <- createTwitterActorNetwork(twitter_rvalues$twitter_data)
-          twitter_rvalues$twitter_graphml <<- netList$network
-          twitter_rvalues$twitterWT_graphml <<- netList$networkWT   # "with text" (edge attribute)
+          # tw_rv$tw_graphml <<- createTwitterActorNetwork(tw_rv$tw_data)
+          netList <- createTwitterActorNetwork(tw_rv$tw_data)
+          tw_rv$tw_graphml <<- netList$network
+          tw_rv$twitterWT_graphml <<- netList$networkWT   # "with text" (edge attribute)
         }, error = function(err) {
           incProgress(1, detail = "Error")
           cat(paste("twitter graphml error: ", err))
@@ -186,21 +187,21 @@ observeEvent(input$twitter_collect_button, {
 })
 
 # download and view actions
-callModule(collectDataButtons, "twitter", data = reactive({ twitter_rvalues$twitter_data }), file_prefix = "twitter")
+callModule(collectDataButtons, "twitter", data = reactive({ tw_rv$tw_data }), file_prefix = "twitter")
 
-callModule(collectGraphButtons, "twitter", graph_data = reactive({ twitter_rvalues$twitter_graphml }), 
-           graph_wt_data = reactive({ twitter_rvalues$twitterWT_graphml }), file_prefix = "twitter")
+callModule(collectGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), 
+           graph_wt_data = reactive({ tw_rv$twitterWT_graphml }), file_prefix = "twitter")
 
 twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", 
-                                   graph_data = reactive({ twitter_rvalues$twitter_graphml }), 
-                                   graph_wt_data = reactive({ twitter_rvalues$twitterWT_graphml }))
+                                   graph_data = reactive({ tw_rv$tw_graphml }), 
+                                   graph_wt_data = reactive({ tw_rv$twitterWT_graphml }))
 
 observeEvent(twitter_view_rvalues$data, {
   setGraphView(data = isolate(twitter_view_rvalues$data), 
                desc = paste0("Twitter network for search term: ", twitter_search_term, sep = ""),
                type = "twitter",
                name = "",
-               seed = sample(g_random_number_range[1]:g_random_number_range[2], 1))
+               seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))
 }, ignoreInit = TRUE)
 
 #### output ----------------------------------------------------------------------------------------------------------- #
@@ -252,28 +253,28 @@ output$dt_twitter_data <- DT::renderDataTable({
 
 observeEvent(input$select_all_twitter_dt_columns, {
   updateCheckboxGroupInput(session, "show_twitter_cols", label = NULL,
-                           choices = isolate(twitter_rvalues$data_cols),
-                           selected = isolate(twitter_rvalues$data_cols),
+                           choices = isolate(tw_rv$data_cols),
+                           selected = isolate(tw_rv$data_cols),
                            inline = TRUE)
 })
 
 observeEvent(input$clear_all_twitter_dt_columns, {
   updateCheckboxGroupInput(session, "show_twitter_cols", label = NULL,
-                           choices = isolate(twitter_rvalues$data_cols),
+                           choices = isolate(tw_rv$data_cols),
                            selected = character(0),
                            inline = TRUE)
 })
 
 observeEvent(input$reset_twitter_dt_columns, {
   updateCheckboxGroupInput(session, "show_twitter_cols", label = NULL,
-                           choices = isolate(twitter_rvalues$data_cols),
+                           choices = isolate(tw_rv$data_cols),
                            selected = c("user_id", "status_id", "created_at", "screen_name", "text",
                                         "is_retweet"),
                            inline = TRUE)
 })
 
 output$twitter_data_cols_ui <- renderUI({
-  data <- twitter_rvalues$data_cols
+  data <- tw_rv$data_cols
   
   if (is.null(data)) {
     return(NULL)
@@ -284,7 +285,7 @@ output$twitter_data_cols_ui <- renderUI({
         actionButton("clear_all_twitter_dt_columns", "Clear all"),
         actionButton("reset_twitter_dt_columns", "Reset")),
     checkboxGroupInput("show_twitter_cols", label = NULL,
-                       choices = twitter_rvalues$data_cols,
+                       choices = tw_rv$data_cols,
                        selected = c("user_id", "status_id", "created_at", "screen_name", "text",
                                     "is_retweet"), 
                        inline = TRUE, width = '98%')
@@ -294,11 +295,11 @@ output$twitter_data_cols_ui <- renderUI({
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 setTwitterAPIKeys <- reactive({
-  twitter_api_keyring$twitter_app_name <<- input$twitter_app_name_input
-  twitter_api_keyring$twitter_api_key <<- trimws(input$twitter_api_key_input)
-  twitter_api_keyring$twitter_api_secret <<- trimws(input$twitter_api_secret_input)
-  twitter_api_keyring$twitter_access_token <<- trimws(input$twitter_access_token_input)
-  twitter_api_keyring$twitter_access_token_secret <<- trimws(input$twitter_access_token_secret_input)
+  tw_api_keyring$twitter_app_name <<- input$twitter_app_name_input
+  tw_api_keyring$twitter_api_key <<- trimws(input$twitter_api_key_input)
+  tw_api_keyring$twitter_api_secret <<- trimws(input$twitter_api_secret_input)
+  tw_api_keyring$twitter_access_token <<- trimws(input$twitter_access_token_input)
+  tw_api_keyring$twitter_access_token_secret <<- trimws(input$twitter_access_token_secret_input)
 })
 
 setTwitterParams <- reactive({
@@ -330,16 +331,16 @@ setTwitterParams <- reactive({
 
 # create data table from collected twitter data
 datatableTwitterData <- reactive({
-  data <- twitter_rvalues$twitter_data
+  data <- tw_rv$tw_data
   
   if (is.null(data)) {
     return(NULL)
   }
   
   if (!is.null(input$show_twitter_cols)) {
-    # data <- twitter_rvalues$twitter_data[, input$show_twitter_cols, drop = FALSE]
+    # data <- tw_rv$tw_data[, input$show_twitter_cols, drop = FALSE]
     if (length(input$show_twitter_cols) > 0) {
-      data <- dplyr::select(twitter_rvalues$twitter_data, input$show_twitter_cols)
+      data <- dplyr::select(tw_rv$tw_data, input$show_twitter_cols)
     } else {
       return(NULL)
     }
@@ -359,14 +360,14 @@ datatableTwitterData <- reactive({
     }
   }
   
-  if (!is.null(twitter_rvalues$twitter_data)) {
+  if (!is.null(tw_rv$tw_data)) {
     col_defs <- NULL
     if (input$dt_twitter_truncate_text_check == TRUE) {
-      col_defs <- g_dt_col_defs
+      col_defs <- gbl_dt_col_defs
       col_defs[[1]]$targets = "_all"
     }
     DT::datatable(data, extensions = 'Buttons', filter = "top",
-                  options = list(lengthMenu = g_dt_length_menu, pageLength = g_dt_page_length, scrollX = TRUE,
+                  options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
   }
@@ -378,10 +379,10 @@ datatableTwitterData <- reactive({
 twitterArgumentsOutput <- function() {
   
   output <- c()
-  check_keys <- sapply(twitter_api_keyring, isNullOrEmpty)
+  check_keys <- sapply(tw_api_keyring, VOSONDash::isNullOrEmpty)
   
   search_term_flag <- FALSE
-  if (!isNullOrEmpty(twitter_search_term)) {
+  if (!VOSONDash::isNullOrEmpty(twitter_search_term)) {
     temp_search_term <- twitter_search_term
     output <- append(output, paste0("search term: ", trimws(temp_search_term)))
     search_term_flag <- TRUE
@@ -413,28 +414,28 @@ twitterArgumentsOutput <- function() {
                ":(" = !twitter_filter_negative)
   
   sapply(names(opts), function(x) {
-    if (!isNullOrEmpty(opts[x])) {
+    if (!VOSONDash::isNullOrEmpty(opts[x])) {
       if (opts[x] == FALSE) { twitter_search_options <<- append(twitter_search_options, x) }
     }
   })
   
-  if (!isNullOrEmpty(twitter_tweet_count) && is.numeric(twitter_tweet_count)) {
+  if (!VOSONDash::isNullOrEmpty(twitter_tweet_count) && is.numeric(twitter_tweet_count)) {
     output <- append(output, paste0("number of tweets: ", twitter_tweet_count))
   }
   
-  if (!isNullOrEmpty(twitter_language)) {
+  if (!VOSONDash::isNullOrEmpty(twitter_language)) {
     output <- append(output, paste0("language: ", twitter_language))
   }
   
-  if (!isNullOrEmpty(twitter_date_until)) {
+  if (!VOSONDash::isNullOrEmpty(twitter_date_until)) {
     output <- append(output, paste0("until date: ", twitter_date_until, sep = ""))
   }
   
-  if (!isNullOrEmpty(twitter_since_id)) {
+  if (!VOSONDash::isNullOrEmpty(twitter_since_id)) {
     output <- append(output, paste0("since ID: ", twitter_since_id, sep = ""))
   }
   
-  if (!isNullOrEmpty(twitter_max_id)) {
+  if (!VOSONDash::isNullOrEmpty(twitter_max_id)) {
     output <- append(output, paste0("max ID: ", twitter_max_id, sep = ""))
   }
   

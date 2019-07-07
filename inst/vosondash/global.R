@@ -5,7 +5,7 @@ app_version <- "v0.4.0"
 app_date <- "16June19"
 
 isLocal <- Sys.getenv('SHINY_PORT') == ""
-suppressLibraryMessages <- TRUE
+suppressLibMsgs <- TRUE
 
 source("packages.R", local = TRUE)
 
@@ -18,24 +18,23 @@ voson_cat_prefix <- "^vosonCA_"
 voson_txt_prefix <- "^vosonTxt_"
 
 # plots
-g_random_number_range <- c(1, 5000)
-g_plot_default_label_color <- "#333333"
-g_plot_default_vertex_color <- "orange"
-g_plot_selected_vertex_color <- "#006cb7"
+gbl_rng_range <- c(1, 5000)
+gbl_plot_def_label_color <- "#333333"
+gbl_plot_def_vertex_color <- "orange"
+gbl_plot_sel_vertex_color <- "#006cb7"
 
-g_plot_palette <- function(n = 8) brewer.pal(n, "Dark2")
-g_plot_height <- 500
+gbl_plot_palette <- function(n = 8) brewer.pal(n, "Dark2")
+gbl_plot_height <- 500
 
 ta_plot_height <- "450px"
 
 # data tables
 options(htmlwidgets.TOJSON_ARGS = list(na = 'string'))
 
-g_dt_length_menu <- list(c(10, 50, -1), c('10', '50', 'All'))
-g_dt_page_length <- 10
-g_dt_horiz_scroll <- TRUE
+gbl_dt_menu_len <- list(c(10, 50, -1), c('10', '50', 'All'))
+gbl_dt_page_len <- 10
 
-g_dt_col_defs <- list(list(
+gbl_dt_col_defs <- list(list(
   render = JS(
     "function(data, type, row, meta) {",
     "return type === 'display' && data.length > 36 ?",
@@ -44,8 +43,8 @@ g_dt_col_defs <- list(list(
 ))
 
 # collection
-g_default_tweet_count <- 100
-g_default_youtube_count <- 200
+gbl_def_tweet_count <- 100
+gbl_def_youtube_count <- 200
 
 # modules
 source("modules/collectionModule.R")

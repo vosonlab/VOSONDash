@@ -54,8 +54,8 @@ visNetworkData <- reactive({
   })
   
   if (nrow(verts) > 0) {
-    verts$color.background <- as.character(g_plot_default_vertex_color)
-    verts$font.color <- g_plot_default_label_color
+    verts$color.background <- as.character(gbl_plot_def_vertex_color)
+    verts$font.color <- gbl_plot_def_label_color
     verts$id <- verts$name
   }
   
@@ -67,7 +67,7 @@ visNetworkData <- reactive({
       categories <- categorical_attributes[[selected_categorical_attribute]]
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
-        df$color <- g_plot_palette()[1:nrow(df)]
+        df$color <- gbl_plot_palette()[1:nrow(df)]
         verts$color.background <- df$color[match(verts[[selected_categorical_attribute]], df$cat)]
       }
     }
@@ -75,8 +75,8 @@ visNetworkData <- reactive({
   
   if (length(input$dt_vertices_rows_selected) > 0) {
     selected_row_names <- row.names(verts)[c(input$dt_vertices_rows_selected)]
-    verts$color.background[row.names(verts) %in% selected_row_names] <- g_plot_selected_vertex_color
-    verts$font.color[row.names(verts) %in% selected_row_names] <- g_plot_selected_vertex_color
+    verts$color.background[row.names(verts) %in% selected_row_names] <- gbl_plot_sel_vertex_color
+    verts$font.color[row.names(verts) %in% selected_row_names] <- gbl_plot_sel_vertex_color
   }
   
   edges <- edges %>% group_by(to, from) %>%

@@ -38,7 +38,7 @@ standardPlotData <- reactive({
   graph_spread <- input$graph_spread_slider
   
   # set default vertex color
-  V(g)$color <- as.character(g_plot_default_vertex_color)
+  V(g)$color <- as.character(gbl_plot_def_vertex_color)
   
   # vertex colours (only if cat attr selected)
   if (length(categorical_attributes) > 0) { # only if have categorical attributes
@@ -48,7 +48,7 @@ standardPlotData <- reactive({
       categories <- categorical_attributes[[selected_categorical_attribute]]
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
-        df$color <- g_plot_palette()[1:nrow(df)]
+        df$color <- gbl_plot_palette()[1:nrow(df)]
         
         va <- paste0('vosonCA_', selected_categorical_attribute)
         V(g)$color <- df$color[match(vertex_attr(g, va), df$cat)]
@@ -62,13 +62,13 @@ standardPlotData <- reactive({
   }
   
   # if (length(selected_edge_rows) > 0) {
-  #   E(g)$color g_plot_selected_vertex_color
+  #   E(g)$color gbl_plot_sel_vertex_color
   # }
   
   plot_parameters <- list(g, vertex.frame.color = "gray", edge.arrow.size = 0.4)
   
   # set vertex color for vertices selected in graph data table
-  plot_parameters[['vertex.color']] <- ifelse(V(g)$id %in% selected_row_names, g_plot_selected_vertex_color, V(g)$color)
+  plot_parameters[['vertex.color']] <- ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, V(g)$color)
   plot_parameters[['vertex.label.font']] <- ifelse(V(g)$id %in% selected_row_names, 2, 1)
   # plot_parameters[['vertex.label.cex']] = ifelse(V(g)$id %in% selected_row_names, 4, 1)
   
@@ -126,8 +126,8 @@ standardPlotData <- reactive({
       plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
     }
   }
-  plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, g_plot_selected_vertex_color, 
-                                                   g_plot_default_label_color)
+  plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, 
+                                                   gbl_plot_def_label_color)
   
   # reproduce same graph with same seed
   # must be set before graph layout
