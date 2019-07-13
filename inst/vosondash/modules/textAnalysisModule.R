@@ -29,7 +29,7 @@ taPlotContainerUI <- function(id) {
 #'
 #' @return None
 #' 
-taPlotPlaceholders <- function(input, output, session, data) {
+taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
   ns <- session$ns
   
   plotPlaceholders <- reactive({
@@ -44,7 +44,12 @@ taPlotPlaceholders <- function(input, output, session, data) {
       tag_list <- tagAppendChild(tag_list, title_tags)
 
       plot_id <- ns(plot_ids[i])
-      plot_tags <- fluidRow(column(width = 12, plotOutput(plot_id, height = ta_plot_height)))
+      if (sub_plots == 2) {
+        plot_tags <- fluidRow(column(width = 8, plotOutput(paste0(plot_id, "-a"), height = ta_plot_height)),
+                              column(width = 4, plotOutput(paste0(plot_id, "-b"), height = ta_plot_height)))
+      } else {
+        plot_tags <- fluidRow(column(width = 12, plotOutput(plot_id, height = ta_plot_height)))
+      }
       tag_list <- tagAppendChild(tag_list, plot_tags)
     }
     
@@ -154,21 +159,24 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
     plot_ids <- names(data)
     
     isolate({ withProgress(message = "Processing sentiment plots...", {
-      
       for (i in seq_along(data)) {
         local({
           local_i <- i
-          plot_id <- plot_ids[local_i]
+          data_item <- data[[local_i]]
+          pcolors <- getColors(categories, 
+                               unlist(data_item$graph_attr$cat), 
+                               unlist(data_item$graph_attr$sub_cats), 
+                               "#f5f5f5", col_palette)          
+          
+          plot_id <- paste0(plot_ids[local_i], "-a")
           output[[plot_id]] <- renderPlot({
-            data_item <- data[[local_i]]
-            
-            pcolors <- getColors(categories, 
-                                 unlist(data_item$graph_attr$cat), 
-                                 unlist(data_item$graph_attr$sub_cats), 
-                                 "#f5f5f5", col_palette)
-            
-            VOSONDash::wordSentChart(corp = data_item$corp, pcolors)
+            out <- VOSONDash::wordSentChart(corp = data_item$corp, pcolors)
           })
+          
+          plot_id <- paste0(plot_ids[local_i], "-b")
+          output[[plot_id]] <- renderPlot({
+            out <- VOSONDash::wordSentChartSummary(corp = data_item$corp)
+          })        
         })
       }
       

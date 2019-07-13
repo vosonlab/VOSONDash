@@ -109,7 +109,7 @@ plotWordFrequencies <- reactive({
 plotSentiments <- reactive({
   # create placeholders and plot charts from list of base text corpus data
   withProgress(message = "Processing sentiment...", {
-    callModule(taPlotPlaceholders, "word_sentiments", ta_rv$plot_data_list)
+    callModule(taPlotPlaceholders, "word_sentiments", ta_rv$plot_data_list, sub_plots = 2)
     callModule(taPlotList, "word_sentiments", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
                NULL, NULL, NULL, "ws", col_palette = gbl_plot_palette())
   })

@@ -126,7 +126,7 @@ observeEvent(input$tokens_load_button, {
 })
 
 observeEvent(creds_rv$created_token, {
-  if (is.null(creds_rv$created_token) || rtweet::check_token(creds_rv$created_token$auth) == FALSE) {
+  if (is.null(creds_rv$created_token)) { # || rtweet::check_token(creds_rv$created_token$auth) == FALSE) {
     creds_rv$msg_log <- logMessage(isolate(creds_rv$msg_log), "created invalid token")
     shinyjs::disable("save_token")
   } else {
@@ -138,7 +138,7 @@ observeEvent(creds_rv$created_token, {
 observeEvent(input$save_token, {
   token <- creds_rv$created_token
   
-  if (!is.null(token) && rtweet::check_token(token$auth)) {
+  if (!is.null(token)) { # && rtweet::check_token(token$auth)) {
     token_id <- createTokenId(token)
     creds_rv$tokens[[token_id]] <- token
     
@@ -205,7 +205,7 @@ output$api_keys_log_output <- renderText({
 output$save_token_output <- renderText({
   output <- c()
   token <- creds_rv$created_token
-  if (is.null(token) || rtweet::check_token(token$auth) == FALSE) {
+  if (is.null(token)) { # || rtweet::check_token(token$auth) == FALSE) {
     output <- append(output, "Empty or invalid token.")
   } else {
     output <- c(paste("token:", token$auth$app$appname),

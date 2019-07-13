@@ -5,16 +5,13 @@
 
 #### values ----------------------------------------------------------------------------------------------------------- #
 
-youtube_rvalues <- reactiveValues(
-  youtube_data = NULL,
-  youtube_graphml = NULL,
-  youtubeWT_graphml
+yt_rv <- reactiveValues(
+  yt_data = NULL,
+  yt_graphml = NULL,
+  yt_wt_graphml = NULL,
+  
+  data_cols = NULL
 )
-youtube_rvalues$youtube_data <- NULL      # dataframe returned by vosonSML collection
-youtube_rvalues$youtube_graphml <- NULL   # graphml object returned from collection
-youtube_rvalues$youtubeWT_graphml <- NULL
-
-youtube_rvalues$data_cols <- NULL
 
 youtube_api_key <- NULL        # youtube api key
 youtube_video_id_list <- c()   # list of youtube video ids to collect on
@@ -72,10 +69,10 @@ observeEvent(input$youtube_collect_button, {
       
       # collect youtube data and print any output to console
       tryCatch({
-        youtube_rvalues$youtube_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
+        yt_rv$yt_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
                                                             youtube_max_comments)
         
-        youtube_rvalues$data_cols <<- names(youtube_rvalues$youtube_data)
+        yt_rv$data_cols <<- names(youtube_rvalues$youtube_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('youtube collection error:', err))
@@ -85,12 +82,12 @@ observeEvent(input$youtube_collect_button, {
       incProgress(0.5, detail = "Creating network")
       
       # if youtube data collected create graphml object
-      if (!is.null(youtube_rvalues$youtube_data)) {
+      if (!is.null(yt_rv$yt_data)) {
         tryCatch({
-          # youtube_rvalues$youtube_graphml <<- createYoutubeNetwork(youtube_rvalues$youtube_data)
-          netList <- createYoutubeNetwork(youtube_rvalues$youtube_data)
-          youtube_rvalues$youtube_graphml <<- netList$network
-          youtube_rvalues$youtubeWT_graphml <<- netList$networkWT   # "with text" (edge attribute)          
+          # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
+          netList <- createYoutubeNetwork(yt_rv$yt_data)
+          yt_rv$yt_graphml <<- netList$network
+          yt_rv$yt_wt_graphml <<- netList$networkWT   # "with text" (edge attribute)          
         }, error = function(err) {
           incProgress(1, detail = "Error")
           cat(paste('youtube graphml error:', err))
@@ -109,14 +106,14 @@ observeEvent(input$youtube_collect_button, {
 })
 
 # download and view actions
-callModule(collectDataButtons, "youtube", data = reactive({ youtube_rvalues$youtube_data }), file_prefix = "youtube")
+callModule(collectDataButtons, "youtube", data = reactive({ yt_rv$yt_data }), file_prefix = "youtube")
 
-callModule(collectGraphButtons, "youtube", graph_data = reactive({ youtube_rvalues$youtube_graphml }), 
-           graph_wt_data = reactive({ youtube_rvalues$youtubeWT_graphml }), file_prefix = "youtube")
+callModule(collectGraphButtons, "youtube", graph_data = reactive({ yt_rv$yt_graphml }), 
+           graph_wt_data = reactive({ yt_rv$yt_wt_graphml }), file_prefix = "youtube")
 
 youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", 
-                                   graph_data = reactive({ youtube_rvalues$youtube_graphml }), 
-                                   graph_wt_data = reactive({ youtube_rvalues$youtubeWT_graphml }))
+                                   graph_data = reactive({ yt_rv$yt_graphml }), 
+                                   graph_wt_data = reactive({ yt_rv$yt_wt_graphml }))
 
 observeEvent(youtube_view_rvalues$data, {
   setGraphView(data = isolate(youtube_view_rvalues$data), 
@@ -155,27 +152,27 @@ output$dt_youtube_data <- DT::renderDataTable({
 
 observeEvent(input$select_all_youtube_dt_columns, {
   updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
-                           choices = isolate(youtube_rvalues$data_cols),
-                           selected = isolate(youtube_rvalues$data_cols),
+                           choices = isolate(yt_rv$data_cols),
+                           selected = isolate(yt_rv$data_cols),
                            inline = TRUE)
 })
 
 observeEvent(input$clear_all_youtube_dt_columns, {
   updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
-                           choices = isolate(youtube_rvalues$data_cols),
+                           choices = isolate(yt_rv$data_cols),
                            selected = character(0),
                            inline = TRUE)
 })
 
 observeEvent(input$reset_youtube_dt_columns, {
   updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
-                           choices = isolate(youtube_rvalues$data_cols),
+                           choices = isolate(yt_rv$data_cols),
                            selected = c("Comment", "User", "PublishTime"),
                            inline = TRUE)
 })
 
 output$youtube_data_cols_ui <- renderUI({
-  data <- youtube_rvalues$data_cols
+  data <- yt_rv$data_cols
   
   if (is.null(data)) {
     return(NULL)
@@ -186,7 +183,7 @@ output$youtube_data_cols_ui <- renderUI({
                        actionButton("clear_all_youtube_dt_columns", "Clear all"),
                        actionButton("reset_youtube_dt_columns", "Reset")),
                    checkboxGroupInput("show_youtube_cols", label = NULL,
-                                      choices = youtube_rvalues$data_cols,
+                                      choices = yt_rv$data_cols,
                                       selected = c("Comment", "User", "PublishTime"),
                                       inline = TRUE, width = '98%')
   )
@@ -232,7 +229,7 @@ videoListRemove <- reactive({
 })
 
 datatableYoutubeData <- reactive({
-  data <- youtube_rvalues$youtube_data
+  data <- yt_rv$yt_data
   
   if (is.null(data)) {
     return(NULL)
@@ -240,7 +237,7 @@ datatableYoutubeData <- reactive({
   
   if (!is.null(input$show_youtube_cols)) {
     if (length(input$show_youtube_cols) > 0) {
-      data <- dplyr::select(youtube_rvalues$youtube_data, input$show_youtube_cols)
+      data <- dplyr::select(yt_rv$yt_data, input$show_youtube_cols)
     } else {
       return(NULL)
     }
@@ -260,7 +257,7 @@ datatableYoutubeData <- reactive({
     }
   }
   
-  if (!is.null(youtube_rvalues$youtube_data)) {
+  if (!is.null(yt_rv$yt_data)) {
     col_defs <- NULL
     if (input$dt_youtube_truncate_text_check == TRUE) {
       col_defs <- gbl_dt_col_defs
