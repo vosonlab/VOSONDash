@@ -175,7 +175,7 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
           
           plot_id <- paste0(plot_ids[local_i], "-b")
           output[[plot_id]] <- renderPlot({
-            out <- VOSONDash::wordSentChartSummary(corp = data_item$corp)
+            out <- VOSONDash::wordSentValenceChart(corp = data_item$corp)
           })        
         })
       }

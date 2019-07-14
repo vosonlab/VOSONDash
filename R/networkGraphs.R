@@ -1,39 +1,10 @@
-#' Filter out graph vertices not in selected voson category attributes
-#' 
-#' @param g graph as graphml object
-#' @param selected_category vertex category as character string 
-#' @param selected_category_attr list of vertex category attributs to filter out as character string 
-#' 
-#' @return g as graphml object
-#' @keywords internal
-#' 
-#' @export
-applyCategoricalFilters <- function(g, selected_category, selected_category_attr) {
-  
-  if (selected_category == "All") {
-    return(g)
-  }
-  
-  # remove All from list
-  selected_category_attr <- selected_category_attr[selected_category_attr != "All"]
-  
-  # filter out all vertices that are not in category attribute
-  if (length(selected_category_attr) > 0) {
-    vattr <- paste0('vosonCA_', selected_category)
-    g <- igraph::delete_vertices(g, V(g)[!(vertex_attr(g, vattr) %in% selected_category_attr)])
-  }
-
-  g
-}
-
 #' Filter out graph vertices not in component size range
 #' 
 #' @param g as graphml object
-#' @param component_type as character string  
+#' @param component_type as character string
 #' @param component_range min and max values of range as vector
 #' 
 #' @return g as graphml object
-#' @keywords internal
 #' 
 #' @export
 applyComponentFilter <- function(g, component_type, component_range) {
@@ -82,7 +53,6 @@ applyComponentFilter <- function(g, component_type, component_range) {
 #' @param loops_edge include vertex edge loops in graph as logical
 #' 
 #' @return g as graphml object
-#' @keywords internal
 #' 
 #' @export
 applyGraphFilters <- function(g, isolates, multi_edge, loops_edge) {
@@ -107,7 +77,6 @@ applyGraphFilters <- function(g, isolates, multi_edge, loops_edge) {
 #' @param g as graphml object
 #'
 #' @return g as graphml object
-#' @keywords internal
 #' 
 #' @export
 addAdditionalMeasures <- function(g) {
@@ -122,12 +91,110 @@ addAdditionalMeasures <- function(g) {
   
   # add centrality
   if (vcount(g) > 1) {
-    V(g)$Betweenness <- as.numeric(sprintf("%.3f", igraph::betweenness(g)))
+    V(g)$Betweenness <- as.numeric(sprintf(fmt = "%#.3f", igraph::betweenness(g)))
     # suppress disconnected graph warnings
-    V(g)$Closeness <- as.numeric(sprintf("%.3f", suppressWarnings(igraph::closeness(g))))    
+    V(g)$Closeness <- as.numeric(sprintf(fmt = "%#.3f", suppressWarnings(igraph::closeness(g))))    
   } else {
     V(g)$Betweenness <- V(g)$Closeness <- 0
   }
 
   g
 }
+
+#' Get a list of vertex attribute names that match a category attribute prefix format
+#' 
+#' @param g as graphml object
+#' @param cat_prefix character string of category attribute prefix format to match
+#' 
+#' @return graph_cats
+#' 
+#' @export
+getVertexCategories <- function(g, cat_prefix = "^vosonCA_") {
+  graph_cats <- list()
+  
+  attr_v <- igraph::vertex_attr_names(g)
+  attr_v <- attr_v[grep(cat_prefix, attr_v, perl = TRUE)]
+  
+  if (length(attr_v)) {
+    for (i in attr_v) {
+      graph_cats[[sapply(strsplit(i, "_"), `[`, 2)]] <- sort(unique(vertex_attr(g, i)))
+    }
+  }
+  
+  graph_cats
+}
+
+#' Check if graph object has vertex or edge voson text attributes
+#' 
+#' @param g as graphml graph object
+#' 
+#' @return has_text as logical
+#' @keywords internal
+#' 
+#' @export
+hasVosonTextData <- function(g) {
+  attr_v <- vertex_attr_names(g)
+  attr_v <- attr_v[grep("^vosonTxt_", attr_v, perl = TRUE)]
+  attr_e <- edge_attr_names(g)
+  attr_e <- attr_e[grep("^vosonTxt_", attr_e, perl = TRUE)]
+  
+  has_text <- FALSE
+  if (length(attr_v)) {
+    attr <- c(attr_v[1], 'vertex')
+    has_text <- TRUE
+  } else if (length(attr_e)) {
+    i <- attr_e[1]
+    attr <- c(attr_e[1], 'edge')
+    has_text <- TRUE
+  }
+  
+  has_text
+}
+
+#' Filter out graph vertices not in selected category sub-categories
+#' 
+#' @param g graph as graphml object
+#' @param selected_cat selected vertex category without prefix as character string
+#' @param selected_subcats list of selected sub-category values to filter as character string 
+#' @param cat_prefix character string of category attribute prefix format to match
+#' 
+#' @return g as graphml object
+#' 
+#' @export
+applyCategoricalFilters <- function(g, selected_cat, selected_subcats, cat_prefix = "^vosonCA_") {
+  
+  if (selected_cat == "All") {
+    return(g)
+  }
+  
+  # re-create category vertex attribute name
+  vattr <- paste0('vosonCA_', cat_prefix)
+  
+  # remove All from sub-categories list
+  selected_subcats <- selected_subcats[selected_subcats != "All"]
+  
+  # filter out all vertices that do not have a category value in sub-categories list
+  if (length(selected_subcats) > 0) {
+    g <- igraph::delete_vertices(g, V(g)[!(igraph::vertex_attr(g, vattr) %in% selected_subcats)])
+  }
+  
+  g
+}
+
+#' Filter out list of vertices from graphml object using vertex id value
+#'
+#' @param g graph as graphml object
+#' @param selected_prune_verts selected vertex ids to filter out as list
+#' 
+#' @return g as graphml object
+#' 
+#' @export
+applyPruneFilterX <- function(g, selected_prune_verts) {
+  if (length(selected_prune_verts) > 0) {
+    verts <- which(V(g)$id %in% selected_prune_verts)
+    g <- igraph::delete.vertices(g, verts)
+  }
+  
+  g
+}
+

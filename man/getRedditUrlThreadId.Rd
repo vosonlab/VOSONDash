@@ -15,4 +15,3 @@ thread_id as character string
 \description{
 Extract thread id from a reddit thread url
 }
-\keyword{internal}

@@ -15,4 +15,3 @@ video_id as character string
 \description{
 Extract youtube video id from url
 }
-\keyword{internal}

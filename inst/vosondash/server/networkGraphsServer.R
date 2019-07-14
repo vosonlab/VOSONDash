@@ -509,22 +509,9 @@ graphFilters <- reactive({
   return(g)
 })
 
-# create a list of categories from voson category field names in data
+# create a list of categories from voson vertex category field names in data
 createGraphCategoryList <- reactive({
-  g <- ng_rv$graph_data
-  
-  # metadata on categorical attributes
-  # note: only vertex attributes
-  ng_rv$graph_cats <- list()
-  
-  attr_v <- vertex_attr_names(g)
-  attr_v <- attr_v[grep(voson_cat_prefix, attr_v, perl = T)]
-  
-  if (length(attr_v)) {
-    for (i in attr_v) {
-      ng_rv$graph_cats[[sapply(strsplit(i, "_"), `[`, 2)]] <<- sort(unique(vertex_attr(g, i)))
-    }
-  }
+  ng_rv$graph_cats <- VOSONDash::getVertexCategories(ng_rv$graph_data)  
 })
 
 # only runs on file upload or when collection view graph option selected

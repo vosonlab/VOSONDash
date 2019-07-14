@@ -15,4 +15,3 @@ g as graphml object
 \description{
 Add degree, in-degree, out-degree, betweenness and closeness measures to graph as vertex attributes
 }
-\keyword{internal}

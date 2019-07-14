@@ -1,7 +1,7 @@
 #' Check a shiny app input value for a range of empty conditions
 #' 
 #' @param x shiny input value
-#' @return result as boolean
+#' @return result as logical
 #' @keywords internal
 #'
 #' @export
@@ -25,7 +25,7 @@ isNullOrEmpty <- function(x) {
 systemTimeFilename <- function(name_suffix, name_ext, clean = FALSE) {
   current_time <- Sys.time()
   
-  if (!missing(clean) && clean == TRUE) {
+  if (clean) {
     name_suffix <- gsub("\\s+", "_", name_suffix, perl = TRUE)
     name_suffix <- gsub(":", "_", name_suffix, perl = TRUE)
     
@@ -68,7 +68,6 @@ createRedditRequestUrl <- function(url) {
 #' 
 #' @param url reddit thread url
 #' @return thread_id as character string
-#' @keywords internal
 #'
 #' @export
 getRedditUrlThreadId <- function(url) {
@@ -80,7 +79,6 @@ getRedditUrlThreadId <- function(url) {
 #' 
 #' @param url reddit thread url
 #' @return subreddit as character string
-#' @keywords internal
 #'
 #' @export
 getRedditUrlSubreddit <- function(url) {
@@ -92,7 +90,6 @@ getRedditUrlSubreddit <- function(url) {
 #' 
 #' @param url youtube video url
 #' @return video_id as character string
-#' @keywords internal
 #'
 #' @export
 getYoutubeVideoId <- function(url) {

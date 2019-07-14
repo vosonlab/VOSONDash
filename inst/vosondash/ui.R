@@ -44,17 +44,17 @@ dashboardPage(
     
     # custom ui stylesheet
     tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
-      tags$link(rel = "icon", type = "image/png", sizes = "16x16", href = "favicon/favicon-16x16.png"),
-      tags$link(rel = "icon", type = "image/png", sizes = "32x32", href = "favicon/favicon-32x32.png"),
-      tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "180x180", 
-                href = "favicon/apple-touch-icon.png"),
-      tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "120x120", 
-                href = "favicon/apple-touch-icon-120x120.png"),
-      tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "76x76", 
-                href = "favicon/apple-touch-icon-76x76.png"),
-      tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "60x60", 
-                href = "favicon/apple-touch-icon-60x60.png")
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css") # ,
+      # tags$link(rel = "icon", type = "image/png", sizes = "16x16", href = "favicon/favicon-16x16.png"),
+      # tags$link(rel = "icon", type = "image/png", sizes = "32x32", href = "favicon/favicon-32x32.png"),
+      # tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "180x180", 
+      #           href = "favicon/apple-touch-icon.png"),
+      # tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "120x120", 
+      #           href = "favicon/apple-touch-icon-120x120.png"),
+      # tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "76x76", 
+      #           href = "favicon/apple-touch-icon-76x76.png"),
+      # tags$link(rel = "apple-touch-icon", type = "image/png", sizes = "60x60", 
+      #           href = "favicon/apple-touch-icon-60x60.png")
     ),    
     
     tabItems(

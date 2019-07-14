@@ -19,4 +19,3 @@ g as graphml object
 \description{
 Filter out graph vertices not in component size range
 }
-\keyword{internal}

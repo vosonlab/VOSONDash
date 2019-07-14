@@ -21,4 +21,3 @@ g as graphml object
 \description{
 Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops
 }
-\keyword{internal}

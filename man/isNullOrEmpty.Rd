@@ -10,7 +10,7 @@ isNullOrEmpty(x)
 \item{x}{shiny input value}
 }
 \value{
-result as boolean
+result as logical
 }
 \description{
 Check a shiny app input value for a range of empty conditions

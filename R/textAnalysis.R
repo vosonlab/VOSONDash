@@ -85,14 +85,14 @@ wordFreqChart <- function(corp, min_freq, top_count, pcolors = NULL) {
 #   sent_plot
 # }
 
-#' Creates a Sentiment Analysis chart summary
+#' Creates a Sentiment Analysis Valence chart
 #'
 #' @param corp text corpus
 #' 
 #' @return barchart plot
 #' 
 #' @export
-wordSentChartSummary <- function(corp) {
+wordSentValenceChart <- function(corp) {
   # returns empty plot with message if no data to chart
   if (is.null(corp) || length(corp) < 1) {
     return(emptyPlotMessage("No text data."))
@@ -108,7 +108,7 @@ wordSentChartSummary <- function(corp) {
   colx <- c("lightcoral", "mediumaquamarine", "gainsboro")
   
   par(las = 2)
-  par(mar = c(4, 4, 10, 4))
+  par(mar = c(4, 4, 12, 4))
   
   sent_plot_summary <- barplot(chart_data, 
                                col = colx, 
@@ -117,7 +117,7 @@ wordSentChartSummary <- function(corp) {
                                ylim = c(0, 100), 
                                xpd = FALSE, 
                                axes = TRUE,
-                               main = "Overall Sentiment")
+                               main = "Emotional Valence")
   
   text(y = ifelse(chart_data <= 2, 2, chart_data + 2.5), 
        x = sent_plot_summary, # y position
@@ -145,7 +145,6 @@ wordSentChart <- function(corp, pcolors = NULL) {
   ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
   
   nrc_sent_df <- syuzhet::get_nrc_sentiment(unlist(ws_df[, 1]))
-  nrc_sent_df$neutral <- ifelse(nrc_sent_df$negative + nrc_sent_df$positive == 0, 1, 0)
   chart_data <- 100 * colSums(nrc_sent_df) / sum(nrc_sent_df)
   
   chart_data <- chart_data[c(1:8)]

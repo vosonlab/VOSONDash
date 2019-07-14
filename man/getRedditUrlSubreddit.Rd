@@ -15,4 +15,3 @@ subreddit as character string
 \description{
 Extract subreddit name from a reddit thread url
 }
-\keyword{internal}

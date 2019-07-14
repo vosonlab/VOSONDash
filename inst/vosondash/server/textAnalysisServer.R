@@ -342,9 +342,9 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
   
   # voson text attributes
   attr_v <- igraph::vertex_attr_names(g)
-  attr_v <- attr_v[grep(voson_txt_prefix, attr_v, perl = T)]
+  attr_v <- attr_v[grep(voson_txt_prefix, attr_v, perl = TRUE)]
   attr_e <- igraph::edge_attr_names(g)
-  attr_e <- attr_e[grep(voson_txt_prefix, attr_e, perl = T)]
+  attr_e <- attr_e[grep(voson_txt_prefix, attr_e, perl = TRUE)]
   
   ta_rv$has_text <- FALSE
   if (length(attr_v)) {

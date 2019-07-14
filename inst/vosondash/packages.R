@@ -17,7 +17,7 @@ if (isLocal) {
   cat(paste("VOSONDash", app_version, app_date, "\n"))
   cat(paste0(format(Sys.time(), "%d %b %Y %H:%M"), "\n\n"))
   
-  cat(paste(trimws(Sys.getenv("os")), R.Version()$platform, "\n"))
+  cat(paste0(trimws(paste(Sys.getenv("os"), R.Version()$platform)), "\n"))
   cat(paste0(R.version.string, "\n"))
   cat(paste("R shiny", packageVersion("shiny"), "\n"))
   
@@ -42,9 +42,9 @@ if (isLocal) {
     stop("Missing packages.", call. = FALSE)
   } else {
     cat("Found all required packages.\n")
-    packageStr <- sapply(requiredPackages, function(x) paste0("- ", x, " [", packageVersion(x), "]"))
-    cat(paste0(packageStr, collapse = "\n"))
-    cat("\n\nStarting VOSONDash...\n")
+    # packageStr <- sapply(requiredPackages, function(x) paste0("- ", x, " [", packageVersion(x), "]"))
+    # cat(paste0(packageStr, collapse = "\n"))
+    cat("\nStarting VOSONDash...\n")
   }
 }
 

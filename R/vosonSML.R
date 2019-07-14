@@ -149,7 +149,7 @@ createTwitterActorNetwork <- function(data) {
   g <- igraph::set_graph_attr(network$graph, "type", "twitter")
   
   g_wt <- g
-  E(g_wt)$vosonTxt_payload <- data$text[match(E(g_wt)$status_id, data$status_id)]
+  E(g_wt)$vosonTxt_tweet <- data$text[match(E(g_wt)$status_id, data$status_id)]
   
   list(network = g, networkWT = g_wt)
 }
@@ -238,33 +238,6 @@ createRedditActorNetwork <- function(data) {
   networkWT <- data %>% vosonSML::Create("actor", textData = TRUE, cleanText = TRUE, writeToFile = FALSE)
   
   list(network = network$graph, networkWT = networkWT$graph)
-}
-
-#' Check if graph object has vertex or edge voson text attributes
-#' 
-#' @param g as graphml graph object
-#' 
-#' @return has_text as boolean
-#' @keywords internal
-#' 
-#' @export
-hasVosonTextData <- function(g) {
-  attr_v <- vertex_attr_names(g)
-  attr_v <- attr_v[grep("^vosonTxt_", attr_v, perl = T)]
-  attr_e <- edge_attr_names(g)
-  attr_e <- attr_e[grep("^vosonTxt_", attr_e, perl = T)]
-  
-  has_text <- FALSE
-  if (length(attr_v)) {
-    attr <- c(attr_v[1], 'vertex')
-    has_text <- TRUE
-  } else if (length(attr_e)) {
-    i <- attr_e[1]
-    attr <- c(attr_e[1], 'edge')
-    has_text <- TRUE
-  }
-  
-  has_text
 }
 
 #' Loaded vosonSML package version

@@ -2,21 +2,23 @@
 % Please edit documentation in R/networkGraphs.R
 \name{applyCategoricalFilters}
 \alias{applyCategoricalFilters}
-\title{Filter out graph vertices not in selected voson category attributes}
+\title{Filter out graph vertices not in selected category sub-categories}
 \usage{
-applyCategoricalFilters(g, selected_category, selected_category_attr)
+applyCategoricalFilters(g, selected_cat, selected_subcats,
+  cat_prefix = "^vosonCA_")
 }
 \arguments{
 \item{g}{graph as graphml object}
 
-\item{selected_category}{vertex category as character string}
+\item{selected_cat}{selected vertex category without prefix as character string}
 
-\item{selected_category_attr}{list of vertex category attributs to filter out as character string}
+\item{selected_subcats}{list of selected sub-category values to filter as character string}
+
+\item{cat_prefix}{character string of category attribute prefix format to match}
 }
 \value{
 g as graphml object
 }
 \description{
-Filter out graph vertices not in selected voson category attributes
+Filter out graph vertices not in selected category sub-categories
 }
-\keyword{internal}
