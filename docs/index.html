@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -46,7 +46,11 @@
   </a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="reference/index.html">
+    <span class="fa fa-cubes"></span>
+     
+    Reference
+  </a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -70,6 +74,7 @@
 <div id="vosondash" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#vosondash" class="anchor"></a>VOSONDash</h1></div>
+<p><img src="https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&amp;colorB=yellow" alt="Github Release"><img src="https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg" alt="Last Commit"><a href="https://CRAN.R-project.org/package=VOSONDash"><img src="https://www.r-pkg.org/badges/version/VOSONDash" alt="CRAN_Status_Badge"></a> <img src="https://cranlogs.r-pkg.org/badges/VOSONDash" alt="Downloads"><img src="https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash" alt="Total"></p>
 <p><code>VOSONDash</code> is an interactive <a href="https://shiny.rstudio.com/">R Shiny</a> web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the <a href="https://github.com/vosonlab/vosonSML">vosonSML</a> R package.</p>
 <div id="installation-getting-started" class="section level2">
 <h2 class="hasAnchor">
@@ -83,7 +88,8 @@
 <a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"vosonlab/VOSONDash"</span>)</a></code></pre></div>
 <p>Once the VOSON Dashboard package is installed the Shiny web application can be run from the RStudio console using the <code><a href="reference/runVOSONDash.html">runVOSONDash()</a></code> function.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(VOSONDash)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="reference/runVOSONDash.html">runVOSONDash</a></span>()</a></code></pre></div>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="reference/runVOSONDash.html">runVOSONDash</a></span>()</a></code></pre></div>
 </div>
 <div id="running-the-app-for-the-first-time" class="section level3">
 <h3 class="hasAnchor">
@@ -112,6 +118,11 @@
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"visNetwork"</span>,<span class="st">"syuzhet"</span>))</a></code></pre></div>
 <p>After installing required packages and running again the <code>VOSONDash</code> Shiny app will open up in the default web browser.</p>
 </div>
+</div>
+<div id="special-thanks" class="section level2">
+<h2 class="hasAnchor">
+<a href="#special-thanks" class="anchor"></a>Special thanks</h2>
+<p>This application would not be possible without key packages by other authors in the R community, particularly the <a href="https://github.com/rstudio/shiny">shiny</a>, <a href="https://github.com/rstudio/shinydashboard">shinydashboard</a>, <a href="https://github.com/rstudio/DT">DT</a> and <a href="https://github.com/daattali/shinyjs">shinyjs</a> packages. Graph visualisations created with <a href="https://github.com/igraph/rigraph">igraph</a> and <a href="https://github.com/datastorm-open/visNetwork">visNetwork</a>, and text analysis with support from <a href="https://cran.r-project.org/web/packages/tm/index.html">tm</a>, <a href="https://cran.r-project.org/web/packages/SnowballC/index.html">SnowballC</a> and <a href="https://cran.r-project.org/web/packages/wordcloud/index.html">wordcloud</a> packages.</p>
 </div>
 </div>
   </div>

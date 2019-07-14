@@ -1,5 +1,5 @@
 Package: VOSONDash
-Version: 0.4.0
+Version: 0.4.2
 Title: User Interface for Collecting and Analysing Social Media Data
 Description: R Shiny application that provides a web interface for collecting
     social media data using vosonSML and interactive analysis using

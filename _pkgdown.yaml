@@ -12,18 +12,17 @@ navbar:
     - home
     - reference
     right: github
-
-components:
-  home:
-    icon: fa-home fa-lg
-    href: index.html
-  reference:
-    icon: fa-cubes
-    text: "Reference"
-    href: reference/index.html
-  github:
-    icon: fa-github fa-lg
-    href: https://github.com/vosonlab/VOSONDash
+  components:
+    home:
+      icon: fa-home fa-lg
+      href: index.html
+    reference:
+      icon: fa-cubes
+      text: "Reference"
+      href: reference/index.html
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/vosonlab/VOSONDash
 
 reference:
 - title: Function Reference

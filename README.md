@@ -1,4 +1,9 @@
 # VOSONDash
+![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=yellow)
+![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
+![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)
+![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)
 
 `VOSONDash` is an interactive [R Shiny](https://shiny.rstudio.com/) web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the [vosonSML](https://github.com/vosonlab/vosonSML) R package.
 
@@ -19,8 +24,10 @@ Once the VOSON Dashboard package is installed the Shiny web application can be r
 
 ```R
 library(VOSONDash)
+
 runVOSONDash()
 ```
+
 ### Running the app for the first time
 
 When run the `VOSONDash` app will check that all of the R packages that are required to make it work are installed. If run for the first time it is likely that some packages will be missing and the app will print a message indicating the missing packages and a function command that can be used to install them.
@@ -55,3 +62,7 @@ install.packages(c("visNetwork","syuzhet"))
 ```
 
 After installing required packages and running again the `VOSONDash` Shiny app will open up in the default web browser.
+
+## Special thanks
+
+This application would not be possible without key packages by other authors in the R community, particularly the [shiny](https://github.com/rstudio/shiny), [shinydashboard](https://github.com/rstudio/shinydashboard), [DT](https://github.com/rstudio/DT) and [shinyjs](https://github.com/daattali/shinyjs) packages. Graph visualisations created with [igraph](https://github.com/igraph/rigraph) and [visNetwork](https://github.com/datastorm-open/visNetwork), and text analysis with support from [tm](https://cran.r-project.org/web/packages/tm/index.html), [SnowballC](https://cran.r-project.org/web/packages/SnowballC/index.html) and [wordcloud](https://cran.r-project.org/web/packages/wordcloud/index.html) packages.
