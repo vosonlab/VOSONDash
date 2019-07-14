@@ -109,11 +109,11 @@ addAdditionalMeasures <- function(g) {
 #' @return graph_cats
 #' 
 #' @export
-getVertexCategories <- function(g, cat_prefix = "^vosonCA_") {
+getVertexCategories <- function(g, cat_prefix = "vosonCA_") {
   graph_cats <- list()
-  
+
   attr_v <- igraph::vertex_attr_names(g)
-  attr_v <- attr_v[grep(cat_prefix, attr_v, perl = TRUE)]
+  attr_v <- attr_v[grep(paste0("^", cat_prefix), attr_v, perl = TRUE)]
   
   if (length(attr_v)) {
     for (i in attr_v) {
@@ -161,14 +161,14 @@ hasVosonTextData <- function(g) {
 #' @return g as graphml object
 #' 
 #' @export
-applyCategoricalFilters <- function(g, selected_cat, selected_subcats, cat_prefix = "^vosonCA_") {
+applyCategoricalFilters <- function(g, selected_cat, selected_subcats, cat_prefix = "vosonCA_") {
   
   if (selected_cat == "All") {
     return(g)
   }
   
   # re-create category vertex attribute name
-  vattr <- paste0('vosonCA_', cat_prefix)
+  vattr <- paste0(cat_prefix, selected_cat)
   
   # remove All from sub-categories list
   selected_subcats <- selected_subcats[selected_subcats != "All"]

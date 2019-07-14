@@ -493,7 +493,7 @@ graphFiltersNoCategorical <- reactive({
 graphFilters <- reactive({
   g <- NULL
 
-  # during a plot this is triggered 3 times - need to fix at some stage
+  # initial plot this is triggered 3 times - need to fix at some stage
   
   if (!is.null(ng_rv$graph_data)) {
     g <- ng_rv$graph_data
