@@ -217,6 +217,14 @@ output$save_token_output <- renderText({
   paste0(output, collapse = '\n')
 })
 
+output$user_keys_path <- renderText({
+  u_api_keys_path
+})
+
+output$user_tokens_path <- renderText({
+  u_api_tokens_path
+})
+
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 getTokenIds <- reactive({

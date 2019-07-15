@@ -1,8 +1,7 @@
 # voson dashboard shiny app globals
 
 # app version
-app_version <- "v0.4.0"
-app_date <- "16June19"
+app_version <- paste0("v", VOSONDash::getVOSONDashVer())
 
 isLocal <- Sys.getenv('SHINY_PORT') == ""
 suppressLibMsgs <- TRUE

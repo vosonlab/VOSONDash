@@ -5,7 +5,7 @@
 \title{Filter out graph vertices not in selected category sub-categories}
 \usage{
 applyCategoricalFilters(g, selected_cat, selected_subcats,
-  cat_prefix = "^vosonCA_")
+  cat_prefix = "vosonCA_")
 }
 \arguments{
 \item{g}{graph as graphml object}

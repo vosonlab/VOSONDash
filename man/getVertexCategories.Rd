@@ -4,7 +4,7 @@
 \alias{getVertexCategories}
 \title{Get a list of vertex attribute names that match a category attribute prefix format}
 \usage{
-getVertexCategories(g, cat_prefix = "^vosonCA_")
+getVertexCategories(g, cat_prefix = "vosonCA_")
 }
 \arguments{
 \item{g}{as graphml object}

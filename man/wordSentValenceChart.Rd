@@ -2,7 +2,7 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordSentValenceChart}
 \alias{wordSentValenceChart}
-\title{Creates a Sentiment Analysis chart}
+\title{Creates a Sentiment Analysis Valence chart}
 \usage{
 wordSentValenceChart(corp)
 }

@@ -20,6 +20,6 @@
 #' @importFrom httr parse_url
 #' @importFrom vosonSML Authenticate Collect Create
 #' @importFrom utils packageVersion
-#' @importFrom graphics plot text par barplot
+#' @importFrom graphics plot text title par barplot
 #' @importFrom lattice barchart
 NULL

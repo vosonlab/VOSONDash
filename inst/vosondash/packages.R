@@ -14,7 +14,7 @@ requiredPackages <- c("htmlwidgets",
 # if app is local print package information
 if (isLocal) {
   cat("=================================================\n")
-  cat(paste("VOSONDash", app_version, app_date, "\n"))
+  cat(paste("VOSONDash", paste0("v", VOSONDash::getVOSONDashVer()), "\n"))
   cat(paste0(format(Sys.time(), "%d %b %Y %H:%M"), "\n\n"))
   
   cat(paste0(trimws(paste(Sys.getenv("os"), R.Version()$platform)), "\n"))

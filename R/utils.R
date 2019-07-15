@@ -1,3 +1,16 @@
+#' Loaded VOSONDash package version
+#' 
+#' @return package version as character string
+#' @keywords internal
+#' 
+#' @export
+getVOSONDashVer <- function() {
+  if ("VOSONDash" %in% loadedNamespaces()) {
+    return(utils::packageVersion("VOSONDash"))
+  }
+  "unknown"
+}
+
 #' Check a shiny app input value for a range of empty conditions
 #' 
 #' @param x shiny input value

@@ -81,8 +81,9 @@ wordSentValenceChart <- function(corp) {
                                ylab = "Sum NRC Sentiment", 
                                horiz = FALSE, 
                                xpd = FALSE, 
-                               axes = TRUE,
-                               main = "Sentiment Valence")
+                               axes = TRUE)
+  
+  title("Sentiment Valence", adj = 0, line = 1)
   
   text(y = ifelse(chart_data == 0, 0, chart_data/2),
        x = sent_plot_summary,
@@ -127,8 +128,9 @@ wordSentChart <- function(corp, pcolors = NULL) {
                        horiz = TRUE, 
                        xlim = c(0, 100), 
                        xpd = FALSE, 
-                       axes = TRUE,
-                       main = "Emotions in text")
+                       axes = TRUE)
+  
+  title("Emotions in Text", adj = 0, line = 1)
   
   text(x = chart_data, 
        y = sent_plot,
