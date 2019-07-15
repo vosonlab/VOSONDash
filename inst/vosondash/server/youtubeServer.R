@@ -72,7 +72,7 @@ observeEvent(input$youtube_collect_button, {
         yt_rv$yt_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
                                                             youtube_max_comments)
         
-        yt_rv$data_cols <<- names(youtube_rvalues$youtube_data)
+        yt_rv$data_cols <<- names(yt_rv$yt_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('youtube collection error:', err))

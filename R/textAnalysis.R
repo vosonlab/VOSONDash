@@ -42,49 +42,6 @@ wordFreqChart <- function(corp, min_freq, top_count, pcolors = NULL) {
                   xlab = "Frequency"))
 }
 
-#' Creates a Sentiment Analysis chart
-#'
-# wordSentChart <- function(corp, pcolors = NULL) {
-# 
-#   # returns empty plot with message if no data to chart
-#   if (is.null(corp) || length(corp) < 1) {
-#     return(emptyPlotMessage("No text data."))
-#   }
-#   
-#   ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
-# 
-#   nrc_sent_df <- syuzhet::get_nrc_sentiment(unlist(ws_df[, 1]))
-#   nrc_sent_df$neutral <- ifelse(nrc_sent_df$negative + nrc_sent_df$positive == 0, 1, 0)
-#   chart_data <- 100 * colSums(nrc_sent_df) / sum(nrc_sent_df)
-#   
-#   colx <- pcolors
-#   if (is.null(colx)) {
-#     colx <- "f5f5f5"
-#   }
-#   colx[seq(1, 8)] <- colx
-#   colx[9] <- "lightcoral"         # negative  
-#   colx[10] <- "mediumaquamarine"  # positive
-#   colx[11] <- "gainsboro"         # neutral
-#   
-#   par(las = 2)
-#   par(mar = c(4, 6, 0, 4))
-# 
-#   sent_plot <- barplot(chart_data, 
-#                        col = colx, 
-#                        xlab = "Percentage %", 
-#                        horiz = TRUE, 
-#                        xlim = c(0, 100), 
-#                        xpd = FALSE, 
-#                        axes = TRUE)
-#   
-#   text(x = ifelse(chart_data <= 1, 1, chart_data + 2.5), 
-#        sent_plot, # y position
-#        labels = round(chart_data, digits = 2), 
-#        col = "black")
-#   
-#   sent_plot
-# }
-
 #' Creates a Sentiment Analysis Valence chart
 #'
 #' @param corp text corpus
@@ -99,30 +56,39 @@ wordSentValenceChart <- function(corp) {
   }
   
   ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
-  
   nrc_sent_df <- syuzhet::get_nrc_sentiment(unlist(ws_df[, 1]))
-  nrc_sent_df$neutral <- ifelse(nrc_sent_df$negative + nrc_sent_df$positive == 0, 1, 0)
-  chart_data <- 100 * colSums(nrc_sent_df) / sum(nrc_sent_df)
   
-  chart_data <- chart_data[c(9:11)]
-  colx <- c("lightcoral", "mediumaquamarine", "gainsboro")
+  chart_data <- colSums(nrc_sent_df[c(9:10)])
+  valence <- ((nrc_sent_df[, 9]*-1) + nrc_sent_df[, 10])
+  chart_data["valence"] <- sum(valence)
+  chart_data["negative"] <- chart_data["negative"]*-1
+  # chart_data["mean valence"] <- mean(valence)
+  
+  valence_col <- "gainsboro"
+  if (sum(valence) < 0) {
+    valence_col <- "lightcoral"
+  } else if (sum(valence) > 0) {
+    valence_col <- "mediumaquamarine"
+  }
+  
+  colx <- c("lightcoral", "mediumaquamarine", valence_col) # "gainsboro"
   
   par(las = 2)
-  par(mar = c(4, 4, 12, 4))
+  par(mar = c(6, 4, 3, 1))
   
-  sent_plot_summary <- barplot(chart_data, 
+  sent_plot_summary <- barplot(chart_data,
                                col = colx, 
-                               ylab = "Percentage %", 
+                               ylab = "Sum NRC Sentiment", 
                                horiz = FALSE, 
-                               ylim = c(0, 100), 
                                xpd = FALSE, 
                                axes = TRUE,
-                               main = "Emotional Valence")
+                               main = "Sentiment Valence")
   
-  text(y = ifelse(chart_data <= 2, 2, chart_data + 2.5), 
-       x = sent_plot_summary, # y position
-       labels = round(chart_data, digits = 2), 
-       col = "black")
+  text(y = ifelse(chart_data == 0, 0, chart_data/2),
+       x = sent_plot_summary,
+       labels = chart_data,
+       col = "black",
+       cex = 0.7)
   
   sent_plot_summary
 }
@@ -143,20 +109,17 @@ wordSentChart <- function(corp, pcolors = NULL) {
   }
   
   ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
-  
   nrc_sent_df <- syuzhet::get_nrc_sentiment(unlist(ws_df[, 1]))
-  chart_data <- 100 * colSums(nrc_sent_df) / sum(nrc_sent_df)
+  chart_data <- sort(colSums(prop.table(nrc_sent_df[, 1:8]))*100)
   
-  chart_data <- chart_data[c(1:8)]
-             
   colx <- pcolors
   if (is.null(colx)) {
-    colx <- "f5f5f5"
+    colx <- "#f5f5f5"
   }
   colx[seq(1, 8)] <- colx
   
   par(las = 2)
-  par(mar = c(4, 6, 0, 4))
+  par(mar = c(4, 6, 3, 1))
   
   sent_plot <- barplot(chart_data, 
                        col = colx, 
@@ -164,12 +127,14 @@ wordSentChart <- function(corp, pcolors = NULL) {
                        horiz = TRUE, 
                        xlim = c(0, 100), 
                        xpd = FALSE, 
-                       axes = TRUE)
+                       axes = TRUE,
+                       main = "Emotions in text")
   
-  text(x = ifelse(chart_data <= 1, 1, chart_data + 2.5), 
-       sent_plot, # y position
+  text(x = chart_data, 
+       y = sent_plot,
        labels = round(chart_data, digits = 2), 
-       col = "black")
+       col = "black",
+       cex = 0.8)
   
   sent_plot
 }
