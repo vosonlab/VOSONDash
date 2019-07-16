@@ -1,0 +1,59 @@
+title: VOSONDash
+url: http://vosonlab.github.io/VOSONDash
+
+authors:
+  Bryan Gertzel:
+    href: "https://vosonlab.net"
+    html: "<span>VOSON Lab</span>"
+
+navbar:
+  structure:
+    left:
+    - home
+    - news
+    - reference
+    right: github
+  components:
+    home:
+      icon: fa-home fa-lg
+      href: index.html
+    news:
+      icon: fa-newspaper-o
+      text: "News"
+      href: news/index.html        
+    reference:
+      icon: fa-cubes
+      text: "Reference"
+      href: reference/index.html
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/vosonlab/VOSONDash
+
+reference:
+- title: Function Reference
+  desc: Available functions and helpers
+  contents:
+  - '`VOSONDash-package`'
+- title: Shiny App
+  contents:
+  - '`runVOSONDash`' 
+- title: Network Graphs
+  contents:
+  - '`addAdditionalMeasures`'
+  - '`applyGraphFilters`'
+  - '`applyComponentFilter`'
+  - '`applyCategoricalFilters`'  
+  - '`applyPruneFilterX`'
+  - '`getVertexCategories`'
+- title: Text Analysis
+  contents:
+  - '`mixmat`'
+  - '`wordCloudPlot`'
+  - '`wordFreqChart`'
+  - '`wordSentChart`'
+  - '`wordSentValenceChart`'
+- title: Social Media
+  contents:
+  - '`getRedditUrlSubreddit`'
+  - '`getRedditUrlThreadId`'
+  - '`getYoutubeVideoId`'  

@@ -1,0 +1,6 @@
+WWW hyperlink network of 161 environmental activist websites from:
+
+Ackland, R. and M. O'Neil (2011), "Online collective identity: The case of the environmental movement," Social Networks, 33, 177-190.
+
+- Node attribute "Type" coded as Bio/Global/Toxic
+- Website meta keyword text data is contained in node attribute "metaKeywords"
