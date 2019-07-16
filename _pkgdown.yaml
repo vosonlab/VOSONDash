@@ -10,12 +10,17 @@ navbar:
   structure:
     left:
     - home
+    - news
     - reference
     right: github
   components:
     home:
       icon: fa-home fa-lg
       href: index.html
+    news:
+      icon: fa-newspaper-o
+      text: "News"
+      href: news/index.html        
     reference:
       icon: fa-cubes
       text: "Reference"
