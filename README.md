@@ -46,7 +46,7 @@ For example:
 ```R
 > runVOSONDash()
 =================================================
-VOSONDash v0.4.0 16June19 
+VOSONDash v0.4.0
 27 Jun 2019 09:35
 
 x86_64-apple-darwin15.6.0 
