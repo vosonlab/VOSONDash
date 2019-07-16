@@ -76,53 +76,72 @@
 <a href="#vosondash" class="anchor"></a>VOSONDash</h1></div>
 <p><img src="https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&amp;colorB=yellow" alt="Github Release"><img src="https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg" alt="Last Commit"><a href="https://CRAN.R-project.org/package=VOSONDash"><img src="https://www.r-pkg.org/badges/version/VOSONDash" alt="CRAN_Status_Badge"></a> <img src="https://cranlogs.r-pkg.org/badges/VOSONDash" alt="Downloads"><img src="https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash" alt="Total"></p>
 <p><code>VOSONDash</code> is an interactive <a href="https://shiny.rstudio.com/">R Shiny</a> web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the <a href="https://github.com/vosonlab/vosonSML">vosonSML</a> R package.</p>
-<div id="installation--getting-started" class="section level2">
+<div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installation--getting-started" class="anchor"></a>Installation &amp; Getting Started</h2>
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p><code>VOSONDash</code> is an R package and must be installed before the app can be run.</p>
-<div id="package-installation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#package-installation" class="anchor"></a>Package Installation</h3>
-<p>Using the devtools package the latest version of VOSON Dashboard can be downloaded and installed directly from github.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"vosonlab/VOSONDash"</span>)</a></code></pre></div>
+<p>Install the latest Github release:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"https://github.com/vosonlab/VOSONDash/releases/download/v0.4.2/VOSONDash-0.4.2.tar.gz"</span>, </a>
+<a class="sourceLine" id="cb1-2" title="2">  <span class="dt">repo =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">"source"</span>)</a></code></pre></div>
+<p>Install vosonSML from CRAN:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># pending acceptance</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"VOSONDash"</span>)</a></code></pre></div>
+<p>or install the latest dev version:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># library(devtools)</span></a>
+<a class="sourceLine" id="cb3-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"vosonlab/VOSONDash"</span>)</a></code></pre></div>
 <p>Once the VOSON Dashboard package is installed the Shiny web application can be run from the RStudio console using the <code><a href="reference/runVOSONDash.html">runVOSONDash()</a></code> function.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(VOSONDash)</a>
-<a class="sourceLine" id="cb2-2" title="2"></a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="kw"><a href="reference/runVOSONDash.html">runVOSONDash</a></span>()</a></code></pre></div>
-</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(VOSONDash)</a>
+<a class="sourceLine" id="cb4-2" title="2"></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="kw"><a href="reference/runVOSONDash.html">runVOSONDash</a></span>()</a></code></pre></div>
 <div id="running-the-app-for-the-first-time" class="section level3">
 <h3 class="hasAnchor">
 <a href="#running-the-app-for-the-first-time" class="anchor"></a>Running the app for the first time</h3>
-<p>When run the <code>VOSONDash</code> app will check that all of the R packages that are required to make it work are installed. If run for the first time it is likely that some packages will be missing and the app will print a message indicating the missing packages and a function command that can be used to install them.</p>
+<p>When run the <code>VOSONDash</code> app will check that all of the R packages that are required to make it work are installed. It is likely that some packages will be missing and the app will print a message indicating the missing packages and a command that can be used to install them.</p>
 <p>For example:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="reference/runVOSONDash.html">runVOSONDash</a></span>()</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="op">==</span><span class="er">===============================================</span></a>
-<a class="sourceLine" id="cb3-3" title="3">VOSONDash v0.<span class="fl">4.0</span> 16June19 </a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="dv">27</span> Jun <span class="dv">2019</span> <span class="dv">09</span><span class="op">:</span><span class="dv">35</span></a>
-<a class="sourceLine" id="cb3-5" title="5"></a>
-<a class="sourceLine" id="cb3-6" title="6">x86_<span class="dv">64</span><span class="op">-</span>apple<span class="op">-</span>darwin15.<span class="fl">6.0</span> </a>
-<a class="sourceLine" id="cb3-7" title="7">R version <span class="dv">3</span>.<span class="fl">6.0</span> (<span class="dv">2019-04-26</span>)</a>
-<a class="sourceLine" id="cb3-8" title="8">R shiny <span class="dv">1</span>.<span class="fl">3.2</span> </a>
-<a class="sourceLine" id="cb3-9" title="9"></a>
-<a class="sourceLine" id="cb3-10" title="10">Home<span class="op">:</span><span class="st"> </span><span class="er">/</span>Users<span class="op">/</span>voson_user</a>
-<a class="sourceLine" id="cb3-11" title="11">Encoding<span class="op">:</span><span class="st"> </span>native.enc </a>
-<a class="sourceLine" id="cb3-12" title="12"></a>
-<a class="sourceLine" id="cb3-13" title="13">Checking packages...</a>
-<a class="sourceLine" id="cb3-14" title="14">Required Packages Missing<span class="op">:</span></a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="op">-</span><span class="st"> </span>visNetwork</a>
-<a class="sourceLine" id="cb3-16" title="16"><span class="op">-</span><span class="st"> </span>syuzhet</a></code></pre></div>
-<p>The missing <code>visNetwork</code> and <code>syuzhet</code> packages can be installed using the provided package install command.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">Please install required packages before using VOSONDash<span class="op">:</span></a>
-<a class="sourceLine" id="cb4-2" title="2"></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"visNetwork"</span>,<span class="st">"syuzhet"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="reference/runVOSONDash.html">runVOSONDash</a></span>()</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="op">==</span><span class="er">===============================================</span></a>
+<a class="sourceLine" id="cb5-3" title="3">VOSONDash v0.<span class="fl">4.0</span> 16June19 </a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="dv">27</span> Jun <span class="dv">2019</span> <span class="dv">09</span><span class="op">:</span><span class="dv">35</span></a>
+<a class="sourceLine" id="cb5-5" title="5"></a>
+<a class="sourceLine" id="cb5-6" title="6">x86_<span class="dv">64</span><span class="op">-</span>apple<span class="op">-</span>darwin15.<span class="fl">6.0</span> </a>
+<a class="sourceLine" id="cb5-7" title="7">R version <span class="dv">3</span>.<span class="fl">6.0</span> (<span class="dv">2019-04-26</span>)</a>
+<a class="sourceLine" id="cb5-8" title="8">R shiny <span class="dv">1</span>.<span class="fl">3.2</span> </a>
+<a class="sourceLine" id="cb5-9" title="9"></a>
+<a class="sourceLine" id="cb5-10" title="10">Home<span class="op">:</span><span class="st"> </span><span class="er">/</span>Users<span class="op">/</span>voson_user</a>
+<a class="sourceLine" id="cb5-11" title="11">Encoding<span class="op">:</span><span class="st"> </span>native.enc </a>
+<a class="sourceLine" id="cb5-12" title="12"></a>
+<a class="sourceLine" id="cb5-13" title="13">Checking packages...</a>
+<a class="sourceLine" id="cb5-14" title="14">Required Packages Missing<span class="op">:</span></a>
+<a class="sourceLine" id="cb5-15" title="15"><span class="op">-</span><span class="st"> </span>visNetwork</a>
+<a class="sourceLine" id="cb5-16" title="16"><span class="op">-</span><span class="st"> </span>syuzhet</a></code></pre></div>
+<p>The missing packages can be installed using the provided package install command.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">Please install required packages before using VOSONDash<span class="op">:</span></a>
+<a class="sourceLine" id="cb6-2" title="2"></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"visNetwork"</span>,<span class="st">"syuzhet"</span>))</a></code></pre></div>
 <p>After installing required packages and running again the <code>VOSONDash</code> Shiny app will open up in the default web browser.</p>
+</div>
+</div>
+<div id="voson-dashboard" class="section level2">
+<h2 class="hasAnchor">
+<a href="#voson-dashboard" class="anchor"></a>VOSON Dashboard</h2>
+<p><code>VOSONDash</code> features an intuitive web interface with a section for ‘Analysis’ of graph data in <code>graphml</code> format and a section for ‘Collection’ of social media data using <a href="https://github.com/vosonlab/vosonSML">vosonSML</a>.</p>
+<div id="analysis" class="section level3">
+<h3 class="hasAnchor">
+<a href="#analysis" class="anchor"></a>Analysis</h3>
+<p>Network and text analysis of graphml network data.</p>
+<p><img src="reference/figures/network-graphs-1420x880.jpg" alt="VOSONDash Network Graphs Analysis"></p>
+</div>
+<div id="collection" class="section level3">
+<h3 class="hasAnchor">
+<a href="#collection" class="anchor"></a>Collection</h3>
+<p>Section for managing Social Media API keys and graphical interfaces for collecting twitter, youtube and reddit data.</p>
+<p><img src="reference/figures/collection-twitter-1420x880.jpg" alt="VOSONDash Twitter Collection"></p>
 </div>
 </div>
 <div id="special-thanks" class="section level2">
 <h2 class="hasAnchor">
 <a href="#special-thanks" class="anchor"></a>Special thanks</h2>
-<p>This application would not be possible without key packages by other authors in the R community, particularly the <a href="https://github.com/rstudio/shiny">shiny</a>, <a href="https://github.com/rstudio/shinydashboard">shinydashboard</a>, <a href="https://github.com/rstudio/DT">DT</a> and <a href="https://github.com/daattali/shinyjs">shinyjs</a> packages. Graph visualisations created with <a href="https://github.com/igraph/rigraph">igraph</a> and <a href="https://github.com/datastorm-open/visNetwork">visNetwork</a>, and text analysis with support from <a href="https://cran.r-project.org/web/packages/tm/index.html">tm</a>, <a href="https://cran.r-project.org/web/packages/SnowballC/index.html">SnowballC</a> and <a href="https://cran.r-project.org/web/packages/wordcloud/index.html">wordcloud</a> packages.</p>
+<p>This application would not be possible without key packages by other authors in the R community, particularly the <a href="https://github.com/rstudio/shiny">shiny</a>, <a href="https://github.com/rstudio/shinydashboard">shinydashboard</a>, <a href="https://github.com/rstudio/DT">DT</a> and <a href="https://github.com/daattali/shinyjs">shinyjs</a> packages. Graph visualisations created with <a href="https://github.com/igraph/rigraph">igraph</a> and <a href="https://github.com/datastorm-open/visNetwork">visNetwork</a>, and text analysis with support from <a href="https://cran.r-project.org/web/packages/tm/index.html">tm</a>, <a href="https://cran.r-project.org/web/packages/SnowballC/index.html">SnowballC</a>, <a href="https://cran.r-project.org/web/packages/wordcloud/index.html">wordcloud</a> and <a href="https://cran.r-project.org/web/packages/syuzhet/index.html">syuzhet</a> packages.</p>
 </div>
 </div>
   </div>

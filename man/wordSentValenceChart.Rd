@@ -2,7 +2,7 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordSentValenceChart}
 \alias{wordSentValenceChart}
-\title{Creates a Sentiment Analysis Valence chart}
+\title{Creates an NRC Positive and Negative Sentiment valence chart}
 \usage{
 wordSentValenceChart(corp)
 }
@@ -13,5 +13,5 @@ wordSentValenceChart(corp)
 barchart plot
 }
 \description{
-Creates a Sentiment Analysis Valence chart
+Creates an NRC Positive and Negative Sentiment valence chart
 }

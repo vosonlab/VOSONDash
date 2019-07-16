@@ -2,7 +2,7 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordSentChart}
 \alias{wordSentChart}
-\title{Creates a Sentiment Analysis chart}
+\title{Creates an NRC Sentiment Emotion chart}
 \usage{
 wordSentChart(corp, pcolors = NULL)
 }
@@ -15,5 +15,5 @@ wordSentChart(corp, pcolors = NULL)
 barchart plot
 }
 \description{
-Creates a Sentiment Analysis chart
+Creates an NRC Sentiment Emotion chart
 }

@@ -42,7 +42,7 @@ wordFreqChart <- function(corp, min_freq, top_count, pcolors = NULL) {
                   xlab = "Frequency"))
 }
 
-#' Creates a Sentiment Analysis Valence chart
+#' Creates an NRC Positive and Negative Sentiment valence chart
 #'
 #' @param corp text corpus
 #' 
@@ -94,7 +94,7 @@ wordSentValenceChart <- function(corp) {
   sent_plot_summary
 }
 
-#' Creates a Sentiment Analysis chart
+#' Creates an NRC Sentiment Emotion chart 
 #'
 #' @param corp text corpus
 #' @param pcolors color list to use in the plot
