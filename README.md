@@ -11,19 +11,18 @@
 
 `VOSONDash` is an R package and must be installed before the app can be run.
 
-Install the latest Github release:
+Install the latest release via GitHub:
 ```R
 install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.4.2/VOSONDash-0.4.2.tar.gz", 
   repo = NULL, type = "source")
 ```
 
-Install vosonSML from CRAN:
+Install the latest release via CRAN:
 ```R
-# pending acceptance
 install.packages("VOSONDash")
 ```
 
-or install the latest dev version:
+Install the latest development version:
 ```R
 # library(devtools)
 devtools::install_github("vosonlab/VOSONDash")
