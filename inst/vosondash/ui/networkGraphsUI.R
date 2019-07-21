@@ -44,7 +44,7 @@ tabItem(tabName = "network_graphs_tab",
                                                               multiple = FALSE, selectize = TRUE))
                                   ),
                                   column(width = 6,
-                                         disabled(sliderInput("graph_node_size_slider", label = "Multiplier", min = 0, max = 10, step = 0.1, value = c(1), ticks = FALSE, animate = FALSE))
+                                         disabled(sliderInput("graph_node_size_slider", label = "Multiplier", min = 0.1, max = 10, step = 0.1, value = c(1), ticks = FALSE, animate = FALSE))
                                   )
                                 ),
                                 
