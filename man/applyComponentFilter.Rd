@@ -7,7 +7,7 @@
 applyComponentFilter(g, component_type = "strong", component_range)
 }
 \arguments{
-\item{g}{\pkg{igraph} \code{\link[igraph]{graph}} object.}
+\item{g}{\pkg{igraph} \code{graph} object.}
 
 \item{component_type}{Character string. Use strongly or weakly connected components by specifying \code{"strong"} or 
 \code{"weak"}. Ignored for undirected graphs. Default is \code{strong}.}

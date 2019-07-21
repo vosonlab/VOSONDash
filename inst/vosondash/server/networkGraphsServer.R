@@ -40,6 +40,12 @@ source("controls.R", local = TRUE)
 
 #### events ----------------------------------------------------------------------------------------------------------- #
 
+# observeEvent(input$graph_node_size_degree_select, {
+#   if (input$graph_node_size_degree_select != "None") {
+#     shinyjs::enable("graph_node_size_slider")
+#   }
+# }, ignoreInit = TRUE)
+
 # set reactive value plot height when height input changes
 observeEvent(input$plot_height, {
   ng_rv$plot_height <- input$plot_height
@@ -141,7 +147,7 @@ observeEvent({ input$graph_component_type_select
                  
   if (input$reset_on_change_check == TRUE) {
     g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
-    g <- VOSONDash::applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
+    g <- applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
   }
 
   updateComponentSlider(g, input$graph_component_type_select)
@@ -340,14 +346,14 @@ output$graph_desc <- renderText({
 })
 
 observeEvent(ng_rv$graph_desc, {
-  if (!VOSONDash::isNullOrEmpty(ng_rv$graph_desc)) {
+  if (!isNullOrEmpty(ng_rv$graph_desc)) {
     shinyjs::enable("expand_data_desc_check")
   } else {
     shinyjs::disable("expand_data_desc_check")
   }
 })
 
-# graph download button for d3 graphs
+# graph download buttons
 output$graph_download_button <- downloadHandler(
   filename = function() { saveGraphFileName() },
   
@@ -480,10 +486,10 @@ graphFiltersNoCategorical <- reactive({
     g <- ng_rv$graph_data
     g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
     # isolate as graph_component_type_select has event
-    g <- VOSONDash::applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
-    g <- VOSONDash::applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
+    g <- applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
+    g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
                                       input$graph_loops_edge_check)
-    g <- VOSONDash::addAdditionalMeasures(g)
+    g <- addAdditionalMeasures(g)
   }
 
   return(g)
@@ -498,12 +504,12 @@ graphFilters <- reactive({
   if (!is.null(ng_rv$graph_data)) {
     g <- ng_rv$graph_data
     g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
-    g <- VOSONDash::applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
+    g <- applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
     # isolate as graph_component_type_select has event
-    g <- VOSONDash::applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)    
-    g <- VOSONDash::applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
+    g <- applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)    
+    g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
                                       input$graph_loops_edge_check)
-    g <- VOSONDash::addAdditionalMeasures(g)
+    g <- addAdditionalMeasures(g)
   }
   
   return(g)
@@ -511,7 +517,7 @@ graphFilters <- reactive({
 
 # create a list of categories from voson vertex category field names in data
 createGraphCategoryList <- reactive({
-  ng_rv$graph_cats <- VOSONDash::getVertexCategories(ng_rv$graph_data)  
+  ng_rv$graph_cats <- getVertexCategories(ng_rv$graph_data)  
 })
 
 # only runs on file upload or when collection view graph option selected

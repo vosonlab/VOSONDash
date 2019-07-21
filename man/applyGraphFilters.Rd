@@ -8,7 +8,7 @@ applyGraphFilters(g, isolates = TRUE, multi_edge = TRUE,
   loops_edge = TRUE)
 }
 \arguments{
-\item{g}{\pkg{igraph} \code{\link[igraph]{graph}} object.}
+\item{g}{\pkg{igraph} \code{graph} object.}
 
 \item{isolates}{Logical. Include isolate vertices in graph. Default is \code{TRUE}.}
 

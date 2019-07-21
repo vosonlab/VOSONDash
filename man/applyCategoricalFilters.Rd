@@ -8,7 +8,7 @@ applyCategoricalFilters(g, selected_cat, selected_subcats,
   cat_prefix = "vosonCA_")
 }
 \arguments{
-\item{g}{\pkg{igraph} \code{\link[igraph]{graph}} object.}
+\item{g}{\pkg{igraph} \code{graph} object.}
 
 \item{selected_cat}{Character string. Selected vertex category without prefix.}
 

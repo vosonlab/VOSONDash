@@ -7,7 +7,7 @@
 hasVosonTextData(g)
 }
 \arguments{
-\item{g}{\pkg{igraph} graph object.}
+\item{g}{\pkg{igraph} \code{graph} object.}
 }
 \value{
 Result as logical.

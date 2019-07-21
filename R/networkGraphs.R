@@ -3,7 +3,7 @@
 #' @description This function removes any graph vertices that are in components that fall outside of the specified 
 #' component size range.
 #' 
-#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param g \pkg{igraph} \code{graph} object.
 #' @param component_type Character string. Use strongly or weakly connected components by specifying \code{"strong"} or 
 #' \code{"weak"}. Ignored for undirected graphs. Default is \code{strong}.
 #' @param component_range Numeric vector. Min and max values or size range of component.
@@ -56,7 +56,7 @@ applyComponentFilter <- function(g, component_type = "strong", component_range) 
 #' 
 #' @note Removing multiple edges or edge loops from a graph will simplify it and remove other edge attributes.
 #' 
-#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param g \pkg{igraph} \code{graph} object.
 #' @param isolates Logical. Include isolate vertices in graph. Default is \code{TRUE}.
 #' @param multi_edge Logical. Include multiple edges between vertices in graph. Default is \code{TRUE}.
 #' @param loops_edge Logical. Include vertex edge loops in graph. Default is \code{TRUE}.
@@ -85,7 +85,7 @@ applyGraphFilters <- function(g, isolates = TRUE, multi_edge = TRUE, loops_edge 
 #' 
 #' @description Adds degree, in-degree, out-degree, betweenness and closeness measures to graph as vertex attributes.
 #' 
-#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param g \pkg{igraph} \code{graph} object.
 #'
 #' @return An igraph graph object.
 #' 
@@ -117,7 +117,7 @@ addAdditionalMeasures <- function(g) {
 #' @description This function returns a list of graph vertex attribute names that match a category attribute prefix 
 #' format.
 #' 
-#' @param g \pkg{igraph} graph object.
+#' @param g \pkg{igraph} \code{graph} object.
 #' @param cat_prefix Character string. Category attribute prefix format to match. Default is \code{"vosonCA_"}.
 #' 
 #' @return A list of vertex category attributes.
@@ -145,7 +145,7 @@ getVertexCategories <- function(g, cat_prefix = "vosonCA_") {
 #' @note Uses the \code{VOSON} vertex and edge text attribute prefix \code{"vosonTxt_"} to determine if attributes are
 #' text attributes.
 #' 
-#' @param g \pkg{igraph} graph object.
+#' @param g \pkg{igraph} \code{graph} object.
 #' 
 #' @return Result as logical.
 #' 
@@ -174,7 +174,7 @@ hasVosonTextData <- function(g) {
 #' 
 #' @description This function removes vertices that are not in the selected categories values list or sub-categories.   
 #' 
-#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param g \pkg{igraph} \code{graph} object.
 #' @param selected_cat Character string. Selected vertex category without prefix.
 #' @param selected_subcats List. Selected sub-category values to include in graph. 
 #' @param cat_prefix Character string. Category attribute prefix format to match. Default is \code{"vosonCA_"}.
@@ -206,7 +206,7 @@ applyCategoricalFilters <- function(g, selected_cat, selected_subcats, cat_prefi
 #'
 #' @description This function removes a list of vertices from the graph object by vertex id value. 
 #' 
-#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param g \pkg{igraph} \code{graph} object.
 #' @param selected_prune_verts List. Selected vertex ids to remove.
 #' 
 #' @return An igraph graph object.

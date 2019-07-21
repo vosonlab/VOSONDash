@@ -28,6 +28,10 @@ visNetworkData <- reactive({
   
   base_vertex_size <- 8
   
+  norm_vsize <- function(x) {
+    (x - min(x)) / (max(x) - min(x)) + 0.25
+  }
+  
   if (node_degree_type == "None") {
     if (node_size_multiplier > 1) {
       verts$size <- base_vertex_size + (node_size_multiplier / 4)
@@ -36,13 +40,21 @@ visNetworkData <- reactive({
     }
   } else {
     # todo: needs to calculate average values to better adjust scale
+    # verts$size <- switch(node_degree_type,
+    #                      "Degree" = (verts$degree / 4 * node_size_multiplier) + base_vertex_size,
+    #                      "Indegree" = (verts$indegree / 2 * node_size_multiplier) + base_vertex_size,
+    #                      "Outdegree" = (verts$outdegree / 2 * node_size_multiplier) + base_vertex_size,
+    #                      "Betweenness" = (verts$betweenness / 100 * node_size_multiplier) + base_vertex_size,
+    #                      "Closeness" = (verts$closeness * 100 * node_size_multiplier) + base_vertex_size
+    # )
+    
     verts$size <- switch(node_degree_type,
-                         "Degree" = (verts$degree / 4 * node_size_multiplier) + base_vertex_size,
-                         "Indegree" = (verts$indegree / 2 * node_size_multiplier) + base_vertex_size,
-                         "Outdegree" = (verts$outdegree / 2 * node_size_multiplier) + base_vertex_size,
-                         "Betweenness" = (verts$betweenness / 100 * node_size_multiplier) + base_vertex_size,
-                         "Closeness" = (verts$closeness * 100 * node_size_multiplier) + base_vertex_size
-    )
+                   "Degree" = (norm_vsize(verts$degree) * 10) + node_size_multiplier,
+                   "Indegree" = (norm_vsize(verts$indegree) * 10) + node_size_multiplier,
+                   "Outdegree" = (norm_vsize(verts$outdegree) * 10) + node_size_multiplier,
+                   "Betweenness" = (norm_vsize(verts$betweenness) * 10) + node_size_multiplier,
+                   "Closeness" = (norm_vsize(verts$closeness) * 10) + node_size_multiplier
+    )    
   }
   
   # category colors
@@ -57,6 +69,10 @@ visNetworkData <- reactive({
     verts$color.background <- as.character(gbl_plot_def_vertex_color)
     verts$font.color <- gbl_plot_def_label_color
     verts$id <- verts$name
+  }
+  
+  if (input$graph_names_check == FALSE) {
+    verts$label <- "" 
   }
   
   # vertex colours (only if cat attr selected)

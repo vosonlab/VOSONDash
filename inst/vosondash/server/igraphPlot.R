@@ -2,8 +2,8 @@
 standardPlotData <- reactive({
   g <- graphFilters()
   
-  if (is.null(g)) { return(VOSONDash::emptyPlotMessage("No graph data.")) }
-  if (vcount(g) <= 0) { return(VOSONDash::emptyPlotMessage("No vertices to plot.")) }
+  if (is.null(g)) { return(emptyPlotMessage("No graph data.")) }
+  if (vcount(g) <= 0) { return(emptyPlotMessage("No vertices to plot.")) }
   
   # reactive dependencies
   isolate({
@@ -80,6 +80,10 @@ standardPlotData <- reactive({
   
   base_vertex_size <- 4
   
+  norm_vsize <- function(x) {
+    (x - min(x)) / (max(x) - min(x)) + 0.25
+  }
+  
   if (node_degree_type == "None") {
     if (node_size_multiplier > 1) {
       plot_parameters['vertex.size'] <- base_vertex_size + (node_size_multiplier / 4)
@@ -88,14 +92,24 @@ standardPlotData <- reactive({
     }
   } else {
     # todo: needs to calculate average values to better adjust scale
+    # plot_parameters[['vertex.size']] <- switch(node_degree_type,
+    #                                            "Degree" = (V(g)$Degree / 4 * node_size_multiplier) + base_vertex_size,
+    #                                            "Indegree" = (V(g)$Indegree / 2 * node_size_multiplier) + base_vertex_size,
+    #                                            "Outdegree" = (V(g)$Outdegree / 2 * node_size_multiplier) + base_vertex_size,
+    #                                            "Betweenness" = (V(g)$Betweenness / 100 * node_size_multiplier) + base_vertex_size,
+    #                                            "Closeness" = (V(g)$Closeness * 100 * node_size_multiplier) + base_vertex_size
+    # )
     plot_parameters[['vertex.size']] <- switch(node_degree_type,
-                                               "Degree" = (V(g)$Degree / 4 * node_size_multiplier) + base_vertex_size,
-                                               "Indegree" = (V(g)$Indegree / 2 * node_size_multiplier) + base_vertex_size,
-                                               "Outdegree" = (V(g)$Outdegree / 2 * node_size_multiplier) + base_vertex_size,
-                                               "Betweenness" = (V(g)$Betweenness / 100 * node_size_multiplier) + base_vertex_size,
-                                               "Closeness" = (V(g)$Closeness * 100 * node_size_multiplier) + base_vertex_size
+                                               "Degree" = (norm_vsize(V(g)$Degree) * 10) + node_size_multiplier,
+                                               "Indegree" = (norm_vsize(V(g)$Indegree) * 10) + node_size_multiplier,
+                                               "Outdegree" = (norm_vsize(V(g)$Outdegree) * 10) + node_size_multiplier,
+                                               "Betweenness" = (norm_vsize(V(g)$Betweenness) * 10) + node_size_multiplier,
+                                               "Closeness" = (norm_vsize(V(g)$Closeness) * 10) + node_size_multiplier
     )
   }
+  
+  # plot_parameters['vertex.shape'] <- "circle"
+  # plot_parameters['vertex.frame.color'] <- "white"
   
   # avoid unknown font warnings on windows by setting TT font
   if (.Platform$OS.type != "unix") {
@@ -103,31 +117,45 @@ standardPlotData <- reactive({
   }
   
   plot_parameters['vertex.label.family'] <- "Arial"
-  plot_parameters['vertex.label.cex'] <- 0.9
-  plot_parameters['vertex.label.dist'] <- 1.4
   
-  labels <- FALSE
-  if (!(is.null(vertex_attr(g, "label")))) {
-    labels <- TRUE
-  }
-  
-  if (input$graph_names_check == FALSE) {
-    if (labels) {
-      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
-                                                  ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
-    } else {
-      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
-                                                  ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
+  # label_name <- FALSE
+  # 
+  # if (label_name == TRUE) {
+    plot_parameters['vertex.label.cex'] <- 0.9
+    plot_parameters['vertex.label.dist'] <- 1.1
+    
+    labels <- FALSE
+    if (!(is.null(vertex_attr(g, "label")))) {
+      labels <- TRUE
     }
-  } else {
-    if (labels) {
-      plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$label) > 0, V(g)$label, "-")
+    
+    if (input$graph_names_check == FALSE) {
+      if (labels) {
+        plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
+                                                    ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
+      } else {
+        plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
+                                                    ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
+      }
     } else {
-      plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
+      if (labels) {
+        plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$label) > 0, V(g)$label, "-")
+      } else {
+        plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
+      }
     }
-  }
-  plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, 
-                                                   gbl_plot_def_label_color)
+    plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, 
+                                                     gbl_plot_def_label_color)
+  # } else {
+    plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
+                                              "Degree" = (norm_vsize(V(g)$Degree)) + 0.5,
+                                              "Indegree" = (norm_vsize(V(g)$Indegree)) + 0.5,
+                                              "Outdegree" = (norm_vsize(V(g)$Outdegree)) + 0.5,
+                                              "Betweenness" = (norm_vsize(V(g)$Betweenness)) + 0.5,
+                                              "Closeness" = (norm_vsize(V(g)$Closeness)) + 0.5,
+                                              "None" = 0.9)
+  #   plot_parameters[['vertex.label']] <- V(g)$id
+  # }
   
   # reproduce same graph with same seed
   # must be set before graph layout
@@ -152,8 +180,10 @@ standardPlotData <- reactive({
   graph_layout <- norm_coords(graph_layout, ymin = -1, ymax = 1, xmin = -1, xmax = 1)
   plot_parameters['rescale'] <- FALSE
   
+  # plot_parameters['asp'] <- 0
+  
   plot_parameters[['layout']] <- graph_layout * graph_spread
   
   par(mar = rep(0, 4))
-  do.call(plot, plot_parameters)
+  do.call(plot.igraph, plot_parameters)
 })

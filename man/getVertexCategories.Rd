@@ -7,7 +7,7 @@
 getVertexCategories(g, cat_prefix = "vosonCA_")
 }
 \arguments{
-\item{g}{\pkg{igraph} graph object.}
+\item{g}{\pkg{igraph} \code{graph} object.}
 
 \item{cat_prefix}{Character string. Category attribute prefix format to match. Default is \code{"vosonCA_"}.}
 }

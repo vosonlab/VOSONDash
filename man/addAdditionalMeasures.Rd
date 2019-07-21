@@ -7,7 +7,7 @@
 addAdditionalMeasures(g)
 }
 \arguments{
-\item{g}{\pkg{igraph} \code{\link[igraph]{graph}} object.}
+\item{g}{\pkg{igraph} \code{graph} object.}
 }
 \value{
 An igraph graph object.

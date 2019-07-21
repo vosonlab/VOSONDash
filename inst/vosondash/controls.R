@@ -23,7 +23,8 @@ resetEnableGraphFilterControls <- function() {
                    "graph_multi_edge_check", 
                    "graph_loops_edge_check", 
                    "graph_names_check", 
-                   "graph_node_size_degree_select", 
+                   "graph_node_size_degree_select",
+                   "graph_node_size_slider",
                    "graph_sub_cats_select", 
                    "graph_layout_select", 
                    "graph_spread_slider",
@@ -99,9 +100,9 @@ enableD3Controls <- function() {
 enableVisNetworkControls <- function() {
   shinyjs::enable("graph_download_button")
   
-  ui_controls <- c("graph_names_check", 
-                   "graph_multi_edge_check", 
-                   "graph_loops_edge_check", 
+  ui_controls <- c(#"graph_names_check", 
+                   # "graph_multi_edge_check", 
+                   # "graph_loops_edge_check", 
                    "graph_spread_slider")
   
   sapply(ui_controls, function(x) { shinyjs::disable(x) })

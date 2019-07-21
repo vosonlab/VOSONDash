@@ -7,7 +7,7 @@
 applyPruneFilter(g, selected_prune_verts)
 }
 \arguments{
-\item{g}{\pkg{igraph} \code{\link[igraph]{graph}} object.}
+\item{g}{\pkg{igraph} \code{graph} object.}
 
 \item{selected_prune_verts}{List. Selected vertex ids to remove.}
 }
