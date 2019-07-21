@@ -43,7 +43,7 @@ reference:
   - '`applyGraphFilters`'
   - '`applyComponentFilter`'
   - '`applyCategoricalFilters`'  
-  - '`applyPruneFilterX`'
+  - '`applyPruneFilter`'
   - '`getVertexCategories`'
 - title: Text Analysis
   contents:

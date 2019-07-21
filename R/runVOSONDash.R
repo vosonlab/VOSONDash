@@ -1,4 +1,6 @@
-#' Run the VOSON Dashboard Shiny Application
+#' @title Run the VOSON Dashboard Shiny Application
+#' 
+#' @description This function launches the \pkg{VOSONDash} Shiny app in the default web browser. 
 #' 
 #' @return None
 #' 
@@ -11,5 +13,3 @@ runVOSONDash <- function() {
   
   shiny::runApp(app_dir, display.mode = "normal", launch.browser = TRUE)
 }
-
-# shiny::runApp(appDir = "./inst/vosondash")

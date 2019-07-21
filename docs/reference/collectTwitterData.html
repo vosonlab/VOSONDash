@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Wrapper for collecting tweets using the vosonSML package — collectTwitterData • VOSONDash</title>
+<title>Collect twitter data — collectTwitterData • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Wrapper for collecting tweets using the vosonSML package — collectTwitterData" />
+<meta property="og:title" content="Collect twitter data — collectTwitterData" />
 
-<meta property="og:description" content="Wrapper for collecting tweets using the vosonSML package" />
+<meta property="og:description" content="This function is a wrapper for collecting tweets using vosonSML::Collect." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,18 +112,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Wrapper for collecting tweets using the vosonSML package</h1>
+    <h1>Collect twitter data</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/vosonSML.R'><code>R/vosonSML.R</code></a></small>
     <div class="hidden name"><code>collectTwitterData.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for collecting tweets using the vosonSML package</p>
+    <p>This function is a wrapper for collecting tweets using <code><a href='https://www.rdocumentation.org/packages/vosonSML/topics/Collect'>vosonSML::Collect</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>collectTwitterData</span>(<span class='no'>token</span>, <span class='no'>search_term</span>, <span class='no'>search_type</span>, <span class='no'>tweet_count</span>,
+    <pre class="usage"><span class='fu'>collectTwitterData</span>(<span class='no'>cred</span>, <span class='no'>search_term</span>, <span class='no'>search_type</span>, <span class='no'>tweet_count</span>,
   <span class='no'>include_retweets</span>, <span class='no'>retry_on_rate_limit</span>, <span class='no'>language</span>, <span class='no'>date_until</span>, <span class='no'>since_id</span>,
   <span class='no'>max_id</span>)</pre>
     
@@ -131,50 +131,50 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>token</th>
-      <td><p>twitter auth token</p></td>
+      <th>cred</th>
+      <td><p><span class="pkg">vosonSML</span> twitter credential object.</p></td>
     </tr>
     <tr>
       <th>search_term</th>
-      <td><p>twitter search term as character string</p></td>
+      <td><p>Character string. Twitter search term.</p></td>
     </tr>
     <tr>
       <th>search_type</th>
-      <td><p>search type as character string - mixed, recent, popular</p></td>
+      <td><p>Character string. Search type <code>"mixed"</code>, <code>"recent"</code> or <code>"popular"</code>.</p></td>
     </tr>
     <tr>
       <th>tweet_count</th>
-      <td><p>number of tweets to collect</p></td>
+      <td><p>Numeric. Number of tweets to collect.</p></td>
     </tr>
     <tr>
       <th>include_retweets</th>
-      <td><p>logical whether to include retweets in the results</p></td>
+      <td><p>Logical. Include retweets in the results.</p></td>
     </tr>
     <tr>
       <th>retry_on_rate_limit</th>
-      <td><p>logical whether to wait and retry when the twitter api rate limit is hit</p></td>
+      <td><p>Logical. Wait and retry when the twitter api rate limit is reached.</p></td>
     </tr>
     <tr>
       <th>language</th>
-      <td><p>language code of tweets to collect as two character ISO 639-1 code</p></td>
+      <td><p>Character string. Language code of tweets to collect as two character ISO 639-1 code.</p></td>
     </tr>
     <tr>
       <th>date_until</th>
-      <td><p>date to collect tweets to as character string YYYY-MM-DD</p></td>
+      <td><p>Character string. Date to collect tweets to in format <code>"YYYY-MM-DD"</code>.</p></td>
     </tr>
     <tr>
       <th>since_id</th>
-      <td><p>numeric id get results with an id more recent than this id</p></td>
+      <td><p>Numeric. Collect tweets with a tweet id more recent than <code>since_id</code>.</p></td>
     </tr>
     <tr>
       <th>max_id</th>
-      <td><p>numeric id get results with an id older than this id</p></td>
+      <td><p>Numeric. Collect tweets with a tweet id older than <code>max_id</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tweets as vosonSML Collect dataframe</p>
+    <p>A vosonSML twitter dataframe.</p>
     
 
   </div>

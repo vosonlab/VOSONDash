@@ -1,13 +1,17 @@
-#' Filter out graph vertices not in component size range
+#' @title Filter out graph vertices not in component size range
 #' 
-#' @param g as graphml object
-#' @param component_type as character string
-#' @param component_range min and max values of range as vector
+#' @description This function removes any graph vertices that are in components that fall outside of the specified 
+#' component size range.
 #' 
-#' @return g as graphml object
+#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param component_type Character string. Use strongly or weakly connected components by specifying \code{"strong"} or 
+#' \code{"weak"}. Ignored for undirected graphs. Default is \code{strong}.
+#' @param component_range Numeric vector. Min and max values or size range of component.
+#' 
+#' @return An igraph graph object.
 #' 
 #' @export
-applyComponentFilter <- function(g, component_type, component_range) {
+applyComponentFilter <- function(g, component_type = "strong", component_range) {
   min_range <- component_range[1]
   max_range <- component_range[2]
   
@@ -45,17 +49,22 @@ applyComponentFilter <- function(g, component_type, component_range) {
   g
 }
 
-#' Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops
+#' @title Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops
 #' 
-#' @param g as graphml object
-#' @param isolates include isolate vertices in graph as logical
-#' @param multi_edge include multiple edges between vertices in graph as logical
-#' @param loops_edge include vertex edge loops in graph as logical
+#' @description This function removes isolate vertices, multiple edges between vertices and or vertex edge loops from a 
+#' graph.
 #' 
-#' @return g as graphml object
+#' @note Removing multiple edges or edge loops from a graph will simplify it and remove other edge attributes.
+#' 
+#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param isolates Logical. Include isolate vertices in graph. Default is \code{TRUE}.
+#' @param multi_edge Logical. Include multiple edges between vertices in graph. Default is \code{TRUE}.
+#' @param loops_edge Logical. Include vertex edge loops in graph. Default is \code{TRUE}.
+#' 
+#' @return An igraph graph object.
 #' 
 #' @export
-applyGraphFilters <- function(g, isolates, multi_edge, loops_edge) {
+applyGraphFilters <- function(g, isolates = TRUE, multi_edge = TRUE, loops_edge = TRUE) {
   
   # remove multiple edges and self loops
   if (multi_edge == FALSE || loops_edge == FALSE) {
@@ -72,11 +81,13 @@ applyGraphFilters <- function(g, isolates, multi_edge, loops_edge) {
   g
 }
 
-#' Add degree, in-degree, out-degree, betweenness and closeness measures to graph as vertex attributes
+#' @title Add additional measures to graph as vertex attributes
 #' 
-#' @param g as graphml object
+#' @description Adds degree, in-degree, out-degree, betweenness and closeness measures to graph as vertex attributes.
+#' 
+#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
 #'
-#' @return g as graphml object
+#' @return An igraph graph object.
 #' 
 #' @export
 addAdditionalMeasures <- function(g) {
@@ -101,12 +112,15 @@ addAdditionalMeasures <- function(g) {
   g
 }
 
-#' Get a list of vertex attribute names that match a category attribute prefix format
+#' @title Get a list of vertex category attribute names
 #' 
-#' @param g as graphml object
-#' @param cat_prefix character string of category attribute prefix format to match
+#' @description This function returns a list of graph vertex attribute names that match a category attribute prefix 
+#' format.
 #' 
-#' @return graph_cats
+#' @param g \pkg{igraph} graph object.
+#' @param cat_prefix Character string. Category attribute prefix format to match. Default is \code{"vosonCA_"}.
+#' 
+#' @return A list of vertex category attributes.
 #' 
 #' @export
 getVertexCategories <- function(g, cat_prefix = "vosonCA_") {
@@ -124,13 +138,18 @@ getVertexCategories <- function(g, cat_prefix = "vosonCA_") {
   graph_cats
 }
 
-#' Check if graph object has vertex or edge voson text attributes
+#' @title Check if graph object has text attributes
 #' 
-#' @param g as graphml graph object
+#' @description This function checks if a graph has either vertex or edge text attributes.
 #' 
-#' @return has_text as logical
+#' @note Uses the \code{VOSON} vertex and edge text attribute prefix \code{"vosonTxt_"} to determine if attributes are
+#' text attributes.
+#' 
+#' @param g \pkg{igraph} graph object.
+#' 
+#' @return Result as logical.
+#' 
 #' @keywords internal
-#' 
 #' @export
 hasVosonTextData <- function(g) {
   attr_v <- vertex_attr_names(g)
@@ -151,14 +170,16 @@ hasVosonTextData <- function(g) {
   has_text
 }
 
-#' Filter out graph vertices not in selected category sub-categories
+#' @title Filter out graph vertices not in selected category
 #' 
-#' @param g graph as graphml object
-#' @param selected_cat selected vertex category without prefix as character string
-#' @param selected_subcats list of selected sub-category values to filter as character string 
-#' @param cat_prefix character string of category attribute prefix format to match
+#' @description This function removes vertices that are not in the selected categories values list or sub-categories.   
 #' 
-#' @return g as graphml object
+#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param selected_cat Character string. Selected vertex category without prefix.
+#' @param selected_subcats List. Selected sub-category values to include in graph. 
+#' @param cat_prefix Character string. Category attribute prefix format to match. Default is \code{"vosonCA_"}.
+#' 
+#' @return An igraph graph object.
 #' 
 #' @export
 applyCategoricalFilters <- function(g, selected_cat, selected_subcats, cat_prefix = "vosonCA_") {
@@ -181,15 +202,17 @@ applyCategoricalFilters <- function(g, selected_cat, selected_subcats, cat_prefi
   g
 }
 
-#' Filter out list of vertices from graphml object using vertex id value
+#' @title Prune vertices from graph by vertex id
 #'
-#' @param g graph as graphml object
-#' @param selected_prune_verts selected vertex ids to filter out as list
+#' @description This function removes a list of vertices from the graph object by vertex id value. 
 #' 
-#' @return g as graphml object
+#' @param g \pkg{igraph} \code{\link[igraph]{graph}} object.
+#' @param selected_prune_verts List. Selected vertex ids to remove.
+#' 
+#' @return An igraph graph object.
 #' 
 #' @export
-applyPruneFilterX <- function(g, selected_prune_verts) {
+applyPruneFilter <- function(g, selected_prune_verts) {
   if (length(selected_prune_verts) > 0) {
     verts <- which(V(g)$id %in% selected_prune_verts)
     g <- igraph::delete.vertices(g, verts)

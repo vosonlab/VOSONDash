@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates an NRC Positive and Negative Sentiment valence chart — wordSentValenceChart • VOSONDash</title>
+<title>Create an NRC Positive and Negative Sentiment valence chart — wordSentValenceChart • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Creates an NRC Positive and Negative Sentiment valence chart — wordSentValenceChart" />
+<meta property="og:title" content="Create an NRC Positive and Negative Sentiment valence chart — wordSentValenceChart" />
 
-<meta property="og:description" content="Creates an NRC Positive and Negative Sentiment valence chart" />
+<meta property="og:description" content="This function creates a vertical barchart of negative, positive and the sum of the sentiment values or
+valence in a text corpus." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,14 +113,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates an NRC Positive and Negative Sentiment valence chart</h1>
+    <h1>Create an NRC Positive and Negative Sentiment valence chart</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/textAnalysis.R'><code>R/textAnalysis.R</code></a></small>
     <div class="hidden name"><code>wordSentValenceChart.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Creates an NRC Positive and Negative Sentiment valence chart</p>
+    <p>This function creates a vertical barchart of negative, positive and the sum of the sentiment values or
+valence in a text corpus.</p>
     
     </div>
 
@@ -130,13 +132,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>corp</th>
-      <td><p>text corpus</p></td>
+      <td><p><span class="pkg">tm</span> package document <code><a href='https://www.rdocumentation.org/packages/tm/topics/Corpus'>Corpus</a></code> object.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>barchart plot</p>
+    <p>A barchart plot.</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>Uses the <span class="pkg">syuzhet</span> package implementation of Saif Mohammad’s NRC Emotion lexicon.</p>
     
 
   </div>
@@ -146,6 +152,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#note">Note</a></li>
           </ul>
 
   </div>

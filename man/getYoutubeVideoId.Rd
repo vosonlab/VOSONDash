@@ -2,16 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{getYoutubeVideoId}
 \alias{getYoutubeVideoId}
-\title{Extract youtube video id from url}
+\title{Get a youtube video id from url}
 \usage{
 getYoutubeVideoId(url)
 }
 \arguments{
-\item{url}{youtube video url}
+\item{url}{Character string. Youtube video url.}
 }
 \value{
-video_id as character string
+Video id as character string.
 }
 \description{
-Extract youtube video id from url
+This function extracts the youtube video id from a youtube video url.
 }

@@ -7,7 +7,7 @@
 
 ng_rv <- reactiveValues(   # ng_rvalues
   data = NULL,                  # vosonsml df
-  graph_data = NULL,            # graphml object
+  graph_data = NULL,            # igraph graph object
   graph_seed = NULL,            # plot seed value
   
   graph_desc = "",              # some graph attributes
@@ -140,7 +140,7 @@ observeEvent({ input$graph_component_type_select
   g <- ng_rv$graph_data
                  
   if (input$reset_on_change_check == TRUE) {
-    g <- applyPruneFilter(g, ng_rv$prune_verts)
+    g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
     g <- VOSONDash::applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
   }
 
@@ -478,7 +478,7 @@ graphFiltersNoCategorical <- reactive({
 
   if (!is.null(ng_rv$graph_data)) {
     g <- ng_rv$graph_data
-    g <- applyPruneFilter(g, ng_rv$prune_verts)
+    g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
     # isolate as graph_component_type_select has event
     g <- VOSONDash::applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
     g <- VOSONDash::applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
@@ -497,7 +497,7 @@ graphFilters <- reactive({
   
   if (!is.null(ng_rv$graph_data)) {
     g <- ng_rv$graph_data
-    g <- applyPruneFilter(g, ng_rv$prune_verts)
+    g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
     g <- VOSONDash::applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
     # isolate as graph_component_type_select has event
     g <- VOSONDash::applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)    
@@ -850,7 +850,7 @@ updateComponentSlider <- function(g, component_type) {
 }
 
 # filter out list of vertices from graph object
-applyPruneFilter <- function(g, selected_prune_verts) {
+applyPruneFilterSrv <- function(g, selected_prune_verts) {
   if (length(selected_prune_verts) > 0) {
     verts <- which(V(g)$id %in% selected_prune_verts)
     g <- delete.vertices(g, verts) # selected_prune_verts

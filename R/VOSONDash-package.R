@@ -1,11 +1,15 @@
 #' @title Interface for collection and interactive analysis of social networks
 #'
-#' @description Description field.
+#' @description VOSONDash provides functions and an interface in the form of an interactive R 
+#' Shiny web application for the visualisation and analysis of network data. The app has 
+#' sections for visualising and manipulating network graphs, performing text analysis, and 
+#' displaying network metrics. It also has an interface for the collection of social network 
+#' data using the vosonSML R package.
 #' 
 #' @name VOSONDash-package
 #' @aliases VOSONDash-package VOSONDash
 #' @docType package
-#' @author Robert Ackland and Bryan Gertzel
+#' @author Bryan Gertzel and Robert Ackland.
 #' 
 #' @import shiny
 #' @import httpuv

@@ -2,17 +2,21 @@
 % Please edit documentation in R/networkGraphs.R
 \name{hasVosonTextData}
 \alias{hasVosonTextData}
-\title{Check if graph object has vertex or edge voson text attributes}
+\title{Check if graph object has text attributes}
 \usage{
 hasVosonTextData(g)
 }
 \arguments{
-\item{g}{as graphml graph object}
+\item{g}{\pkg{igraph} graph object.}
 }
 \value{
-has_text as logical
+Result as logical.
 }
 \description{
-Check if graph object has vertex or edge voson text attributes
+This function checks if a graph has either vertex or edge text attributes.
+}
+\note{
+Uses the \code{VOSON} vertex and edge text attribute prefix \code{"vosonTxt_"} to determine if attributes are
+text attributes.
 }
 \keyword{internal}

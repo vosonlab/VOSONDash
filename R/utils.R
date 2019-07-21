@@ -1,8 +1,10 @@
-#' Loaded VOSONDash package version
+#' @title Get the VOSONDash package version
 #' 
-#' @return package version as character string
+#' @description This function returns the version of the loaded VOSONDash package. 
+#' 
+#' @return Package version character string.
+#' 
 #' @keywords internal
-#' 
 #' @export
 getVOSONDashVer <- function() {
   if ("VOSONDash" %in% loadedNamespaces()) {
@@ -11,29 +13,34 @@ getVOSONDashVer <- function() {
   "unknown"
 }
 
-#' Check a shiny app input value for a range of empty conditions
+#' @title Check a value for a range of empty conditions
 #' 
-#' @param x shiny input value
-#' @return result as logical
+#' @description This function checks a value is not NULL, NA or an empty string. 
+#' 
+#' @param x Input value.
+#' 
+#' @return Result as logical.
+#' 
 #' @keywords internal
-#'
 #' @export
 isNullOrEmpty <- function(x) {
   if (is.null(x) || identical(x, character(0)) || is.na(x) || trimws(x) == "") {
     return(TRUE)
   }
-  
   FALSE
 }
 
-#' Create a file-system friendly file name with system date time prefix
+#' @title Create a file name with system date time prefix
 #' 
-#' @param name_suffix name part of file name to append to date time as character string
-#' @param name_ext file name extension as character string
-#' @param clean remove problematic characters from file name as boolean
-#' @return file_name as character string
+#' @description This function uses the system date and time to create a unique file name.
+#' 
+#' @param name_suffix Character string. Name part of file name to append to date time part.
+#' @param name_ext Character string. File extension without the period. For example, \code{"txt"}.
+#' @param clean Logical. Remove problematic file system characters from file name part. Default is \code{FALSE}.
+#' 
+#' @return A unique date time file name as character string.
+#' 
 #' @keywords internal
-#' 
 #' @export
 systemTimeFilename <- function(name_suffix, name_ext, clean = FALSE) {
   current_time <- Sys.time()
@@ -51,12 +58,15 @@ systemTimeFilename <- function(name_suffix, name_ext, clean = FALSE) {
                       "_", name_suffix, ".", name_ext, sep = "")
 }
 
-#' Return reddit url appropriate for reddit API comments request
+#' @title Create a reddit url to request thread comments
 #' 
-#' @param url reddit thread url
-#' @return url as character string
+#' @description This function creates a url from specified thread url that can be used to request the thread comments.
+#' 
+#' @param url Character string. Reddit thread url.
+#' 
+#' @return Reddit API url as character string.
+#' 
 #' @keywords internal
-#'
 #' @export
 createRedditRequestUrl <- function(url) {
   url <- tolower(url)
@@ -77,10 +87,13 @@ createRedditRequestUrl <- function(url) {
               url, ignore.case = TRUE, perl = TRUE)
 }
 
-#' Extract thread id from a reddit thread url
+#' @title Get a reddit thread id from url
 #' 
-#' @param url reddit thread url
-#' @return thread_id as character string
+#' @description This function extracts the thread id from a reddit thread url.
+#' 
+#' @param url Character string. Reddit thread url.
+#' 
+#' @return Reddit thread id as character string.
 #'
 #' @export
 getRedditUrlThreadId <- function(url) {
@@ -88,10 +101,13 @@ getRedditUrlThreadId <- function(url) {
                     url, ignore.case = TRUE, perl = TRUE)
 }
 
-#' Extract subreddit name from a reddit thread url
+#' @title Get subreddit name from url
 #' 
-#' @param url reddit thread url
-#' @return subreddit as character string
+#' @description This function extracts the subreddit name from a reddit thread url. 
+#' 
+#' @param url Character string. Reddit thread url.
+#' 
+#' @return Subreddit name as character string.
 #'
 #' @export
 getRedditUrlSubreddit <- function(url) {
@@ -99,10 +115,13 @@ getRedditUrlSubreddit <- function(url) {
                     url, ignore.case = TRUE, perl = TRUE)  
 }
 
-#' Extract youtube video id from url
+#' @title Get a youtube video id from url
 #' 
-#' @param url youtube video url
-#' @return video_id as character string
+#' @description This function extracts the youtube video id from a youtube video url.
+#' 
+#' @param url Character string. Youtube video url.
+#' 
+#' @return Video id as character string.
 #'
 #' @export
 getYoutubeVideoId <- function(url) {
@@ -140,11 +159,13 @@ getYoutubeVideoId <- function(url) {
   video_id
 }
 
-#' Check if macOS version of R
+#' @title Check if macOS
 #' 
-#' @return result as boolean
+#' @description This function checks if running the macOS version of R.
+#' 
+#' @return Result as logical.
+#' 
 #' @keywords internal
-#'
 #' @export
 isMac <- function() {
   macMatch <- grep("darwin", R.Version()$os)
@@ -156,34 +177,19 @@ isMac <- function() {
   FALSE
 }
 
-#' Simple text aggregation
+#' @title Add message to log queue
 #' 
-#' @param lines vector of text lines
-#' @param add_line text line to add to lines
-#' @param txt return lines as character string
-#' @return text lines as vector or character string 
-#' @keywords internal
-#'
-#' @export
-addLine <- function(lines, add_line, txt = FALSE) {
-  
-  if (isNullOrEmpty(lines)) { lines <- c() }
-  lines <- append(lines, add_line)
-  
-  if (txt) { return(paste0(lines, collapse = '\n')) }
-  
-  lines
-}
-
-#' Simple logging queue with count FIFO
+#' @description This function adds a text message to a queue or list with a count limiting how many messages are 
+#' stored. The queue stores count messages based on first in first out.
 #' 
-#' @param messages vector of text messages
-#' @param add_message text message to add to the messages queue
-#' @param txt return lines as character string
-#' @param count return queue of count messages and discard the rest
-#' @return messages as vector or character string 
+#' @param messages Character vector. Lines or text log messages.
+#' @param add_message Character string. Text log message to add to messages
+#' @param txt Logical. Return messages as single character string delimited by newline characters.
+#' @param count Numeric. Return queue of count messages and discard the rest.
+#' 
+#' @return Messages as vector or character string.
+#'  
 #' @keywords internal
-#'
 #' @export
 logMessage <- function(messages, add_message, txt = FALSE, count = 20) {
   

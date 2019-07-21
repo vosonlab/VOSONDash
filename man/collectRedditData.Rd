@@ -2,17 +2,17 @@
 % Please edit documentation in R/vosonSML.R
 \name{collectRedditData}
 \alias{collectRedditData}
-\title{Wrapper for collecting reddit thread comments using the vosonSML package}
+\title{Collect reddit data}
 \usage{
 collectRedditData(reddit_url_list)
 }
 \arguments{
-\item{reddit_url_list}{vector of thread urls to collect comments from}
+\item{reddit_url_list}{Character vector. Thread urls to collect comments from.}
 }
 \value{
-data as vosonSML reddit collection dataframe
+A vosonSML reddit dataframe.
 }
 \description{
-Wrapper for collecting reddit thread comments using the vosonSML package
+This function is a wrapper for collecting reddit thread comments using \code{vosonSML::Collect}.
 }
 \keyword{internal}

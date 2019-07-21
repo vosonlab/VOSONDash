@@ -7,7 +7,7 @@
 
 red_rv <- reactiveValues(
   reddit_data = NULL,      # dataframe returned by vosonSML collection
-  reddit_graphml = NULL,   # graphml object returned from collection
+  reddit_graphml = NULL,   # igraph graph object returned from collection
   reddit_wt_graphml = NULL,
   
   data_cols = NULL  
@@ -61,7 +61,7 @@ observeEvent(input$reddit_collect_button, {
       
       incProgress(0.5, detail = "Creating network")
       
-      # if reddit data collected create graphml object
+      # if reddit data collected create igraph graph object
       if (!is.null(red_rv$reddit_data)) {
         tryCatch({
           netList <- createRedditActorNetwork(red_rv$reddit_data)

@@ -1,10 +1,37 @@
-#' Create a auth token with twitter app dev keys
+#' @title Get the vosonSML package version
 #' 
-#' @param app_name twitter app name
-#' @param keys named list of app API keys
-#' @return cred
+#' @description This function returns the version of the loaded vosonSML package. 
+#' 
+#' @param compare_ver Character string. Version string to compare.
+#' 
+#' @return Package version as character string or if package later than compare version as logical.
+#' 
 #' @keywords internal
+#' @export
+getVosonSMLVersion <- function(compare_ver) {
+  if ("vosonSML" %in% loadedNamespaces()) {
+    if (missing(compare_ver)) {
+      return(utils::packageVersion("vosonSML"))
+    } else {
+      return(utils::packageVersion("vosonSML") >= compare_ver)
+    }
+  }
+  
+  NULL
+}
+
+#' @title Create an auth token with twitter app dev keys
 #' 
+#' @description This function is a wrapper for \code{vosonSML::Authenticate} with twitter app developer keys. The 
+#' properties \code{type} and \code{created} are added to the credential object to assist with \pkg{VOSONDash} token 
+#' management. 
+#' 
+#' @param app_name Character string. Twitter app name.
+#' @param keys List. Named list of twitter app API keys.
+#'
+#' @return A vosonSML twitter credential object.
+#' 
+#' @keywords internal
 #' @export
 createTwitterDevToken <- function(app_name, keys) {
   check_keys <- sapply(keys, isNullOrEmpty)
@@ -27,13 +54,18 @@ createTwitterDevToken <- function(app_name, keys) {
   cred
 }
 
-#' Create a auth token with twitter app consumer keys and interactive web authorization
+#' @title Create a auth token with twitter app consumer keys 
 #' 
-#' @param app_name twitter app name
-#' @param keys named list of app API keys
-#' @return cred
+#' @description This function creates a \code{vosonSML::Authenticate} credential object with twitter app consumer keys 
+#' and interactive web authorization. \code{rtweet::create_token} is used to create the access token and the properties 
+#' \code{type} and \code{created} are added to the credential object to assist with \pkg{VOSONDash} token management. 
+#' 
+#' @param app_name Character string. Twitter app name.
+#' @param keys List. Named list of twitter app API keys.
+#'
+#' @return A \pkg{vosonSML} twitter credential object.
+#' 
 #' @keywords internal
-#' 
 #' @export
 createTwitterWebToken <- function(app_name, keys) {
   check_keys <- sapply(keys, isNullOrEmpty)
@@ -57,42 +89,48 @@ createTwitterWebToken <- function(app_name, keys) {
   cred
 }
 
-#' Create voson dash twitter auth token id
+#' @title Create a twitter auth token id
 #' 
-#' @param token twitter auth token
-#' @return token_id as character string 
+#' @description This function uses properties of the twitter credential object to create a unique token id.
+#' 
+#' @param cred \pkg{vosonSML} twitter credential object.
+#' 
+#' @return A token id as character string. 
+#' 
 #' @keywords internal
-#'
 #' @export
-createTokenId <- function(token) {
-  token_id <- paste0(token$created, " ", token$auth$app$appname, " (", token$type ,")")
+createTokenId <- function(cred) {
+  token_id <- paste0(cred$created, " ", cred$auth$app$appname, " (", cred$type ,")")
 }
 
-#' Wrapper for collecting tweets using the vosonSML package
+#' @title Collect twitter data
 #' 
-#' @param token twitter auth token
-#' @param search_term twitter search term as character string
-#' @param search_type search type as character string - mixed, recent, popular
-#' @param tweet_count number of tweets to collect
-#' @param include_retweets logical whether to include retweets in the results
-#' @param retry_on_rate_limit logical whether to wait and retry when the twitter api rate limit is hit
-#' @param language language code of tweets to collect as two character ISO 639-1 code
-#' @param date_until date to collect tweets to as character string YYYY-MM-DD
-#' @param since_id numeric id get results with an id more recent than this id
-#' @param max_id numeric id get results with an id older than this id
-#' @return tweets as vosonSML Collect dataframe
+#' @description This function is a wrapper for collecting tweets using \code{vosonSML::Collect}.
+#' 
+#' @param cred \pkg{vosonSML} twitter credential object.
+#' @param search_term Character string. Twitter search term.
+#' @param search_type Character string. Search type \code{"mixed"}, \code{"recent"} or \code{"popular"}.
+#' @param tweet_count Numeric. Number of tweets to collect.
+#' @param include_retweets Logical. Include retweets in the results.
+#' @param retry_on_rate_limit Logical. Wait and retry when the twitter api rate limit is reached.
+#' @param language Character string. Language code of tweets to collect as two character ISO 639-1 code.
+#' @param date_until Character string. Date to collect tweets to in format \code{"YYYY-MM-DD"}.
+#' @param since_id Numeric. Collect tweets with a tweet id more recent than \code{since_id}.
+#' @param max_id Numeric. Collect tweets with a tweet id older than \code{max_id}.
+#' 
+#' @return A vosonSML twitter dataframe.
+#' 
 #' @keywords internal
-#' 
 #' @export
-collectTwitterData <- function(token, search_term, search_type, tweet_count, 
+collectTwitterData <- function(cred, search_term, search_type, tweet_count, 
                                include_retweets, retry_on_rate_limit,
                                language, date_until, since_id, max_id) {
   
-  if (is.null(token) || isNullOrEmpty(search_term)) { return(NULL) }
+  if (is.null(cred) || isNullOrEmpty(search_term)) { return(NULL) }
   
   collect_params <- list()
   
-  collect_params[['credential']] <- token
+  collect_params[['credential']] <- cred
   collect_params['searchTerm'] <- search_term
   
   if (!isNullOrEmpty(search_type)) {
@@ -135,13 +173,15 @@ collectTwitterData <- function(token, search_term, search_type, tweet_count,
   data <- do.call(vosonSML::Collect, collect_params)
 }
 
-#' Create twitter actor networks
+#' @title Create twitter actor networks
 #' 
-#' @param data vosonSML twitter Collect dataframe
+#' @description This function is a wrapper for creating a twitter actor networks using \code{vosonSML::Create}.
+#' 
+#' @param data \pkg{vosonSML} twitter dataframe.
 #'
-#' @return named list of twitter actor networks
-#' @keywords internal
+#' @return Twitter actor networks as named list.
 #' 
+#' @keywords internal
 #' @export
 createTwitterActorNetwork <- function(data) {
   network <- data %>% vosonSML::Create("actor", verbose = TRUE)
@@ -154,15 +194,17 @@ createTwitterActorNetwork <- function(data) {
   list(network = g, networkWT = g_wt)
 }
 
-#' Wrapper for collecting youtube video comments using the vosonSML package
+#' @title Collect youtube data
 #' 
-#' @param youtube_api_key youtube api key as character string
-#' @param youtube_video_id_list vector of youtube video ids to collect comments from
-#' @param youtube_max_comments maximum number of comments to collect
+#' @description This function is a wrapper for collecting youtube video comments using \code{vosonSML::Collect}. 
 #' 
-#' @return data as vosonSML youtube collection dataframe
+#' @param youtube_api_key Character string. Youtube api key.
+#' @param youtube_video_id_list Character vector. Youtube video ids to collect comments from.
+#' @param youtube_max_comments Numeric. Maximum number of comments to collect.
+#' 
+#' @return A vosonSML youtube dataframe.
+#' 
 #' @keywords internal
-#' 
 #' @export
 collectYoutubeData <- function(youtube_api_key, youtube_video_id_list, youtube_max_comments) {
   
@@ -187,13 +229,15 @@ collectYoutubeData <- function(youtube_api_key, youtube_video_id_list, youtube_m
   data <- do.call(vosonSML::Collect, collect_params)
 }
 
-#' Create youtube actor networks
+#' @title Create youtube actor networks
 #' 
-#' @param data as vosonSML youtube collection dataframe
+#' @description This function is a wrapper for creating a youtube actor networks using \code{vosonSML::Create}.
+#' 
+#' @param data \pkg{vosonSML} youtube dataframe.
 #'
-#' @return named list of youtube actor networks
-#' @keywords internal
+#' @return Youtube actor networks as named list.
 #' 
+#' @keywords internal
 #' @export
 createYoutubeNetwork <- function(data) {
   network <- data %>% Create('actor', writeToFile = FALSE)
@@ -206,13 +250,15 @@ createYoutubeNetwork <- function(data) {
   list(network = g, networkWT = g_wt)
 }
 
-#' Wrapper for collecting reddit thread comments using the vosonSML package
+#' @title Collect reddit data
 #' 
-#' @param reddit_url_list vector of thread urls to collect comments from
+#' @description This function is a wrapper for collecting reddit thread comments using \code{vosonSML::Collect}. 
+#' 
+#' @param reddit_url_list Character vector. Thread urls to collect comments from.
 #'
-#' @return data as vosonSML reddit collection dataframe
-#' @keywords internal
+#' @return A vosonSML reddit dataframe.
 #' 
+#' @keywords internal
 #' @export
 collectRedditData <- function(reddit_url_list) {
   data <- NULL
@@ -225,13 +271,15 @@ collectRedditData <- function(reddit_url_list) {
   data
 }
 
-#' Create reddit actor networks
+#' @title Create reddit actor networks
 #' 
-#' @param data as vosonSML reddit collection dataframe
+#' @description This function is a wrapper for creating a reddit actor networks using \code{vosonSML::Create}.
+#' 
+#' @param data \pkg{vosonSML} reddit dataframe.
 #'
-#' @return list of reddit actor networks as graphml objects
-#' @keywords internal
+#' @return Reddit actor networks as named list.
 #' 
+#' @keywords internal
 #' @export
 createRedditActorNetwork <- function(data) {
   network <- data %>% vosonSML::Create("actor", writeToFile = FALSE)
@@ -239,22 +287,3 @@ createRedditActorNetwork <- function(data) {
   
   list(network = network$graph, networkWT = networkWT$graph)
 }
-
-#' Loaded vosonSML package version
-#' 
-#' @return package version as character string
-#' @keywords internal
-#' 
-#' @export
-getVosonSMLVersion <- function(compare_ver) {
-  if ("vosonSML" %in% loadedNamespaces()) {
-    if (missing(compare_ver)) {
-      return(utils::packageVersion("vosonSML"))
-    } else {
-      return(utils::packageVersion("vosonSML") >= compare_ver)
-    }
-  }
-  
-  NULL
-}
-

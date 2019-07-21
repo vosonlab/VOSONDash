@@ -2,16 +2,16 @@
 % Please edit documentation in R/networkGraphs.R
 \name{addAdditionalMeasures}
 \alias{addAdditionalMeasures}
-\title{Add degree, in-degree, out-degree, betweenness and closeness measures to graph as vertex attributes}
+\title{Add additional measures to graph as vertex attributes}
 \usage{
 addAdditionalMeasures(g)
 }
 \arguments{
-\item{g}{as graphml object}
+\item{g}{\pkg{igraph} \code{\link[igraph]{graph}} object.}
 }
 \value{
-g as graphml object
+An igraph graph object.
 }
 \description{
-Add degree, in-degree, out-degree, betweenness and closeness measures to graph as vertex attributes
+Adds degree, in-degree, out-degree, betweenness and closeness measures to graph as vertex attributes.
 }

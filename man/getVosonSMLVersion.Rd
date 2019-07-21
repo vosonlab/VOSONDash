@@ -2,14 +2,17 @@
 % Please edit documentation in R/vosonSML.R
 \name{getVosonSMLVersion}
 \alias{getVosonSMLVersion}
-\title{Loaded vosonSML package version}
+\title{Get the vosonSML package version}
 \usage{
 getVosonSMLVersion(compare_ver)
 }
+\arguments{
+\item{compare_ver}{Character string. Version string to compare.}
+}
 \value{
-package version as character string
+Package version as character string or if package later than compare version as logical.
 }
 \description{
-Loaded vosonSML package version
+This function returns the version of the loaded vosonSML package.
 }
 \keyword{internal}

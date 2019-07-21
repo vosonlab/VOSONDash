@@ -7,12 +7,12 @@
 createRedditActorNetwork(data)
 }
 \arguments{
-\item{data}{as vosonSML reddit collection dataframe}
+\item{data}{\pkg{vosonSML} reddit dataframe.}
 }
 \value{
-list of reddit actor networks as graphml objects
+Reddit actor networks as named list.
 }
 \description{
-Create reddit actor networks
+This function is a wrapper for creating a reddit actor networks using \code{vosonSML::Create}.
 }
 \keyword{internal}

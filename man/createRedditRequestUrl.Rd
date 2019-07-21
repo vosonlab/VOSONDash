@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{createRedditRequestUrl}
 \alias{createRedditRequestUrl}
-\title{Return reddit url appropriate for reddit API comments request}
+\title{Create a reddit url to request thread comments}
 \usage{
 createRedditRequestUrl(url)
 }
 \arguments{
-\item{url}{reddit thread url}
+\item{url}{Character string. Reddit thread url.}
 }
 \value{
-url as character string
+Reddit API url as character string.
 }
 \description{
-Return reddit url appropriate for reddit API comments request
+This function creates a url from specified thread url that can be used to request the thread comments.
 }
 \keyword{internal}

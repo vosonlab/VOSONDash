@@ -7,9 +7,6 @@
     <loc>http://vosonlab.github.io/VOSONDash/reference/addAdditionalMeasures.html</loc>
   </url>
   <url>
-    <loc>http://vosonlab.github.io/VOSONDash/reference/addLine.html</loc>
-  </url>
-  <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/applyCategoricalFilters.html</loc>
   </url>
   <url>
@@ -19,7 +16,7 @@
     <loc>http://vosonlab.github.io/VOSONDash/reference/applyGraphFilters.html</loc>
   </url>
   <url>
-    <loc>http://vosonlab.github.io/VOSONDash/reference/applyPruneFilterX.html</loc>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/applyPruneFilter.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/collectRedditData.html</loc>

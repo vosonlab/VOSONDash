@@ -34,7 +34,8 @@
   
 <meta property="og:title" content="Filter out graph vertices not in component size range — applyComponentFilter" />
 
-<meta property="og:description" content="Filter out graph vertices not in component size range" />
+<meta property="og:description" content="This function removes any graph vertices that are in components that fall outside of the specified 
+component size range." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -119,32 +120,34 @@
 
     <div class="ref-description">
     
-    <p>Filter out graph vertices not in component size range</p>
+    <p>This function removes any graph vertices that are in components that fall outside of the specified 
+component size range.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>applyComponentFilter</span>(<span class='no'>g</span>, <span class='no'>component_type</span>, <span class='no'>component_range</span>)</pre>
+    <pre class="usage"><span class='fu'>applyComponentFilter</span>(<span class='no'>g</span>, <span class='kw'>component_type</span> <span class='kw'>=</span> <span class='st'>"strong"</span>, <span class='no'>component_range</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p>as graphml object</p></td>
+      <td><p><span class="pkg">igraph</span> <code><a href='https://www.rdocumentation.org/packages/igraph/topics/make_graph'>graph</a></code> object.</p></td>
     </tr>
     <tr>
       <th>component_type</th>
-      <td><p>as character string</p></td>
+      <td><p>Character string. Use strongly or weakly connected components by specifying <code>"strong"</code> or 
+<code>"weak"</code>. Ignored for undirected graphs. Default is <code>strong</code>.</p></td>
     </tr>
     <tr>
       <th>component_range</th>
-      <td><p>min and max values of range as vector</p></td>
+      <td><p>Numeric vector. Min and max values or size range of component.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>g as graphml object</p>
+    <p>An igraph graph object.</p>
     
 
   </div>

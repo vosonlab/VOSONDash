@@ -7,12 +7,12 @@
 createTwitterActorNetwork(data)
 }
 \arguments{
-\item{data}{vosonSML twitter Collect dataframe}
+\item{data}{\pkg{vosonSML} twitter dataframe.}
 }
 \value{
-named list of twitter actor networks
+Twitter actor networks as named list.
 }
 \description{
-Create twitter actor networks
+This function is a wrapper for creating a twitter actor networks using \code{vosonSML::Create}.
 }
 \keyword{internal}

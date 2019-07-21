@@ -2,16 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{getRedditUrlThreadId}
 \alias{getRedditUrlThreadId}
-\title{Extract thread id from a reddit thread url}
+\title{Get a reddit thread id from url}
 \usage{
 getRedditUrlThreadId(url)
 }
 \arguments{
-\item{url}{reddit thread url}
+\item{url}{Character string. Reddit thread url.}
 }
 \value{
-thread_id as character string
+Reddit thread id as character string.
 }
 \description{
-Extract thread id from a reddit thread url
+This function extracts the thread id from a reddit thread url.
 }

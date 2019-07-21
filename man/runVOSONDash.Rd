@@ -10,5 +10,5 @@ runVOSONDash()
 None
 }
 \description{
-Run the VOSON Dashboard Shiny Application
+This function launches the \pkg{VOSONDash} Shiny app in the default web browser.
 }

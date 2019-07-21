@@ -2,14 +2,14 @@
 % Please edit documentation in R/utils.R
 \name{getVOSONDashVer}
 \alias{getVOSONDashVer}
-\title{Loaded VOSONDash package version}
+\title{Get the VOSONDash package version}
 \usage{
 getVOSONDashVer()
 }
 \value{
-package version as character string
+Package version character string.
 }
 \description{
-Loaded VOSONDash package version
+This function returns the version of the loaded VOSONDash package.
 }
 \keyword{internal}

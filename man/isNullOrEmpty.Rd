@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{isNullOrEmpty}
 \alias{isNullOrEmpty}
-\title{Check a shiny app input value for a range of empty conditions}
+\title{Check a value for a range of empty conditions}
 \usage{
 isNullOrEmpty(x)
 }
 \arguments{
-\item{x}{shiny input value}
+\item{x}{Input value.}
 }
 \value{
-result as logical
+Result as logical.
 }
 \description{
-Check a shiny app input value for a range of empty conditions
+This function checks a value is not NULL, NA or an empty string.
 }
 \keyword{internal}

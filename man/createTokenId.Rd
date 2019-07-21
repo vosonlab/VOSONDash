@@ -2,17 +2,17 @@
 % Please edit documentation in R/vosonSML.R
 \name{createTokenId}
 \alias{createTokenId}
-\title{Create voson dash twitter auth token id}
+\title{Create a twitter auth token id}
 \usage{
-createTokenId(token)
+createTokenId(cred)
 }
 \arguments{
-\item{token}{twitter auth token}
+\item{cred}{\pkg{vosonSML} twitter credential object.}
 }
 \value{
-token_id as character string
+A token id as character string.
 }
 \description{
-Create voson dash twitter auth token id
+This function uses properties of the twitter credential object to create a unique token id.
 }
 \keyword{internal}

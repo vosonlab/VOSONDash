@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check if graph object has text attributes — hasVosonTextData • VOSONDash</title>
+<title>Prune vertices from graph by vertex id — applyPruneFilter • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Check if graph object has text attributes — hasVosonTextData" />
+<meta property="og:title" content="Prune vertices from graph by vertex id — applyPruneFilter" />
 
-<meta property="og:description" content="This function checks if a graph has either vertex or edge text attributes." />
+<meta property="og:description" content="This function removes a list of vertices from the graph object by vertex id value." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,36 +112,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Check if graph object has text attributes</h1>
+    <h1>Prune vertices from graph by vertex id</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/networkGraphs.R'><code>R/networkGraphs.R</code></a></small>
-    <div class="hidden name"><code>hasVosonTextData.Rd</code></div>
+    <div class="hidden name"><code>applyPruneFilter.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function checks if a graph has either vertex or edge text attributes.</p>
+    <p>This function removes a list of vertices from the graph object by vertex id value.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>hasVosonTextData</span>(<span class='no'>g</span>)</pre>
+    <pre class="usage"><span class='fu'>applyPruneFilter</span>(<span class='no'>g</span>, <span class='no'>selected_prune_verts</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p><span class="pkg">igraph</span> graph object.</p></td>
+      <td><p><span class="pkg">igraph</span> <code><a href='https://www.rdocumentation.org/packages/igraph/topics/make_graph'>graph</a></code> object.</p></td>
+    </tr>
+    <tr>
+      <th>selected_prune_verts</th>
+      <td><p>List. Selected vertex ids to remove.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Result as logical.</p>
-    
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>Uses the <code>VOSON</code> vertex and edge text attribute prefix <code>"vosonTxt_"</code> to determine if attributes are
-text attributes.</p>
+    <p>An igraph graph object.</p>
     
 
   </div>
@@ -151,8 +150,6 @@ text attributes.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#note">Note</a></li>
           </ul>
 
   </div>

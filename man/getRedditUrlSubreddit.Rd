@@ -2,16 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{getRedditUrlSubreddit}
 \alias{getRedditUrlSubreddit}
-\title{Extract subreddit name from a reddit thread url}
+\title{Get subreddit name from url}
 \usage{
 getRedditUrlSubreddit(url)
 }
 \arguments{
-\item{url}{reddit thread url}
+\item{url}{Character string. Reddit thread url.}
 }
 \value{
-subreddit as character string
+Subreddit name as character string.
 }
 \description{
-Extract subreddit name from a reddit thread url
+This function extracts the subreddit name from a reddit thread url.
 }

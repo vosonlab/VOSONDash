@@ -2,14 +2,14 @@
 % Please edit documentation in R/utils.R
 \name{isMac}
 \alias{isMac}
-\title{Check if macOS version of R}
+\title{Check if macOS}
 \usage{
 isMac()
 }
 \value{
-result as boolean
+Result as logical.
 }
 \description{
-Check if macOS version of R
+This function checks if running the macOS version of R.
 }
 \keyword{internal}

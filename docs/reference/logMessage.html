@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simple logging queue with count FIFO — logMessage • VOSONDash</title>
+<title>Add message to log queue — logMessage • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Simple logging queue with count FIFO — logMessage" />
+<meta property="og:title" content="Add message to log queue — logMessage" />
 
-<meta property="og:description" content="Simple logging queue with count FIFO" />
+<meta property="og:description" content="This function adds a text message to a queue or list with a count limiting how many messages are 
+stored. The queue stores count messages based on first in first out." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,14 +113,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simple logging queue with count FIFO</h1>
+    <h1>Add message to log queue</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>logMessage.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Simple logging queue with count FIFO</p>
+    <p>This function adds a text message to a queue or list with a count limiting how many messages are 
+stored. The queue stores count messages based on first in first out.</p>
     
     </div>
 
@@ -130,25 +132,25 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>messages</th>
-      <td><p>vector of text messages</p></td>
+      <td><p>Character vector. Lines or text log messages.</p></td>
     </tr>
     <tr>
       <th>add_message</th>
-      <td><p>text message to add to the messages queue</p></td>
+      <td><p>Character string. Text log message to add to messages</p></td>
     </tr>
     <tr>
       <th>txt</th>
-      <td><p>return lines as character string</p></td>
+      <td><p>Logical. Return messages as single character string delimited by newline characters.</p></td>
     </tr>
     <tr>
       <th>count</th>
-      <td><p>return queue of count messages and discard the rest</p></td>
+      <td><p>Numeric. Return queue of count messages and discard the rest.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>messages as vector or character string</p>
+    <p>Messages as vector or character string.</p>
     
 
   </div>

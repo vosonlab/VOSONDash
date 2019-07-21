@@ -34,8 +34,7 @@
   
 <meta property="og:title" content="Create a mixing matrix — mixmat" />
 
-<meta property="og:description" content="mixing matrix original function written by Gary Weissman
-see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=351" />
+<meta property="og:description" content="Function creates a mixing matrix by graph vertex attribute." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,33 +119,36 @@ see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=
 
     <div class="ref-description">
     
-    <p>mixing matrix original function written by Gary Weissman
-see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=351</p>
+    <p>Function creates a mixing matrix by graph vertex attribute.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mixmat</span>(<span class='no'>g</span>, <span class='no'>attrib</span>, <span class='kw'>use.density</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>mixmat</span>(<span class='no'>g</span>, <span class='no'>attrib</span>, <span class='kw'>use_density</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p>graph as graphml object</p></td>
+      <td><p><span class="pkg">igraph</span> graph object.</p></td>
     </tr>
     <tr>
       <th>attrib</th>
-      <td><p>vertex attribute</p></td>
+      <td><p>Character string. Vertex attribute or category.</p></td>
     </tr>
     <tr>
-      <th>use.density</th>
-      <td><p>use edge density</p></td>
+      <th>use_density</th>
+      <td><p>Logical. Use edge density. Default is <code>TRUE</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>mixing matrix</p>
+    <p>A mixing matrix.</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>Mixing matrix original function written by Gary Weissman. See: https://gist.github.com/gweissman/2402741.</p>
     
 
   </div>
@@ -156,6 +158,8 @@ see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#note">Note</a></li>
           </ul>
 
   </div>

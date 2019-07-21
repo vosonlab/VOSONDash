@@ -34,7 +34,8 @@
   
 <meta property="og:title" content="Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops — applyGraphFilters" />
 
-<meta property="og:description" content="Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops" />
+<meta property="og:description" content="This function removes isolate vertices, multiple edges between vertices and or vertex edge loops from a 
+graph." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -119,36 +120,42 @@
 
     <div class="ref-description">
     
-    <p>Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops</p>
+    <p>This function removes isolate vertices, multiple edges between vertices and or vertex edge loops from a 
+graph.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>applyGraphFilters</span>(<span class='no'>g</span>, <span class='no'>isolates</span>, <span class='no'>multi_edge</span>, <span class='no'>loops_edge</span>)</pre>
+    <pre class="usage"><span class='fu'>applyGraphFilters</span>(<span class='no'>g</span>, <span class='kw'>isolates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>multi_edge</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>loops_edge</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p>as graphml object</p></td>
+      <td><p><span class="pkg">igraph</span> <code><a href='https://www.rdocumentation.org/packages/igraph/topics/make_graph'>graph</a></code> object.</p></td>
     </tr>
     <tr>
       <th>isolates</th>
-      <td><p>include isolate vertices in graph as logical</p></td>
+      <td><p>Logical. Include isolate vertices in graph. Default is <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>multi_edge</th>
-      <td><p>include multiple edges between vertices in graph as logical</p></td>
+      <td><p>Logical. Include multiple edges between vertices in graph. Default is <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>loops_edge</th>
-      <td><p>include vertex edge loops in graph as logical</p></td>
+      <td><p>Logical. Include vertex edge loops in graph. Default is <code>TRUE</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>g as graphml object</p>
+    <p>An igraph graph object.</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>Removing multiple edges or edge loops from a graph will simplify it and remove other edge attributes.</p>
     
 
   </div>
@@ -158,6 +165,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#note">Note</a></li>
           </ul>
 
   </div>

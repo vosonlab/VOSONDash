@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a list of vertex attribute names that match a category attribute prefix format — getVertexCategories • VOSONDash</title>
+<title>Get a list of vertex category attribute names — getVertexCategories • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Get a list of vertex attribute names that match a category attribute prefix format — getVertexCategories" />
+<meta property="og:title" content="Get a list of vertex category attribute names — getVertexCategories" />
 
-<meta property="og:description" content="Get a list of vertex attribute names that match a category attribute prefix format" />
+<meta property="og:description" content="This function returns a list of graph vertex attribute names that match a category attribute prefix 
+format." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,14 +113,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a list of vertex attribute names that match a category attribute prefix format</h1>
+    <h1>Get a list of vertex category attribute names</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/networkGraphs.R'><code>R/networkGraphs.R</code></a></small>
     <div class="hidden name"><code>getVertexCategories.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Get a list of vertex attribute names that match a category attribute prefix format</p>
+    <p>This function returns a list of graph vertex attribute names that match a category attribute prefix 
+format.</p>
     
     </div>
 
@@ -130,17 +132,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p>as graphml object</p></td>
+      <td><p><span class="pkg">igraph</span> graph object.</p></td>
     </tr>
     <tr>
       <th>cat_prefix</th>
-      <td><p>character string of category attribute prefix format to match</p></td>
+      <td><p>Character string. Category attribute prefix format to match. Default is <code>"vosonCA_"</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>graph_cats</p>
+    <p>A list of vertex category attributes.</p>
     
 
   </div>

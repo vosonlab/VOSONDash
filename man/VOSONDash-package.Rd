@@ -6,8 +6,12 @@
 \alias{VOSONDash}
 \title{Interface for collection and interactive analysis of social networks}
 \description{
-Description field.
+VOSONDash provides functions and an interface in the form of an interactive R 
+Shiny web application for the visualisation and analysis of network data. The app has 
+sections for visualising and manipulating network graphs, performing text analysis, and 
+displaying network metrics. It also has an interface for the collection of social network 
+data using the vosonSML R package.
 }
 \author{
-Robert Ackland and Bryan Gertzel
+Bryan Gertzel and Robert Ackland.
 }

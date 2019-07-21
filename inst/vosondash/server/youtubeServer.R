@@ -81,7 +81,7 @@ observeEvent(input$youtube_collect_button, {
       
       incProgress(0.5, detail = "Creating network")
       
-      # if youtube data collected create graphml object
+      # if youtube data collected create igraph graph object
       if (!is.null(yt_rv$yt_data)) {
         tryCatch({
           # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
