@@ -9,7 +9,7 @@ tabItem(tabName = "twitter_collection_tab",
                                 ),
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                                 # twitter search term input
-                                textAreaInput("twitter_search_term_input", label = "Search Terms", value = "",
+                                textAreaInput("twitter_search_term_input", label = "Search Query", value = "",
                                               width = NULL, height = NULL,
                                               cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
                                 

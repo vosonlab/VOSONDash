@@ -26,37 +26,18 @@ visNetworkData <- reactive({
   node_degree_type <- input$graph_node_size_degree_select
   node_size_multiplier <- input$graph_node_size_slider  
   
-  base_vertex_size <- 8
-  
-  norm_vsize <- function(x) {
-    (x - min(x)) / (max(x) - min(x)) + 0.25
-  }
-  
-  if (node_degree_type == "None") {
-    if (node_size_multiplier > 1) {
-      verts$size <- base_vertex_size + (node_size_multiplier / 4)
-    } else {
-      verts$size <- base_vertex_size
-    }
-  } else {
-    # todo: needs to calculate average values to better adjust scale
-    # verts$size <- switch(node_degree_type,
-    #                      "Degree" = (verts$degree / 4 * node_size_multiplier) + base_vertex_size,
-    #                      "Indegree" = (verts$indegree / 2 * node_size_multiplier) + base_vertex_size,
-    #                      "Outdegree" = (verts$outdegree / 2 * node_size_multiplier) + base_vertex_size,
-    #                      "Betweenness" = (verts$betweenness / 100 * node_size_multiplier) + base_vertex_size,
-    #                      "Closeness" = (verts$closeness * 100 * node_size_multiplier) + base_vertex_size
-    # )
-    
-    verts$size <- switch(node_degree_type,
-                   "Degree" = (norm_vsize(verts$degree) * 10) + node_size_multiplier,
-                   "Indegree" = (norm_vsize(verts$indegree) * 10) + node_size_multiplier,
-                   "Outdegree" = (norm_vsize(verts$outdegree) * 10) + node_size_multiplier,
-                   "Betweenness" = (norm_vsize(verts$betweenness) * 10) + node_size_multiplier,
-                   "Closeness" = (norm_vsize(verts$closeness) * 10) + node_size_multiplier
-    )    
-  }
-  
+  verts$font.size <- 24
+  base_vertex_size <- 30
+
+  norm_multi <- 5
+  verts$size <- switch(node_degree_type,
+                       "Degree" = base_vertex_size + (((norm_vsize(verts$degree)+0.1)*norm_multi) * node_size_multiplier),
+                       "Indegree" = base_vertex_size + (((norm_vsize(verts$indegree)+0.1)*norm_multi) * node_size_multiplier),
+                       "Outdegree" = base_vertex_size + (((norm_vsize(verts$outdegree)+0.1)*norm_multi) * node_size_multiplier),
+                       "Betweenness" = base_vertex_size + (((norm_vsize(verts$betweenness)+0.1)*norm_multi) * node_size_multiplier),
+                       "Closeness" = base_vertex_size + (((norm_vsize(verts$closeness)+0.1)*norm_multi) * node_size_multiplier),
+                       "None" = (base_vertex_size+0.1) * node_size_multiplier)
+
   # category colors
   
   isolate({

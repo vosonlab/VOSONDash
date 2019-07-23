@@ -33,7 +33,7 @@ tabItem(tabName = "network_graphs_tab",
                                                               selectize = TRUE, selected = "Auto"))
                                   ),
                                   column(width = 6,
-                                         disabled(sliderInput("graph_spread_slider", "Spread", min = 0.5, max = 2.5, step = 0.1, value = c(1), ticks = FALSE))
+                                         disabled(sliderInput("graph_spread_slider", "Spread", min = 0.25, max = 2.5, step = 0.1, value = c(1), ticks = FALSE))
                                   )
                                 ),
                                 
@@ -44,7 +44,7 @@ tabItem(tabName = "network_graphs_tab",
                                                               multiple = FALSE, selectize = TRUE))
                                   ),
                                   column(width = 6,
-                                         disabled(sliderInput("graph_node_size_slider", label = "Multiplier", min = 0.1, max = 10, step = 0.1, value = c(1), ticks = FALSE, animate = FALSE))
+                                         disabled(sliderInput("graph_node_size_slider", label = "Multiplier", min = 0.1, max = 15, step = 0.1, value = c(1), ticks = FALSE, animate = FALSE))
                                   )
                                 ),
                                 

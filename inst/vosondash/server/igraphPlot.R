@@ -79,34 +79,21 @@ standardPlotData <- reactive({
   # plot_parameters[['edge.width']] <- E(g)$weight
   
   base_vertex_size <- 4
+  base_label_size <- 0.8
+  label_dist <- 0.6
+  label_degree <- -(pi)/2  
   
-  norm_vsize <- function(x) {
-    (x - min(x)) / (max(x) - min(x)) + 0.25
-  }
-  
-  if (node_degree_type == "None") {
-    if (node_size_multiplier > 1) {
-      plot_parameters['vertex.size'] <- base_vertex_size + (node_size_multiplier / 4)
-    } else {
-      plot_parameters['vertex.size'] <- base_vertex_size
-    }
-  } else {
-    # todo: needs to calculate average values to better adjust scale
-    # plot_parameters[['vertex.size']] <- switch(node_degree_type,
-    #                                            "Degree" = (V(g)$Degree / 4 * node_size_multiplier) + base_vertex_size,
-    #                                            "Indegree" = (V(g)$Indegree / 2 * node_size_multiplier) + base_vertex_size,
-    #                                            "Outdegree" = (V(g)$Outdegree / 2 * node_size_multiplier) + base_vertex_size,
-    #                                            "Betweenness" = (V(g)$Betweenness / 100 * node_size_multiplier) + base_vertex_size,
-    #                                            "Closeness" = (V(g)$Closeness * 100 * node_size_multiplier) + base_vertex_size
-    # )
-    plot_parameters[['vertex.size']] <- switch(node_degree_type,
-                                               "Degree" = (norm_vsize(V(g)$Degree) * 10) + node_size_multiplier,
-                                               "Indegree" = (norm_vsize(V(g)$Indegree) * 10) + node_size_multiplier,
-                                               "Outdegree" = (norm_vsize(V(g)$Outdegree) * 10) + node_size_multiplier,
-                                               "Betweenness" = (norm_vsize(V(g)$Betweenness) * 10) + node_size_multiplier,
-                                               "Closeness" = (norm_vsize(V(g)$Closeness) * 10) + node_size_multiplier
-    )
-  }
+  # plot_parameters['vertex.size'] <- base_vertex_size
+
+  norm_multi <- 3
+  plot_parameters[['vertex.size']] <- switch(node_degree_type,
+                                             "Degree" = base_vertex_size + (((norm_vsize(V(g)$Degree)+0.1)*norm_multi) * node_size_multiplier),
+                                             "Indegree" = base_vertex_size + (((norm_vsize(V(g)$Indegree)+0.1)*norm_multi) * node_size_multiplier),
+                                             "Outdegree" = base_vertex_size + (((norm_vsize(V(g)$Outdegree)+0.1)*norm_multi) * node_size_multiplier),
+                                             "Betweenness" = base_vertex_size + (((norm_vsize(V(g)$Betweenness)+0.1)*norm_multi) * node_size_multiplier),
+                                             "Closeness" = base_vertex_size + (((norm_vsize(V(g)$Closeness)+0.1)*norm_multi) * node_size_multiplier),
+                                             "None" = (base_vertex_size+0.1) * node_size_multiplier
+  )
   
   # plot_parameters['vertex.shape'] <- "circle"
   # plot_parameters['vertex.frame.color'] <- "white"
@@ -121,8 +108,10 @@ standardPlotData <- reactive({
   # label_name <- FALSE
   # 
   # if (label_name == TRUE) {
-    plot_parameters['vertex.label.cex'] <- 0.9
-    plot_parameters['vertex.label.dist'] <- 1.1
+  
+    plot_parameters['vertex.label.cex'] <- base_label_size
+    plot_parameters['vertex.label.dist'] <- label_dist
+    plot_parameters['vertex.label.degree'] <- label_degree
     
     labels <- FALSE
     if (!(is.null(vertex_attr(g, "label")))) {
@@ -148,12 +137,12 @@ standardPlotData <- reactive({
                                                      gbl_plot_def_label_color)
   # } else {
     plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
-                                              "Degree" = (norm_vsize(V(g)$Degree)) + 0.5,
-                                              "Indegree" = (norm_vsize(V(g)$Indegree)) + 0.5,
-                                              "Outdegree" = (norm_vsize(V(g)$Outdegree)) + 0.5,
-                                              "Betweenness" = (norm_vsize(V(g)$Betweenness)) + 0.5,
-                                              "Closeness" = (norm_vsize(V(g)$Closeness)) + 0.5,
-                                              "None" = 0.9)
+                                              "Degree" = (norm_vsize(V(g)$Degree)) + base_label_size,
+                                              "Indegree" = (norm_vsize(V(g)$Indegree)) + base_label_size,
+                                              "Outdegree" = (norm_vsize(V(g)$Outdegree)) + base_label_size,
+                                              "Betweenness" = (norm_vsize(V(g)$Betweenness)) + base_label_size,
+                                              "Closeness" = (norm_vsize(V(g)$Closeness)) + base_label_size,
+                                              "None" = base_label_size)
   #   plot_parameters[['vertex.label']] <- V(g)$id
   # }
   

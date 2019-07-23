@@ -869,3 +869,14 @@ applyPruneFilterSrv <- function(g, selected_prune_verts) {
   
   g
 }
+
+# normalize continuous values for vertex size
+norm_vsize <- function(x) {
+  # all values the same
+  if (var(x) == 0) {
+    return(rep(0.5, length(x)))
+  }
+  min_x <- min(x)
+  diff_x <- max(x) - min_x
+  s <- sapply(x, function(y) { (y - min_x) / diff_x })
+}
