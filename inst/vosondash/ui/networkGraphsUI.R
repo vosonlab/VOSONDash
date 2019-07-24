@@ -62,7 +62,7 @@ tabItem(tabName = "network_graphs_tab",
                                 ),
                                 checkboxInput('expand_component_filter_check', div("Component Filter", style = "font-weight: bold;"), FALSE),
                                 conditionalPanel(condition = 'input.expand_component_filter_check',
-                                                 disabled(checkboxInput('reset_on_change_check', div("Recalculate for category change", style = "font-weight: normal;"), TRUE)),
+                                                 disabled(checkboxInput('reset_on_change_check', div("Recalculate on category change", style = "font-weight: normal;"), TRUE)),
                                                  fluidRow(
                                                    column(width = 4,
                                                           shinyjs::disabled(selectInput("graph_component_type_select", div("Type", style = "font-weight: normal;"), choices = c("Weak", "Strong"), selected = "Weak", multiple = FALSE))

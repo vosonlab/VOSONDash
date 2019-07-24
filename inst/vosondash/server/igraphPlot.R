@@ -11,10 +11,14 @@ standardPlotData <- reactive({
     categorical_attributes <- ng_rv$graph_cats
     selected_categorical_attribute <- input$graph_cat_select
   })
-  selected_rows <- input$dt_vertices_rows_selected
-  # graph_vertices <- as_data_frame(g, what = c("vertices"))
   
+  selected_rows <- input$dt_vertices_rows_selected
   selected_edge_rows <- input$dt_edges_rows_selected
+  chosen_layout <- input$graph_layout_select
+  graph_seed <- ng_rv$graph_seed
+  graph_spread <- input$graph_spread_slider  
+  node_degree_type <- input$graph_node_size_degree_select
+  node_size_multiplier <- input$graph_node_size_slider  
   
   if (is.null(V(g)$label)) {
     V(g)$label <- V(g)$name
@@ -30,12 +34,6 @@ standardPlotData <- reactive({
                    stringsAsFactors = FALSE)
   row.names(df) <- V(g)$id
   graph_vertices <- df
-  
-  node_degree_type <- input$graph_node_size_degree_select
-  node_size_multiplier <- input$graph_node_size_slider  
-  chosen_layout <- input$graph_layout_select
-  graph_seed <- ng_rv$graph_seed
-  graph_spread <- input$graph_spread_slider
   
   # set default vertex color
   V(g)$color <- as.character(gbl_plot_def_vertex_color)
@@ -61,42 +59,29 @@ standardPlotData <- reactive({
     selected_row_names <- row.names(graph_vertices)[c(selected_rows)]
   }
   
-  # if (length(selected_edge_rows) > 0) {
-  #   E(g)$color gbl_plot_sel_vertex_color
-  # }
-  
   plot_parameters <- list(g, vertex.frame.color = "gray", edge.arrow.size = 0.4)
   
   # set vertex color for vertices selected in graph data table
   plot_parameters[['vertex.color']] <- ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, V(g)$color)
   plot_parameters[['vertex.label.font']] <- ifelse(V(g)$id %in% selected_row_names, 2, 1)
-  # plot_parameters[['vertex.label.cex']] = ifelse(V(g)$id %in% selected_row_names, 4, 1)
-  
-  # E(g)$weight <- 1
-  # g <- simplify(g, edge.attr.comb = list(weight = "sum"), 
-  #               remove.loops = FALSE, # !input$graph_loops_edge_check,
-  #               remove.multiple = FALSE) # !input$graph_multi_edge_check)
-  # plot_parameters[['edge.width']] <- E(g)$weight
   
   base_vertex_size <- 4
   base_label_size <- 0.8
   label_dist <- 0.6
   label_degree <- -(pi)/2  
-  
-  # plot_parameters['vertex.size'] <- base_vertex_size
-
   norm_multi <- 3
+
+  igraph_vsize <- function(x) {
+    base_vertex_size + (((norm_values(x) + 0.1) * norm_multi) * node_size_multiplier)
+  }
+
   plot_parameters[['vertex.size']] <- switch(node_degree_type,
-                                             "Degree" = base_vertex_size + (((norm_vsize(V(g)$Degree)+0.1)*norm_multi) * node_size_multiplier),
-                                             "Indegree" = base_vertex_size + (((norm_vsize(V(g)$Indegree)+0.1)*norm_multi) * node_size_multiplier),
-                                             "Outdegree" = base_vertex_size + (((norm_vsize(V(g)$Outdegree)+0.1)*norm_multi) * node_size_multiplier),
-                                             "Betweenness" = base_vertex_size + (((norm_vsize(V(g)$Betweenness)+0.1)*norm_multi) * node_size_multiplier),
-                                             "Closeness" = base_vertex_size + (((norm_vsize(V(g)$Closeness)+0.1)*norm_multi) * node_size_multiplier),
-                                             "None" = (base_vertex_size+0.1) * node_size_multiplier
-  )
-  
-  # plot_parameters['vertex.shape'] <- "circle"
-  # plot_parameters['vertex.frame.color'] <- "white"
+                                             "Degree" = igraph_vsize(V(g)$Degree),
+                                             "Indegree" = igraph_vsize(V(g)$Indegree),
+                                             "Outdegree" = igraph_vsize(V(g)$Outdegree),
+                                             "Betweenness" = igraph_vsize(V(g)$Betweenness),
+                                             "Closeness" = igraph_vsize(V(g)$Closeness),
+                                             "None" = (base_vertex_size + 0.1) * node_size_multiplier)
   
   # avoid unknown font warnings on windows by setting TT font
   if (.Platform$OS.type != "unix") {
@@ -105,48 +90,43 @@ standardPlotData <- reactive({
   
   plot_parameters['vertex.label.family'] <- "Arial"
   
-  # label_name <- FALSE
-  # 
-  # if (label_name == TRUE) {
+  plot_parameters['vertex.label.cex'] <- base_label_size
+  plot_parameters['vertex.label.dist'] <- label_dist
+  plot_parameters['vertex.label.degree'] <- label_degree
   
-    plot_parameters['vertex.label.cex'] <- base_label_size
-    plot_parameters['vertex.label.dist'] <- label_dist
-    plot_parameters['vertex.label.degree'] <- label_degree
+  labels <- FALSE
+  if (!(is.null(vertex_attr(g, "label")))) {
+    labels <- TRUE
+  }
     
-    labels <- FALSE
-    if (!(is.null(vertex_attr(g, "label")))) {
-      labels <- TRUE
-    }
-    
-    if (input$graph_names_check == FALSE) {
-      if (labels) {
-        plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
-                                                    ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
-      } else {
-        plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
-                                                    ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
-      }
+  if (input$graph_names_check == FALSE) {
+    if (labels) {
+      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
+                                                  ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
     } else {
-      if (labels) {
-        plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$label) > 0, V(g)$label, "-")
-      } else {
-        plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
-      }
+      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
+                                                  ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
     }
-    plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, 
-                                                     gbl_plot_def_label_color)
-  # } else {
-    plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
-                                              "Degree" = (norm_vsize(V(g)$Degree)) + base_label_size,
-                                              "Indegree" = (norm_vsize(V(g)$Indegree)) + base_label_size,
-                                              "Outdegree" = (norm_vsize(V(g)$Outdegree)) + base_label_size,
-                                              "Betweenness" = (norm_vsize(V(g)$Betweenness)) + base_label_size,
-                                              "Closeness" = (norm_vsize(V(g)$Closeness)) + base_label_size,
-                                              "None" = base_label_size)
-  #   plot_parameters[['vertex.label']] <- V(g)$id
-  # }
+  } else {
+    if (labels) {
+      plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$label) > 0, V(g)$label, "-")
+    } else {
+      plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
+    }
+  }
   
-  # reproduce same graph with same seed
+  # plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, 
+  #                                                  gbl_plot_def_label_color)
+  plot_parameters[['vertex.label.color']] <- gbl_plot_def_label_color
+  
+  plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
+                                            "Degree" = (norm_values(V(g)$Degree)) + base_label_size,
+                                            "Indegree" = (norm_values(V(g)$Indegree)) + base_label_size,
+                                            "Outdegree" = (norm_values(V(g)$Outdegree)) + base_label_size,
+                                            "Betweenness" = (norm_values(V(g)$Betweenness)) + base_label_size,
+                                            "Closeness" = (norm_values(V(g)$Closeness)) + base_label_size,
+                                            "None" = base_label_size)
+  
   # must be set before graph layout
   if (!is.null(graph_seed)) {
     set.seed(graph_seed)
@@ -168,9 +148,7 @@ standardPlotData <- reactive({
   
   graph_layout <- norm_coords(graph_layout, ymin = -1, ymax = 1, xmin = -1, xmax = 1)
   plot_parameters['rescale'] <- FALSE
-  
-  # plot_parameters['asp'] <- 0
-  
+
   plot_parameters[['layout']] <- graph_layout * graph_spread
   
   par(mar = rep(0, 4))

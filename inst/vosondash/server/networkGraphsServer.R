@@ -23,7 +23,7 @@ ng_rv <- reactiveValues(   # ng_rvalues
 )
 
 # list of user selected graph vertices to prune
-prune_flag <- FALSE
+#prune_flag <- FALSE
 # pruning_rvalues <- reactiveValues(
 #   prune_verts = c()
 # )
@@ -58,8 +58,9 @@ observeEvent(check_demo_files, {
   tryCatch({
     demo_files_list <- list.files(path = system.file("extdata", "", package = "VOSONDash", mustWork = TRUE),
                                   pattern = "\\.graphml$")
-    
+      
     if (length(demo_files_list) > 0) {
+      demo_files_list <- lapply(demo_files_list, function(x) gsub("\\.graphml$", "", x, ignore.case = TRUE))
       updateSelectInput(session, "demo_data_select", label = NULL, choices = demo_files_list,
                         selected = NULL)
       shinyjs::enable("demo_data_select")
@@ -74,7 +75,7 @@ observeEvent(check_demo_files, {
 
 # load demo data button event
 observeEvent(input$demo_data_select_button, {
-  load_file <- system.file("extdata", input$demo_data_select, package = "VOSONDash")
+  load_file <- system.file("extdata", paste0(input$demo_data_select, ".graphml"), package = "VOSONDash")
 
   if (load_file != "") {
     file_desc <- "Description not found."
@@ -137,16 +138,18 @@ observeEvent(ng_rv$graph_cat_selected, {
   }
 })
 
-# check this is not redundant
+# check this is not redundant **
 # update component slider when graph component or category changed
+# added ng_rv$prune_verts
 observeEvent({ input$graph_component_type_select
                input$graph_sub_cats_select
+               ng_rv$prune_verts
                input$reset_on_change_check }, {
   
   g <- ng_rv$graph_data
-                 
+  g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
+  
   if (input$reset_on_change_check == TRUE) {
-    g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
     g <- applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
   }
 
@@ -204,8 +207,9 @@ observeEvent(input$graph_layout_select, {
 
 # add selected data table rows to pruned vertices list
 observeEvent(input$prune_selected_rows_button, {
-  if (length(input$dt_vertices_rows_selected) > 0) { prune_flag <<- TRUE }
+  # if (length(input$dt_vertices_rows_selected) > 0) { prune_flag <<- TRUE }
   
+  # this updates prune list and triggers graph redraw
   pruneListAddNames()
   
   # update prune list select box
@@ -223,12 +227,12 @@ observeEvent(input$prune_selected_rows_button, {
   updateSelectInput(session, "pruned_vertices_select", choices = prune_list)
   
   # added to address bug with disappearing plot on pruning
-  updateComponentSlider(ng_rv$graph_data, input$graph_component_type_select)
+  # updateComponentSlider(ng_rv$graph_data, input$graph_component_type_select)
 })
 
 # add unselected data table rows to pruned vertices list
 observeEvent(input$prune_unselected_rows_button, {
-  if (length(input$dt_vertices_rows_selected) > 0) { prune_flag <<- TRUE }
+  # if (length(input$dt_vertices_rows_selected) > 0) { prune_flag <<- TRUE }
   
   pruneListAddOtherNames()
   
@@ -249,7 +253,7 @@ observeEvent(input$prune_unselected_rows_button, {
 
 # remove selected vertices from prune list
 observeEvent(input$prune_return_button, {
-  if (length(input$pruned_vertices_select) > 0) { prune_flag <<- TRUE }
+  # if (length(input$pruned_vertices_select) > 0) { prune_flag <<- TRUE }
   
   ng_rv$prune_verts <- ng_rv$prune_verts[!(ng_rv$prune_verts %in% input$pruned_vertices_select)]
   
@@ -270,7 +274,7 @@ observeEvent(input$prune_return_button, {
 
 # reset prune list
 observeEvent(input$prune_reset_button, {
-  if (length(isolate(ng_rv$prune_verts)) > 0) { prune_flag <- TRUE }
+  # if (length(isolate(ng_rv$prune_verts)) > 0) { prune_flag <- TRUE }
   
   ng_rv$prune_verts <- c()
   
@@ -473,6 +477,7 @@ filedata <- reactive({
     
     createGraphCategoryList()
     
+    updateCheckboxInput(session, "expand_demo_data_check", value = FALSE)
   }, error = function(err) {
     return(NULL)
   })
@@ -740,7 +745,6 @@ dt_edges_df <- reactive({
   if (is.null(g)) { return(NULL) }
   
   igraph::as_data_frame(g, what = c("edges"))
-  # data.frame(name = V(g)$name)
 })
 
 # d3 simple network graph
@@ -863,18 +867,18 @@ applyPruneFilterSrv <- function(g, selected_prune_verts) {
   }
   
   # toggle flag even if did not prune
-  if (prune_flag == TRUE) {
-    prune_flag <<- FALSE
-  }
+  # if (prune_flag == TRUE) {
+  #   prune_flag <<- FALSE
+  # }
   
   g
 }
 
-# normalize continuous values for vertex size
-norm_vsize <- function(x) {
+# normalize continuous values
+norm_values <- function(x) {
   # all values the same
   if (var(x) == 0) {
-    return(rep(0.5, length(x)))
+    return(rep(0.1, length(x)))
   }
   min_x <- min(x)
   diff_x <- max(x) - min_x

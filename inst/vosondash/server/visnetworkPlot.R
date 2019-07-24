@@ -5,7 +5,20 @@ visNetworkData <- reactive({
   if (is.null(verts) | is.null(edges)) { return(NULL) }
   if (nrow(verts) < 1) { return(NULL) }
   
+  isolate({
+    # already dependencies of graphFilters / verts / edges
+    categorical_attributes <- ng_rv$graph_cats
+    selected_categorical_attribute <- input$graph_cat_select
+    gcs <- ng_rv$graph_cat_selected
+  })
+  
+  verts_rows_selected <- input$dt_vertices_rows_selected
   chosen_layout <- input$graph_layout_select
+  graph_seed <- ng_rv$graph_seed
+  node_degree_type <- input$graph_node_size_degree_select
+  node_size_multiplier <- input$graph_node_size_slider
+  plot_height <- ng_rv$plot_height
+  
   graph_layout <- switch(chosen_layout,
                          "Auto" = "layout_nicely",
                          "Fruchterman-Reingold" = "layout_with_fr",
@@ -19,33 +32,22 @@ visNetworkData <- reactive({
                          "Random" = "layout_randomly",
                          "layout_nicely")
   
-  graph_seed <- ng_rv$graph_seed
-  
-  # node size
-  
-  node_degree_type <- input$graph_node_size_degree_select
-  node_size_multiplier <- input$graph_node_size_slider  
-  
   verts$font.size <- 24
-  base_vertex_size <- 30
-
+  base_vertex_size <- 20
   norm_multi <- 5
+  
+  vis_vsize <- function(x) {
+    base_vertex_size + (((norm_values(x) + 0.1) * norm_multi) * node_size_multiplier)
+  }
+  
   verts$size <- switch(node_degree_type,
-                       "Degree" = base_vertex_size + (((norm_vsize(verts$degree)+0.1)*norm_multi) * node_size_multiplier),
-                       "Indegree" = base_vertex_size + (((norm_vsize(verts$indegree)+0.1)*norm_multi) * node_size_multiplier),
-                       "Outdegree" = base_vertex_size + (((norm_vsize(verts$outdegree)+0.1)*norm_multi) * node_size_multiplier),
-                       "Betweenness" = base_vertex_size + (((norm_vsize(verts$betweenness)+0.1)*norm_multi) * node_size_multiplier),
-                       "Closeness" = base_vertex_size + (((norm_vsize(verts$closeness)+0.1)*norm_multi) * node_size_multiplier),
-                       "None" = (base_vertex_size+0.1) * node_size_multiplier)
+                       "Degree" = vis_vsize(verts$degree),
+                       "Indegree" = vis_vsize(verts$indegree),
+                       "Outdegree" = vis_vsize(verts$outdegree),
+                       "Betweenness" = vis_vsize(verts$betweenness),
+                       "Closeness" = vis_vsize(verts$closeness),
+                       "None" = (base_vertex_size + 0.1) * node_size_multiplier)
 
-  # category colors
-  
-  isolate({
-    # already dependencies of graphFilters
-    categorical_attributes <- ng_rv$graph_cats
-    selected_categorical_attribute <- input$graph_cat_select
-  })
-  
   if (nrow(verts) > 0) {
     verts$color.background <- as.character(gbl_plot_def_vertex_color)
     verts$font.color <- gbl_plot_def_label_color
@@ -70,8 +72,8 @@ visNetworkData <- reactive({
     }
   }
   
-  if (length(input$dt_vertices_rows_selected) > 0) {
-    selected_row_names <- row.names(verts)[c(input$dt_vertices_rows_selected)]
+  if (length(verts_rows_selected) > 0) {
+    selected_row_names <- row.names(verts)[c(verts_rows_selected)]
     verts$color.background[row.names(verts) %in% selected_row_names] <- gbl_plot_sel_vertex_color
     verts$font.color[row.names(verts) %in% selected_row_names] <- gbl_plot_sel_vertex_color
   }
@@ -81,23 +83,20 @@ visNetworkData <- reactive({
     ungroup()
   
   category_selection <- NULL
-  if (!is.null(ng_rv$graph_cat_selected) && (!(ng_rv$graph_cat_selected %in% c("All", "")))) {
-    category_selection <- list(variable = ng_rv$graph_cat_selected, multiple = TRUE)
+  if (!is.null(gcs) && (!(gcs %in% c("All", "")))) {
+    category_selection <- list(variable = gcs, multiple = TRUE)
   }
   
-  visNetwork::visNetwork(verts, edges, main = NULL) %>% # height = "500px"
+  visNetwork::visNetwork(verts, edges, main = NULL) %>%
     visIgraphLayout(layout = graph_layout, 
                     randomSeed = graph_seed) %>%
     
     visNetwork::visEdges(arrows = 'to',
-                         # smooth = list(enabled = TRUE, type = "continuous", roundness = 0.1)
-                         color = list(color = "#b0b0b0")) %>% # arrows = 'to, from'
+                         color = list(color = "#b0b0b0")) %>%
     
     visOptions(collapse = TRUE, 
                highlightNearest = list(enabled = TRUE, hover = TRUE),
                selectedBy = category_selection,
                nodesIdSelection = TRUE,
-               height = ng_rv$plot_height) # ng_rv$plot_height
-  
-  # visInteraction(navigationButtons = TRUE)
+               height = plot_height)
 })

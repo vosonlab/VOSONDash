@@ -1,3 +1,8 @@
+# VOSONDash 0.4.3
+
+## Minor Changes:
+- Changed the node size controls in `Network Graphs` to be based on normalized continuous values.
+
 # VOSONDash 0.4.2
 
 ## Bug Fixes:

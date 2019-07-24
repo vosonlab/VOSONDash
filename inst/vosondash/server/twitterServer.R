@@ -202,6 +202,7 @@ observeEvent(twitter_view_rvalues$data, {
                type = "twitter",
                name = "",
                seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))
+  updateCheckboxInput(session, "expand_demo_data_check", value = FALSE)
 }, ignoreInit = TRUE)
 
 #### output ----------------------------------------------------------------------------------------------------------- #
