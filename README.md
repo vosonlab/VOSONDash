@@ -17,7 +17,7 @@ install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.4.2
   repo = NULL, type = "source")
 ```
 
-Install the latest release via CRAN:
+**[not yet available, coming soon...]** Install the latest release via CRAN:
 ```R
 install.packages("VOSONDash")
 ```
