@@ -2,6 +2,8 @@
 
 ## Minor Changes:
 - Changed the node size controls in `Network Graphs` to be based on normalized continuous values.
+- Moved the calculation of network metrics to the `getNetworkMetrics()` package function.
+- Demonstration data select box now hidden when another data source is loaded.
 
 # VOSONDash 0.4.2
 

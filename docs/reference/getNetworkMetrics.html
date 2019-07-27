@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Filter out graph vertices not in component size range — applyComponentFilter • VOSONDash</title>
+<title>Get graph network metrics — getNetworkMetrics • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,10 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Filter out graph vertices not in component size range — applyComponentFilter" />
+<meta property="og:title" content="Get graph network metrics — getNetworkMetrics" />
 
-<meta property="og:description" content="This function removes any graph vertices that are in components that fall outside of the specified 
-component size range." />
+<meta property="og:description" content="Function creates a vector of calculated network metrics for a graph." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -113,41 +112,36 @@ component size range." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Filter out graph vertices not in component size range</h1>
-    <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/networkGraphs.R'><code>R/networkGraphs.R</code></a></small>
-    <div class="hidden name"><code>applyComponentFilter.Rd</code></div>
+    <h1>Get graph network metrics</h1>
+    <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/networkMetrics.R'><code>R/networkMetrics.R</code></a></small>
+    <div class="hidden name"><code>getNetworkMetrics.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function removes any graph vertices that are in components that fall outside of the specified 
-component size range.</p>
+    <p>Function creates a vector of calculated network metrics for a graph.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>applyComponentFilter</span>(<span class='no'>g</span>, <span class='kw'>component_type</span> <span class='kw'>=</span> <span class='st'>"strong"</span>, <span class='no'>component_range</span>)</pre>
+    <pre class="usage"><span class='fu'>getNetworkMetrics</span>(<span class='no'>g</span>, <span class='kw'>component_type</span> <span class='kw'>=</span> <span class='st'>"strong"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p><span class="pkg">igraph</span> <code>graph</code> object.</p></td>
+      <td><p><span class="pkg">igraph</span> graph object.</p></td>
     </tr>
     <tr>
       <th>component_type</th>
       <td><p>Character string. Use strongly or weakly connected components by specifying <code>"strong"</code> or 
 <code>"weak"</code>. Ignored for undirected graphs. Default is <code>"strong"</code>.</p></td>
     </tr>
-    <tr>
-      <th>component_range</th>
-      <td><p>Numeric vector. Min and max values or size range of component.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An igraph graph object.</p>
+    <p>Network metrics as named vector.</p>
     
 
   </div>

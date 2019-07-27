@@ -16,6 +16,8 @@
 #' @importFrom tm DocumentTermMatrix removeSparseTerms
 #' @importFrom igraph vertex_attr as_edgelist gsize delete_vertices components simplify vcount 
 #' betweenness closeness set_graph_attr V 'V<-' E 'E<-' degree edge_attr_names vertex_attr_names
+#' reciprocity transitivity mean_distance graph.density is.directed ecount count_components
+#' centr_degree centr_betw centr_clo
 #' @importFrom rtweet create_token
 #' @importFrom magrittr '%>%' '%<>%'
 #' @importFrom RColorBrewer brewer.pal

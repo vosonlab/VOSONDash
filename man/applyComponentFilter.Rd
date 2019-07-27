@@ -10,7 +10,7 @@ applyComponentFilter(g, component_type = "strong", component_range)
 \item{g}{\pkg{igraph} \code{graph} object.}
 
 \item{component_type}{Character string. Use strongly or weakly connected components by specifying \code{"strong"} or 
-\code{"weak"}. Ignored for undirected graphs. Default is \code{strong}.}
+\code{"weak"}. Ignored for undirected graphs. Default is \code{"strong"}.}
 
 \item{component_range}{Numeric vector. Min and max values or size range of component.}
 }

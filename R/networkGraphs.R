@@ -5,7 +5,7 @@
 #' 
 #' @param g \pkg{igraph} \code{graph} object.
 #' @param component_type Character string. Use strongly or weakly connected components by specifying \code{"strong"} or 
-#' \code{"weak"}. Ignored for undirected graphs. Default is \code{strong}.
+#' \code{"weak"}. Ignored for undirected graphs. Default is \code{"strong"}.
 #' @param component_range Numeric vector. Min and max values or size range of component.
 #' 
 #' @return An igraph graph object.

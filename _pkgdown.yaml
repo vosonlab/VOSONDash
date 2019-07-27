@@ -45,6 +45,9 @@ reference:
   - '`applyCategoricalFilters`'  
   - '`applyPruneFilter`'
   - '`getVertexCategories`'
+- title: Network Metrics
+  contents:
+  - '`getNetworkMetrics`'  
 - title: Text Analysis
   contents:
   - '`mixmat`'
