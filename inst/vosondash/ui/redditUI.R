@@ -5,7 +5,10 @@ tabItem(tabName = "reddit_collection_tab",
                  fluidRow(
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                                 # youtube video ids input
-                                textAreaInput("reddit_url_input", label = "Add Reddit URL", value = "",
+                                div(tags$b("Add Reddit URL"), 
+                                    vpopover(po_red_url()$title, po_red_url()$content), 
+                                    style = "margin-bottom:5px;"),
+                                textAreaInput("reddit_url_input", label = NULL, value = "",
                                               width = NULL, height = NULL,
                                               cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
                                 actionButton("reddit_add_url_button", label = "Add"),

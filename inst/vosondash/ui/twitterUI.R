@@ -19,7 +19,9 @@ tabItem(tabName = "twitter_collection_tab",
                                 checkboxInput("twitter_retweets_check", "Include retweets", TRUE),
                                 checkboxInput("twitter_retry_check", "Retry on rate limit", TRUE),
                                 
-                                div(div("Results", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"), 
+                                div(div("Results", 
+                                        vpopover(po_twit_results()$title, po_twit_results()$content),
+                                        class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"), 
                                     div(selectInput("twitter_search_type_select", label = NULL, choices = c("recent", "mixed", "popular"),
                                                     multiple = FALSE, width = "90px"), class = "div_inline")),
                                 

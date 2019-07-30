@@ -7,7 +7,8 @@ po_reseed_graph <- function() {
 
 po_graph_layout <- function() {
   title <- "Graph Layout Algorithms"
-  content <- paste0("<code>FR</code> Fruchterman-Reingold<br>",
+  content <- paste0("Select a network layout for the graph.<br><br>",
+                    "<code>FR</code> Fruchterman-Reingold<br>",
                     "<code>KK</code> Kamada-Kawai<br>",
                     "<code>DH</code> Davidson-Harel<br>",
                     "<code>LGL</code> Large Graph Layout<br>",
@@ -35,9 +36,9 @@ po_cat_filter <- function() {
 
 po_twit_query <- function() {
   title <- "Twitter Search Query"
-  content <- paste0("A full-range of search operators and filters can be used in the <code>Search Query</code> input, ",
-                    "or search terms can be entered and used with the provided controls, or a combination of both.",
-                    "<br><br>",
+  content <- paste0("A range of search operators and filters can be used in the <code>Search Query</code> input. ",
+                    "Simple terms can also entered and used in conjunction with the <code>Additional Filters</code> ",
+                    "provided.<br><br>",
                     "<i class = 'fa fa-book-reader'></i>&nbsp;&nbsp;",
                     "<a href = 'https://developer.twitter.com/en/docs/tweets/rules-and-filtering/overview/standard-",
                     "operators' target = '_blank'>Twitter Standard Search Operators</a>"
@@ -63,6 +64,39 @@ po_twit_lang <- function() {
                     "<i class = 'fa fa-book-reader'></i>&nbsp;&nbsp;",
                     "<a href = 'https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes'",
                     "target = '_blank'>ISO 639-1 Language Codes</a>"
+  )
+  
+  list(title = title, content = content)
+}
+
+po_twit_results <- function() {
+  title <- "Search Results"
+  content <- paste0("Requests the twitter API to return tweets of the following result types.<br><br>",
+                    "<code>Recent</code> Return only the most recent tweets in results<br>",
+                    "<code>Mixed</code> Return mixture of both popular and real time tweets in results<br>",
+                    "<code>Popular</code> Return only the most popular tweets in results"
+  )
+  
+  list(title = title, content = content)
+}
+
+po_yt_url <- function() {
+  title <- "Youtube Video URL"
+  content <- paste0("Enter a Youtube video URL in either long or short format.<br><br>",
+                    "<i class = 'fa fa-angle-right'></i>&nbsp;&nbsp;",
+                    "<code>https://www.youtube.com/watch?v=xxxxxxxxxxx</code><br>",
+                    "<i class = 'fa fa-angle-right'></i>&nbsp;&nbsp;",
+                    "<code>https://youtu.be/xxxxxxxx</code>"
+  )
+  
+  list(title = title, content = content)
+}
+
+po_red_url <- function() {
+  title <- "Reddit Thread URL"
+  content <- paste0("Enter a Reddit thread URL in the following format.<br><br>",
+                    "<i class = 'fa fa-angle-right'></i>&nbsp;&nbsp;",
+                    "<code>https://www.reddit.com/r/xxxxxx/<br>comments/xxxxxx/x_xxxx_xxxx</code>"
   )
   
   list(title = title, content = content)

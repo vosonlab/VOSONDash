@@ -216,3 +216,8 @@ select#plot_height.form-control {
 #graphvisNetworkPlot {
   height:98% !important;
 }
+
+.popover{
+  max-width:300px;
+}
+    
