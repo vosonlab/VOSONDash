@@ -21,10 +21,15 @@ visNetworkData <- reactive({
   
   graph_layout <- switch(chosen_layout,
                          "Auto" = "layout_nicely",
-                         "Fruchterman-Reingold" = "layout_with_fr",
-                         "Kamada-Kawai" = "layout_with_kk",
-                         "Davidson-Harel" = "layout_with_dh",
-                         "Large Graph Layout" = "layout_with_lgl",
+                         "FR" = "layout_with_fr", # Fruchterman-Reingold
+                         "KK" = "layout_with_kk", # Kamada-Kawai
+                         "DH" = "layout_with_dh", # Davidson-Harel
+                         "LGL" = "layout_with_lgl", # Large Graph Layout
+                         "Graphopt" = "layout_with_graphopt",
+                         "DrL" = "layout_with_drl",
+                         "GEM" = "layout_with_gem",
+                         "MDS" = "layout_with_mds",
+                         # "Tree" = "layout_as_tree",
                          "Grid" = "layout_on_grid",
                          "Sphere" = "layout_on_sphere",
                          "Circle" = "layout_in_circle",

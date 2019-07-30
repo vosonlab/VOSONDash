@@ -9,7 +9,10 @@ tabItem(tabName = "twitter_collection_tab",
                                 ),
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                                 # twitter search term input
-                                textAreaInput("twitter_search_term_input", label = "Search Query", value = "",
+                                div(tags$b("Search Query"), 
+                                    vpopover(po_twit_query()$title, po_twit_query()$content), 
+                                    style = "margin-bottom:5px;"),
+                                textAreaInput("twitter_search_term_input", label = NULL, value = "",
                                               width = NULL, height = NULL,
                                               cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
                                 
@@ -20,23 +23,27 @@ tabItem(tabName = "twitter_collection_tab",
                                     div(selectInput("twitter_search_type_select", label = NULL, choices = c("recent", "mixed", "popular"),
                                                     multiple = FALSE, width = "90px"), class = "div_inline")),
                                 
-                                div(div("Count", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;margin-right:22px;"),
+                                div(div("Count", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;margin-right:28px;"),
                                     div(numericInput("twitter_tweet_count_input", label = NULL, value = gbl_def_tweet_count, min = 1, width = "90px"), class = "div_inline")),
                                 
-                                div(div("Language", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
+                                div(div("Language", 
+                                        vpopover(po_twit_lang()$title, po_twit_lang()$content),
+                                        class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
                                     div(textInput("twitter_language_input", label = NULL, value = "", width = "45px"), class = "div_inline")),
                                 
-                                div(div("Date Until", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
+                                div(div("Date Until", class = "div_inline", style = "padding-bottom:10px;padding-right:16px;"),
                                     div(dateInput("twitter_date_until_input", label = NULL, value = "", min = NULL, max = NULL,
                                                   format = "yyyy-mm-dd", startview = "month", weekstart = 0,
                                                   language = "en", width = "90px", autoclose = TRUE), class = "div_inline")),
                                 
-                                checkboxInput('expand_twitter_id_filters_check', 'Tweet ID Range', FALSE),
+                                checkboxInput('expand_twitter_id_filters_check', 
+                                              div("Tweet ID Range", vpopover(po_twit_id_range()$title, po_twit_id_range()$content), class = "div_inline"), 
+                                              FALSE),
                                 conditionalPanel(condition = 'input.expand_twitter_id_filters_check',
                                                 div(div("Since ID", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
-                                                    div(textInput("twitter_since_id_input", label = NULL, value = "", width = "auto"), class = "div_inline")),
-                                                div(div("Max ID", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
-                                                    div(textInput("twitter_max_id_input", label = NULL, value = "", width = "auto"), class = "div_inline"))
+                                                    div(textInput("twitter_since_id_input", label = NULL, value = "", width = "110px"), class = "div_inline")),
+                                                div(div("Max ID", class = "div_inline", style = "padding-bottom:10px;padding-right:20px;"),
+                                                    div(textInput("twitter_max_id_input", label = NULL, value = "", width = "110px"), class = "div_inline"))
                                 ),
                                 
                                 checkboxInput('expand_twitter_filters_check', 'Additional Filters', FALSE),
@@ -67,9 +74,6 @@ tabItem(tabName = "twitter_collection_tab",
                                  style = "padding-right: 10px;"),
                             span(icon("twitter", class = "twitter_blue"), "Twitter Network Collection")
                           ),
-                          # tabPanel("Console", width = 12,
-                          #       consoleUI("twitter")
-                          # )
                           tabPanel("Console", width = 12,
                                    verbatimTextOutput("twitter_arguments_output"),
 

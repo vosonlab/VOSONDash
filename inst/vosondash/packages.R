@@ -1,7 +1,7 @@
 # required packages
-requiredPackages <- c("htmlwidgets", 
+requiredPackages <- c("htmlwidgets",
                       "shinydashboard",
-                      "shinyjs", 
+                      "shinyjs",
                       "DT",
                       "igraph",
                       "networkD3",
