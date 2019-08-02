@@ -45,7 +45,7 @@ dashboardPage(
     
     # custom ui stylesheet
     tags$head(
-      tags$script(src = "popper.min.js"),
+      tags$script(src = "popper.js"),
       tags$script(HTML("$(function () {
         $('[data-toggle = \"popover\"]').popover()
       })
