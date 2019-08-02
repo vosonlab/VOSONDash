@@ -5,3 +5,5 @@
 
 ## R CMD check results
 0 errors | 0 warnings
+* checking CRAN incoming feasibility ... NOTE
+New submission
