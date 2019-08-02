@@ -61,7 +61,7 @@ vpopover <- function(title, content) {
 gbl_def_tweet_count <- 100
 gbl_def_youtube_count <- 200
 
-source("popovers.R")
+source("ui/popovers.R")
 
 # modules
 source("modules/collectionModule.R")
