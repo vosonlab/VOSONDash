@@ -124,7 +124,7 @@ addAdditionalMeasures <- function(g) {
 #' 
 #' @examples
 #' \dontrun{
-#' # return 
+#' # get a list of voson vertex categories and values
 #' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
 #' 
 #' vcats <- getVertexCategories(g)
@@ -195,7 +195,8 @@ hasVosonTextData <- function(g) {
 #' 
 #' @examples
 #' \dontrun{
-#' # return a graph containing only vertices that have the vertex category attribute "vosonCA_Stance" value "liberal"
+#' # return a graph containing only vertices that have the vertex category 
+#' # attribute "vosonCA_Stance" value "liberal"
 #' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
 #' 
 #' g <- applyCategoricalFilters(g, "Stance", c("liberal"))
@@ -253,7 +254,10 @@ applyPruneFilter <- function(g, selected_prune_verts) {
 #' @examples
 #' \dontrun{
 #' # load the "DividedTheyBlog" demonstration network graph
-#' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+#' g_demo_div <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+#' 
+#' # load the "enviroActivistWebsites" demonstration network graph
+#' g_demo_env <- loadDemoGraph("enviroActivistWebsites_2006.graphml")
 #' }
 #' 
 #' @export

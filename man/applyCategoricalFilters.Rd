@@ -22,3 +22,13 @@ An igraph graph object.
 \description{
 This function removes vertices that are not in the selected categories values list or sub-categories.
 }
+\examples{
+\dontrun{
+# return a graph containing only vertices that have the vertex category 
+# attribute "vosonCA_Stance" value "liberal"
+g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+
+g <- applyCategoricalFilters(g, "Stance", c("liberal"))
+}
+
+}

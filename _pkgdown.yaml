@@ -39,6 +39,7 @@ reference:
   - '`runVOSONDash`' 
 - title: Network Graphs
   contents:
+  - '`loadDemoGraph`'
   - '`addAdditionalMeasures`'
   - '`applyGraphFilters`'
   - '`applyComponentFilter`'

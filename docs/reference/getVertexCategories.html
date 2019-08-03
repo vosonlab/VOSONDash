@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a list of vertex category attribute names — getVertexCategories • VOSONDash</title>
+<title>Get a list of vertex category attribute names and values — getVertexCategories • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,10 +32,10 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Get a list of vertex category attribute names — getVertexCategories" />
+<meta property="og:title" content="Get a list of vertex category attribute names and values — getVertexCategories" />
 
 <meta property="og:description" content="This function returns a list of graph vertex attribute names that match a category attribute prefix 
-format." />
+format and their unique values." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -113,7 +113,7 @@ format." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a list of vertex category attribute names</h1>
+    <h1>Get a list of vertex category attribute names and values</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/networkGraphs.R'><code>R/networkGraphs.R</code></a></small>
     <div class="hidden name"><code>getVertexCategories.Rd</code></div>
     </div>
@@ -121,7 +121,7 @@ format." />
     <div class="ref-description">
     
     <p>This function returns a list of graph vertex attribute names that match a category attribute prefix 
-format.</p>
+format and their unique values.</p>
     
     </div>
 
@@ -142,9 +142,21 @@ format.</p>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of vertex category attributes.</p>
+    <p>A named list of vertex category attributes and values.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># get a list of voson vertex categories and values</span>
+<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadDemoGraph.html'>loadDemoGraph</a></span>(<span class='st'>"DividedTheyBlog_40Alist_release.graphml"</span>)
+
+<span class='no'>vcats</span> <span class='kw'>&lt;-</span> <span class='fu'>getVertexCategories</span>(<span class='no'>g</span>)
+
+<span class='co'># vcats</span>
+<span class='co'># $Stance</span>
+<span class='co'># [1] "conservative" "liberal"  </span>
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -152,7 +164,9 @@ format.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
