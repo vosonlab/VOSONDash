@@ -9,6 +9,15 @@
 #' @param use_density Logical. Use edge density. Default is \code{TRUE}.
 #' 
 #' @return A mixing matrix.
+#'
+#' @examples
+#' \dontrun{
+#' # create a mixing matrix of the demonstration network based on vertex categorical attribute for political 
+#' stance "vosonCA_Stance"
+#' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+#' 
+#' mm <- mixmat(g, "vosonCA_Stance", use_density = FALSE)
+#' }
 #' 
 #' @export
 mixmat <- function(g, attrib, use_density = TRUE) {

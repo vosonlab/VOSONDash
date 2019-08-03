@@ -112,15 +112,27 @@ addAdditionalMeasures <- function(g) {
   g
 }
 
-#' @title Get a list of vertex category attribute names
+#' @title Get a list of vertex category attribute names and values
 #' 
 #' @description This function returns a list of graph vertex attribute names that match a category attribute prefix 
-#' format.
+#' format and their unique values.
 #' 
 #' @param g \pkg{igraph} \code{graph} object.
 #' @param cat_prefix Character string. Category attribute prefix format to match. Default is \code{"vosonCA_"}.
 #' 
-#' @return A list of vertex category attributes.
+#' @return A named list of vertex category attributes and values.
+#' 
+#' @examples
+#' \dontrun{
+#' # return 
+#' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+#' 
+#' vcats <- getVertexCategories(g)
+#' 
+#' # vcats
+#' # $Stance
+#' # [1] "conservative" "liberal"  
+#' }
 #' 
 #' @export
 getVertexCategories <- function(g, cat_prefix = "vosonCA_") {
@@ -181,6 +193,14 @@ hasVosonTextData <- function(g) {
 #' 
 #' @return An igraph graph object.
 #' 
+#' @examples
+#' \dontrun{
+#' # return a graph containing only vertices that have the vertex category attribute "vosonCA_Stance" value "liberal"
+#' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+#' 
+#' g <- applyCategoricalFilters(g, "Stance", c("liberal"))
+#' }
+#' 
 #' @export
 applyCategoricalFilters <- function(g, selected_cat, selected_subcats, cat_prefix = "vosonCA_") {
   
@@ -221,3 +241,29 @@ applyPruneFilter <- function(g, selected_prune_verts) {
   g
 }
 
+#' @title Load package demonstration network graph
+#'
+#' @description This function loads a demonstration network graph included in the \code{extdata} directory of the 
+#' \code{VOSONDash} package by file name. 
+#' 
+#' @param fname Character string. Name of demonstration \code{graphml} file.
+#' 
+#' @return An igraph graph object.
+#' 
+#' @examples
+#' \dontrun{
+#' # load the "DividedTheyBlog" demonstration network graph
+#' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+#' }
+#' 
+#' @export
+loadDemoGraph <- function(fname) {
+  tryCatch({
+    f <- system.file("extdata", fname, package = "VOSONDash", mustWork = TRUE)
+    g <- igraph::read_graph(f, format = c('graphml'))  
+  }, error = function(e) {
+    stop(e)
+  })
+  
+  g
+}
