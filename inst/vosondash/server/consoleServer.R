@@ -1,5 +1,5 @@
 withConsoleRedirect <- function(id, value) {
-  input_text <- capture.output(results <- value, type = "output")
+  input_text <- capture.output(results <- value, type = c("output"))
   
   if (length(input_text) > 0) {
     output <- gsub("\n{2,}", "\n", input_text)

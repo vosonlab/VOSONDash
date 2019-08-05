@@ -1,3 +1,9 @@
+# VOSONDash 0.4.4
+
+## Minor Changes:
+- Changed the required package check to be more efficient by calling `required()` instead of `installed.packages()`.
+- Changed the app startup messages to use `message()` instead of `cat()` so if desired they can be suppressed.
+
 # VOSONDash 0.4.3
 
 ## Minor Changes:

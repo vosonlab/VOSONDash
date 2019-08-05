@@ -43,7 +43,7 @@ shinyServer(function(input, output, session) {
   # stop app when browser closes
   session$onSessionEnded(function() {
     if (isLocal) {
-      cat("Session ended or browser closed. Exiting.\n")
+      message("Session ended or browser closed. Exiting.\n")
       stopApp()
     }
   })
