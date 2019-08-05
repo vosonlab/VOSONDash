@@ -13,7 +13,7 @@
 
 Install the latest release via GitHub:
 ```R
-install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.4.3/VOSONDash-0.4.3.tar.gz", 
+install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.4.4/VOSONDash-0.4.4.tar.gz", 
   repo = NULL, type = "source")
 ```
 
@@ -46,7 +46,7 @@ For example:
 ```R
 > runVOSONDash()
 =================================================
-VOSONDash v0.4.3
+VOSONDash v0.4.4
 01 Aug 2019 09:35
 
 ...
