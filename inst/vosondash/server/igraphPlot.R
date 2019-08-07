@@ -25,6 +25,7 @@ standardPlotData <- reactive({
   saved_par <- par(no.readonly = TRUE)  
   
   # avoid unknown font warnings on windows by setting TT font
+  saved_win_font <- NULL
   # if (.Platform$OS.type != "unix") {
   if (.Platform$OS.type == "windows") {
     # win_font <- unlist(windowsFonts("sans"), use.names = FALSE)
