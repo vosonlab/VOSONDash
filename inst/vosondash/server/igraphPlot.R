@@ -20,6 +20,27 @@ standardPlotData <- reactive({
   node_degree_type <- input$graph_node_size_degree_select
   node_size_multiplier <- input$graph_node_size_slider  
   
+  # ------------------
+  # save and restore graphics parameters
+  saved_par <- par(no.readonly = TRUE)  
+  
+  # avoid unknown font warnings on windows by setting TT font
+  # if (.Platform$OS.type != "unix") {
+  if (.Platform$OS.type == "windows") {
+    # win_font <- unlist(windowsFonts("sans"), use.names = FALSE)
+    
+    saved_win_font <- windowsFonts()$Arial
+    windowsFonts(Arial = windowsFont("TT Arial"))
+  }
+  
+  on.exit({
+    par(saved_par)
+    if (!is.null(saved_win_font)) {
+      windowsFonts(Arial = windowsFont(saved_win_font))
+    }
+  })
+  # ------------------
+  
   if (is.null(V(g)$label)) {
     V(g)$label <- V(g)$name
   }
@@ -82,11 +103,6 @@ standardPlotData <- reactive({
                                              "Betweenness" = igraph_vsize(V(g)$Betweenness),
                                              "Closeness" = igraph_vsize(V(g)$Closeness),
                                              "None" = (base_vertex_size + 0.1) * node_size_multiplier)
-  
-  # avoid unknown font warnings on windows by setting TT font
-  if (.Platform$OS.type != "unix") {
-    windowsFonts(Arial = windowsFont("TT Arial"))
-  }
   
   plot_parameters['vertex.label.family'] <- "Arial"
   
@@ -155,9 +171,6 @@ standardPlotData <- reactive({
   plot_parameters['rescale'] <- FALSE
 
   plot_parameters[['layout']] <- graph_layout * graph_spread
-  
-  saved_par <- par(no.readonly = TRUE)
-  on.exit(par(saved_par))
   
   par(mar = rep(0, 4))
   do.call(plot.igraph, plot_parameters)
