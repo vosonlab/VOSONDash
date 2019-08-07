@@ -3,6 +3,10 @@
 ## Minor Changes:
 - Changed the required package check to be more efficient by calling `required()` instead of `installed.packages()`.
 - Changed the app startup messages to use `message()` instead of `cat()` so if desired they can be suppressed.
+- Added `pkgStartupMsgs` parameter to `runVOSONDash()` to hide the app's required package startup messages.
+- Added optional `isLocal` parameter to `runVOSONDash()` to manually set local or server flag if desired. If not set app will detect if it is running in server mode.
+- Disabled the loading and saving of keys and tokens in server mode.
+- Added a tooltip to `Create Web Auth Token` to add some further information on process and note.
 
 # VOSONDash 0.4.3
 

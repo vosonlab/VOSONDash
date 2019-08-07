@@ -101,3 +101,22 @@ po_red_url <- function() {
   
   list(title = title, content = content)
 }
+
+po_web_auth <- function() {
+  title <- "Web Auth Token"
+  content <- paste0("This token creation method is interactive and will open a web browser tab to twitter asking you ",
+                    "to login and authorize the twitter app. This allows the app to access the twitter API on your ",
+                    "behalf.<br><br>", 
+                    "As <code>VOSONDash</code> only uses the twitter search API an app only requires minimal ",
+                    "<code>read</code> access to the users twitter account.<br><br>",
+                    "Note: Unfortunately a current side-effect of <code>aborting</code> or interupting / not ",
+                    "completing the process is ending the <code>VOSONDash</code> session. Please save any work before ",
+                    "continuing.",
+                    "<br><br>",
+                    "<i class = 'fa fa-book-reader'></i>&nbsp;&nbsp;",
+                    "<a href = 'https://developer.twitter.com/en/docs/basics/authentication/overview/oauth'",
+                    "target = '_blank'>Twitter API: Application-user authentication</a>"
+  )
+  
+  list(title = title, content = content)
+}

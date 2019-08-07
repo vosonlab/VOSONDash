@@ -25,26 +25,29 @@ if (isLocal) {
                 "Checking packages...\n"))
 }
 
-if (suppressLibWarn) {
-  suppressWarnings({
-    loadedPackages <- sapply(requiredPackages, function(x) { require(x, character.only = TRUE, quietly = TRUE) })
+if (pkgMsgs == FALSE) {
+  loadedPackages <- sapply(requiredPackages, function(x) { 
+    suppressPackageStartupMessages(require(x, character.only = TRUE))
   })
 } else {
-  loadedPackages <- sapply(requiredPackages, function(x) { require(x, character.only = TRUE) })
+  loadedPackages <- sapply(requiredPackages, function(x) { require(x, character.only = TRUE) })  
 }
 
 if (isLocal) {
   if (any(loadedPackages == FALSE)) {
     missingPackages <- names(which(loadedPackages == FALSE))
     
-    message("Required Packages Missing:\n",
-            paste0(missingPackages, collapse = "\n"),
-            "\n\nPlease install required packages before using VOSONDash:\n\n")
+    err_msg <- paste0("Required packages missing.\n",
+                      paste0(sapply(missingPackages, function(x) paste0("- ", x)), 
+                             collapse = "\n"),
+                      "\n\nPlease install required packages before using VOSONDash:\n\n")
     
     packageStr <- sapply(missingPackages, function(x) paste0("\"", x, "\""))
-    message(paste0("install.packages(c(", paste0(packageStr, collapse = ","), "))\n"), "\n")
+    err_msg <- paste0(err_msg, 
+                      paste0("install.packages(c(", paste0(packageStr, collapse = ","), "))\n"), 
+                      "\n")
   
-    stop("Missing packages.", call. = FALSE)
+    stop(err_msg, call. = FALSE)
   } else {
     message("Found all required packages.\n",
             "\nStarting VOSONDash...\n")

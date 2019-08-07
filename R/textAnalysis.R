@@ -42,6 +42,9 @@ wordFreqChart <- function(corp, min_freq = 1, top_count = 20, pcolors = NULL) {
   freq_terms <- colSums(as.matrix(dtm_sparse_removed))
   order_terms <- order(freq_terms, decreasing = TRUE)
   
+  saved_par <- par(no.readonly = TRUE)
+  on.exit(par(saved_par))
+  
   par(mar = rep(0, 4))
   return(barchart(freq_terms[order_terms[1:top_count]], 
                   col = pcolors, 
@@ -83,6 +86,9 @@ wordSentValenceChart <- function(corp) {
   }
   
   colx <- c("lightcoral", "mediumaquamarine", valence_col) # "gainsboro"
+  
+  saved_par <- par(no.readonly = TRUE)
+  on.exit(par(saved_par))
   
   par(las = 2)
   par(mar = c(6, 4, 3, 1))
@@ -136,6 +142,9 @@ wordSentChart <- function(corp, pcolors = NULL) {
   }
   colx[seq(1, 8)] <- colx
   
+  saved_par <- par(no.readonly = TRUE)
+  on.exit(par(saved_par))
+  
   par(las = 2)
   par(mar = c(4, 6, 3, 1))
   
@@ -181,6 +190,9 @@ wordCloudPlot <- function(corp, seed = NULL, min_freq = 1, max_words = 50, pcolo
   if (!is.null(seed)) {
     set.seed(seed)
   }
+  
+  saved_par <- par(no.readonly = TRUE)
+  on.exit(par(saved_par))
   
   par(mar = rep(0, 4))
   wordcloud::wordcloud(corp, 

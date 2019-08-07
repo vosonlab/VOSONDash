@@ -5,6 +5,8 @@ This is a resubmission. In this version I have:
   are using cat to communicate caught errors as a single character strings 
   to a shiny ui component via a 'capture.output' method with type 'output'
 * Removed use of 'installed.packages()' and replaced with 'require()'
+* Added saving and restoring of users graphical parameters in functions 
+  that alter them with the `par()` function
 * Incremented package version to 0.4.4
 
 ## Re-submission 1

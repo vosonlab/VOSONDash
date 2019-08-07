@@ -4,7 +4,16 @@
 app_version <- paste0("v", VOSONDash::getVOSONDashVer())
 
 isLocal <- Sys.getenv('SHINY_PORT') == ""
-suppressLibWarn <- TRUE
+if (exists(".VOSONIsLocal")) {
+  # cat(paste0(".VOSONIsLocal = ", .VOSONIsLocal, "\n"))
+  isLocal <- .VOSONIsLocal
+}
+
+pkgMsgs <- TRUE
+if (exists(".VOSONPkgMsgs")) {
+  # cat(paste0(".VOSONPkgMsgs = ", .VOSONPkgMsgs, "\n"))
+  pkgMsgs <- .VOSONPkgMsgs
+}
 
 source("packages.R", local = TRUE)
 

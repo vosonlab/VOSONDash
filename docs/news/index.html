@@ -122,6 +122,10 @@
 <ul>
 <li>Changed the required package check to be more efficient by calling <code>required()</code> instead of <code><a href="https://www.rdocumentation.org/packages/utils/topics/installed.packages">installed.packages()</a></code>.</li>
 <li>Changed the app startup messages to use <code><a href="https://www.rdocumentation.org/packages/base/topics/message">message()</a></code> instead of <code><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat()</a></code> so if desired they can be suppressed.</li>
+<li>Added <code>pkgStartupMsgs</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to hide the app’s required package startup messages.</li>
+<li>Added optional <code>isLocal</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to manually set local or server flag if desired. If not set app will detect if it is running in server mode.</li>
+<li>Disabled the loading and saving of keys and tokens in server mode.</li>
+<li>Added a tooltip to <code>Create Web Auth Token</code> to add some further information on process and note.</li>
 </ul>
 </div>
 </div>

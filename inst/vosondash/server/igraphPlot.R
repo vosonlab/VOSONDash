@@ -156,6 +156,9 @@ standardPlotData <- reactive({
 
   plot_parameters[['layout']] <- graph_layout * graph_spread
   
+  saved_par <- par(no.readonly = TRUE)
+  on.exit(par(saved_par))
+  
   par(mar = rep(0, 4))
   do.call(plot.igraph, plot_parameters)
 })

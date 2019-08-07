@@ -87,6 +87,9 @@ output$ta_details_output <- renderText({
 })
 
 output$comparison_cloud_plot <- renderPlot({
+  saved_par <- par(no.readonly = TRUE)
+  on.exit(par(saved_par))
+  
   par(mar = rep(0, 4))
   comparisonCloudPlotData()
 })

@@ -52,7 +52,8 @@ VOSONDash v0.4.4
 ...
 
 Checking packages...
-Required Packages Missing:
+
+Error: Required packages missing.
 - visNetwork
 - syuzhet
 ```
