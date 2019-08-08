@@ -4,7 +4,7 @@
 \alias{runVOSONDash}
 \title{Run the VOSON Dashboard Shiny Application}
 \usage{
-runVOSONDash(pkgStartupMsgs = FALSE, isLocal)
+runVOSONDash(pkgStartupMsgs = FALSE, isLocal = NULL)
 }
 \arguments{
 \item{pkgStartupMsgs}{Logical. Display app package loading messages. Default is \code{FALSE}.}

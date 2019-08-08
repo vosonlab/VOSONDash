@@ -4,15 +4,17 @@
 app_version <- paste0("v", VOSONDash::getVOSONDashVer())
 
 isLocal <- Sys.getenv('SHINY_PORT') == ""
-if (exists(".VOSONIsLocal")) {
-  # cat(paste0(".VOSONIsLocal = ", .VOSONIsLocal, "\n"))
-  isLocal <- .VOSONIsLocal
+# if (exists(".VOSONIsLocal")) {
+if (!is.null(getShinyOption("VOSONIsLocal"))) {
+  # isLocal <- .VOSONIsLocal
+  isLocal <- getShinyOption("VOSONIsLocal")
 }
 
 pkgMsgs <- TRUE
-if (exists(".VOSONPkgMsgs")) {
-  # cat(paste0(".VOSONPkgMsgs = ", .VOSONPkgMsgs, "\n"))
-  pkgMsgs <- .VOSONPkgMsgs
+# if (exists(".VOSONPkgMsgs")) {
+if (!is.null(getShinyOption("VOSONPkgMsgs"))) {
+  # pkgMsgs <- .VOSONPkgMsgs
+  pkgMsgs <- getShinyOption("VOSONPkgMsgs")
 }
 
 source("packages.R", local = TRUE)
