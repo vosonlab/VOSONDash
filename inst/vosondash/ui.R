@@ -41,9 +41,17 @@ dashboardPage(
   dashboardBody(
     # additional js features
     useShinyjs(),
+    #use_tippy(),
     
     # custom ui stylesheet
     tags$head(
+      tags$script(src = "popper.js"),
+      tags$script(HTML("$(function () {
+        $('[data-toggle = \"popover\"]').popover()
+      })
+      $('.popover-dismiss').popover({
+        trigger: 'focus'
+      })")),
       tags$link(rel = "stylesheet", type = "text/css", href = "custom.css") # ,
       # tags$link(rel = "icon", type = "image/png", sizes = "16x16", href = "favicon/favicon-16x16.png"),
       # tags$link(rel = "icon", type = "image/png", sizes = "32x32", href = "favicon/favicon-32x32.png"),
@@ -58,13 +66,6 @@ dashboardPage(
     ),    
     
     tabItems(
-      
-      #### home tab
-      # tabItem(tabName="home_tab",
-      #         fluidRow(
-      #           box(width=12, includeHTML("www/home.html"))
-      #         )
-      # ),
       
       #### network graphs tab
       source("ui/networkGraphsUI.R")$value,

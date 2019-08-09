@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a auth token with twitter app dev keys — createTwitterDevToken • VOSONDash</title>
+<title>Create an auth token with twitter app dev keys — createTwitterDevToken • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,11 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Create a auth token with twitter app dev keys — createTwitterDevToken" />
+<meta property="og:title" content="Create an auth token with twitter app dev keys — createTwitterDevToken" />
 
-<meta property="og:description" content="Create a auth token with twitter app dev keys" />
+<meta property="og:description" content="This function is a wrapper for vosonSML::Authenticate with twitter app developer keys. The 
+properties type and created are added to the credential object to assist with VOSONDash token 
+management." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -112,14 +114,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a auth token with twitter app dev keys</h1>
+    <h1>Create an auth token with twitter app dev keys</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/vosonSML.R'><code>R/vosonSML.R</code></a></small>
     <div class="hidden name"><code>createTwitterDevToken.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create a auth token with twitter app dev keys</p>
+    <p>This function is a wrapper for <code><a href='https://www.rdocumentation.org/packages/vosonSML/topics/Authenticate'>vosonSML::Authenticate</a></code> with twitter app developer keys. The 
+properties <code>type</code> and <code>created</code> are added to the credential object to assist with <span class="pkg">VOSONDash</span> token 
+management.</p>
     
     </div>
 
@@ -130,17 +134,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>app_name</th>
-      <td><p>twitter app name</p></td>
+      <td><p>Character string. Twitter app name.</p></td>
     </tr>
     <tr>
       <th>keys</th>
-      <td><p>named list of app API keys</p></td>
+      <td><p>List. Named list of twitter app API keys.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>cred</p>
+    <p>A vosonSML twitter credential object.</p>
     
 
   </div>

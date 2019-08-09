@@ -8,8 +8,8 @@
 ta_rv <- reactiveValues(
   plot_data_list = list(),          # list of base text corpus data sets
   has_text = FALSE,                 # does graphml have voson text data
-  txt_attr_type = "",                   # is text atttribute a vertex or edge
-  txt_attr_name = ""                    # text attribute name in graphml
+  txt_attr_type = "",               # is text atttribute a vertex or edge
+  txt_attr_name = ""                # text attribute name in graphml
 )
 
 #### events ----------------------------------------------------------------------------------------------------------- #
@@ -87,6 +87,9 @@ output$ta_details_output <- renderText({
 })
 
 output$comparison_cloud_plot <- renderPlot({
+  saved_par <- par(no.readonly = TRUE)
+  on.exit(par(saved_par))
+  
   par(mar = rep(0, 4))
   comparisonCloudPlotData()
 })
@@ -336,7 +339,7 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
   
   # create filtered graph object for category and attribute value passed to the function
   if (plot_cat != "") {
-    g <- graphFilters()
+    # g <- graphFilters()
     g <- VOSONDash::applyCategoricalFilters(g, plot_cat, plot_sub_cats)
   }
   

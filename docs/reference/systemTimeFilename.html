@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a file-system friendly file name with system date time prefix — systemTimeFilename • VOSONDash</title>
+<title>Create a file name with system date time prefix — systemTimeFilename • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Create a file-system friendly file name with system date time prefix — systemTimeFilename" />
+<meta property="og:title" content="Create a file name with system date time prefix — systemTimeFilename" />
 
-<meta property="og:description" content="Create a file-system friendly file name with system date time prefix" />
+<meta property="og:description" content="This function uses the system date and time to create a unique file name." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -112,14 +112,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a file-system friendly file name with system date time prefix</h1>
+    <h1>Create a file name with system date time prefix</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>systemTimeFilename.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create a file-system friendly file name with system date time prefix</p>
+    <p>This function uses the system date and time to create a unique file name.</p>
     
     </div>
 
@@ -130,21 +130,21 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>name_suffix</th>
-      <td><p>name part of file name to append to date time as character string</p></td>
+      <td><p>Character string. Name part of file name to append to date time part.</p></td>
     </tr>
     <tr>
       <th>name_ext</th>
-      <td><p>file name extension as character string</p></td>
+      <td><p>Character string. File extension without the period. For example, <code>"txt"</code>.</p></td>
     </tr>
     <tr>
       <th>clean</th>
-      <td><p>remove problematic characters from file name as boolean</p></td>
+      <td><p>Logical. Remove problematic file system characters from file name part. Default is <code>FALSE</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>file_name as character string</p>
+    <p>A unique date time file name as character string.</p>
     
 
   </div>

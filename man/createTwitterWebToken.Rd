@@ -2,19 +2,21 @@
 % Please edit documentation in R/vosonSML.R
 \name{createTwitterWebToken}
 \alias{createTwitterWebToken}
-\title{Create a auth token with twitter app consumer keys and interactive web authorization}
+\title{Create a auth token with twitter app consumer keys}
 \usage{
 createTwitterWebToken(app_name, keys)
 }
 \arguments{
-\item{app_name}{twitter app name}
+\item{app_name}{Character string. Twitter app name.}
 
-\item{keys}{named list of app API keys}
+\item{keys}{List. Named list of twitter app API keys.}
 }
 \value{
-cred
+A \pkg{vosonSML} twitter credential object.
 }
 \description{
-Create a auth token with twitter app consumer keys and interactive web authorization
+This function creates a \code{vosonSML::Authenticate} credential object with twitter app consumer keys 
+and interactive web authorization. \code{rtweet::create_token} is used to create the access token and the properties 
+\code{type} and \code{created} are added to the credential object to assist with \pkg{VOSONDash} token management.
 }
 \keyword{internal}

@@ -2,24 +2,25 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordCloudPlot}
 \alias{wordCloudPlot}
-\title{Creates a Word Cloud plot}
+\title{Create a Word Cloud plot}
 \usage{
-wordCloudPlot(corp, seed, min_freq, max_words, pcolors = NULL)
+wordCloudPlot(corp, seed = NULL, min_freq = 1, max_words = 50,
+  pcolors = NULL)
 }
 \arguments{
-\item{corp}{text corpus}
+\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
 
-\item{seed}{value to seed rendering of word clouds}
+\item{seed}{Numeric. Seed value can be supplied to reproduce a word cloud layout.}
 
-\item{min_freq}{minimum word frequency for word clouds}
+\item{min_freq}{Numeric. Minimum word frequency to include a word in the word cloud. Default is \code{1}.}
 
-\item{max_words}{maximum number of words to render in word clouds}
+\item{max_words}{Numeric. Maximum number of words to render in the word cloud. Default is \code{50}.}
 
-\item{pcolors}{color list to use in the plot}
+\item{pcolors}{List. Colors to assign categorical variable in the plot. Default is \code{NULL}.}
 }
 \value{
-wordcloud plot
+A wordcloud plot.
 }
 \description{
-Creates a Word Cloud plot
+This function creates a wordcloud plot of words in a text corpus.
 }

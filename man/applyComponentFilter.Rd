@@ -4,18 +4,20 @@
 \alias{applyComponentFilter}
 \title{Filter out graph vertices not in component size range}
 \usage{
-applyComponentFilter(g, component_type, component_range)
+applyComponentFilter(g, component_type = "strong", component_range)
 }
 \arguments{
-\item{g}{as graphml object}
+\item{g}{\pkg{igraph} \code{graph} object.}
 
-\item{component_type}{as character string}
+\item{component_type}{Character string. Use strongly or weakly connected components by specifying \code{"strong"} or 
+\code{"weak"}. Ignored for undirected graphs. Default is \code{"strong"}.}
 
-\item{component_range}{min and max values of range as vector}
+\item{component_range}{Numeric vector. Min and max values or size range of component.}
 }
 \value{
-g as graphml object
+An igraph graph object.
 }
 \description{
-Filter out graph vertices not in component size range
+This function removes any graph vertices that are in components that fall outside of the specified 
+component size range.
 }

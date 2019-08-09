@@ -7,7 +7,7 @@
 
 tw_rv <- reactiveValues(
   tw_data = NULL,        # dataframe returned by vosonSML collection
-  tw_graphml = NULL      # graphml object returned from collection
+  tw_graphml = NULL      # igraph graph object returned from collection
 )
 
 test_data <- NULL
@@ -143,10 +143,10 @@ observeEvent(input$twitter_collect_button, {
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
         test_data <<- suppressWarnings({
-                          collectTwitterData(creds_rv$use_token, search_term, search_type,
-                                             twitter_tweet_count, twitter_retweets, twitter_retry, 
-                                             twitter_language, twitter_date_until,
-                                             twitter_since_id, twitter_max_id) })
+          VOSONDash::collectTwitterData(cred = creds_rv$use_token, search_term, search_type,
+                                        twitter_tweet_count, twitter_retweets, twitter_retry, 
+                                        twitter_language, twitter_date_until,
+                                        twitter_since_id, twitter_max_id) })
         
         tw_rv$tw_data <<- test_data
         
@@ -162,12 +162,12 @@ observeEvent(input$twitter_collect_button, {
       })
       )
       
-      # if twitter data collected create graphml object
+      # if twitter data collected create igraph graph object
       if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data) > 0) {
         incProgress(0.5, detail = "Creating network")
         tryCatch({
           # tw_rv$tw_graphml <<- createTwitterActorNetwork(tw_rv$tw_data)
-          netList <- createTwitterActorNetwork(tw_rv$tw_data)
+          netList <- VOSONDash::createTwitterActorNetwork(tw_rv$tw_data)
           tw_rv$tw_graphml <<- netList$network
           tw_rv$twitterWT_graphml <<- netList$networkWT   # "with text" (edge attribute)
         }, error = function(err) {
@@ -202,6 +202,7 @@ observeEvent(twitter_view_rvalues$data, {
                type = "twitter",
                name = "",
                seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))
+  updateCheckboxInput(session, "expand_demo_data_check", value = FALSE)
 }, ignoreInit = TRUE)
 
 #### output ----------------------------------------------------------------------------------------------------------- #

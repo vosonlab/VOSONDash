@@ -2,22 +2,22 @@
 % Please edit documentation in R/vosonSML.R
 \name{collectYoutubeData}
 \alias{collectYoutubeData}
-\title{Wrapper for collecting youtube video comments using the vosonSML package}
+\title{Collect youtube data}
 \usage{
 collectYoutubeData(youtube_api_key, youtube_video_id_list,
   youtube_max_comments)
 }
 \arguments{
-\item{youtube_api_key}{youtube api key as character string}
+\item{youtube_api_key}{Character string. Youtube api key.}
 
-\item{youtube_video_id_list}{vector of youtube video ids to collect comments from}
+\item{youtube_video_id_list}{Character vector. Youtube video ids to collect comments from.}
 
-\item{youtube_max_comments}{maximum number of comments to collect}
+\item{youtube_max_comments}{Numeric. Maximum number of comments to collect.}
 }
 \value{
-data as vosonSML youtube collection dataframe
+A vosonSML youtube dataframe.
 }
 \description{
-Wrapper for collecting youtube video comments using the vosonSML package
+This function is a wrapper for collecting youtube video comments using \code{vosonSML::Collect}.
 }
 \keyword{internal}

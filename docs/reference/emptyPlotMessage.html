@@ -34,7 +34,9 @@
   
 <meta property="og:title" content="Create an empty plot with text — emptyPlotMessage" />
 
-<meta property="og:description" content="Create an empty plot with text" />
+<meta property="og:description" content="This function creates an empty plot that can be used to display a text message. Intended to be used in 
+a series of plots to indicate that an individual plot cannot be created for some reason and still maintain a plot 
+aesthetic." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -119,24 +121,26 @@
 
     <div class="ref-description">
     
-    <p>Create an empty plot with text</p>
+    <p>This function creates an empty plot that can be used to display a text message. Intended to be used in 
+a series of plots to indicate that an individual plot cannot be created for some reason and still maintain a plot 
+aesthetic.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>emptyPlotMessage</span>(<span class='no'>message</span>)</pre>
+    <pre class="usage"><span class='fu'>emptyPlotMessage</span>(<span class='kw'>message</span> <span class='kw'>=</span> <span class='st'>"No plot available."</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>message</th>
-      <td><p>text to place on plot character string</p></td>
+      <td><p>Character string. Text message to centre on empty plot. Default text is <code>"No plot available."</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>plot with text message</p>
+    <p>An empty plot with text message.</p>
     
 
   </div>

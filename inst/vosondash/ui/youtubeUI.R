@@ -13,7 +13,10 @@ tabItem(tabName = "youtube_collection_tab",
                    
                    sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                                 # youtube video ids input
-                                textAreaInput("youtube_video_id_input", label = "Add Youtube URL", value = "",
+                                div(tags$b("Add Youtube URL"), 
+                                    vpopover(po_yt_url()$title, po_yt_url()$content), 
+                                    style = "margin-bottom:5px;"),
+                                textAreaInput("youtube_video_id_input", label = NULL, value = "",
                                               width = NULL, height = NULL,
                                               cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
                                 actionButton("youtube_add_video_id_button", label = "Add"),

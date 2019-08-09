@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a Word Frequency chart — wordFreqChart • VOSONDash</title>
+<title>Create a Word Frequency chart — wordFreqChart • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Creates a Word Frequency chart — wordFreqChart" />
+<meta property="og:title" content="Create a Word Frequency chart — wordFreqChart" />
 
-<meta property="og:description" content="Creates a Word Frequency chart" />
+<meta property="og:description" content="This function creates a horizontal barchart of word frequencies in a text corpus." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -112,43 +112,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a Word Frequency chart</h1>
+    <h1>Create a Word Frequency chart</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/textAnalysis.R'><code>R/textAnalysis.R</code></a></small>
     <div class="hidden name"><code>wordFreqChart.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Creates a Word Frequency chart</p>
+    <p>This function creates a horizontal barchart of word frequencies in a text corpus.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>wordFreqChart</span>(<span class='no'>corp</span>, <span class='no'>min_freq</span>, <span class='no'>top_count</span>, <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>wordFreqChart</span>(<span class='no'>corp</span>, <span class='kw'>min_freq</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>top_count</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>corp</th>
-      <td><p>text corpus</p></td>
+      <td><p><span class="pkg">tm</span> package document <code><a href='https://www.rdocumentation.org/packages/tm/topics/Corpus'>Corpus</a></code> object.</p></td>
     </tr>
     <tr>
       <th>min_freq</th>
-      <td><p>minimum word frequency for word frequency charts</p></td>
+      <td><p>Numeric. Minimum frequency for a word to be included in the chart. Default is <code>1</code>.</p></td>
     </tr>
     <tr>
       <th>top_count</th>
-      <td><p>number of words to render in word frequency charts</p></td>
+      <td><p>Numeric. Top count of words to render in word frequency chart. Default is <code>20</code>.</p></td>
     </tr>
     <tr>
       <th>pcolors</th>
-      <td><p>color list to use in the plot</p></td>
+      <td><p>List. Colors to assign categorical variable in the plot. Default is <code>NULL</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>barchart plot</p>
+    <p>A barchart plot.</p>
     
 
   </div>

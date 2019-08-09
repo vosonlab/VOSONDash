@@ -62,7 +62,7 @@ assortativityMMOutput <- reactive({
     CA_sel <- ng_rv$graph_cat_selected
     if (nchar(CA_sel) && CA_sel != "All") {  # eventually will have cat attr selected by default...
       assort_rvalues$mixmat_message <- NULL
-      df <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use.density = FALSE)
+      df <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use_density = FALSE)
       return(df)
     } else {
       assort_rvalues$mixmat_message <- "Categorical attribute not present, or not selected."
@@ -85,7 +85,7 @@ homophilyOutput <- reactive({
     if (nchar(CA_sel) && CA_sel != "All") {   # eventually will have cat attr selected by default...
       # output <- append(output, paste0("Selected categorical attribute is: ", CA_sel))
       vattr <- paste0('vosonCA_', CA_sel)
-      mm <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use.density = FALSE)
+      mm <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use_density = FALSE)
       
       attr_list <- ng_rv$graph_cats[[CA_sel]]
       

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Loaded vosonSML package version — getVosonSMLVersion • VOSONDash</title>
+<title>Get the vosonSML package version — getVosonSMLVersion • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Loaded vosonSML package version — getVosonSMLVersion" />
+<meta property="og:title" content="Get the vosonSML package version — getVosonSMLVersion" />
 
-<meta property="og:description" content="Loaded vosonSML package version" />
+<meta property="og:description" content="This function returns the version of the loaded vosonSML package." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -112,28 +112,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Loaded vosonSML package version</h1>
+    <h1>Get the vosonSML package version</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/vosonSML.R'><code>R/vosonSML.R</code></a></small>
     <div class="hidden name"><code>getVosonSMLVersion.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Loaded vosonSML package version</p>
+    <p>This function returns the version of the loaded vosonSML package.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>getVosonSMLVersion</span>(<span class='no'>compare_ver</span>)</pre>
-        
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>compare_ver</th>
+      <td><p>Character string. Version string to compare.</p></td>
+    </tr>
+    </table>
+    
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>package version as character string</p>
+    <p>Package version as character string or if package later than compare version as logical.</p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
           </ul>

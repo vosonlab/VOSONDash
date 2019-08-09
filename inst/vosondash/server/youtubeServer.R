@@ -81,7 +81,7 @@ observeEvent(input$youtube_collect_button, {
       
       incProgress(0.5, detail = "Creating network")
       
-      # if youtube data collected create graphml object
+      # if youtube data collected create igraph graph object
       if (!is.null(yt_rv$yt_data)) {
         tryCatch({
           # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
@@ -122,6 +122,7 @@ observeEvent(youtube_view_rvalues$data, {
                type = "twitter",
                name = "",
                seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))
+  updateCheckboxInput(session, "expand_demo_data_check", value = FALSE)
 }, ignoreInit = TRUE)
 
 observeEvent(input$clear_youtube_console, {

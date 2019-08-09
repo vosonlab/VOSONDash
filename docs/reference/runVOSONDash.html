@@ -34,7 +34,7 @@
   
 <meta property="og:title" content="Run the VOSON Dashboard Shiny Application — runVOSONDash" />
 
-<meta property="og:description" content="Run the VOSON Dashboard Shiny Application" />
+<meta property="og:description" content="This function launches the VOSONDash Shiny app in the default web browser." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -119,12 +119,25 @@
 
     <div class="ref-description">
     
-    <p>Run the VOSON Dashboard Shiny Application</p>
+    <p>This function launches the <span class="pkg">VOSONDash</span> Shiny app in the default web browser.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>runVOSONDash</span>()</pre>
-        
+    <pre class="usage"><span class='fu'>runVOSONDash</span>(<span class='kw'>pkgStartupMsgs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>isLocal</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>pkgStartupMsgs</th>
+      <td><p>Logical. Display app package loading messages. Default is <code>FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>isLocal</th>
+      <td><p>Logical. Manually set app local or server mode flag.</p></td>
+    </tr>
+    </table>
+    
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>None</p>
@@ -134,6 +147,7 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
           </ul>

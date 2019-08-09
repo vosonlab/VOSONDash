@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a Word Cloud plot — wordCloudPlot • VOSONDash</title>
+<title>Create a Word Cloud plot — wordCloudPlot • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Creates a Word Cloud plot — wordCloudPlot" />
+<meta property="og:title" content="Create a Word Cloud plot — wordCloudPlot" />
 
-<meta property="og:description" content="Creates a Word Cloud plot" />
+<meta property="og:description" content="This function creates a wordcloud plot of words in a text corpus." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -112,47 +112,48 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a Word Cloud plot</h1>
+    <h1>Create a Word Cloud plot</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/textAnalysis.R'><code>R/textAnalysis.R</code></a></small>
     <div class="hidden name"><code>wordCloudPlot.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Creates a Word Cloud plot</p>
+    <p>This function creates a wordcloud plot of words in a text corpus.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>wordCloudPlot</span>(<span class='no'>corp</span>, <span class='no'>seed</span>, <span class='no'>min_freq</span>, <span class='no'>max_words</span>, <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>wordCloudPlot</span>(<span class='no'>corp</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>min_freq</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>max_words</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>corp</th>
-      <td><p>text corpus</p></td>
+      <td><p><span class="pkg">tm</span> package document <code><a href='https://www.rdocumentation.org/packages/tm/topics/Corpus'>Corpus</a></code> object.</p></td>
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>value to seed rendering of word clouds</p></td>
+      <td><p>Numeric. Seed value can be supplied to reproduce a word cloud layout.</p></td>
     </tr>
     <tr>
       <th>min_freq</th>
-      <td><p>minimum word frequency for word clouds</p></td>
+      <td><p>Numeric. Minimum word frequency to include a word in the word cloud. Default is <code>1</code>.</p></td>
     </tr>
     <tr>
       <th>max_words</th>
-      <td><p>maximum number of words to render in word clouds</p></td>
+      <td><p>Numeric. Maximum number of words to render in the word cloud. Default is <code>50</code>.</p></td>
     </tr>
     <tr>
       <th>pcolors</th>
-      <td><p>color list to use in the plot</p></td>
+      <td><p>List. Colors to assign categorical variable in the plot. Default is <code>NULL</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>wordcloud plot</p>
+    <p>A wordcloud plot.</p>
     
 
   </div>

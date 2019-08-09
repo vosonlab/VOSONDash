@@ -7,12 +7,12 @@
 createYoutubeNetwork(data)
 }
 \arguments{
-\item{data}{as vosonSML youtube collection dataframe}
+\item{data}{\pkg{vosonSML} youtube dataframe.}
 }
 \value{
-named list of youtube actor networks
+Youtube actor networks as named list.
 }
 \description{
-Create youtube actor networks
+This function is a wrapper for creating a youtube actor networks using \code{vosonSML::Create}.
 }
 \keyword{internal}

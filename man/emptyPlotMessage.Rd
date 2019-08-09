@@ -4,15 +4,17 @@
 \alias{emptyPlotMessage}
 \title{Create an empty plot with text}
 \usage{
-emptyPlotMessage(message)
+emptyPlotMessage(message = "No plot available.")
 }
 \arguments{
-\item{message}{text to place on plot character string}
+\item{message}{Character string. Text message to centre on empty plot. Default text is \code{"No plot available."}.}
 }
 \value{
-plot with text message
+An empty plot with text message.
 }
 \description{
-Create an empty plot with text
+This function creates an empty plot that can be used to display a text message. Intended to be used in 
+a series of plots to indicate that an individual plot cannot be created for some reason and still maintain a plot 
+aesthetic.
 }
 \keyword{internal}

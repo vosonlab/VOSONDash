@@ -47,7 +47,10 @@ tabItem(tabName = "keys_tab",
                                                                        textInput("keys_twitter_api_secret_input", label = "Consumer Secret", value = ""),
                                                                        
                                                                        fluidRow(
-                                                                       div(checkboxInput("web_auth_check", "Experimental (aborting will end session)", value = FALSE, width = NULL), style = "display:inline-block; margin-left:15px;"),
+                                                                       div(checkboxInput("web_auth_check",
+                                                                                         div("Note: Incomplete process will end session", vpopover(po_web_auth()$title, po_web_auth()$content), class = "div_inline"), 
+                                                                                         # "Note: aborting will end session", 
+                                                                                         value = FALSE, width = NULL), style = "display:inline-block; margin-left:15px;"),
                                                                        div(disabled(actionButton("create_web_auth_token", "Create Web Auth Token", icon("drafting-compass"))), style = "display:inline-block;float:right;margin-right:15px;margin-left:5px;"),
                                                                        style = "padding-bottom:0px; margin-bottom:0px"),
                                                                        

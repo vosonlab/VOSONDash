@@ -34,8 +34,7 @@
   
 <meta property="og:title" content="Create a mixing matrix — mixmat" />
 
-<meta property="og:description" content="mixing matrix original function written by Gary Weissman
-see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=351" />
+<meta property="og:description" content="Function creates a mixing matrix by graph vertex attribute." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +65,7 @@ see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -120,35 +119,47 @@ see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=
 
     <div class="ref-description">
     
-    <p>mixing matrix original function written by Gary Weissman
-see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=351</p>
+    <p>Function creates a mixing matrix by graph vertex attribute.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mixmat</span>(<span class='no'>g</span>, <span class='no'>attrib</span>, <span class='kw'>use.density</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>mixmat</span>(<span class='no'>g</span>, <span class='no'>attrib</span>, <span class='kw'>use_density</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p>graph as graphml object</p></td>
+      <td><p><span class="pkg">igraph</span> graph object.</p></td>
     </tr>
     <tr>
       <th>attrib</th>
-      <td><p>vertex attribute</p></td>
+      <td><p>Character string. Vertex attribute or category.</p></td>
     </tr>
     <tr>
-      <th>use.density</th>
-      <td><p>use edge density</p></td>
+      <th>use_density</th>
+      <td><p>Logical. Use edge density. Default is <code>TRUE</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>mixing matrix</p>
+    <p>A mixing matrix.</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>Mixing matrix original function written by Gary Weissman. See: https://gist.github.com/gweissman/2402741.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># create a mixing matrix of the demonstration network based on vertex </span>
+<span class='co'># categorical attribute for political stance "vosonCA_Stance"</span>
+<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadDemoGraph.html'>loadDemoGraph</a></span>(<span class='st'>"DividedTheyBlog_40Alist_release.graphml"</span>)
+
+<span class='no'>mm</span> <span class='kw'>&lt;-</span> <span class='fu'>mixmat</span>(<span class='no'>g</span>, <span class='st'>"vosonCA_Stance"</span>, <span class='kw'>use_density</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -156,7 +167,11 @@ see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+
+      <li><a href="#note">Note</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

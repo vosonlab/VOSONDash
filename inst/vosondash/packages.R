@@ -1,7 +1,7 @@
 # required packages
-requiredPackages <- c("htmlwidgets", 
+requiredPackages <- c("htmlwidgets",
                       "shinydashboard",
-                      "shinyjs", 
+                      "shinyjs",
                       "DT",
                       "igraph",
                       "networkD3",
@@ -13,46 +13,43 @@ requiredPackages <- c("htmlwidgets",
 
 # if app is local print package information
 if (isLocal) {
-  cat("=================================================\n")
-  cat(paste("VOSONDash", paste0("v", VOSONDash::getVOSONDashVer()), "\n"))
-  cat(paste0(format(Sys.time(), "%d %b %Y %H:%M"), "\n\n"))
+  message("=================================================\n",
+          paste("VOSONDash", paste0("v", VOSONDash::getVOSONDashVer()), "\n"),
+          paste0(format(Sys.time(), "%d %b %Y %H:%M"), "\n\n"),
   
-  cat(paste0(trimws(paste(Sys.getenv("os"), R.Version()$platform)), "\n"))
-  cat(paste0(R.version.string, "\n"))
-  cat(paste("R shiny", packageVersion("shiny"), "\n"))
+          paste0(trimws(paste(Sys.getenv("os"), R.Version()$platform)), "\n"),
+          paste0(R.version.string, "\n"),
+          paste("R shiny", packageVersion("shiny"), "\n"),
   
-  cat(paste("\nHome:", Sys.getenv("HOME"), "\n"))
-  # cat(paste("Encoding:", save_enc, "\n"))
-  cat("\n")
-  
-  cat("Checking packages...\n")
-  missingPackages <- requiredPackages[!(requiredPackages %in% installed.packages()[, "Package"])]
-  
-  if (length(missingPackages) > 0) {
-    cat("Required Packages Missing:\n")
-    packageStr <- sapply(missingPackages, function(x) paste0("- ", x))
-    cat(paste0(packageStr, collapse = "\n"))
-
-    cat("\n\nPlease install required packages before using VOSONDash:\n\n")
-  
-    packageStr <- sapply(missingPackages, function(x) paste0("\"", x, "\""))
-    cat(paste0("install.packages(c(", paste0(packageStr, collapse = ","), "))\n"))
-    cat("\n")
-    
-    stop("Missing packages.", call. = FALSE)
-  } else {
-    cat("Found all required packages.\n")
-    # packageStr <- sapply(requiredPackages, function(x) paste0("- ", x, " [", packageVersion(x), "]"))
-    # cat(paste0(packageStr, collapse = "\n"))
-    cat("\nStarting VOSONDash...\n")
-  }
+          paste("\nHome:", Sys.getenv("HOME"), "\n\n", 
+                "Checking packages...\n"))
 }
 
-# load required packages
-if (suppressLibMsgs) {
-  suppressMessages({
-    sapply(requiredPackages, function(x) library(x, character.only = TRUE))
-  })  
+if (pkgMsgs == FALSE) {
+  loadedPackages <- sapply(requiredPackages, function(x) { 
+    suppressPackageStartupMessages(require(x, character.only = TRUE))
+  })
 } else {
-  sapply(requiredPackages, function(x) library(x, character.only = TRUE))
+  loadedPackages <- sapply(requiredPackages, function(x) { require(x, character.only = TRUE) })  
+}
+
+if (isLocal) {
+  if (any(loadedPackages == FALSE)) {
+    missingPackages <- names(which(loadedPackages == FALSE))
+    
+    err_msg <- paste0("Required packages missing.\n",
+                      paste0(sapply(missingPackages, function(x) paste0("- ", x)), 
+                             collapse = "\n"),
+                      "\n\nPlease install required packages before using VOSONDash:\n\n")
+    
+    packageStr <- sapply(missingPackages, function(x) paste0("\"", x, "\""))
+    err_msg <- paste0(err_msg, 
+                      paste0("install.packages(c(", paste0(packageStr, collapse = ","), "))\n"), 
+                      "\n")
+  
+    stop(err_msg, call. = FALSE)
+  } else {
+    message("Found all required packages.\n",
+            "\nStarting VOSONDash...\n")
+  }
 }

@@ -4,8 +4,13 @@
 shinyServer(function(input, output, session) {
   
   # api keys
-  u_api_keys_path <- paste0(Sys.getenv("HOME"), "/vosondash_keys.rds", sep = "")
-  u_api_tokens_path <- paste0(Sys.getenv("HOME"), "/vosondash_tokens.rds", sep = "")
+  u_api_keys_path <- "NA"
+  u_api_tokens_path <- "NA"
+  
+  if (isLocal) {
+    u_api_keys_path <- paste0(Sys.getenv("HOME"), "/vosondash_keys.rds", sep = "")
+    u_api_tokens_path <- paste0(Sys.getenv("HOME"), "/vosondash_tokens.rds", sep = "")
+  }
   
   #### network graphs ####
   source("server/networkGraphsServer.R", local = TRUE)
@@ -43,7 +48,7 @@ shinyServer(function(input, output, session) {
   # stop app when browser closes
   session$onSessionEnded(function() {
     if (isLocal) {
-      cat("Session ended or browser closed. Exiting.\n")
+      message("Session ended or browser closed. Exiting.\n")
       stopApp()
     }
   })

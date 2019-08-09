@@ -2,18 +2,23 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordSentChart}
 \alias{wordSentChart}
-\title{Creates an NRC Sentiment Emotion chart}
+\title{Create an NRC Emotion chart}
 \usage{
 wordSentChart(corp, pcolors = NULL)
 }
 \arguments{
-\item{corp}{text corpus}
+\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
 
-\item{pcolors}{color list to use in the plot}
+\item{pcolors}{List. Colors to assign categorical variable in the plot. Default is \code{NULL}.}
 }
 \value{
-barchart plot
+A barchart plot.
 }
 \description{
-Creates an NRC Sentiment Emotion chart
+This function creates a horizontal barchart measuring and sorting the eight NRC lexicon emotions in 
+the text corpus. Emotions are measured as the proportion of the total value of the eight emotions in the text as a 
+percentage.
+}
+\note{
+Uses the \pkg{syuzhet} package implementation of Saif Mohammad’s NRC Emotion lexicon.
 }

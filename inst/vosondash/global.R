@@ -4,7 +4,18 @@
 app_version <- paste0("v", VOSONDash::getVOSONDashVer())
 
 isLocal <- Sys.getenv('SHINY_PORT') == ""
-suppressLibMsgs <- TRUE
+# if (exists(".VOSONIsLocal")) {
+if (!is.null(getShinyOption("VOSONIsLocal"))) {
+  # isLocal <- .VOSONIsLocal
+  isLocal <- getShinyOption("VOSONIsLocal")
+}
+
+pkgMsgs <- TRUE
+# if (exists(".VOSONPkgMsgs")) {
+if (!is.null(getShinyOption("VOSONPkgMsgs"))) {
+  # pkgMsgs <- .VOSONPkgMsgs
+  pkgMsgs <- getShinyOption("VOSONPkgMsgs")
+}
 
 source("packages.R", local = TRUE)
 
@@ -41,9 +52,27 @@ gbl_dt_col_defs <- list(list(
     "}")
 ))
 
+vpopover <- function(title, content) {
+  div(HTML(paste("<a href = \"#\"",
+                 "class = \"popover-link\"",
+                 "data-toggle = \"popover\"",
+                 "data-container = \"body\"",
+                 "data-content = \"", content, "\"",
+                 "data-html = \"true\"",
+                 "data-trigger = \"focus\"",
+                 "tabindex = \"0\"",
+                 #"data-original-title = \"\"",
+                 "title = \"", title, "\"",
+                 ">",
+                 "<i class=\"fa fa-question-circle\" style = \"font-size:0.90em;vertical-align:top;\"></i></a>"))
+      , style = "width:4px;display:inline-block;")
+}
+
 # collection
 gbl_def_tweet_count <- 100
 gbl_def_youtube_count <- 200
+
+source("ui/popovers.R")
 
 # modules
 source("modules/collectionModule.R")

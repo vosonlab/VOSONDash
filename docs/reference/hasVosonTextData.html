@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check if graph object has vertex or edge voson text attributes — hasVosonTextData • VOSONDash</title>
+<title>Check if graph object has text attributes — hasVosonTextData • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Check if graph object has vertex or edge voson text attributes — hasVosonTextData" />
+<meta property="og:title" content="Check if graph object has text attributes — hasVosonTextData" />
 
-<meta property="og:description" content="Check if graph object has vertex or edge voson text attributes" />
+<meta property="og:description" content="This function checks if a graph has either vertex or edge text attributes." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -112,14 +112,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Check if graph object has vertex or edge voson text attributes</h1>
+    <h1>Check if graph object has text attributes</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/networkGraphs.R'><code>R/networkGraphs.R</code></a></small>
     <div class="hidden name"><code>hasVosonTextData.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Check if graph object has vertex or edge voson text attributes</p>
+    <p>This function checks if a graph has either vertex or edge text attributes.</p>
     
     </div>
 
@@ -130,13 +130,18 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p>as graphml graph object</p></td>
+      <td><p><span class="pkg">igraph</span> <code>graph</code> object.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>has_text as logical</p>
+    <p>Result as logical.</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>Uses the <code>VOSON</code> vertex and edge text attribute prefix <code>"vosonTxt_"</code> to determine if attributes are
+text attributes.</p>
     
 
   </div>
@@ -146,6 +151,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#note">Note</a></li>
           </ul>
 
   </div>

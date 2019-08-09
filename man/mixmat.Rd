@@ -4,19 +4,31 @@
 \alias{mixmat}
 \title{Create a mixing matrix}
 \usage{
-mixmat(g, attrib, use.density = TRUE)
+mixmat(g, attrib, use_density = TRUE)
 }
 \arguments{
-\item{g}{graph as graphml object}
+\item{g}{\pkg{igraph} graph object.}
 
-\item{attrib}{vertex attribute}
+\item{attrib}{Character string. Vertex attribute or category.}
 
-\item{use.density}{use edge density}
+\item{use_density}{Logical. Use edge density. Default is \code{TRUE}.}
 }
 \value{
-mixing matrix
+A mixing matrix.
 }
 \description{
-mixing matrix original function written by Gary Weissman
-see: https://gist.github.com/gweissman/2402741, http://www.babelgraph.org/wp/?p=351
+Function creates a mixing matrix by graph vertex attribute.
+}
+\note{
+Mixing matrix original function written by Gary Weissman. See: https://gist.github.com/gweissman/2402741.
+}
+\examples{
+\dontrun{
+# create a mixing matrix of the demonstration network based on vertex 
+# categorical attribute for political stance "vosonCA_Stance"
+g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+
+mm <- mixmat(g, "vosonCA_Stance", use_density = FALSE)
+}
+
 }

@@ -4,20 +4,25 @@
 \alias{applyGraphFilters}
 \title{Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops}
 \usage{
-applyGraphFilters(g, isolates, multi_edge, loops_edge)
+applyGraphFilters(g, isolates = TRUE, multi_edge = TRUE,
+  loops_edge = TRUE)
 }
 \arguments{
-\item{g}{as graphml object}
+\item{g}{\pkg{igraph} \code{graph} object.}
 
-\item{isolates}{include isolate vertices in graph as logical}
+\item{isolates}{Logical. Include isolate vertices in graph. Default is \code{TRUE}.}
 
-\item{multi_edge}{include multiple edges between vertices in graph as logical}
+\item{multi_edge}{Logical. Include multiple edges between vertices in graph. Default is \code{TRUE}.}
 
-\item{loops_edge}{include vertex edge loops in graph as logical}
+\item{loops_edge}{Logical. Include vertex edge loops in graph. Default is \code{TRUE}.}
 }
 \value{
-g as graphml object
+An igraph graph object.
 }
 \description{
-Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops
+This function removes isolate vertices, multiple edges between vertices and or vertex edge loops from a 
+graph.
+}
+\note{
+Removing multiple edges or edge loops from a graph will simplify it and remove other edge attributes.
 }

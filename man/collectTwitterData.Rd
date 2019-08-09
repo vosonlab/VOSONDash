@@ -2,37 +2,37 @@
 % Please edit documentation in R/vosonSML.R
 \name{collectTwitterData}
 \alias{collectTwitterData}
-\title{Wrapper for collecting tweets using the vosonSML package}
+\title{Collect twitter data}
 \usage{
-collectTwitterData(token, search_term, search_type, tweet_count,
+collectTwitterData(cred, search_term, search_type, tweet_count,
   include_retweets, retry_on_rate_limit, language, date_until, since_id,
   max_id)
 }
 \arguments{
-\item{token}{twitter auth token}
+\item{cred}{\pkg{vosonSML} twitter credential object.}
 
-\item{search_term}{twitter search term as character string}
+\item{search_term}{Character string. Twitter search term.}
 
-\item{search_type}{search type as character string - mixed, recent, popular}
+\item{search_type}{Character string. Search type \code{"mixed"}, \code{"recent"} or \code{"popular"}.}
 
-\item{tweet_count}{number of tweets to collect}
+\item{tweet_count}{Numeric. Number of tweets to collect.}
 
-\item{include_retweets}{logical whether to include retweets in the results}
+\item{include_retweets}{Logical. Include retweets in the results.}
 
-\item{retry_on_rate_limit}{logical whether to wait and retry when the twitter api rate limit is hit}
+\item{retry_on_rate_limit}{Logical. Wait and retry when the twitter api rate limit is reached.}
 
-\item{language}{language code of tweets to collect as two character ISO 639-1 code}
+\item{language}{Character string. Language code of tweets to collect as two character ISO 639-1 code.}
 
-\item{date_until}{date to collect tweets to as character string YYYY-MM-DD}
+\item{date_until}{Character string. Date to collect tweets to in format \code{"YYYY-MM-DD"}.}
 
-\item{since_id}{numeric id get results with an id more recent than this id}
+\item{since_id}{Numeric. Collect tweets with a tweet id more recent than \code{since_id}.}
 
-\item{max_id}{numeric id get results with an id older than this id}
+\item{max_id}{Numeric. Collect tweets with a tweet id older than \code{max_id}.}
 }
 \value{
-tweets as vosonSML Collect dataframe
+A vosonSML twitter dataframe.
 }
 \description{
-Wrapper for collecting tweets using the vosonSML package
+This function is a wrapper for collecting tweets using \code{vosonSML::Collect}.
 }
 \keyword{internal}

@@ -11,24 +11,25 @@
 
 `VOSONDash` is an R package and must be installed before the app can be run.
 
-Install the latest release via GitHub:
-```R
-install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.4.2/VOSONDash-0.4.2.tar.gz", 
-  repo = NULL, type = "source")
-```
-
-**[not yet available, coming soon...]** Install the latest release via CRAN:
+Install the latest release via CRAN:
 ```R
 install.packages("VOSONDash")
+```
+
+Install the latest release via GitHub:
+```R
+install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.4.4/VOSONDash-0.4.4.tar.gz", 
+  repo = NULL, type = "source")
 ```
 
 Install the latest development version:
 ```R
 # library(devtools)
+
 devtools::install_github("vosonlab/VOSONDash")
 ```
 
-Once the VOSON Dashboard package is installed the Shiny web application can be run from the RStudio console using the `runVOSONDash()` function.
+Once the VOSON Dashboard package is installed and loaded the Shiny web application can be run from the RStudio console using the `runVOSONDash()` function.
 
 ```R
 library(VOSONDash)
@@ -45,18 +46,14 @@ For example:
 ```R
 > runVOSONDash()
 =================================================
-VOSONDash v0.4.0
-27 Jun 2019 09:35
+VOSONDash v0.4.4
+01 Aug 2019 09:35
 
-x86_64-apple-darwin15.6.0 
-R version 3.6.0 (2019-04-26)
-R shiny 1.3.2 
-
-Home: /Users/voson_user
-Encoding: native.enc 
+...
 
 Checking packages...
-Required Packages Missing:
+
+Error: Required packages missing.
 - visNetwork
 - syuzhet
 ```
@@ -73,20 +70,32 @@ After installing required packages and running again the `VOSONDash` Shiny app w
 
 ## VOSON Dashboard
 
-`VOSONDash` features an intuitive web interface with a section for 'Analysis' of graph data in `graphml` format and a section for 'Collection' of social media data using [vosonSML](https://github.com/vosonlab/vosonSML).
+`VOSONDash` features an intuitive web interface with a section for 'Analysis' of graph data loaded from [igraph](https://igraph.org/r/) objects and a section for the 'Collection' of social media data using [vosonSML](https://github.com/vosonlab/vosonSML).
 
 ### Analysis
 
-Network and text analysis of graphml network data.  
+Network and text analysis of graph data.
+
+* Network Graphs: Visualise and modify networks
+* Network Metrics: Calculate node and network level metrics
+* Text Analysis: Word frequency, word clouds and sentiment
+* Assortativity: Calculate homogeneity and homophily indexes (if VOSON categorical node attributes present)
 
 ![VOSONDash Network Graphs Analysis](man/figures/network-graphs-1420x880.jpg)
 
+Fig 1. Environmental activist site hyperlink network loaded from a `graphml` file and plotted by the `visNetwork` package.
+
 ### Collection
 
-Section for managing Social Media API keys and graphical interfaces for collecting twitter, youtube and reddit data.
+Graphical interfaces for collecting network data from social media API's.
+
+* Collect: Twitter, youtube and reddit network data
+* API Keys: Enter, save, load API keys and create access tokens
 
 ![VOSONDash Twitter Collection](man/figures/collection-twitter-1420x880.jpg)
 
+Fig 2. Collection of recent `#auspol` tweets and generation of an actor network with the `vosonSML` package.
+
 ## Special thanks
 
-This application would not be possible without key packages by other authors in the R community, particularly the [shiny](https://github.com/rstudio/shiny), [shinydashboard](https://github.com/rstudio/shinydashboard), [DT](https://github.com/rstudio/DT) and [shinyjs](https://github.com/daattali/shinyjs) packages. Graph visualisations created with [igraph](https://github.com/igraph/rigraph) and [visNetwork](https://github.com/datastorm-open/visNetwork), and text analysis with support from [tm](https://cran.r-project.org/web/packages/tm/index.html), [SnowballC](https://cran.r-project.org/web/packages/SnowballC/index.html), [wordcloud](https://cran.r-project.org/web/packages/wordcloud/index.html) and [syuzhet](https://cran.r-project.org/web/packages/syuzhet/index.html) packages.
+This application would not be possible without key packages by other authors in the R community, particularly the [shiny](https://github.com/rstudio/shiny), [shinydashboard](https://github.com/rstudio/shinydashboard), [DT](https://github.com/rstudio/DT) and [shinyjs](https://github.com/daattali/shinyjs) packages. Graph visualisations created with [igraph](https://github.com/igraph/rigraph) and [visNetwork](https://github.com/datastorm-open/visNetwork), and text analysis with support from [tm](https://CRAN.R-project.org/package=tm), [SnowballC](https://CRAN.R-project.org/package=SnowballC), [wordcloud](https://CRAN.R-project.org/package=wordcloud) and [syuzhet](https://CRAN.R-project.org/package=syuzhet) packages.

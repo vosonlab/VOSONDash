@@ -62,7 +62,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -113,9 +113,43 @@
       <small>Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="vosondash-044" class="section level1">
+<h1 class="page-header">
+<a href="#vosondash-044" class="anchor"></a>VOSONDash 0.4.4<small> 2019-08-09 </small>
+</h1>
+<div id="minor-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes" class="anchor"></a>Minor Changes:</h2>
+<ul>
+<li>Changed the required package check to be more efficient by calling <code>required()</code> instead of <code><a href="https://www.rdocumentation.org/packages/utils/topics/installed.packages">installed.packages()</a></code>.</li>
+<li>Changed the app startup messages to use <code><a href="https://www.rdocumentation.org/packages/base/topics/message">message()</a></code> instead of <code><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat()</a></code> so if desired they can be suppressed.</li>
+<li>Added <code>pkgStartupMsgs</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to hide the app’s required package startup messages.</li>
+<li>Added optional <code>isLocal</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to manually set local or server flag if desired. If not set app will detect if it is running in server mode.</li>
+<li>Disabled the loading and saving of keys and tokens in server mode.</li>
+<li>Added a tooltip to <code>Create Web Auth Token</code> to add some further information on process and note.</li>
+</ul>
+</div>
+</div>
+    <div id="vosondash-043" class="section level1">
+<h1 class="page-header">
+<a href="#vosondash-043" class="anchor"></a>VOSONDash 0.4.3<small> Unreleased </small>
+</h1>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>Minor Changes:</h2>
+<ul>
+<li>Changed the node size controls in <code>Network Graphs</code> to be based on normalized continuous values.</li>
+<li>Moved the calculation of network metrics to the <code><a href="../reference/getNetworkMetrics.html">getNetworkMetrics()</a></code> package function.</li>
+<li>Demonstration data select box now hidden when another data source is loaded.</li>
+<li>Abbreviated long name layouts in the <code>Graph layout</code> control.</li>
+<li>Added tooltips to various interface controls using the <code>popper.js</code> javascript library (v1.14.3). Documentation at <a href="https://getbootstrap.com/docs/4.1/components/popovers/" class="uri">https://getbootstrap.com/docs/4.1/components/popovers/</a> and <a href="https://popper.js.org" class="uri">https://popper.js.org</a>.</li>
+</ul>
+</div>
+</div>
     <div id="vosondash-042" class="section level1">
 <h1 class="page-header">
-<a href="#vosondash-042" class="anchor"></a>VOSONDash 0.4.2</h1>
+<a href="#vosondash-042" class="anchor"></a>VOSONDash 0.4.2<small> Unreleased </small>
+</h1>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug Fixes:</h2>
@@ -134,9 +168,9 @@
 <li>A twitter web authorization token can now be created and used for API access without the need for a Developer account. This still requires a twitter app and Consumer API keys but means if a user has access to these that the user can authorize the twitter app against their account and use <code>VOSONDash</code> to perform twitter collections. Using this token API rate-limiting will be applied to the users account not the app. Twitter refers to this method of authentication as ‘Application-user authentication: OAuth 1a (access token for user context)’. This feature uses the <code>rtweet</code> packages interactive web authorization as implemented by the <code><a href="https://www.rdocumentation.org/packages/rtweet/topics/create_token">rtweet::create_token</a></code> function. As stated above once a token has been created it should be saved and re-used.</li>
 </ul>
 </div>
-<div id="minor-changes" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-2" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Demonstration data has been included in the package and is accessible by a new selection box below the graphml file loader in <code>Network Graphs</code>. If there is a file with the same name as the demonstration graphml file but with an additional ‘.txt’ extension in the packages demonstration data folder it will be loaded as the graph description.</li>
 <li>Added graph summary information for <code>Network Graphs</code> plots as an overlay in the bottom left corner.</li>
@@ -157,6 +191,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#vosondash-044">0.4.4</a></li>
+        <li><a href="#vosondash-043">0.4.3</a></li>
         <li><a href="#vosondash-042">0.4.2</a></li>
       </ul>
     </div>

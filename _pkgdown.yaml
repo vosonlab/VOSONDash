@@ -39,12 +39,16 @@ reference:
   - '`runVOSONDash`' 
 - title: Network Graphs
   contents:
+  - '`loadDemoGraph`'
   - '`addAdditionalMeasures`'
   - '`applyGraphFilters`'
   - '`applyComponentFilter`'
   - '`applyCategoricalFilters`'  
-  - '`applyPruneFilterX`'
+  - '`applyPruneFilter`'
   - '`getVertexCategories`'
+- title: Network Metrics
+  contents:
+  - '`getNetworkMetrics`'  
 - title: Text Analysis
   contents:
   - '`mixmat`'

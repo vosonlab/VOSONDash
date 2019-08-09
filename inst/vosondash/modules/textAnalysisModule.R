@@ -5,7 +5,7 @@
 
 #### ui ---------------------------------------------------------------------------------------------------------------
 
-#' UI container for plots
+#' @title UI container for plots
 #' 
 #' @param id shiny module namespace id
 #' 
@@ -16,7 +16,7 @@ taPlotContainerUI <- function(id) {
   uiOutput(ns("ta_plot"))
 }
 
-#' Creates dynamic ui plot placeholders generated from list of data
+#' @title Create dynamic UI plot placeholders generated from list of datasets
 #' 
 #' @param input shiny module namespaced input parameter
 #' @param output shiny module namespaced output parameter

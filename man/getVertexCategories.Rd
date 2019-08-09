@@ -2,18 +2,32 @@
 % Please edit documentation in R/networkGraphs.R
 \name{getVertexCategories}
 \alias{getVertexCategories}
-\title{Get a list of vertex attribute names that match a category attribute prefix format}
+\title{Get a list of vertex category attribute names and values}
 \usage{
 getVertexCategories(g, cat_prefix = "vosonCA_")
 }
 \arguments{
-\item{g}{as graphml object}
+\item{g}{\pkg{igraph} \code{graph} object.}
 
-\item{cat_prefix}{character string of category attribute prefix format to match}
+\item{cat_prefix}{Character string. Category attribute prefix format to match. Default is \code{"vosonCA_"}.}
 }
 \value{
-graph_cats
+A named list of vertex category attributes and values.
 }
 \description{
-Get a list of vertex attribute names that match a category attribute prefix format
+This function returns a list of graph vertex attribute names that match a category attribute prefix 
+format and their unique values.
+}
+\examples{
+\dontrun{
+# get a list of voson vertex categories and values
+g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+
+vcats <- getVertexCategories(g)
+
+# vcats
+# $Stance
+# [1] "conservative" "liberal"  
+}
+
 }

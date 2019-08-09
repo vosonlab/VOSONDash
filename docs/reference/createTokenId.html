@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create voson dash twitter auth token id — createTokenId • VOSONDash</title>
+<title>Create a twitter auth token id — createTokenId • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Create voson dash twitter auth token id — createTokenId" />
+<meta property="og:title" content="Create a twitter auth token id — createTokenId" />
 
-<meta property="og:description" content="Create voson dash twitter auth token id" />
+<meta property="og:description" content="This function uses properties of the twitter credential object to create a unique token id." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -112,31 +112,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create voson dash twitter auth token id</h1>
+    <h1>Create a twitter auth token id</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/vosonSML.R'><code>R/vosonSML.R</code></a></small>
     <div class="hidden name"><code>createTokenId.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create voson dash twitter auth token id</p>
+    <p>This function uses properties of the twitter credential object to create a unique token id.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>createTokenId</span>(<span class='no'>token</span>)</pre>
+    <pre class="usage"><span class='fu'>createTokenId</span>(<span class='no'>cred</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>token</th>
-      <td><p>twitter auth token</p></td>
+      <th>cred</th>
+      <td><p><span class="pkg">vosonSML</span> twitter credential object.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>token_id as character string</p>
+    <p>A token id as character string.</p>
     
 
   </div>

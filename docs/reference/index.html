@@ -62,7 +62,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -158,9 +158,15 @@
       <tr>
         
         <td>
+          <p><code><a href="loadDemoGraph.html">loadDemoGraph()</a></code> </p>
+        </td>
+        <td><p>Load package demonstration network graph</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="addAdditionalMeasures.html">addAdditionalMeasures()</a></code> </p>
         </td>
-        <td><p>Add degree, in-degree, out-degree, betweenness and closeness measures to graph as vertex attributes</p></td>
+        <td><p>Add additional measures to graph as vertex attributes</p></td>
       </tr><tr>
         
         <td>
@@ -178,19 +184,33 @@
         <td>
           <p><code><a href="applyCategoricalFilters.html">applyCategoricalFilters()</a></code> </p>
         </td>
-        <td><p>Filter out graph vertices not in selected category sub-categories</p></td>
+        <td><p>Filter out graph vertices not in selected category</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="applyPruneFilterX.html">applyPruneFilterX()</a></code> </p>
+          <p><code><a href="applyPruneFilter.html">applyPruneFilter()</a></code> </p>
         </td>
-        <td><p>Filter out list of vertices from graphml object using vertex id value</p></td>
+        <td><p>Prune vertices from graph by vertex id</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="getVertexCategories.html">getVertexCategories()</a></code> </p>
         </td>
-        <td><p>Get a list of vertex attribute names that match a category attribute prefix format</p></td>
+        <td><p>Get a list of vertex category attribute names and values</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-network-metrics" class="hasAnchor"><a href="#section-network-metrics" class="anchor"></a>Network Metrics</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="getNetworkMetrics.html">getNetworkMetrics()</a></code> </p>
+        </td>
+        <td><p>Get graph network metrics</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -210,25 +230,25 @@
         <td>
           <p><code><a href="wordCloudPlot.html">wordCloudPlot()</a></code> </p>
         </td>
-        <td><p>Creates a Word Cloud plot</p></td>
+        <td><p>Create a Word Cloud plot</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="wordFreqChart.html">wordFreqChart()</a></code> </p>
         </td>
-        <td><p>Creates a Word Frequency chart</p></td>
+        <td><p>Create a Word Frequency chart</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="wordSentChart.html">wordSentChart()</a></code> </p>
         </td>
-        <td><p>Creates an NRC Sentiment Emotion chart</p></td>
+        <td><p>Create an NRC Emotion chart</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="wordSentValenceChart.html">wordSentValenceChart()</a></code> </p>
         </td>
-        <td><p>Creates an NRC Positive and Negative Sentiment valence chart</p></td>
+        <td><p>Create an NRC Positive and Negative Sentiment valence chart</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -242,19 +262,19 @@
         <td>
           <p><code><a href="getRedditUrlSubreddit.html">getRedditUrlSubreddit()</a></code> </p>
         </td>
-        <td><p>Extract subreddit name from a reddit thread url</p></td>
+        <td><p>Get subreddit name from url</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="getRedditUrlThreadId.html">getRedditUrlThreadId()</a></code> </p>
         </td>
-        <td><p>Extract thread id from a reddit thread url</p></td>
+        <td><p>Get a reddit thread id from url</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="getYoutubeVideoId.html">getYoutubeVideoId()</a></code> </p>
         </td>
-        <td><p>Extract youtube video id from url</p></td>
+        <td><p>Get a youtube video id from url</p></td>
       </tr>
     </tbody>
     </table>
@@ -266,6 +286,7 @@
       <li><a href="#section-function-reference">Function Reference</a></li>
       <li><a href="#section-shiny-app">Shiny App</a></li>
       <li><a href="#section-network-graphs">Network Graphs</a></li>
+      <li><a href="#section-network-metrics">Network Metrics</a></li>
       <li><a href="#section-text-analysis">Text Analysis</a></li>
       <li><a href="#section-social-media">Social Media</a></li>
     </ul>

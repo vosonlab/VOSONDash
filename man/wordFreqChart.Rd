@@ -2,22 +2,22 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordFreqChart}
 \alias{wordFreqChart}
-\title{Creates a Word Frequency chart}
+\title{Create a Word Frequency chart}
 \usage{
-wordFreqChart(corp, min_freq, top_count, pcolors = NULL)
+wordFreqChart(corp, min_freq = 1, top_count = 20, pcolors = NULL)
 }
 \arguments{
-\item{corp}{text corpus}
+\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
 
-\item{min_freq}{minimum word frequency for word frequency charts}
+\item{min_freq}{Numeric. Minimum frequency for a word to be included in the chart. Default is \code{1}.}
 
-\item{top_count}{number of words to render in word frequency charts}
+\item{top_count}{Numeric. Top count of words to render in word frequency chart. Default is \code{20}.}
 
-\item{pcolors}{color list to use in the plot}
+\item{pcolors}{List. Colors to assign categorical variable in the plot. Default is \code{NULL}.}
 }
 \value{
-barchart plot
+A barchart plot.
 }
 \description{
-Creates a Word Frequency chart
+This function creates a horizontal barchart of word frequencies in a text corpus.
 }

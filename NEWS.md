@@ -1,3 +1,22 @@
+# VOSONDash 0.4.4
+
+## Minor Changes:
+- Changed the required package check to be more efficient by calling `required()` instead of `installed.packages()`.
+- Changed the app startup messages to use `message()` instead of `cat()` so if desired they can be suppressed.
+- Added `pkgStartupMsgs` parameter to `runVOSONDash()` to hide the app's required package startup messages.
+- Added optional `isLocal` parameter to `runVOSONDash()` to manually set local or server flag if desired. If not set app will detect if it is running in server mode.
+- Disabled the loading and saving of keys and tokens in server mode.
+- Added a tooltip to `Create Web Auth Token` to add some further information on process and note.
+
+# VOSONDash 0.4.3
+
+## Minor Changes:
+- Changed the node size controls in `Network Graphs` to be based on normalized continuous values.
+- Moved the calculation of network metrics to the `getNetworkMetrics()` package function.
+- Demonstration data select box now hidden when another data source is loaded.
+- Abbreviated long name layouts in the `Graph layout` control.
+- Added tooltips to various interface controls using the `popper.js` javascript library (v1.14.3). Documentation at https://getbootstrap.com/docs/4.1/components/popovers/ and https://popper.js.org.
+
 # VOSONDash 0.4.2
 
 ## Bug Fixes:

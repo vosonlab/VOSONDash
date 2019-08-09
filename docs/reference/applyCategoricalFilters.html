@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Filter out graph vertices not in selected category sub-categories — applyCategoricalFilters • VOSONDash</title>
+<title>Filter out graph vertices not in selected category — applyCategoricalFilters • VOSONDash</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Filter out graph vertices not in selected category sub-categories — applyCategoricalFilters" />
+<meta property="og:title" content="Filter out graph vertices not in selected category — applyCategoricalFilters" />
 
-<meta property="og:description" content="Filter out graph vertices not in selected category sub-categories" />
+<meta property="og:description" content="This function removes vertices that are not in the selected categories values list or sub-categories." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -112,14 +112,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Filter out graph vertices not in selected category sub-categories</h1>
+    <h1>Filter out graph vertices not in selected category</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/networkGraphs.R'><code>R/networkGraphs.R</code></a></small>
     <div class="hidden name"><code>applyCategoricalFilters.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Filter out graph vertices not in selected category sub-categories</p>
+    <p>This function removes vertices that are not in the selected categories values list or sub-categories.</p>
     
     </div>
 
@@ -131,27 +131,36 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>g</th>
-      <td><p>graph as graphml object</p></td>
+      <td><p><span class="pkg">igraph</span> <code>graph</code> object.</p></td>
     </tr>
     <tr>
       <th>selected_cat</th>
-      <td><p>selected vertex category without prefix as character string</p></td>
+      <td><p>Character string. Selected vertex category without prefix.</p></td>
     </tr>
     <tr>
       <th>selected_subcats</th>
-      <td><p>list of selected sub-category values to filter as character string</p></td>
+      <td><p>List. Selected sub-category values to include in graph.</p></td>
     </tr>
     <tr>
       <th>cat_prefix</th>
-      <td><p>character string of category attribute prefix format to match</p></td>
+      <td><p>Character string. Category attribute prefix format to match. Default is <code>"vosonCA_"</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>g as graphml object</p>
+    <p>An igraph graph object.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># return a graph containing only vertices that have the vertex category </span>
+<span class='co'># attribute "vosonCA_Stance" value "liberal"</span>
+<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadDemoGraph.html'>loadDemoGraph</a></span>(<span class='st'>"DividedTheyBlog_40Alist_release.graphml"</span>)
+
+<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'>applyCategoricalFilters</span>(<span class='no'>g</span>, <span class='st'>"Stance"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"liberal"</span>))
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -159,7 +168,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

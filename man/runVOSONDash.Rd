@@ -4,11 +4,16 @@
 \alias{runVOSONDash}
 \title{Run the VOSON Dashboard Shiny Application}
 \usage{
-runVOSONDash()
+runVOSONDash(pkgStartupMsgs = FALSE, isLocal = NULL)
+}
+\arguments{
+\item{pkgStartupMsgs}{Logical. Display app package loading messages. Default is \code{FALSE}.}
+
+\item{isLocal}{Logical. Manually set app local or server mode flag.}
 }
 \value{
 None
 }
 \description{
-Run the VOSON Dashboard Shiny Application
+This function launches the \pkg{VOSONDash} Shiny app in the default web browser.
 }

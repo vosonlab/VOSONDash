@@ -20,6 +20,8 @@ creds_rv <- reactiveValues(
 #### events ----------------------------------------------------------------------------------------------------------- #
 
 observeEvent(check_creds_startup, {
+  if (isLocal) {
+    
   isolate({
     if (file.exists(u_api_keys_path)) {
       api_keys <- readRDS(file = u_api_keys_path)
@@ -50,6 +52,8 @@ observeEvent(check_creds_startup, {
       creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("no tokens file found", u_api_tokens_path))
     }    
   })
+    
+  } # end isLocal
 }, once = TRUE)
 
 observeEvent(input$create_app_token, {
@@ -109,9 +113,13 @@ observeEvent(saveTokensButtonStatus(), {
 })
 
 observeEvent(input$tokens_save_button, {
+  if (isLocal) {
+    
   # save tokens
   saveRDS(creds_rv$tokens, u_api_tokens_path)
-  creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste0("saved tokens to file (", length(creds_rv$tokens), ")"))  
+  creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste0("saved tokens to file (", length(creds_rv$tokens), ")"))
+  
+  } # end isLocal
 })
 
 observeEvent(input$tokens_load_button, {
@@ -238,6 +246,10 @@ getTokenIds <- reactive({
 })
 
 saveButtonStatus <- reactive({
+  if (!isLocal) {
+    return(FALSE)
+  }
+  
   key_values <- c(input$keys_twitter_app_name_input,
                   input$keys_twitter_api_key_input,
                   input$keys_twitter_api_secret_input,
@@ -254,6 +266,10 @@ saveButtonStatus <- reactive({
 })
 
 saveTokensButtonStatus <- reactive({
+  if (!isLocal) {
+    return(FALSE)
+  }
+  
   if (length(creds_rv$tokens) > 0) {
     return(TRUE)
   }
@@ -264,6 +280,8 @@ saveTokensButtonStatus <- reactive({
 
 # save input field values to api_keys list and then save object as rds
 writeKeysFile <- function() {
+  if (isLocal) {
+    
   status <- ""
   
   api_keys <<- list(
@@ -278,6 +296,8 @@ writeKeysFile <- function() {
   
   saveRDS(api_keys, u_api_keys_path)
   creds_rv$msg_log <<- logMessage(creds_rv$msg_log, paste("wrote keys to", u_api_keys_path))
+  
+  } # end isLocal
 }
 
 # read api_keys object from rds file and update input fields with values

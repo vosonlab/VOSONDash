@@ -2,21 +2,21 @@
 % Please edit documentation in R/utils.R
 \name{systemTimeFilename}
 \alias{systemTimeFilename}
-\title{Create a file-system friendly file name with system date time prefix}
+\title{Create a file name with system date time prefix}
 \usage{
 systemTimeFilename(name_suffix, name_ext, clean = FALSE)
 }
 \arguments{
-\item{name_suffix}{name part of file name to append to date time as character string}
+\item{name_suffix}{Character string. Name part of file name to append to date time part.}
 
-\item{name_ext}{file name extension as character string}
+\item{name_ext}{Character string. File extension without the period. For example, \code{"txt"}.}
 
-\item{clean}{remove problematic characters from file name as boolean}
+\item{clean}{Logical. Remove problematic file system characters from file name part. Default is \code{FALSE}.}
 }
 \value{
-file_name as character string
+A unique date time file name as character string.
 }
 \description{
-Create a file-system friendly file name with system date time prefix
+This function uses the system date and time to create a unique file name.
 }
 \keyword{internal}

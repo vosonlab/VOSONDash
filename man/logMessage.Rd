@@ -2,23 +2,24 @@
 % Please edit documentation in R/utils.R
 \name{logMessage}
 \alias{logMessage}
-\title{Simple logging queue with count FIFO}
+\title{Add message to log queue}
 \usage{
 logMessage(messages, add_message, txt = FALSE, count = 20)
 }
 \arguments{
-\item{messages}{vector of text messages}
+\item{messages}{Character vector. Lines or text log messages.}
 
-\item{add_message}{text message to add to the messages queue}
+\item{add_message}{Character string. Text log message to add to messages}
 
-\item{txt}{return lines as character string}
+\item{txt}{Logical. Return messages as single character string delimited by newline characters.}
 
-\item{count}{return queue of count messages and discard the rest}
+\item{count}{Numeric. Return queue of count messages and discard the rest.}
 }
 \value{
-messages as vector or character string
+Messages as vector or character string.
 }
 \description{
-Simple logging queue with count FIFO
+This function adds a text message to a queue or list with a count limiting how many messages are 
+stored. The queue stores count messages based on first in first out.
 }
 \keyword{internal}

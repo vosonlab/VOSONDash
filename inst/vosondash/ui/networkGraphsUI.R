@@ -21,19 +21,25 @@ tabItem(tabName = "network_graphs_tab",
                    ),
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
                                 div("Graph Filters", style = "font-weight: bold;", class = "div_inline"),
-                                div("re-seed ", disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding:2px 8px;")), style = "float:right; margin-top:5px; font-size:0.98em;"),
+                                div(disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding:2px 8px;")), style = "float:right; margin-top:5px; font-size:0.98em;",
+                                    vpopover(po_reseed_graph()$title, po_reseed_graph()$content)),
+
                                 disabled(checkboxInput("graph_names_check", "Node Labels", FALSE)),
                                 div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_loops_edge_check", "Loops", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_isolates_check", "Isolates", TRUE)), class = "div_inline"),
                                 fluidRow(
                                   column(width = 6,
-                                         disabled(selectInput("graph_layout_select", label = "Graph Layout", choices = c("Auto", "Fruchterman-Reingold", "Kamada-Kawai", "Davidson-Harel",
-                                                                                                                         "Large Graph Layout", "Grid", "Sphere", "Circle", "Star", "Random"),
+                                         div(tags$b("Graph Layout"), 
+                                             vpopover(po_graph_layout()$title, po_graph_layout()$content), 
+                                             style = "margin-bottom:5px;"),
+                                         disabled(selectInput("graph_layout_select", label = NULL, choices = c("Auto", "FR", "KK", "DH",
+                                                                                                                         "LGL", "Graphopt", "DrL", "GEM", "MDS",
+                                                                                                                         "Grid", "Sphere", "Circle", "Star", "Random"),
                                                               selectize = TRUE, selected = "Auto"))
                                   ),
                                   column(width = 6,
-                                         disabled(sliderInput("graph_spread_slider", "Spread", min = 0.5, max = 2.5, step = 0.1, value = c(1), ticks = FALSE))
+                                         disabled(sliderInput("graph_spread_slider", "Spread", min = 0.25, max = 2.5, step = 0.1, value = c(1), ticks = FALSE))
                                   )
                                 ),
                                 
@@ -44,25 +50,28 @@ tabItem(tabName = "network_graphs_tab",
                                                               multiple = FALSE, selectize = TRUE))
                                   ),
                                   column(width = 6,
-                                         disabled(sliderInput("graph_node_size_slider", label = "Multiplier", min = 0, max = 10, step = 0.1, value = c(1), ticks = FALSE, animate = FALSE))
+                                         disabled(sliderInput("graph_node_size_slider", label = "Multiplier", min = 0.1, max = 15, step = 0.1, value = c(1), ticks = FALSE, animate = FALSE))
                                   )
                                 ),
                                 
-                                checkboxInput('expand_categorical_filter_check', div("Categorical Filter", style = "font-weight: bold;"), FALSE),
+                                checkboxInput('expand_categorical_filter_check', 
+                                              div(tags$b("Categorical Filter"), 
+                                                  vpopover(po_cat_filter()$title, po_cat_filter()$content), 
+                                                  style = "margin-bottom:5px;")
+                                              , FALSE),
                                 conditionalPanel(condition = 'input.expand_categorical_filter_check',
                                                  fluidRow(
                                                    column(width = 6,
                                                           disabled(selectInput("graph_cat_select", div("Category", style = "font-weight: normal;"), choices = c("All"), multiple = FALSE)) # selectize = TRUE graph_catAttr_select
                                                    ),
                                                    column(width = 6,
-                                                          # graph_catAttr_attr_select
                                                           disabled(selectInput("graph_sub_cats_select", div("View", style = "font-weight: normal;"), choices = c("All"), multiple = TRUE, selected = "All", selectize = FALSE, size = 3))
                                                    )
                                                  )
                                 ),
                                 checkboxInput('expand_component_filter_check', div("Component Filter", style = "font-weight: bold;"), FALSE),
                                 conditionalPanel(condition = 'input.expand_component_filter_check',
-                                                 disabled(checkboxInput('reset_on_change_check', div("Recalculate for category change", style = "font-weight: normal;"), TRUE)),
+                                                 disabled(checkboxInput('reset_on_change_check', div("Recalculate on category change", style = "font-weight: normal;"), TRUE)),
                                                  fluidRow(
                                                    column(width = 4,
                                                           shinyjs::disabled(selectInput("graph_component_type_select", div("Type", style = "font-weight: normal;"), choices = c("Weak", "Strong"), selected = "Weak", multiple = FALSE))
@@ -78,28 +87,13 @@ tabItem(tabName = "network_graphs_tab",
                                                  
                                 )
                                 
-                   ) # ,
-                   # graph summary info
-                   # sidebarPanel(width = 12, class = "custom_well_for_controls",
-                   #              div("Summary", style = "font-weight: bold;", style = "margin-bottom:5px;"),
-                   #              verbatimTextOutput("graph_summary_output", placeholder = TRUE)
-                   # )
-                   
+                   )
                  )
           ),
           
           column(width = 9, offset = 0,
                  fluidRow(
                    # graph type tabs
-                   # tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
-                   #        selected = "Plot", id = "selected_graph_tab",
-                   #        tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), # 500px
-                   #                 value = "Plot"),
-                   #        tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",
-                   #                                                height = "auto"), value = "visNetwork"),
-                   #        tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
-                   #        tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
-                   # ),
                    uiOutput("vis_plot_ui"),
                    uiOutput("plot_height_ui"),
                    uiOutput("graph_summary_ui"),
