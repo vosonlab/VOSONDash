@@ -1,5 +1,5 @@
 # VOSONDash
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/vosonSML)](https://CRAN.R-project.org/package=VOSONDash)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 ![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)
 ![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)
 ![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=8065ac)
