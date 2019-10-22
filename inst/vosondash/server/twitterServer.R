@@ -162,18 +162,20 @@ observeEvent(input$twitter_collect_button, {
       })
       )
       
-      # if twitter data collected create igraph graph object
-      if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data) > 0) {
-        incProgress(0.5, detail = "Creating network")
-        tryCatch({
-          # tw_rv$tw_graphml <<- createTwitterActorNetwork(tw_rv$tw_data)
-          netList <- VOSONDash::createTwitterActorNetwork(tw_rv$tw_data)
-          tw_rv$tw_graphml <<- netList$network
-          tw_rv$twitterWT_graphml <<- netList$networkWT   # "with text" (edge attribute)
-        }, error = function(err) {
-          incProgress(1, detail = "Error")
-          cat(paste("twitter graphml error: ", err))
-        })
+      if (!v029) {
+        # if twitter data collected create igraph graph object
+        if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data) > 0) {
+          incProgress(0.5, detail = "Creating network")
+          tryCatch({
+            # tw_rv$tw_graphml <<- createTwitterActorNetwork(tw_rv$tw_data)
+            netList <- VOSONDash::createTwitterActorNetwork(tw_rv$tw_data)
+            tw_rv$tw_graphml <<- netList$network
+            tw_rv$twitterWT_graphml <<- netList$networkWT   # "with text" (edge attribute)
+          }, error = function(err) {
+            incProgress(1, detail = "Error")
+            cat(paste("twitter graphml error: ", err))
+          })
+        }
       }
       
       incProgress(1, detail = "Finished")
@@ -184,6 +186,42 @@ observeEvent(input$twitter_collect_button, {
   
   # enable button
   twitterArgumentsOutput()
+})
+
+observeEvent(tw_rv$tw_data, {
+  if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data)) {
+    shinyjs::enable("twitter_create_button")
+  } else {
+    shinyjs::disable("twitter_create_button")
+  }
+})
+
+observeEvent(input$twitter_create_button, {
+  net_type <- input$twitter_network_type_select
+  add_text <- input$twitter_network_text
+  add_user_data <- input$twitter_network_user_data
+  network <- NULL
+  
+  withConsoleRedirect("twitter_console", {
+    if (net_type == "activity") {
+      network <- vosonSML::Create(isolate(tw_rv$tw_data), "activity", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(tw_rv$tw_data)) }
+    } else if (net_type == "actor") {
+      network <- vosonSML::Create(isolate(tw_rv$tw_data), "actor", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(tw_rv$tw_data)) }
+      if (add_user_data) { 
+        network <- vosonSML::AddUserData(network, isolate(tw_rv$tw_data), twitterAuth = creds_rv$use_token) 
+      }
+    } else if (net_type == "bimodal") {
+      network <- vosonSML::Create(isolate(tw_rv$tw_data), "bimodal", verbose = TRUE)
+    } else if (net_type == "semantic") {
+      network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", verbose = TRUE)
+    }
+    if (!is.null(network)) { tw_rv$tw_graphml <- vosonSML::Graph(network) }
+  })
+  
+  shinyjs::runjs("jQuery( function() { var pre = jQuery('#twitter_console');
+                                       pre.scrollTop( pre.prop('scrollHeight') ); }); ")
 })
 
 # download and view actions

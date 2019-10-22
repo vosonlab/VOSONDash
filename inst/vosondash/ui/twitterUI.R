@@ -7,7 +7,14 @@ tabItem(tabName = "twitter_collection_tab",
                                 p(tags$b("Auth Token")),
                                 verbatimTextOutput("twitter_collect_token_output", placeholder = TRUE)
                                 ),
-                   sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
+                                    
+                   # sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
+                    
+                   tabBox(title = NULL,
+                          id = "twitter_control_tabset",
+                          width = 12,
+                          tabPanel("Collect Data",
+                                                 
                                 # twitter search term input
                                 div(tags$b("Search Query"), 
                                     vpopover(po_twit_query()$title, po_twit_query()$content), 
@@ -63,7 +70,27 @@ tabItem(tabName = "twitter_collection_tab",
                                 ),
                                 p(""),
                                 disabled(actionButton("twitter_collect_button", label = "Collect Tweets", icon = icon("cloud-download")))
-                   )
+                                
+                          ), # end tabPanel
+                          tabPanel("Create Network",
+                                   div(tags$b("Network")),
+                                   selectInput("twitter_network_type_select", label = NULL, choices = c("activity", "actor", "bimodal", "semantic"), multiple = FALSE),
+                                   conditionalPanel(
+                                           condition = "input.twitter_network_type_select == 'activity' || 
+                                                        input.twitter_network_type_select == 'actor'",
+                                           checkboxInput("twitter_network_text", "Add Text", FALSE)
+                                   ),
+                                   conditionalPanel(
+                                           condition = "input.twitter_network_type_select == 'actor'",
+                                           checkboxInput("twitter_network_user_data", "Lookup User Data", FALSE)
+                                   ),
+                                   p(""),
+                                   disabled(actionButton("twitter_create_button", label = "Create Network", icon = icon("share-alt")))
+                                   
+                          ) # end tabPanel
+                   ) # end tabBox
+                                
+                   #) # end sidebar
                  )
           ),
           

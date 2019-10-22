@@ -79,22 +79,23 @@ observeEvent(input$youtube_collect_button, {
         return(NULL)
       })
       
-      incProgress(0.5, detail = "Creating network")
-      
-      # if youtube data collected create igraph graph object
-      if (!is.null(yt_rv$yt_data)) {
-        tryCatch({
-          # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
-          netList <- createYoutubeNetwork(yt_rv$yt_data)
-          yt_rv$yt_graphml <<- netList$network
-          yt_rv$yt_wt_graphml <<- netList$networkWT   # "with text" (edge attribute)          
-        }, error = function(err) {
-          incProgress(1, detail = "Error")
-          cat(paste('youtube graphml error:', err))
-          return(NULL)
-        })
+      if (!v029) {
+        incProgress(0.5, detail = "Creating network")
+        
+        # if youtube data collected create igraph graph object
+        if (!is.null(yt_rv$yt_data)) {
+          tryCatch({
+            # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
+            netList <- createYoutubeNetwork(yt_rv$yt_data)
+            yt_rv$yt_graphml <<- netList$network
+            yt_rv$yt_wt_graphml <<- netList$networkWT   # "with text" (edge attribute)          
+          }, error = function(err) {
+            incProgress(1, detail = "Error")
+            cat(paste('youtube graphml error:', err))
+            return(NULL)
+          })
+        }
       }
-      
       incProgress(1, detail = "Finished")
       
     }) # withConsoleRedirect
@@ -103,6 +104,36 @@ observeEvent(input$youtube_collect_button, {
   
   # enable button
   youtubeArgumentsOutput()
+})
+
+observeEvent(yt_rv$yt_data, {
+  if (!is.null(yt_rv$yt_data) && nrow(yt_rv$yt_data)) {
+    shinyjs::enable("youtube_create_button")
+  } else {
+    shinyjs::disable("youtube_create_button")
+  }
+})
+
+observeEvent(input$youtube_create_button, {
+  net_type <- input$youtube_network_type_select
+  add_text <- input$youtube_network_text
+  add_video_data <- input$youtube_network_video_data
+  network <- NULL
+  
+  withConsoleRedirect("youtube_console", {
+    if (net_type == "activity") {
+      network <- vosonSML::Create(isolate(yt_rv$yt_data), "activity", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(yt_rv$yt_data)) }
+    } else if (net_type == "actor") {
+      network <- vosonSML::Create(isolate(yt_rv$yt_data), "actor", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(yt_rv$yt_data)) }
+      if (add_video_data) { 
+        creds <- vosonSML::Authenticate("youtube", apiKey = youtube_api_key)
+        network <- vosonSML::AddVideoData(network, isolate(yt_rv$yt_data), youtubeAuth = creds, actorSubOnly = TRUE)
+      }
+    }
+    if (!is.null(network)) { yt_rv$yt_graphml <- vosonSML::Graph(network) }
+  })
 })
 
 # download and view actions

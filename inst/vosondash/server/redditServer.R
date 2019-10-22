@@ -59,19 +59,21 @@ observeEvent(input$reddit_collect_button, {
         return(NULL)
       })
       
-      incProgress(0.5, detail = "Creating network")
-      
-      # if reddit data collected create igraph graph object
-      if (!is.null(red_rv$reddit_data)) {
-        tryCatch({
-          netList <- createRedditActorNetwork(red_rv$reddit_data)
-          red_rv$reddit_graphml <<- netList$network
-          red_rv$reddit_wt_graphml <<- netList$networkWT
-        }, error = function(err) {
-          incProgress(1, detail = "Error")
-          cat(paste('reddit graphml error:', err))
-          return(NULL)
-        })
+      if (!v029) {
+        incProgress(0.5, detail = "Creating network")
+        
+        # if reddit data collected create igraph graph object
+        if (!is.null(red_rv$reddit_data)) {
+          tryCatch({
+            netList <- createRedditActorNetwork(red_rv$reddit_data)
+            red_rv$reddit_graphml <<- netList$network
+            red_rv$reddit_wt_graphml <<- netList$networkWT
+          }, error = function(err) {
+            incProgress(1, detail = "Error")
+            cat(paste('reddit graphml error:', err))
+            return(NULL)
+          })
+        }
       }
       
       incProgress(1, detail = "Finished")
@@ -82,6 +84,36 @@ observeEvent(input$reddit_collect_button, {
   
   # enable button
   redditArgumentsOutput()
+})
+
+observeEvent(red_rv$reddit_data, {
+  if (!is.null(red_rv$reddit_data) && nrow(red_rv$reddit_data)) {
+    shinyjs::enable("reddit_create_button")
+  } else {
+    shinyjs::disable("reddit_create_button")
+  }
+})
+
+observeEvent(input$reddit_create_button, {
+  net_type <- input$reddit_network_type_select
+  add_text <- input$reddit_network_text
+  network <- NULL
+  
+  withConsoleRedirect("reddit_console", {
+    if (net_type == "activity") {
+      network <- vosonSML::Create(isolate(red_rv$reddit_data), "activity", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
+    } else if (net_type == "actor") {
+      network <- vosonSML::Create(isolate(red_rv$reddit_data), "actor", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
+    }
+    if (!is.null(network)) { red_rv$reddit_graphml <- vosonSML::Graph(network) }
+  })
+  
+  # shinyjs::runjs("jQuery( function() { var pre = jQuery('#reddit_console');
+  #                                      pre.scrollTop( pre.prop('scrollHeight')+200 ); }); ")
+  # 
+  # scrollIntoView()
 })
 
 # download and view actions
