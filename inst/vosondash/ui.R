@@ -42,7 +42,7 @@ dashboardPage(
     # additional js features
     useShinyjs(),
     #use_tippy(),
-    
+    extendShinyjs(text = gbl_scroll_console, functions = c("scroll_console")),
     # custom ui stylesheet
     tags$head(
       tags$script(src = "popper.js"),

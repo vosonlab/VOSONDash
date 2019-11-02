@@ -41,9 +41,9 @@ tabItem(tabName = "twitter_collection_tab",
                                     div(textInput("twitter_language_input", label = NULL, value = "", width = "45px"), class = "div_inline")),
                                 
                                 div(div("Date Until", class = "div_inline", style = "padding-bottom:10px;padding-right:16px;"),
-                                    div(dateInput("twitter_date_until_input", label = NULL, value = "", min = NULL, max = NULL,
+                                    div(suppressWarnings(dateInput("twitter_date_until_input", label = NULL, value = "", min = NULL, max = NULL,
                                                   format = "yyyy-mm-dd", startview = "month", weekstart = 0,
-                                                  language = "en", width = "90px", autoclose = TRUE), class = "div_inline")),
+                                                  language = "en", width = "90px", autoclose = TRUE)), class = "div_inline")),
                                 
                                 checkboxInput('expand_twitter_id_filters_check', 
                                               div("Tweet ID Range", vpopover(po_twit_id_range()$title, po_twit_id_range()$content), class = "div_inline"), 
@@ -73,8 +73,7 @@ tabItem(tabName = "twitter_collection_tab",
                                 
                           ), # end tabPanel
                           tabPanel("Create Network",
-                                   div(tags$b("Network")),
-                                   selectInput("twitter_network_type_select", label = NULL, choices = c("activity", "actor", "bimodal", "semantic"), multiple = FALSE),
+                                   selectInput("twitter_network_type_select", label = "Network", choices = c("activity", "actor", "bimodal", "semantic"), multiple = FALSE),
                                    conditionalPanel(
                                            condition = "input.twitter_network_type_select == 'activity' || 
                                                         input.twitter_network_type_select == 'actor'",
@@ -83,6 +82,18 @@ tabItem(tabName = "twitter_collection_tab",
                                    conditionalPanel(
                                            condition = "input.twitter_network_type_select == 'actor'",
                                            checkboxInput("twitter_network_user_data", "Lookup User Data", FALSE)
+                                   ),
+                                   conditionalPanel(
+                                           condition = "input.twitter_network_type_select == 'bimodal'",
+                                           textAreaInput("twitter_bimodal_remove", label = "Remove hashtags", value = "",
+                                                     width = NULL, height = NULL,
+                                                     cols = NULL, rows = 2, placeholder = NULL, resize = "vertical")
+                                   ),
+                                   conditionalPanel(
+                                           condition = "input.twitter_network_type_select == 'semantic'",
+                                           textAreaInput("twitter_semantic_remove", label = "Remove hashtags", value = "",
+                                                     width = NULL, height = NULL,
+                                                     cols = NULL, rows = 2, placeholder = NULL, resize = "vertical")
                                    ),
                                    p(""),
                                    disabled(actionButton("twitter_create_button", label = "Create Network", icon = icon("share-alt")))

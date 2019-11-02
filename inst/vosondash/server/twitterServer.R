@@ -202,6 +202,20 @@ observeEvent(input$twitter_create_button, {
   add_user_data <- input$twitter_network_user_data
   network <- NULL
   
+  parse_rem_terms <- function(rem_terms) {
+    rem_terms <- unlist(strsplit(rem_terms, ","), use.names = FALSE)
+    rem_terms <- sapply(rem_terms, function(x) { 
+      term <- trimws(x)
+      if (term == "") { return(NA) }
+      term
+    }, USE.NAMES = FALSE)
+    rem_terms <- na.omit(rem_terms)    
+  }
+  
+  shinyjs::disable("twitter_create_button")
+  
+  withProgress(message = 'Creating network', value = 0.5, {
+  
   withConsoleRedirect("twitter_console", {
     if (net_type == "activity") {
       network <- vosonSML::Create(isolate(tw_rv$tw_data), "activity", verbose = TRUE)
@@ -213,15 +227,34 @@ observeEvent(input$twitter_create_button, {
         network <- vosonSML::AddUserData(network, isolate(tw_rv$tw_data), twitterAuth = creds_rv$use_token) 
       }
     } else if (net_type == "bimodal") {
-      network <- vosonSML::Create(isolate(tw_rv$tw_data), "bimodal", verbose = TRUE)
+      rem_terms <- parse_rem_terms(input$twitter_bimodal_remove)
+      if (length(rem_terms)) {
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "bimodal", removeTermsOrHashtags = rem_terms,
+                                    verbose = TRUE)
+      } else {
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "bimodal", verbose = TRUE) 
+      }
     } else if (net_type == "semantic") {
-      network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", verbose = TRUE)
+      rem_terms <- parse_rem_terms(input$twitter_semantic_remove)
+      browser()
+      if (length(rem_terms)) {
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", removeTermsOrHashtags = rem_terms,
+                                    verbose = TRUE)
+      } else {
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", verbose = TRUE) 
+      }
     }
     if (!is.null(network)) { tw_rv$tw_graphml <- vosonSML::Graph(network) }
   })
   
-  shinyjs::runjs("jQuery( function() { var pre = jQuery('#twitter_console');
-                                       pre.scrollTop( pre.prop('scrollHeight') ); }); ")
+  incProgress(1, detail = "Finished")
+  })
+  
+  shinyjs::enable("twitter_create_button")
+  
+  # shinyjs::runjs("jQuery( function() { var pre = jQuery('#twitter_console');
+  #                                      pre.scrollTop( pre.prop('scrollHeight') ); }); ")
+  js$scroll_console("twitter_console")
 })
 
 # download and view actions

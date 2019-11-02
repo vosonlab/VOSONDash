@@ -99,6 +99,10 @@ observeEvent(input$reddit_create_button, {
   add_text <- input$reddit_network_text
   network <- NULL
   
+  shinyjs::disable("reddit_create_button")
+  
+  withProgress(message = 'Creating network', value = 0.5, {
+    
   withConsoleRedirect("reddit_console", {
     if (net_type == "activity") {
       network <- vosonSML::Create(isolate(red_rv$reddit_data), "activity", verbose = TRUE)
@@ -110,6 +114,10 @@ observeEvent(input$reddit_create_button, {
     if (!is.null(network)) { red_rv$reddit_graphml <- vosonSML::Graph(network) }
   })
   
+  incProgress(1, detail = "Finished")
+  })
+  
+  shinyjs::enable("reddit_create_button")
   # shinyjs::runjs("jQuery( function() { var pre = jQuery('#reddit_console');
   #                                      pre.scrollTop( pre.prop('scrollHeight')+200 ); }); ")
   # 

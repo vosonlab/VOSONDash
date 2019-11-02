@@ -70,6 +70,14 @@ vpopover <- function(title, content) {
       , style = "width:4px;display:inline-block;")
 }
 
+# gbl_scroll_console <- "function scroll_console(id) { 
+#                            var pre = jQuery(id);
+#                            pre.scrollTop( pre.prop('scrollHeight') ); }" # #twitter_console
+
+# gbl_scroll_console <- "shinyjs.scroll_console = $(function(id) { $(id).scrollTop($(id).prop('scrollHeight')); })"
+gbl_scroll_console <- "shinyjs.scroll_console = function(id) { var elem = document.getElementById(id); 
+                                                               elem.scrollTop = elem.scrollHeight+600; }" 
+
 # collection
 gbl_def_tweet_count <- 100
 gbl_def_youtube_count <- 200
