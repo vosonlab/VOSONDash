@@ -7,18 +7,20 @@
 #' @keywords internal
 #' @export
 getVosonSMLVersion <- function() {
-  if ("vosonSML" %in% loadedNamespaces()) {
-    return(utils::packageVersion("vosonSML"))
-  }
+  if ("vosonSML" %in% loadedNamespaces()) { return(utils::packageVersion("vosonSML")) }
   "unknown"
 }
 
+#' @title Return logical if vosonSML version later than 0.29
+#' 
+#' @description This function returns if the installed version of vosonSML is later than v0.29
+#'
+#' @return Logical.
+#' 
 #' @keywords internal
 #' @export
 isVosonSML0290 <- function() {
-  if (utils::packageVersion("vosonSML") >= "0.29.0") {
-    return(TRUE)
-  }
+  if (utils::packageVersion("vosonSML") >= "0.29.0") { return(TRUE) }
   FALSE
 }
 

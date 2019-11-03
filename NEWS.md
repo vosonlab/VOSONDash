@@ -1,3 +1,8 @@
+# VOSONDash 0.5.0
+
+## Major Changes:
+- 
+
 # VOSONDash 0.4.4
 
 ## Minor Changes:
