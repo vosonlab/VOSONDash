@@ -220,10 +220,18 @@ observeEvent(input$clear_all_youtube_dt_columns, {
                            inline = TRUE)
 })
 
+dt_yt_cols <- function() {
+  if (v029) {
+    return(c("Comment", "AuthorDisplayName", "VideoID", "PublishedAt"))
+  } else {
+    return(c("Comment", "User", "PublishTime"))
+  }
+}
+
 observeEvent(input$reset_youtube_dt_columns, {
   updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
                            choices = isolate(yt_rv$data_cols),
-                           selected = c("Comment", "AuthorDisplayName", "VideoID", "PublishedAt"),
+                           selected = dt_yt_cols(),
                            inline = TRUE)
 })
 
@@ -240,7 +248,7 @@ output$youtube_data_cols_ui <- renderUI({
                        actionButton("reset_youtube_dt_columns", "Reset")),
                    checkboxGroupInput("show_youtube_cols", label = NULL,
                                       choices = yt_rv$data_cols,
-                                      selected = c("Comment", "AuthorDisplayName", "VideoID", "PublishedAt"),
+                                      selected = dt_yt_cols(),
                                       inline = TRUE, width = '98%')
   )
 })

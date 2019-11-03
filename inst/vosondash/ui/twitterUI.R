@@ -124,6 +124,7 @@ tabItem(tabName = "twitter_collection_tab",
                    # download twitter data and graphml button
                    sidebarPanel(width = 12, class = "custom_well_for_buttons",
                                 fluidRow(collectDataButtonsUI("twitter"),
+                                         collectNetworkButtonsUI("twitter"),
                                          collectGraphButtonsUI("twitter"),
                                          collectViewGraphButtonsUI("twitter"))
                    )

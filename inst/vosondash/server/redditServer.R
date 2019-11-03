@@ -7,6 +7,7 @@
 
 red_rv <- reactiveValues(
   reddit_data = NULL,      # dataframe returned by vosonSML collection
+  reddit_network = NULL,
   reddit_graphml = NULL,   # igraph graph object returned from collection
   reddit_wt_graphml = NULL,
   
@@ -111,7 +112,10 @@ observeEvent(input$reddit_create_button, {
       network <- vosonSML::Create(isolate(red_rv$reddit_data), "actor", verbose = TRUE)
       if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
     }
-    if (!is.null(network)) { red_rv$reddit_graphml <- vosonSML::Graph(network) }
+    if (!is.null(network)) {
+      red_rv$reddit_network <- network
+      red_rv$reddit_graphml <- vosonSML::Graph(network) 
+    }
   })
   
   incProgress(1, detail = "Finished")
@@ -127,16 +131,24 @@ observeEvent(input$reddit_create_button, {
 # download and view actions
 callModule(collectDataButtons, "reddit", data = reactive({ red_rv$reddit_data }), file_prefix = "reddit")
 
-callModule(collectGraphButtons, "reddit", graph_data = reactive({ red_rv$reddit_graphml }), 
-           graph_wt_data = reactive({ red_rv$reddit_wt_graphml }), file_prefix = "reddit")
+callModule(collectNetworkButtons, "reddit", network = reactive({ red_rv$reddit_network }), file_prefix = "reddit")
 
-reddit_view_rvalues <- callModule(collectViewGraphButtons, "reddit", 
-                                   graph_data = reactive({ red_rv$reddit_graphml }), 
-                                   graph_wt_data = reactive({ red_rv$reddit_wt_graphml }))
+if (v029) {
+  callModule(collectGraphButtons_, "reddit", graph_data = reactive({ red_rv$reddit_graphml }), file_prefix = "reddit")
+  
+  reddit_view_rvalues <- callModule(collectViewGraphButtons, "reddit", graph_data = reactive({ red_rv$reddit_graphml }))  
+} else {
+  callModule(collectGraphButtons, "reddit", graph_data = reactive({ red_rv$reddit_graphml }), 
+             graph_wt_data = reactive({ red_rv$reddit_wt_graphml }), file_prefix = "reddit")
+  
+  reddit_view_rvalues <- callModule(collectViewGraphButtons, "reddit", 
+                                     graph_data = reactive({ red_rv$reddit_graphml }), 
+                                     graph_wt_data = reactive({ red_rv$reddit_wt_graphml }))
+}
 
 observeEvent(reddit_view_rvalues$data, {
   setGraphView(data = isolate(reddit_view_rvalues$data), 
-               desc = paste0("Reddit actor network for threads: ", paste0(reddit_url_list, collapse = ', '), sep = ""),
+               desc = paste0("Reddit network for threads: ", paste0(reddit_url_list, collapse = ', '), sep = ""),
                type = "reddit",
                name = "",
                seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))

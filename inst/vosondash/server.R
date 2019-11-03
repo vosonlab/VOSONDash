@@ -45,6 +45,10 @@ shinyServer(function(input, output, session) {
     resetConsole("reddit_console", FALSE)
   }, once = TRUE, ignoreInit = FALSE)
   
+  if (!v029) {
+    js$disableTab("'Create Network'")  
+  }
+  
   # stop app when browser closes
   session$onSessionEnded(function() {
     if (isLocal) {

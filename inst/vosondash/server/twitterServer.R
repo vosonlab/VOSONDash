@@ -7,6 +7,7 @@
 
 tw_rv <- reactiveValues(
   tw_data = NULL,        # dataframe returned by vosonSML collection
+  tw_network = NULL,
   tw_graphml = NULL      # igraph graph object returned from collection
 )
 
@@ -236,7 +237,7 @@ observeEvent(input$twitter_create_button, {
       }
     } else if (net_type == "semantic") {
       rem_terms <- parse_rem_terms(input$twitter_semantic_remove)
-      browser()
+
       if (length(rem_terms)) {
         network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", removeTermsOrHashtags = rem_terms,
                                     verbose = TRUE)
@@ -244,7 +245,10 @@ observeEvent(input$twitter_create_button, {
         network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", verbose = TRUE) 
       }
     }
-    if (!is.null(network)) { tw_rv$tw_graphml <- vosonSML::Graph(network) }
+    if (!is.null(network)) {
+      tw_rv$tw_network <- network
+      tw_rv$tw_graphml <- vosonSML::Graph(network) 
+    }
   })
   
   incProgress(1, detail = "Finished")
@@ -260,12 +264,20 @@ observeEvent(input$twitter_create_button, {
 # download and view actions
 callModule(collectDataButtons, "twitter", data = reactive({ tw_rv$tw_data }), file_prefix = "twitter")
 
-callModule(collectGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), 
-           graph_wt_data = reactive({ tw_rv$twitterWT_graphml }), file_prefix = "twitter")
+callModule(collectNetworkButtons, "twitter", network = reactive({ tw_rv$tw_network }), file_prefix = "twitter")
 
-twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", 
-                                   graph_data = reactive({ tw_rv$tw_graphml }), 
-                                   graph_wt_data = reactive({ tw_rv$twitterWT_graphml }))
+if (v029) {
+  callModule(collectGraphButtons_, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), file_prefix = "twitter")
+  
+  twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }))  
+} else {
+  callModule(collectGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), 
+             graph_wt_data = reactive({ tw_rv$twitterWT_graphml }), file_prefix = "twitter")
+  
+  twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", 
+                                     graph_data = reactive({ tw_rv$tw_graphml }), 
+                                     graph_wt_data = reactive({ tw_rv$twitterWT_graphml }))
+}
 
 observeEvent(twitter_view_rvalues$data, {
   setGraphView(data = isolate(twitter_view_rvalues$data), 

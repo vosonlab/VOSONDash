@@ -78,6 +78,30 @@ vpopover <- function(title, content) {
 gbl_scroll_console <- "shinyjs.scroll_console = function(id) { var elem = document.getElementById(id); 
                                                                elem.scrollTop = elem.scrollHeight+600; }" 
 
+disable_tab_jscode <- "
+shinyjs.disableTab = function(name) {
+  var tab = $('.nav li a[data-value=' + name + ']');
+  tab.bind('click.tab', function(e) {
+    e.preventDefault();
+    return false;
+  });
+  tab.addClass('disabled');
+}
+
+shinyjs.enableTab = function(name) {
+  var tab = $('.nav li a[data-value=' + name + ']');
+  tab.unbind('click.tab');
+  tab.removeClass('disabled');
+}"
+
+disable_tab_css <- "
+.nav li a.disabled {
+  background-color: #f5f5f5 !important;
+  color: #444 !important;
+  cursor: not-allowed !important;
+  border-color: #f5f5f5 !important;
+}"
+
 # collection
 gbl_def_tweet_count <- 100
 gbl_def_youtube_count <- 200

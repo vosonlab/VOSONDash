@@ -41,6 +41,10 @@ dashboardPage(
   dashboardBody(
     # additional js features
     useShinyjs(),
+    
+    extendShinyjs(text = disable_tab_jscode),
+    inlineCSS(disable_tab_css),
+    
     #use_tippy(),
     extendShinyjs(text = gbl_scroll_console, functions = c("scroll_console")),
     # custom ui stylesheet
