@@ -70,37 +70,29 @@ vpopover <- function(title, content) {
       , style = "width:4px;display:inline-block;")
 }
 
-# gbl_scroll_console <- "function scroll_console(id) { 
-#                            var pre = jQuery(id);
-#                            pre.scrollTop( pre.prop('scrollHeight') ); }" # #twitter_console
-
-# gbl_scroll_console <- "shinyjs.scroll_console = $(function(id) { $(id).scrollTop($(id).prop('scrollHeight')); })"
-gbl_scroll_console <- "shinyjs.scroll_console = function(id) { var elem = document.getElementById(id); 
-                                                               elem.scrollTop = elem.scrollHeight+600; }" 
+gbl_scroll_delay <- 250 # ms
+gbl_scroll_console <- "
+  shinyjs.scroll_console = function(id) {
+    $('#' + id + '').scrollTop($('#' + id + '')[0].scrollHeight);
+  }" 
 
 disable_tab_jscode <- "
-shinyjs.disableTab = function(name) {
-  var tab = $('.nav li a[data-value=' + name + ']');
-  tab.bind('click.tab', function(e) {
-    e.preventDefault();
-    return false;
-  });
-  tab.addClass('disabled');
-}
-
-shinyjs.enableTab = function(name) {
-  var tab = $('.nav li a[data-value=' + name + ']');
-  tab.unbind('click.tab');
-  tab.removeClass('disabled');
-}"
+  shinyjs.disableTab = function(name) {
+    var tab = $('.nav li a[data-value=' + name + ']');
+    tab.bind('click.tab', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    tab.addClass('disabled');
+  }"
 
 disable_tab_css <- "
-.nav li a.disabled {
-  background-color: #f5f5f5 !important;
-  color: #444 !important;
-  cursor: not-allowed !important;
-  border-color: #f5f5f5 !important;
-}"
+  .nav li a.disabled {
+    background-color: #f5f5f5 !important;
+    color: #444 !important;
+    cursor: not-allowed !important;
+    border-color: #f5f5f5 !important;
+  }"
 
 # collection
 gbl_def_tweet_count <- 100

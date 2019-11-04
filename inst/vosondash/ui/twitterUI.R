@@ -85,13 +85,13 @@ tabItem(tabName = "twitter_collection_tab",
                                    ),
                                    conditionalPanel(
                                            condition = "input.twitter_network_type_select == 'bimodal'",
-                                           textAreaInput("twitter_bimodal_remove", label = "Remove hashtags", value = "",
+                                           textAreaInput("twitter_bimodal_remove", label = "Remove Terms", value = "",
                                                      width = NULL, height = NULL,
                                                      cols = NULL, rows = 2, placeholder = NULL, resize = "vertical")
                                    ),
                                    conditionalPanel(
                                            condition = "input.twitter_network_type_select == 'semantic'",
-                                           textAreaInput("twitter_semantic_remove", label = "Remove hashtags", value = "",
+                                           textAreaInput("twitter_semantic_remove", label = "Remove Terms", value = "",
                                                      width = NULL, height = NULL,
                                                      cols = NULL, rows = 2, placeholder = NULL, resize = "vertical")
                                    ),

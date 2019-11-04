@@ -85,6 +85,8 @@ observeEvent(input$reddit_collect_button, {
   
   # enable button
   redditArgumentsOutput()
+  
+  delay(gbl_scroll_delay, js$scroll_console("reddit_console"))
 })
 
 observeEvent(red_rv$reddit_data, {
@@ -126,6 +128,8 @@ observeEvent(input$reddit_create_button, {
   #                                      pre.scrollTop( pre.prop('scrollHeight')+200 ); }); ")
   # 
   # scrollIntoView()
+  
+  delay(gbl_scroll_delay, js$scroll_console("reddit_console"))
 })
 
 # download and view actions

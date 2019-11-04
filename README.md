@@ -86,11 +86,12 @@ Network and text analysis of graph data.
 
 Fig 1. Environmental activist site hyperlink network loaded from a `graphml` file and plotted by the `visNetwork` package.
 
-### Collection
+### Collection and Network Creation
 
 Graphical interfaces for collecting network data from social media API's.
 
 * Collect: Twitter, youtube and reddit network data
+* Create: different types of networks from the data such as activity, actor, bimodal and semantic networks
 * API Keys: Enter, save, load API keys and create access tokens
 
 ![VOSONDash Twitter Collection](man/figures/collection-twitter-1420x880.jpg)

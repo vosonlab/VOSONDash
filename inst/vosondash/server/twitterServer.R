@@ -187,6 +187,8 @@ observeEvent(input$twitter_collect_button, {
   
   # enable button
   twitterArgumentsOutput()
+  
+  delay(gbl_scroll_delay, js$scroll_console("twitter_console"))
 })
 
 observeEvent(tw_rv$tw_data, {
@@ -258,7 +260,8 @@ observeEvent(input$twitter_create_button, {
   
   # shinyjs::runjs("jQuery( function() { var pre = jQuery('#twitter_console');
   #                                      pre.scrollTop( pre.prop('scrollHeight') ); }); ")
-  js$scroll_console("twitter_console")
+  
+  delay(gbl_scroll_delay, js$scroll_console("twitter_console"))
 })
 
 # download and view actions

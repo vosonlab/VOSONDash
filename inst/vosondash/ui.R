@@ -42,7 +42,7 @@ dashboardPage(
     # additional js features
     useShinyjs(),
     
-    extendShinyjs(text = disable_tab_jscode),
+    extendShinyjs(text = disable_tab_jscode, functions = c("disableTab")),
     inlineCSS(disable_tab_css),
     
     #use_tippy(),

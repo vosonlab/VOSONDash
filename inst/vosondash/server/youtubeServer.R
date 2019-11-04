@@ -105,6 +105,8 @@ observeEvent(input$youtube_collect_button, {
   
   # enable button
   youtubeArgumentsOutput()
+  
+  delay(gbl_scroll_delay, js$scroll_console("youtube_console"))
 })
 
 observeEvent(yt_rv$yt_data, {
@@ -150,6 +152,8 @@ observeEvent(input$youtube_create_button, {
   })
   
   shinyjs::enable("youtube_create_button")
+  
+  delay(gbl_scroll_delay, js$scroll_console("youtube_console"))
 })
 
 # download and view actions
