@@ -4,13 +4,10 @@
 \alias{getVosonSMLVersion}
 \title{Get the vosonSML package version}
 \usage{
-getVosonSMLVersion(compare_ver)
-}
-\arguments{
-\item{compare_ver}{Character string. Version string to compare.}
+getVosonSMLVersion()
 }
 \value{
-Package version as character string or if package later than compare version as logical.
+Package version as character string.
 }
 \description{
 This function returns the version of the loaded vosonSML package.

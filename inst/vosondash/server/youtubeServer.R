@@ -7,6 +7,7 @@
 
 yt_rv <- reactiveValues(
   yt_data = NULL,
+  yt_network = NULL,
   yt_graphml = NULL,
   yt_wt_graphml = NULL,
   
@@ -79,22 +80,23 @@ observeEvent(input$youtube_collect_button, {
         return(NULL)
       })
       
-      incProgress(0.5, detail = "Creating network")
-      
-      # if youtube data collected create igraph graph object
-      if (!is.null(yt_rv$yt_data)) {
-        tryCatch({
-          # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
-          netList <- createYoutubeNetwork(yt_rv$yt_data)
-          yt_rv$yt_graphml <<- netList$network
-          yt_rv$yt_wt_graphml <<- netList$networkWT   # "with text" (edge attribute)          
-        }, error = function(err) {
-          incProgress(1, detail = "Error")
-          cat(paste('youtube graphml error:', err))
-          return(NULL)
-        })
+      if (!v029) {
+        incProgress(0.5, detail = "Creating network")
+        
+        # if youtube data collected create igraph graph object
+        if (!is.null(yt_rv$yt_data)) {
+          tryCatch({
+            # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
+            netList <- createYoutubeNetwork(yt_rv$yt_data)
+            yt_rv$yt_graphml <<- netList$network
+            yt_rv$yt_wt_graphml <<- netList$networkWT   # "with text" (edge attribute)          
+          }, error = function(err) {
+            incProgress(1, detail = "Error")
+            cat(paste('youtube graphml error:', err))
+            return(NULL)
+          })
+        }
       }
-      
       incProgress(1, detail = "Finished")
       
     }) # withConsoleRedirect
@@ -103,23 +105,80 @@ observeEvent(input$youtube_collect_button, {
   
   # enable button
   youtubeArgumentsOutput()
+  
+  delay(gbl_scroll_delay, js$scroll_console("youtube_console"))
+})
+
+observeEvent(yt_rv$yt_data, {
+  if (!is.null(yt_rv$yt_data) && nrow(yt_rv$yt_data)) {
+    shinyjs::enable("youtube_create_button")
+  } else {
+    shinyjs::disable("youtube_create_button")
+  }
+})
+
+observeEvent(input$youtube_create_button, {
+  net_type <- input$youtube_network_type_select
+  add_text <- input$youtube_network_text
+  network <- NULL
+  
+  shinyjs::disable("youtube_create_button")
+  
+  withProgress(message = 'Creating network', value = 0.5, {
+    
+  withConsoleRedirect("youtube_console", {
+    if (net_type == "activity") {
+      network <- vosonSML::Create(isolate(yt_rv$yt_data), "activity", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(yt_rv$yt_data)) }
+    } else if (net_type == "actor") {
+      network <- vosonSML::Create(isolate(yt_rv$yt_data), "actor", verbose = TRUE)
+      if (add_text) {
+          network <- vosonSML::AddText(network, isolate(yt_rv$yt_data), 
+                                       replies_from_text = input$youtube_network_replies_from_text)
+      }
+      if (input$youtube_network_video_data) { 
+        creds <- vosonSML::Authenticate("youtube", apiKey = youtube_api_key)
+        network <- vosonSML::AddVideoData(network, youtubeAuth = creds,
+                                          actorSubOnly = input$youtube_network_video_subs)
+      }
+    }
+    if (!is.null(network)) { 
+      yt_rv$yt_network <- network
+      yt_rv$yt_graphml <- vosonSML::Graph(network)
+    }
+  })
+    
+  incProgress(1, detail = "Finished")
+  })
+  
+  shinyjs::enable("youtube_create_button")
+  
+  delay(gbl_scroll_delay, js$scroll_console("youtube_console"))
 })
 
 # download and view actions
 callModule(collectDataButtons, "youtube", data = reactive({ yt_rv$yt_data }), file_prefix = "youtube")
 
-callModule(collectGraphButtons, "youtube", graph_data = reactive({ yt_rv$yt_graphml }), 
-           graph_wt_data = reactive({ yt_rv$yt_wt_graphml }), file_prefix = "youtube")
+callModule(collectNetworkButtons, "youtube", network = reactive({ yt_rv$yt_network }), file_prefix = "youtube")
 
-youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", 
-                                   graph_data = reactive({ yt_rv$yt_graphml }), 
-                                   graph_wt_data = reactive({ yt_rv$yt_wt_graphml }))
+if (v029) {
+  callModule(collectGraphButtons_, "youtube", graph_data = reactive({ yt_rv$yt_graphml }), file_prefix = "youtube")
+  
+  youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", graph_data = reactive({ yt_rv$yt_graphml }))  
+} else {
+  callModule(collectGraphButtons, "youtube", graph_data = reactive({ yt_rv$yt_graphml }), 
+             graph_wt_data = reactive({ yt_rv$yt_wt_graphml }), file_prefix = "youtube")
+  
+  youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", 
+                                     graph_data = reactive({ yt_rv$yt_graphml }), 
+                                     graph_wt_data = reactive({ yt_rv$yt_wt_graphml }))
+}
 
 observeEvent(youtube_view_rvalues$data, {
   setGraphView(data = isolate(youtube_view_rvalues$data), 
-               desc = paste0("Youtube actor network for videos: ", paste0(youtube_video_id_list, collapse = ', '), 
+               desc = paste0("Youtube network for videos: ", paste0(youtube_video_id_list, collapse = ', '), 
                              sep = ""),
-               type = "twitter",
+               type = "youtube",
                name = "",
                seed = sample(gbl_rng_range[1]:gbl_rng_range[2], 1))
   updateCheckboxInput(session, "expand_demo_data_check", value = FALSE)
@@ -165,10 +224,18 @@ observeEvent(input$clear_all_youtube_dt_columns, {
                            inline = TRUE)
 })
 
+dt_yt_cols <- function() {
+  if (v029) {
+    return(c("Comment", "AuthorDisplayName", "VideoID", "PublishedAt"))
+  } else {
+    return(c("Comment", "User", "PublishTime"))
+  }
+}
+
 observeEvent(input$reset_youtube_dt_columns, {
   updateCheckboxGroupInput(session, "show_youtube_cols", label = NULL,
                            choices = isolate(yt_rv$data_cols),
-                           selected = c("Comment", "User", "PublishTime"),
+                           selected = dt_yt_cols(),
                            inline = TRUE)
 })
 
@@ -185,7 +252,7 @@ output$youtube_data_cols_ui <- renderUI({
                        actionButton("reset_youtube_dt_columns", "Reset")),
                    checkboxGroupInput("show_youtube_cols", label = NULL,
                                       choices = yt_rv$data_cols,
-                                      selected = c("Comment", "User", "PublishTime"),
+                                      selected = dt_yt_cols(),
                                       inline = TRUE, width = '98%')
   )
 })

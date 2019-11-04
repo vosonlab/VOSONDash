@@ -41,8 +41,12 @@ dashboardPage(
   dashboardBody(
     # additional js features
     useShinyjs(),
-    #use_tippy(),
     
+    extendShinyjs(text = disable_tab_jscode, functions = c("disableTab")),
+    inlineCSS(disable_tab_css),
+    
+    #use_tippy(),
+    extendShinyjs(text = gbl_scroll_console, functions = c("scroll_console")),
     # custom ui stylesheet
     tags$head(
       tags$script(src = "popper.js"),

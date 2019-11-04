@@ -1,3 +1,34 @@
+# VOSONDash 0.5.0
+
+## Major Changes:
+- Supports the new `vosonSML` version `0.29` changes to the network and graph creation process. It is backwards compatable with version `0.27` albeit without the new features.
+- Added a new tab to the `Collect Data` controls named `Create Network`. This allows the creation of the different types of networks that are supported by `vosonSML`.
+
+#### Twitter:
+- Networks supported are `activity`, `actor`, `bimodal` and `semantic`.
+- Both `activity` and `actor` have an option to `Add Text` that adds tweet text as a network node or edge attribute.
+- The `actor` network also has the option to `Lookup User Data`. This will retrieve profile information for users that became nodes during network creation who were not authors of tweets. Their profile information was missing most likely because they were referenced in tweets but none of their tweets were collected in the search. In a twitter search profile information is only returned for the authors of tweets captured in the search.
+- Both `bimodal` and `semantic` networks have the option to filter out terms using the `Remove Terms` field. This accepts a comma delimited list of terms that can be `actors` and `hashtags` (e.g \@climate_person, #climate) for `bimodal` networks and `terms`, `actors` and `hashtags` (e.g climate, \@climate_person, #climate) for `semantic` networks. The `semantic` network currently uses the default `vosonSML` options of only including the 5% most frequent terms and 50% most frequently occuring hashtags in the network. 
+
+#### Youtube:
+- Networks supported are `activity` and `actor`.
+- Both `activity` and `actor` have an option to `Add Text` that adds video comment text as a network node or edge attribute.
+- The `actor` network with `Add Text` option allows for the further option to `Find Replies in Text`. This will create reply `edges` between `actors` in the network when an `@actor_name` reference is found at the beginning of a text comment.
+- There is also the `Add Video Details` option for `actor` networks that retrieves video information and adds it to the network as a `node` attributes of `VideoID` type nodes (e.g title, description and publisher). This also replaces `VideoID` type nodes with the actors ID who published the video.
+- A further option for `Add Video Details` is `Only replace Video ID's`. This option does not supplement the network with the additional video information retrieved but instead only replaces the `VideoID` type nodes with the actors ID who published the video.
+
+#### Reddit:
+- Networks supported are `activity` and `actor`.
+- Both `activity` and `actor` have an option to `Add Text` that adds thread comment text as a network node or edge attribute. 
+
+<br/>Refer to `vosonSML` documentation for further information on network types and options at https://vosonlab.github.io/vosonSML/reference/index.html.
+
+## Minor Changes:
+- Added a new `Collect` data download button named `Network` to allow the `nodes` and `edges` dataframes to be downloaded after `Create Network`. The data is downloaded as an R object in a `.rds` file that can be loaded into R using the `readRDS()` function. 
+
+## Bug Fixes:
+- Fixed the console scrolling in the `Collect` section of the interface to scroll to the bottom when there is new text output.
+
 # VOSONDash 0.4.4
 
 ## Minor Changes:

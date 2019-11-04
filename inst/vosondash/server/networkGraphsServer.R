@@ -286,7 +286,7 @@ observeEvent(input$prune_reset_button, {
 
 # deselect all data table selected rows
 observeEvent(input$prune_deselect_rows_button, {
-  dt_vertices_proxy %>% selectRows(NULL)
+  selectRows(dt_vertices_proxy, NULL)
 })
 
 #### output ----------------------------------------------------------------------------------------------------------- #
@@ -363,9 +363,9 @@ output$graph_download_button <- downloadHandler(
   
   content = function(file) {
     if (input$selected_graph_tab == "visNetwork") {
-      saveGraphFileData() %>% visSave(file, selfcontained = TRUE, background = "white")
+      visSave(saveGraphFileData(), file, selfcontained = TRUE, background = "white")
     } else {
-      saveGraphFileData() %>% saveNetwork(file, selfcontained = TRUE) 
+      saveNetwork(saveGraphFileData(), file, selfcontained = TRUE) 
     }
   }
 )
@@ -399,7 +399,7 @@ output$dt_vertices <- DT::renderDataTable({
 
     # format betweeness and closeness values to display 3 decimal places
     if (nrow(data) > 0) {
-      dt %>% DT::formatRound(columns = c('betweenness', 'closeness'), digits = 3)
+      DT::formatRound(dt, columns = c('betweenness', 'closeness'), digits = 3)
     } else { dt }
   }
 })
@@ -441,8 +441,7 @@ output$simple <- renderSimpleNetwork({
 output$visNetworkPlot <- renderVisNetwork({
   data <- visNetworkData() 
   if (!is.null(data)) {
-    data %>% 
-    visEvents(select = 
+    visEvents(data, select = 
     "function(nodes) {
       Shiny.onInputChange('visnetwork_vertex_selection', nodes.nodes);
     }")

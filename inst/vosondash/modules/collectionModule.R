@@ -11,7 +11,14 @@ collectDataButtonsUI <- function(id) {
   tagList(shinyjs::disabled(downloadButton(ns("dl_data"), label = "Data", title = "Download Raw Data File")))
 }
 
+collectNetworkButtonsUI <- function(id) {
+  ns <- NS(id)
+  
+  tagList(shinyjs::disabled(downloadButton(ns("dl_network"), label = "Network", title = "Download Network Data File")))
+}
+
 collectGraphButtonsUI <- function(id) {
+  if (v029) { collectGraphButtonsUI_(id) }
   ns <- NS(id)
   
   tagList(
@@ -21,13 +28,30 @@ collectGraphButtonsUI <- function(id) {
   )
 }
 
+collectGraphButtonsUI_ <- function(id) {
+  ns <- NS(id)
+  
+  tagList(
+    shinyjs::disabled(downloadButton(ns("dl_graph"), label = "Graphml", title = "Download Network Graphml File"))
+  )
+}
+
 collectViewGraphButtonsUI <- function(id) {
+  if (v029) { collectViewGraphButtonsUI_(id) }
   ns <- NS(id)
   
   tagList(
     shinyjs::disabled(actionButton(ns("view_graph"), label = "Graph", title = "View Network Graph", icon("eye"))),
     shinyjs::disabled(actionButton(ns("view_graph_wt"), label = "Graph (+text)", 
                       title = "View Network Graph with Text", icon("eye")))
+  )
+}
+
+collectViewGraphButtonsUI_ <- function(id) {
+  ns <- NS(id)
+  
+  tagList(
+    shinyjs::disabled(actionButton(ns("view_graph"), label = "Graph", title = "View Network Graph", icon("eye")))
   )
 }
 
@@ -53,6 +77,30 @@ collectDataButtons <- function(input, output, session, data, file_prefix = "") {
       shinyjs::enable("dl_data")  
     } else {
       shinyjs::disable("dl_data")
+    }
+  })  
+}
+
+collectNetworkButtons <- function(input, output, session, network, file_prefix = "") {
+  output$dl_network <- downloadHandler(
+    filename = function() {
+      systemTimeFilename(paste0(ifelse(file_prefix == "", "", paste0(file_prefix, "-")), "network"), "rds")
+    },
+    
+    content = function(file) {
+      saveRDS(collectNetwork(), file)
+    }
+  )
+  
+  collectNetwork <- reactive({
+    network()
+  })
+  
+  observeEvent(network(), {
+    if (!is.null(network()) && nrow(network()$nodes) > 0) {
+      shinyjs::enable("dl_network")  
+    } else {
+      shinyjs::disable("dl_network")
     }
   })  
 }
@@ -107,6 +155,32 @@ collectGraphButtons <- function(input, output, session, graph_data, graph_wt_dat
   })  
 }
 
+collectGraphButtons_ <- function(input, output, session, graph_data, file_prefix = "") {
+  output$dl_graph <- downloadHandler(
+    filename = function() {
+      systemTimeFilename(ifelse(file_prefix == "", "graph", file_prefix), "graphml")
+    },
+    
+    content = function(file) {
+      write_graph(collectGraphData(), file, format = c("graphml"))
+    }
+  )
+  
+  collectGraphData <- reactive({
+    g <- graph_data()
+  })
+  
+  observeEvent(graph_data(), {
+    if (!is.null(graph_data())) {
+      shinyjs::enable("dl_graph")
+      shinyjs::enable("view_graph")
+    } else {
+      shinyjs::disable("dl_graph")
+      shinyjs::disable("view_graph")
+    }
+  })
+}
+
 collectViewGraphButtons <- function(input, output, session, graph_data, graph_wt_data) {
   view_rvalues <- reactiveValues(data = NULL)
   
@@ -116,6 +190,16 @@ collectViewGraphButtons <- function(input, output, session, graph_data, graph_wt
   
   observeEvent(input$view_graph_wt, {
     view_rvalues$data <<- graph_wt_data()
+  })
+  
+  return(view_rvalues)
+}
+
+collectViewGraphButtons_ <- function(input, output, session, graph_data) {
+  view_rvalues <- reactiveValues(data = NULL)
+  
+  observeEvent(input$view_graph, {
+    view_rvalues$data <<- graph_data()
   })
   
   return(view_rvalues)

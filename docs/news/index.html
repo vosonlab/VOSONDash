@@ -8,21 +8,25 @@
 
 <title>Changelog • VOSONDash</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,7 +36,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
+
 <meta property="og:title" content="Changelog" />
+
 
 
 
@@ -44,6 +50,7 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -62,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -89,7 +96,6 @@
   </a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/vosonlab/VOSONDash">
@@ -104,6 +110,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -113,16 +120,73 @@
       <small>Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="vosondash-044" class="section level1">
+    <div id="vosondash-050" class="section level1">
 <h1 class="page-header">
-<a href="#vosondash-044" class="anchor"></a>VOSONDash 0.4.4<small> 2019-08-09 </small>
+<a href="#vosondash-050" class="anchor"></a>VOSONDash 0.5.0<small> Unreleased </small>
 </h1>
+<div id="major-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes" class="anchor"></a>Major Changes:</h2>
+<ul>
+<li>Supports the new <code>vosonSML</code> version <code>0.29</code> changes to the network and graph creation process. It is backwards compatable with version <code>0.27</code> albeit without the new features.</li>
+<li>Added a new tab to the <code>Collect Data</code> controls named <code>Create Network</code>. This allows the creation of the different types of networks that are supported by <code>vosonSML</code>.</li>
+</ul>
+<div id="twitter" class="section level4">
+<h4 class="hasAnchor">
+<a href="#twitter" class="anchor"></a>Twitter:</h4>
+<ul>
+<li>Networks supported are <code>activity</code>, <code>actor</code>, <code>bimodal</code> and <code>semantic</code>.</li>
+<li>Both <code>activity</code> and <code>actor</code> have an option to <code>Add Text</code> that adds tweet text as a network node or edge attribute.</li>
+<li>The <code>actor</code> network also has the option to <code>Lookup User Data</code>. This will retrieve profile information for users that became nodes during network creation who were not authors of tweets. Their profile information was missing most likely because they were referenced in tweets but none of their tweets were collected in the search. In a twitter search profile information is only returned for the authors of tweets captured in the search.</li>
+<li>Both <code>bimodal</code> and <code>semantic</code> networks have the option to filter out terms using the <code>Remove Terms</code> field. This accepts a comma delimited list of terms that can be <code>actors</code> and <code>hashtags</code> (e.g \@climate_person, #climate) for <code>bimodal</code> networks and <code>terms</code>, <code>actors</code> and <code>hashtags</code> (e.g climate, \@climate_person, #climate) for <code>semantic</code> networks. The <code>semantic</code> network currently uses the default <code>vosonSML</code> options of only including the 5% most frequent terms and 50% most frequently occuring hashtags in the network.</li>
+</ul>
+</div>
+<div id="youtube" class="section level4">
+<h4 class="hasAnchor">
+<a href="#youtube" class="anchor"></a>Youtube:</h4>
+<ul>
+<li>Networks supported are <code>activity</code> and <code>actor</code>.</li>
+<li>Both <code>activity</code> and <code>actor</code> have an option to <code>Add Text</code> that adds video comment text as a network node or edge attribute.</li>
+<li>The <code>actor</code> network with <code>Add Text</code> option allows for the further option to <code>Find Replies in Text</code>. This will create reply <code>edges</code> between <code>actors</code> in the network when an <code>@actor_name</code> reference is found at the beginning of a text comment.</li>
+<li>There is also the <code>Add Video Details</code> option for <code>actor</code> networks that retrieves video information and adds it to the network as a <code>node</code> attributes of <code>VideoID</code> type nodes (e.g title, description and publisher). This also replaces <code>VideoID</code> type nodes with the actors ID who published the video.</li>
+<li>A further option for <code>Add Video Details</code> is <code>Only replace Video ID's</code>. This option does not supplement the network with the additional video information retrieved but instead only replaces the <code>VideoID</code> type nodes with the actors ID who published the video.</li>
+</ul>
+</div>
+<div id="reddit" class="section level4">
+<h4 class="hasAnchor">
+<a href="#reddit" class="anchor"></a>Reddit:</h4>
+<ul>
+<li>Networks supported are <code>activity</code> and <code>actor</code>.</li>
+<li>Both <code>activity</code> and <code>actor</code> have an option to <code>Add Text</code> that adds thread comment text as a network node or edge attribute.</li>
+</ul>
+<p><br>Refer to <code>vosonSML</code> documentation for further information on network types and options at <a href="https://vosonlab.github.io/vosonSML/reference/index.html" class="uri">https://vosonlab.github.io/vosonSML/reference/index.html</a>.</p>
+</div>
+</div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor Changes:</h2>
 <ul>
-<li>Changed the required package check to be more efficient by calling <code>required()</code> instead of <code><a href="https://www.rdocumentation.org/packages/utils/topics/installed.packages">installed.packages()</a></code>.</li>
-<li>Changed the app startup messages to use <code><a href="https://www.rdocumentation.org/packages/base/topics/message">message()</a></code> instead of <code><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat()</a></code> so if desired they can be suppressed.</li>
+<li>Added a new <code>Collect</code> data download button named <code>Network</code> to allow the <code>nodes</code> and <code>edges</code> dataframes to be downloaded after <code>Create Network</code>. The data is downloaded as an R object in a <code>.rds</code> file that can be loaded into R using the <code><a href="https://rdrr.io/r/base/readRDS.html">readRDS()</a></code> function.</li>
+</ul>
+</div>
+<div id="bug-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug Fixes:</h2>
+<ul>
+<li>Fixed the console scrolling in the <code>Collect</code> section of the interface to scroll to the bottom when there is new text output.</li>
+</ul>
+</div>
+</div>
+    <div id="vosondash-044" class="section level1">
+<h1 class="page-header">
+<a href="#vosondash-044" class="anchor"></a>VOSONDash 0.4.4<small> 2019-08-09 </small>
+</h1>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>Minor Changes:</h2>
+<ul>
+<li>Changed the required package check to be more efficient by calling <code>required()</code> instead of <code><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages()</a></code>.</li>
+<li>Changed the app startup messages to use <code><a href="https://rdrr.io/r/base/message.html">message()</a></code> instead of <code><a href="https://rdrr.io/r/base/cat.html">cat()</a></code> so if desired they can be suppressed.</li>
 <li>Added <code>pkgStartupMsgs</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to hide the app’s required package startup messages.</li>
 <li>Added optional <code>isLocal</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to manually set local or server flag if desired. If not set app will detect if it is running in server mode.</li>
 <li>Disabled the loading and saving of keys and tokens in server mode.</li>
@@ -134,9 +198,9 @@
 <h1 class="page-header">
 <a href="#vosondash-043" class="anchor"></a>VOSONDash 0.4.3<small> Unreleased </small>
 </h1>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-2" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Changed the node size controls in <code>Network Graphs</code> to be based on normalized continuous values.</li>
 <li>Moved the calculation of network metrics to the <code><a href="../reference/getNetworkMetrics.html">getNetworkMetrics()</a></code> package function.</li>
@@ -150,27 +214,27 @@
 <h1 class="page-header">
 <a href="#vosondash-042" class="anchor"></a>VOSONDash 0.4.2<small> Unreleased </small>
 </h1>
-<div id="bug-fixes" class="section level2">
+<div id="bug-fixes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>Bug Fixes:</h2>
+<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes:</h2>
 <ul>
 <li>Fixed problem with <code>visNetwork</code> graphs rendering slightly off the canvas.</li>
 </ul>
 </div>
-<div id="major-changes" class="section level2">
+<div id="major-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes" class="anchor"></a>Major Changes:</h2>
+<a href="#major-changes-1" class="anchor"></a>Major Changes:</h2>
 <ul>
 <li>
 <code>VOSONDash</code> Shiny app has been re-structured into an R package. Have started moving some of the ‘business logic’ away from the app server and into the general package.</li>
-<li>Social Media API keys are no longer saved to the users working directory. API keys and tokens are now saved to files in the users home directory as specified by the system environment variable <code>HOME</code>. This location can be found in the <code>VOSONDash</code> start up information, in the apps <code>API Keys</code> tab or by using the following R function in <code>RStudio</code>: <code><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv("HOME")</a></code>. The keys and tokens files are named <code>vosondash_keys.rds</code> and <code>vosondash_tokens.rds</code> respectively.</li>
+<li>Social Media API keys are no longer saved to the users working directory. API keys and tokens are now saved to files in the users home directory as specified by the system environment variable <code>HOME</code>. This location can be found in the <code>VOSONDash</code> start up information, in the apps <code>API Keys</code> tab or by using the following R function in <code>RStudio</code>: <code><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv("HOME")</a></code>. The keys and tokens files are named <code>vosondash_keys.rds</code> and <code>vosondash_tokens.rds</code> respectively.</li>
 <li>Twitter no longer creates an API authentication token for each twitter collection. Instead twitter tokens are now created and managed in the <code>API Keys</code> tab and should be saved and re-used.</li>
-<li>A twitter web authorization token can now be created and used for API access without the need for a Developer account. This still requires a twitter app and Consumer API keys but means if a user has access to these that the user can authorize the twitter app against their account and use <code>VOSONDash</code> to perform twitter collections. Using this token API rate-limiting will be applied to the users account not the app. Twitter refers to this method of authentication as ‘Application-user authentication: OAuth 1a (access token for user context)’. This feature uses the <code>rtweet</code> packages interactive web authorization as implemented by the <code><a href="https://www.rdocumentation.org/packages/rtweet/topics/create_token">rtweet::create_token</a></code> function. As stated above once a token has been created it should be saved and re-used.</li>
+<li>A twitter web authorization token can now be created and used for API access without the need for a Developer account. This still requires a twitter app and Consumer API keys but means if a user has access to these that the user can authorize the twitter app against their account and use <code>VOSONDash</code> to perform twitter collections. Using this token API rate-limiting will be applied to the users account not the app. Twitter refers to this method of authentication as ‘Application-user authentication: OAuth 1a (access token for user context)’. This feature uses the <code>rtweet</code> packages interactive web authorization as implemented by the <code><a href="https://rdrr.io/pkg/rtweet/man/create_token.html">rtweet::create_token</a></code> function. As stated above once a token has been created it should be saved and re-used.</li>
 </ul>
 </div>
-<div id="minor-changes-2" class="section level2">
+<div id="minor-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-2" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-3" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Demonstration data has been included in the package and is accessible by a new selection box below the graphml file loader in <code>Network Graphs</code>. If there is a file with the same name as the demonstration graphml file but with an additional ‘.txt’ extension in the packages demonstration data folder it will be loaded as the graph description.</li>
 <li>Added graph summary information for <code>Network Graphs</code> plots as an overlay in the bottom left corner.</li>
@@ -191,6 +255,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#vosondash-050">0.5.0</a></li>
         <li><a href="#vosondash-044">0.4.4</a></li>
         <li><a href="#vosondash-043">0.4.3</a></li>
         <li><a href="#vosondash-042">0.4.2</a></li>
@@ -200,19 +265,23 @@
 
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by <a href='https://vosonlab.net'><span>VOSON Lab</span></a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

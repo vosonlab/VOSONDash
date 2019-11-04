@@ -9,9 +9,15 @@ tabItem(tabName = "youtube_collection_tab",
                                                  # youtube api keys input
                                                  textInput("youtube_api_key_input", label = "Data API Key", value = "")
                                 )
-                   ),
+                    ),
                    
-                   sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
+                   # sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
+                   
+                   tabBox(title = NULL,
+                          id = "youtube_control_tabset",
+                          width = 12,
+                          tabPanel("Collect Data",
+                                   
                                 # youtube video ids input
                                 div(tags$b("Add Youtube URL"), 
                                     vpopover(po_yt_url()$title, po_yt_url()$content), 
@@ -26,9 +32,36 @@ tabItem(tabName = "youtube_collection_tab",
                                     div(numericInput("youtube_max_comments_input", label = NULL, value = gbl_def_youtube_count, min = 1, width = "90px"), class = "div_inline")),
                                 p(""),
                                 disabled(actionButton("youtube_collect_button", label = "Collect Comments", icon = icon("cloud-download")))
-                   )
-                 )
-          ),
+                          ), # end tabPanel
+                          tabPanel("Create Network",
+                                   div(tags$b("Network")),
+                                   selectInput("youtube_network_type_select", label = NULL, choices = c("activity", "actor"), multiple = FALSE),
+                                   conditionalPanel(
+                                           condition = "input.youtube_network_type_select == 'activity' || 
+                                                        input.youtube_network_type_select == 'actor'",
+                                           checkboxInput("youtube_network_text", "Add Text", FALSE)
+                                   ),
+                                   conditionalPanel(
+                                           condition = "input.youtube_network_type_select == 'actor' &&
+                                                        input.youtube_network_text == 1",
+                                           checkboxInput("youtube_network_replies_from_text", "Find Replies in Text", FALSE)
+                                   ),                                   
+                                   conditionalPanel(
+                                           condition = "input.youtube_network_type_select == 'actor'",
+                                           checkboxInput("youtube_network_video_data", "Add Video Details", FALSE)
+                                   ),
+                                   conditionalPanel(
+                                           condition = "input.youtube_network_type_select == 'actor' &&
+                                                        input.youtube_network_video_data == 1",
+                                           checkboxInput("youtube_network_video_subs", "Only replace Video ID's", FALSE)
+                                   ),
+                                   p(""),
+                                   disabled(actionButton("youtube_create_button", label = "Create Network", icon = icon("share-alt")))
+                                   
+                          ) # end tabPanel
+                   ) # end tabBox
+                 ) # end fluidRow
+          ), # end column
           
           column(width = 9, offset = 0,
                  fluidRow(
@@ -49,6 +82,7 @@ tabItem(tabName = "youtube_collection_tab",
                    
                    sidebarPanel(width = 12, class = "custom_well_for_buttons",
                                 fluidRow(collectDataButtonsUI("youtube"),
+                                         collectNetworkButtonsUI("youtube"),
                                          collectGraphButtonsUI("youtube"),
                                          collectViewGraphButtonsUI("youtube"))
                    )

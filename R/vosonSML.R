@@ -1,23 +1,27 @@
 #' @title Get the vosonSML package version
 #' 
-#' @description This function returns the version of the loaded vosonSML package. 
+#' @description This function returns the version of the loaded vosonSML package.
 #' 
-#' @param compare_ver Character string. Version string to compare.
-#' 
-#' @return Package version as character string or if package later than compare version as logical.
+#' @return Package version as character string.
 #' 
 #' @keywords internal
 #' @export
-getVosonSMLVersion <- function(compare_ver) {
-  if ("vosonSML" %in% loadedNamespaces()) {
-    if (missing(compare_ver)) {
-      return(utils::packageVersion("vosonSML"))
-    } else {
-      return(utils::packageVersion("vosonSML") >= compare_ver)
-    }
-  }
-  
-  NULL
+getVosonSMLVersion <- function() {
+  if ("vosonSML" %in% loadedNamespaces()) { return(utils::packageVersion("vosonSML")) }
+  "unknown"
+}
+
+#' @title Return logical if vosonSML version later than 0.29
+#' 
+#' @description This function returns if the installed version of vosonSML is later than v0.29
+#'
+#' @return Logical.
+#' 
+#' @keywords internal
+#' @export
+isVosonSML0290 <- function() {
+  if (utils::packageVersion("vosonSML") >= "0.29.0") { return(TRUE) }
+  FALSE
 }
 
 #' @title Create an auth token with twitter app dev keys
@@ -184,7 +188,7 @@ collectTwitterData <- function(cred, search_term, search_type, tweet_count,
 #' @keywords internal
 #' @export
 createTwitterActorNetwork <- function(data) {
-  network <- data %>% vosonSML::Create("actor", verbose = TRUE)
+  network <- vosonSML::Create(data, "actor", verbose = TRUE)
   
   g <- igraph::set_graph_attr(network$graph, "type", "twitter")
   
@@ -240,7 +244,7 @@ collectYoutubeData <- function(youtube_api_key, youtube_video_id_list, youtube_m
 #' @keywords internal
 #' @export
 createYoutubeNetwork <- function(data) {
-  network <- data %>% Create('actor', writeToFile = FALSE)
+  network <- Create(data, 'actor', writeToFile = FALSE)
   
   g <- igraph::set_graph_attr(network$graph, "type", "youtube")
   
@@ -264,8 +268,8 @@ collectRedditData <- function(reddit_url_list) {
   data <- NULL
   
   if (length(reddit_url_list) > 0) {
-    data <- vosonSML::Authenticate("reddit") %>% 
-      vosonSML::Collect(threadUrls = reddit_url_list, waitTime = 5, writeToFile = FALSE)
+    data <- vosonSML::Collect(vosonSML::Authenticate("reddit"), threadUrls = reddit_url_list, waitTime = 5, 
+                              writeToFile = FALSE)
   }
   
   data
@@ -282,8 +286,8 @@ collectRedditData <- function(reddit_url_list) {
 #' @keywords internal
 #' @export
 createRedditActorNetwork <- function(data) {
-  network <- data %>% vosonSML::Create("actor", writeToFile = FALSE)
-  networkWT <- data %>% vosonSML::Create("actor", textData = TRUE, cleanText = TRUE, writeToFile = FALSE)
+  network <- vosonSML::Create(data, "actor", writeToFile = FALSE)
+  networkWT <- vosonSML::Create(data, "actor", textData = TRUE, cleanText = TRUE, writeToFile = FALSE)
   
   list(network = network$graph, networkWT = networkWT$graph)
 }

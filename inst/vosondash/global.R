@@ -1,5 +1,7 @@
 # voson dashboard shiny app globals
 
+v029 <- isVosonSML0290()
+
 # app version
 app_version <- paste0("v", VOSONDash::getVOSONDashVer())
 
@@ -67,6 +69,30 @@ vpopover <- function(title, content) {
                  "<i class=\"fa fa-question-circle\" style = \"font-size:0.90em;vertical-align:top;\"></i></a>"))
       , style = "width:4px;display:inline-block;")
 }
+
+gbl_scroll_delay <- 250 # ms
+gbl_scroll_console <- "
+  shinyjs.scroll_console = function(id) {
+    $('#' + id + '').scrollTop($('#' + id + '')[0].scrollHeight);
+  }" 
+
+disable_tab_jscode <- "
+  shinyjs.disableTab = function(name) {
+    var tab = $('.nav li a[data-value=' + name + ']');
+    tab.bind('click.tab', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    tab.addClass('disabled');
+  }"
+
+disable_tab_css <- "
+  .nav li a.disabled {
+    background-color: #f5f5f5 !important;
+    color: #444 !important;
+    cursor: not-allowed !important;
+    border-color: #f5f5f5 !important;
+  }"
 
 # collection
 gbl_def_tweet_count <- 100

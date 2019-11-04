@@ -1,5 +1,5 @@
 Package: VOSONDash
-Version: 0.4.4
+Version: 0.5.0
 Title: User Interface for Collecting and Analysing Social Networks
 Description: A 'Shiny' application for the interactive visualisation and
     analysis of networks that also provides a web interface for collecting

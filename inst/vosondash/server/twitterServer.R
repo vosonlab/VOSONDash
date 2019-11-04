@@ -7,6 +7,7 @@
 
 tw_rv <- reactiveValues(
   tw_data = NULL,        # dataframe returned by vosonSML collection
+  tw_network = NULL,
   tw_graphml = NULL      # igraph graph object returned from collection
 )
 
@@ -162,18 +163,20 @@ observeEvent(input$twitter_collect_button, {
       })
       )
       
-      # if twitter data collected create igraph graph object
-      if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data) > 0) {
-        incProgress(0.5, detail = "Creating network")
-        tryCatch({
-          # tw_rv$tw_graphml <<- createTwitterActorNetwork(tw_rv$tw_data)
-          netList <- VOSONDash::createTwitterActorNetwork(tw_rv$tw_data)
-          tw_rv$tw_graphml <<- netList$network
-          tw_rv$twitterWT_graphml <<- netList$networkWT   # "with text" (edge attribute)
-        }, error = function(err) {
-          incProgress(1, detail = "Error")
-          cat(paste("twitter graphml error: ", err))
-        })
+      if (!v029) {
+        # if twitter data collected create igraph graph object
+        if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data) > 0) {
+          incProgress(0.5, detail = "Creating network")
+          tryCatch({
+            # tw_rv$tw_graphml <<- createTwitterActorNetwork(tw_rv$tw_data)
+            netList <- VOSONDash::createTwitterActorNetwork(tw_rv$tw_data)
+            tw_rv$tw_graphml <<- netList$network
+            tw_rv$twitterWT_graphml <<- netList$networkWT   # "with text" (edge attribute)
+          }, error = function(err) {
+            incProgress(1, detail = "Error")
+            cat(paste("twitter graphml error: ", err))
+          })
+        }
       }
       
       incProgress(1, detail = "Finished")
@@ -184,17 +187,100 @@ observeEvent(input$twitter_collect_button, {
   
   # enable button
   twitterArgumentsOutput()
+  
+  delay(gbl_scroll_delay, js$scroll_console("twitter_console"))
+})
+
+observeEvent(tw_rv$tw_data, {
+  if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data)) {
+    shinyjs::enable("twitter_create_button")
+  } else {
+    shinyjs::disable("twitter_create_button")
+  }
+})
+
+observeEvent(input$twitter_create_button, {
+  net_type <- input$twitter_network_type_select
+  add_text <- input$twitter_network_text
+  add_user_data <- input$twitter_network_user_data
+  network <- NULL
+  
+  parse_rem_terms <- function(rem_terms) {
+    rem_terms <- unlist(strsplit(rem_terms, ","), use.names = FALSE)
+    rem_terms <- sapply(rem_terms, function(x) { 
+      term <- trimws(x)
+      if (term == "") { return(NA) }
+      term
+    }, USE.NAMES = FALSE)
+    rem_terms <- na.omit(rem_terms)    
+  }
+  
+  shinyjs::disable("twitter_create_button")
+  
+  withProgress(message = 'Creating network', value = 0.5, {
+  
+  withConsoleRedirect("twitter_console", {
+    if (net_type == "activity") {
+      network <- vosonSML::Create(isolate(tw_rv$tw_data), "activity", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(tw_rv$tw_data)) }
+    } else if (net_type == "actor") {
+      network <- vosonSML::Create(isolate(tw_rv$tw_data), "actor", verbose = TRUE)
+      if (add_text) { network <- vosonSML::AddText(network, isolate(tw_rv$tw_data)) }
+      if (add_user_data) { 
+        network <- vosonSML::AddUserData(network, isolate(tw_rv$tw_data), twitterAuth = creds_rv$use_token) 
+      }
+    } else if (net_type == "bimodal") {
+      rem_terms <- parse_rem_terms(input$twitter_bimodal_remove)
+      if (length(rem_terms)) {
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "bimodal", removeTermsOrHashtags = rem_terms,
+                                    verbose = TRUE)
+      } else {
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "bimodal", verbose = TRUE) 
+      }
+    } else if (net_type == "semantic") {
+      rem_terms <- parse_rem_terms(input$twitter_semantic_remove)
+
+      if (length(rem_terms)) {
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", removeTermsOrHashtags = rem_terms,
+                                    verbose = TRUE)
+      } else {
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", verbose = TRUE) 
+      }
+    }
+    if (!is.null(network)) {
+      tw_rv$tw_network <- network
+      tw_rv$tw_graphml <- vosonSML::Graph(network) 
+    }
+  })
+  
+  incProgress(1, detail = "Finished")
+  })
+  
+  shinyjs::enable("twitter_create_button")
+  
+  # shinyjs::runjs("jQuery( function() { var pre = jQuery('#twitter_console');
+  #                                      pre.scrollTop( pre.prop('scrollHeight') ); }); ")
+  
+  delay(gbl_scroll_delay, js$scroll_console("twitter_console"))
 })
 
 # download and view actions
 callModule(collectDataButtons, "twitter", data = reactive({ tw_rv$tw_data }), file_prefix = "twitter")
 
-callModule(collectGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), 
-           graph_wt_data = reactive({ tw_rv$twitterWT_graphml }), file_prefix = "twitter")
+callModule(collectNetworkButtons, "twitter", network = reactive({ tw_rv$tw_network }), file_prefix = "twitter")
 
-twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", 
-                                   graph_data = reactive({ tw_rv$tw_graphml }), 
-                                   graph_wt_data = reactive({ tw_rv$twitterWT_graphml }))
+if (v029) {
+  callModule(collectGraphButtons_, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), file_prefix = "twitter")
+  
+  twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }))  
+} else {
+  callModule(collectGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), 
+             graph_wt_data = reactive({ tw_rv$twitterWT_graphml }), file_prefix = "twitter")
+  
+  twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", 
+                                     graph_data = reactive({ tw_rv$tw_graphml }), 
+                                     graph_wt_data = reactive({ tw_rv$twitterWT_graphml }))
+}
 
 observeEvent(twitter_view_rvalues$data, {
   setGraphView(data = isolate(twitter_view_rvalues$data), 

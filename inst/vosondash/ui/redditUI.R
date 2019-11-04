@@ -3,7 +3,13 @@ tabItem(tabName = "reddit_collection_tab",
         fluidRow(
           column(width = 3, offset = 0,
                  fluidRow(
-                   sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
+                   # sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
+                         
+                   tabBox(title = NULL,
+                          id = "twitter_control_tabset",
+                          width = 12,
+                          tabPanel("Collect Data",
+                                         
                                 # youtube video ids input
                                 div(tags$b("Add Reddit URL"), 
                                     vpopover(po_red_url()$title, po_red_url()$content), 
@@ -18,9 +24,27 @@ tabItem(tabName = "reddit_collection_tab",
                                 p(""),
                                 disabled(actionButton("reddit_collect_button", label = "Collect Threads", 
                                                       icon = icon("cloud-download")))
-                   )
-                 )
-          ),
+                                
+                          ), # end tabPanel
+                          tabPanel("Create Network",
+                                   div(tags$b("Network")),
+                                   selectInput("reddit_network_type_select", label = NULL, choices = c("activity", "actor"), multiple = FALSE),
+                                   conditionalPanel(
+                                           condition = "input.reddit_network_type_select == 'activity' || 
+                                                        input.reddit_network_type_select == 'actor'",
+                                           checkboxInput("reddit_network_text", "Add Text", FALSE)
+                                   ),
+                                   p(""),
+                                   disabled(actionButton("reddit_create_button", label = "Create Network", icon = icon("share-alt")))
+                                   
+                          ) # end tabPanel
+                   ) # end tabBox
+                 ) # end fluidRow
+          ), # end column
+          
+          #          )
+          #        )
+          # ),
           
           column(width = 9, offset = 0,
                  fluidRow(
@@ -41,6 +65,7 @@ tabItem(tabName = "reddit_collection_tab",
                    
                    sidebarPanel(width = 12, class = "custom_well_for_buttons",
                                 fluidRow(collectDataButtonsUI("reddit"),
+                                         collectNetworkButtonsUI("reddit"),
                                          collectGraphButtonsUI("reddit"),
                                          collectViewGraphButtonsUI("reddit"))
                    )

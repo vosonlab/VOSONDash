@@ -96,7 +96,8 @@ po_red_url <- function() {
   title <- "Reddit Thread URL"
   content <- paste0("Enter a Reddit thread URL in the following format.<br><br>",
                     "<i class = 'fa fa-angle-right'></i>&nbsp;&nbsp;",
-                    "<code>https://www.reddit.com/r/xxxxxx/<br>comments/xxxxxx/x_xxxx_xxxx</code>"
+                    "<code>https://www.reddit.com/r/xxxxxx/<br>comments/xxxxxx/x_xxxx_xxxx</code><br><br>",
+                    "Collects maximum 500 comments per thread."
   )
   
   list(title = title, content = content)
