@@ -1,3 +1,8 @@
+# VOSONDash 0.5.1
+
+## Minor Changes:
+- Renamed `bimodal` networks to `twomode`.
+
 # VOSONDash 0.5.0
 
 ## Major Changes:

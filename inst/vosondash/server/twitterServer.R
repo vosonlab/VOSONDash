@@ -229,23 +229,23 @@ observeEvent(input$twitter_create_button, {
       if (add_user_data) { 
         network <- vosonSML::AddUserData(network, isolate(tw_rv$tw_data), twitterAuth = creds_rv$use_token) 
       }
-    } else if (net_type == "bimodal") {
-      rem_terms <- parse_rem_terms(input$twitter_bimodal_remove)
+    } else if (net_type == "twomode") {
+      rem_terms <- parse_rem_terms(input$twitter_twomode_remove)
       if (length(rem_terms)) {
-        network <- vosonSML::Create(isolate(tw_rv$tw_data), "bimodal", removeTermsOrHashtags = rem_terms,
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "twomode", removeTermsOrHashtags = rem_terms,
                                     verbose = TRUE)
       } else {
-        network <- vosonSML::Create(isolate(tw_rv$tw_data), "bimodal", verbose = TRUE) 
+        network <- vosonSML::Create(isolate(tw_rv$tw_data), "twomode", verbose = TRUE) 
       }
     } else if (net_type == "semantic") {
       rem_terms <- parse_rem_terms(input$twitter_semantic_remove)
 
-      if (length(rem_terms)) {
-        network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", removeTermsOrHashtags = rem_terms,
-                                    verbose = TRUE)
-      } else {
-        network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", verbose = TRUE) 
-      }
+      network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic", 
+                                  removeTermsOrHashtags = rem_terms,
+                                  stopwordsEnglish = input$twitter_semantic_stopwords,
+                                  termFreq = input$twitter_term_freq,
+                                  hashtagFreq = input$twitter_hashtag_freq,
+                                  verbose = TRUE)
     }
     if (!is.null(network)) {
       tw_rv$tw_network <- network
