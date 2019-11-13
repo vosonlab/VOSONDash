@@ -18,7 +18,7 @@ collectNetworkButtonsUI <- function(id) {
 }
 
 collectGraphButtonsUI <- function(id) {
-  if (v029) { collectGraphButtonsUI_(id) }
+  if (v029) { return(collectGraphButtonsUI_(id)) }
   ns <- NS(id)
   
   tagList(
@@ -37,7 +37,7 @@ collectGraphButtonsUI_ <- function(id) {
 }
 
 collectViewGraphButtonsUI <- function(id) {
-  if (v029) { collectViewGraphButtonsUI_(id) }
+  if (v029) { return(collectViewGraphButtonsUI_(id)) }
   ns <- NS(id)
   
   tagList(

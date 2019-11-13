@@ -2,6 +2,7 @@
 
 ## Minor Changes:
 - Renamed `bimodal` networks to `twomode`.
+- Added percentage sliders to twitter `semantic` network creation tab.
 
 # VOSONDash 0.5.0
 
