@@ -73,7 +73,7 @@ tabItem(tabName = "twitter_collection_tab",
                                 
                           ), # end tabPanel
                           tabPanel("Create Network",
-                                   selectInput("twitter_network_type_select", label = "Network", choices = c("activity", "actor", "bimodal", "semantic"), multiple = FALSE),
+                                   selectInput("twitter_network_type_select", label = "Network", choices = c("activity", "actor", "twomode", "semantic"), multiple = FALSE),
                                    conditionalPanel(
                                            condition = "input.twitter_network_type_select == 'activity' || 
                                                         input.twitter_network_type_select == 'actor'",
@@ -84,16 +84,21 @@ tabItem(tabName = "twitter_collection_tab",
                                            checkboxInput("twitter_network_user_data", "Lookup User Data", FALSE)
                                    ),
                                    conditionalPanel(
-                                           condition = "input.twitter_network_type_select == 'bimodal'",
-                                           textAreaInput("twitter_bimodal_remove", label = "Remove Terms", value = "",
+                                           condition = "input.twitter_network_type_select == 'twomode'",
+                                           textAreaInput("twitter_twomode_remove", label = "Remove Terms", value = "",
                                                      width = NULL, height = NULL,
                                                      cols = NULL, rows = 2, placeholder = NULL, resize = "vertical")
                                    ),
                                    conditionalPanel(
                                            condition = "input.twitter_network_type_select == 'semantic'",
+                                           checkboxInput("twitter_semantic_stopwords", "Remove English stopwords", TRUE),
                                            textAreaInput("twitter_semantic_remove", label = "Remove Terms", value = "",
                                                      width = NULL, height = NULL,
-                                                     cols = NULL, rows = 2, placeholder = NULL, resize = "vertical")
+                                                     cols = NULL, rows = 2, placeholder = NULL, resize = "vertical"),
+                                           sliderInput("twitter_term_freq", "% Most Frequent Words", 1, 100, value = 5, step = 1,
+                                                       round = TRUE),
+                                           sliderInput("twitter_hashtag_freq", "% Most Frequent Hashtags", 1, 100, value = 50, step = 1,
+                                                       round = TRUE)
                                    ),
                                    p(""),
                                    disabled(actionButton("twitter_create_button", label = "Create Network", icon = icon("share-alt")))
