@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -127,9 +127,18 @@
     <p>This function is a wrapper for collecting tweets using <code><a href='https://rdrr.io/pkg/vosonSML/man/Collect.html'>vosonSML::Collect</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>collectTwitterData</span>(<span class='no'>cred</span>, <span class='no'>search_term</span>, <span class='no'>search_type</span>, <span class='no'>tweet_count</span>,
-  <span class='no'>include_retweets</span>, <span class='no'>retry_on_rate_limit</span>, <span class='no'>language</span>, <span class='no'>date_until</span>, <span class='no'>since_id</span>,
-  <span class='no'>max_id</span>)</pre>
+    <pre class="usage"><span class='fu'>collectTwitterData</span>(
+  <span class='no'>cred</span>,
+  <span class='no'>search_term</span>,
+  <span class='no'>search_type</span>,
+  <span class='no'>tweet_count</span>,
+  <span class='no'>include_retweets</span>,
+  <span class='no'>retry_on_rate_limit</span>,
+  <span class='no'>language</span>,
+  <span class='no'>date_until</span>,
+  <span class='no'>since_id</span>,
+  <span class='no'>max_id</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

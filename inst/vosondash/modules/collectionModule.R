@@ -195,12 +195,12 @@ collectViewGraphButtons <- function(input, output, session, graph_data, graph_wt
   return(view_rvalues)
 }
 
-collectViewGraphButtons_ <- function(input, output, session, graph_data) {
-  view_rvalues <- reactiveValues(data = NULL)
-  
-  observeEvent(input$view_graph, {
-    view_rvalues$data <<- graph_data()
-  })
-  
-  return(view_rvalues)
-}
+# collectViewGraphButtons_ <- function(input, output, session, graph_data) {
+#   view_rvalues <- reactiveValues(data = NULL)
+#   
+#   observeEvent(input$view_graph, {
+#     view_rvalues$data <<- graph_data()
+#   })
+#   
+#   return(view_rvalues)
+# }

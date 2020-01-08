@@ -38,11 +38,10 @@ isVosonSML0290 <- function() {
 #' @keywords internal
 #' @export
 createTwitterDevToken <- function(app_name, keys) {
-  check_keys <- sapply(keys, isNullOrEmpty)
+  if (!requireNamespace("rtweet", quietly = TRUE)) { return(NULL) }
   
-  if (any(check_keys == TRUE)) { 
-    return(NULL) 
-  }
+  check_keys <- sapply(keys, isNullOrEmpty)
+  if (any(check_keys == TRUE)) { return(NULL) }
   
   cred <- vosonSML::Authenticate("twitter", 
                                  appName = app_name,
@@ -72,11 +71,10 @@ createTwitterDevToken <- function(app_name, keys) {
 #' @keywords internal
 #' @export
 createTwitterWebToken <- function(app_name, keys) {
-  check_keys <- sapply(keys, isNullOrEmpty)
+  if (!requireNamespace("rtweet", quietly = TRUE)) { return(NULL) }
   
-  if (any(check_keys == TRUE)) { 
-    return(NULL) 
-  }
+  check_keys <- sapply(keys, isNullOrEmpty)
+  if (any(check_keys == TRUE)) { return(NULL) }
   
   cred <- list(socialmedia = "twitter", auth = NULL)
   class(cred) <- append(class(cred), c("credential", "twitter")) 
@@ -130,6 +128,7 @@ collectTwitterData <- function(cred, search_term, search_type, tweet_count,
                                include_retweets, retry_on_rate_limit,
                                language, date_until, since_id, max_id) {
   
+  # if (!requireNamespace("rtweet", quietly = TRUE)) { return(NULL) }
   if (is.null(cred) || isNullOrEmpty(search_term)) { return(NULL) }
   
   collect_params <- list()

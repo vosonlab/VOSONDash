@@ -1,3 +1,8 @@
+# VOSONDash 0.5.2
+
+## Minor Changes:
+- Moved `rtweet` from package imports to suggests. 
+
 # VOSONDash 0.5.1
 
 ## Minor Changes:

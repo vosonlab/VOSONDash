@@ -11,7 +11,7 @@ tw_rv <- reactiveValues(
   tw_graphml = NULL      # igraph graph object returned from collection
 )
 
-test_data <- NULL
+tw_data <- NULL
 
 tw_rv$data_cols <- NULL
 
@@ -143,13 +143,13 @@ observeEvent(input$twitter_collect_button, {
         # tw_api_keyring, search_term, search_type, tweet_count, 
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
-        test_data <<- suppressWarnings({
+        tw_data <<- suppressWarnings({
           VOSONDash::collectTwitterData(cred = creds_rv$use_token, search_term, search_type,
                                         twitter_tweet_count, twitter_retweets, twitter_retry, 
                                         twitter_language, twitter_date_until,
                                         twitter_since_id, twitter_max_id) })
         
-        tw_rv$tw_data <<- test_data
+        tw_rv$tw_data <<- tw_data
         
         tw_rv$data_cols <<- names(tw_rv$tw_data)
       }, error = function(err) {
