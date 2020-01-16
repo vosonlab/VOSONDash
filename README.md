@@ -53,14 +53,11 @@ Checking packages...
 Error: Required packages missing.
 - visNetwork
 - syuzhet
-```
 
-The missing packages can be installed using the provided package install command.
-
-```R
 Please install required packages before using VOSONDash:
 install.packages(c("visNetwork","syuzhet"))
 ```
+The missing packages can be installed using the provided package install command.
 
 After installing required packages and running again the `VOSONDash` Shiny app will open up in the default web browser.
 
