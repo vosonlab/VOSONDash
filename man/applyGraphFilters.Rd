@@ -4,8 +4,7 @@
 \alias{applyGraphFilters}
 \title{Filter out graph vertices and edges from graph object that are isolates, multi edge or edge loops}
 \usage{
-applyGraphFilters(g, isolates = TRUE, multi_edge = TRUE,
-  loops_edge = TRUE)
+applyGraphFilters(g, isolates = TRUE, multi_edge = TRUE, loops_edge = TRUE)
 }
 \arguments{
 \item{g}{\pkg{igraph} \code{graph} object.}

@@ -3,8 +3,8 @@
 ![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)
 ![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)
 ![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=8065ac)
-![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.1&color=orange&logo=github)
-![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?logo=github)
+![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.2&color=659DBD&logo=github)
+![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?color=659DBD&logo=github)
 
 `VOSONDash` is an interactive [R Shiny](https://shiny.rstudio.com/) web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the [vosonSML](https://github.com/vosonlab/vosonSML) R package.
 
@@ -23,7 +23,7 @@ install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.1
   repo = NULL, type = "source")
 ```
 
-Install the latest development version (v0.5.1):
+Install the latest development version (v0.5.2):
 ```R
 # library(devtools)
 devtools::install_github("vosonlab/VOSONDash")
@@ -53,14 +53,11 @@ Checking packages...
 Error: Required packages missing.
 - visNetwork
 - syuzhet
-```
 
-The missing packages can be installed using the provided package install command.
-
-```R
 Please install required packages before using VOSONDash:
 install.packages(c("visNetwork","syuzhet"))
 ```
+The missing packages can be installed using the generated package install command.
 
 After installing required packages and running again the `VOSONDash` Shiny app will open up in the default web browser.
 

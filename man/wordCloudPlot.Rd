@@ -4,8 +4,7 @@
 \alias{wordCloudPlot}
 \title{Create a Word Cloud plot}
 \usage{
-wordCloudPlot(corp, seed = NULL, min_freq = 1, max_words = 50,
-  pcolors = NULL)
+wordCloudPlot(corp, seed = NULL, min_freq = 1, max_words = 50, pcolors = NULL)
 }
 \arguments{
 \item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}

@@ -69,22 +69,20 @@ systemTimeFilename <- function(name_suffix, name_ext, clean = FALSE) {
 #' @keywords internal
 #' @export
 createRedditRequestUrl <- function(url) {
-  url <- tolower(url)
+  # url <- tolower(url)
   
-  # base_url       <- "https://reddit.com/r/"
-  # base_url_oauth <- "https://oauth.reddit.com/r/"
-  
-  if(!grepl("^https://(www\\.)?reddit.com/r/(.*?)/comments/([0-9A-Za-z]{6})?/.*$", 
+  if(!grepl("^https://(www\\.)?reddit.com/r/(.*?)/comments/([0-9A-Za-z]{6})?/.*?/$", 
             url, ignore.case = TRUE, perl = TRUE)) {
     return(NULL)
   }
   
-  # "https://oauth.reddit.com/r/"
-  url <- gsub("^https://(www\\.)?reddit.com/r/", "r/", 
-              url, ignore.case = TRUE, perl = TRUE)
+  url <- gsub("^https://(www\\.)?reddit.com/r/", "r/", url, ignore.case = TRUE, perl = TRUE)
   
-  url <- gsub("^(.*)?/comments/([0-9A-Za-z]{6})?/.*?(/)?$", "\\1/comments/\\2/", 
-              url, ignore.case = TRUE, perl = TRUE)
+  # url <- gsub("^(.*)?/comments/([0-9A-Za-z]{6})?/.*?(/)?$", "\\1/comments/\\2/", 
+  #             url, ignore.case = TRUE, perl = TRUE)
+  
+  # url <- gsub("^(.*)?/comments/([0-9A-Za-z]{6})?/(.*)?/$", "\\1/comments/\\2/\\3/", 
+  #            url, ignore.case = TRUE, perl = TRUE)
 }
 
 #' @title Get a reddit thread id from url

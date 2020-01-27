@@ -4,8 +4,12 @@
 \alias{applyCategoricalFilters}
 \title{Filter out graph vertices not in selected category}
 \usage{
-applyCategoricalFilters(g, selected_cat, selected_subcats,
-  cat_prefix = "vosonCA_")
+applyCategoricalFilters(
+  g,
+  selected_cat,
+  selected_subcats,
+  cat_prefix = "vosonCA_"
+)
 }
 \arguments{
 \item{g}{\pkg{igraph} \code{graph} object.}

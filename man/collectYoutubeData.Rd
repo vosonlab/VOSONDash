@@ -4,8 +4,11 @@
 \alias{collectYoutubeData}
 \title{Collect youtube data}
 \usage{
-collectYoutubeData(youtube_api_key, youtube_video_id_list,
-  youtube_max_comments)
+collectYoutubeData(
+  youtube_api_key,
+  youtube_video_id_list,
+  youtube_max_comments
+)
 }
 \arguments{
 \item{youtube_api_key}{Character string. Youtube api key.}

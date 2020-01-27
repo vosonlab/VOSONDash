@@ -11,21 +11,20 @@
 #' @docType package
 #' @author Bryan Gertzel and Robert Ackland.
 #' 
-#' @import shiny
+#' @importFrom graphics plot text title par barplot
 #' @import httpuv
-#' @importFrom tm DocumentTermMatrix removeSparseTerms
+#' @importFrom httr parse_url
 #' @importFrom igraph vertex_attr as_edgelist gsize delete_vertices components simplify vcount 
 #' betweenness closeness set_graph_attr V 'V<-' E 'E<-' degree edge_attr_names vertex_attr_names
 #' reciprocity transitivity mean_distance graph.density is.directed ecount count_components
 #' centr_degree centr_betw centr_clo
-#' @importFrom rtweet create_token
+#' @importFrom lattice barchart
 #' @importFrom magrittr '%>%' '%<>%'
 #' @importFrom RColorBrewer brewer.pal
+#' @import shiny
 #' @importFrom syuzhet get_nrc_sentiment
-#' @importFrom wordcloud wordcloud
-#' @importFrom httr parse_url
-#' @importFrom vosonSML Authenticate Collect Create
+#' @importFrom tm DocumentTermMatrix removeSparseTerms
 #' @importFrom utils packageVersion
-#' @importFrom graphics plot text title par barplot
-#' @importFrom lattice barchart
+#' @importFrom vosonSML Authenticate Collect Create
+#' @importFrom wordcloud wordcloud
 NULL

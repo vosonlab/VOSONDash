@@ -4,9 +4,18 @@
 \alias{collectTwitterData}
 \title{Collect twitter data}
 \usage{
-collectTwitterData(cred, search_term, search_type, tweet_count,
-  include_retweets, retry_on_rate_limit, language, date_until, since_id,
-  max_id)
+collectTwitterData(
+  cred,
+  search_term,
+  search_type,
+  tweet_count,
+  include_retweets,
+  retry_on_rate_limit,
+  language,
+  date_until,
+  since_id,
+  max_id
+)
 }
 \arguments{
 \item{cred}{\pkg{vosonSML} twitter credential object.}

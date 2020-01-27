@@ -1,3 +1,11 @@
+# VOSONDash 0.5.2
+
+## Minor Changes:
+- Moved `rtweet` from package imports to suggests. 
+
+## Bug Fixes:
+- Fixed `reddit` URL formatting to support retrieving additional threads.
+
 # VOSONDash 0.5.1
 
 ## Minor Changes:
