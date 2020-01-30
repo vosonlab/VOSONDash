@@ -19,6 +19,8 @@ visNetworkData <- reactive({
   node_size_multiplier <- input$graph_node_size_slider
   plot_height <- ng_rv$plot_height
   
+  use_v_colors <- input$use_vertex_colors_check
+  
   graph_layout <- switch(chosen_layout,
                          "Auto" = "layout_nicely",
                          "FR" = "layout_with_fr", # Fruchterman-Reingold
@@ -29,7 +31,7 @@ visNetworkData <- reactive({
                          "DrL" = "layout_with_drl",
                          "GEM" = "layout_with_gem",
                          "MDS" = "layout_with_mds",
-                         # "Tree" = "layout_as_tree",
+                         "Tree" = "layout_as_tree",
                          "Grid" = "layout_on_grid",
                          "Sphere" = "layout_on_sphere",
                          "Circle" = "layout_in_circle",
@@ -53,8 +55,16 @@ visNetworkData <- reactive({
                        "Closeness" = vis_vsize(verts$closeness),
                        "None" = (base_vertex_size + 0.1) * node_size_multiplier)
 
+  v_color_in_data <- FALSE
+  if ("color" %in% names(verts)) { v_color_in_data <- TRUE }
+  
   if (nrow(verts) > 0) {
     verts$color.background <- as.character(gbl_plot_def_vertex_color)
+
+    if (use_v_colors & v_color_in_data) { # added checkbox
+      verts$color.background <- verts$color
+    }
+    
     verts$font.color <- gbl_plot_def_label_color
     verts$id <- verts$name
   }
@@ -72,7 +82,9 @@ visNetworkData <- reactive({
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
         df$color <- gbl_plot_palette()[1:nrow(df)]
-        verts$color.background <- df$color[match(verts[[selected_categorical_attribute]], df$cat)]
+        if (use_v_colors == FALSE || !v_color_in_data) { # added checkbox
+          verts$color.background <- df$color[match(verts[[selected_categorical_attribute]], df$cat)]
+        }
       }
     }
   }
@@ -91,6 +103,8 @@ visNetworkData <- reactive({
   if (!is.null(gcs) && (!(gcs %in% c("All", "")))) {
     category_selection <- list(variable = gcs, multiple = TRUE)
   }
+  
+  if ("color" %in% names(verts)) { verts <- dplyr::select(verts, -color) }
   
   visNetwork::visNetwork(verts, edges, main = NULL) %>%
     visIgraphLayout(layout = graph_layout, 

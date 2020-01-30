@@ -57,8 +57,17 @@ standardPlotData <- reactive({
   row.names(df) <- V(g)$id
   graph_vertices <- df
   
-  # set default vertex color
-  V(g)$color <- as.character(gbl_plot_def_vertex_color)
+  # set vertex color
+  v_color_in_data <- FALSE
+  if ("color" %in% vertex_attr_names(g)) { v_color_in_data <- TRUE }
+  
+  if (input$use_vertex_colors_check == FALSE) { # added checkbox
+    V(g)$color <- as.character(gbl_plot_def_vertex_color)  
+  } else {
+    if (!v_color_in_data) {
+      V(g)$color <- as.character(gbl_plot_def_vertex_color)
+    }
+  }
   
   # vertex colours (only if cat attr selected)
   if (length(categorical_attributes) > 0) { # only if have categorical attributes
@@ -68,10 +77,12 @@ standardPlotData <- reactive({
       categories <- categorical_attributes[[selected_categorical_attribute]]
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
-        df$color <- gbl_plot_palette()[1:nrow(df)]
         
-        va <- paste0('vosonCA_', selected_categorical_attribute)
-        V(g)$color <- df$color[match(vertex_attr(g, va), df$cat)]
+        if (input$use_vertex_colors_check == FALSE || !v_color_in_data) { # added checkbox
+          df$color <- gbl_plot_palette()[1:nrow(df)]
+          va <- paste0('vosonCA_', selected_categorical_attribute)
+          V(g)$color <- df$color[match(vertex_attr(g, va), df$cat)]  
+        }
       }
     }
   }
@@ -159,7 +170,7 @@ standardPlotData <- reactive({
                          "DrL" = layout_with_drl(g),
                          "GEM" = layout_with_gem(g),
                          "MDS" = layout_with_mds(g),
-                         # "Tree" = layout_as_tree(g),
+                         "Tree" = layout_as_tree(g, circular = TRUE),
                          "Grid" = layout_on_grid(g),
                          "Sphere" = layout_on_sphere(g),
                          "Circle" = layout_in_circle(g),

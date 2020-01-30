@@ -706,7 +706,10 @@ dt_vertices_df <- reactive({
   df_parameters[['name']] <- V(g)$name
   if (!(is.null(vertex_attr(g, "label")))) {
     df_parameters[['label']] <- V(g)$label
-  }  
+  }
+  if ("color" %in% vertex_attr_names(g)) {
+    df_parameters[['color']] <- V(g)$color
+  }
   df_parameters[['degree']] <- V(g)$Degree
   df_parameters[['indegree']] <- V(g)$Indegree
   df_parameters[['outdegree']] <- V(g)$Outdegree
@@ -730,6 +733,7 @@ dt_vertices_df <- reactive({
     }  
   }
 
+  df_parameters['stringsAsFactors'] <- FALSE
   df <- do.call(data.frame, df_parameters)
   
   row.names(df) <- V(g)$id

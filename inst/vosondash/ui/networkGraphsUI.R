@@ -33,9 +33,8 @@ tabItem(tabName = "network_graphs_tab",
                                          div(tags$b("Graph Layout"), 
                                              vpopover(po_graph_layout()$title, po_graph_layout()$content), 
                                              style = "margin-bottom:5px;"),
-                                         disabled(selectInput("graph_layout_select", label = NULL, choices = c("Auto", "FR", "KK", "DH",
-                                                                                                                         "LGL", "Graphopt", "DrL", "GEM", "MDS",
-                                                                                                                         "Grid", "Sphere", "Circle", "Star", "Random"),
+                                         disabled(selectInput("graph_layout_select", label = NULL, choices = c("Auto", "FR", "KK", "DH", "LGL", "Graphopt", "DrL", "GEM",
+                                                                                                               "MDS", "Grid", "Sphere", "Circle", "Star", "Random"),
                                                               selectize = TRUE, selected = "Auto"))
                                   ),
                                   column(width = 6,
@@ -53,6 +52,10 @@ tabItem(tabName = "network_graphs_tab",
                                          disabled(sliderInput("graph_node_size_slider", label = "Multiplier", min = 0.1, max = 15, step = 0.1, value = c(1), ticks = FALSE, animate = FALSE))
                                   )
                                 ),
+                                
+                                checkboxInput('use_vertex_colors_check', 
+                                              div("Data Vertex colors", style = "margin-bottom:5px;")
+                                              , TRUE),
                                 
                                 checkboxInput('expand_categorical_filter_check', 
                                               div(tags$b("Categorical Filter"), 
