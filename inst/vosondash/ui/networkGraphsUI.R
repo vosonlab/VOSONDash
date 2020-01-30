@@ -54,7 +54,7 @@ tabItem(tabName = "network_graphs_tab",
                                 ),
                                 
                                 checkboxInput('use_vertex_colors_check', 
-                                              div("Data Vertex colors", style = "margin-bottom:5px;")
+                                              div("Node colors from graphml", style = "margin-bottom:5px;")
                                               , TRUE),
                                 
                                 checkboxInput('expand_categorical_filter_check', 

@@ -1,7 +1,8 @@
 # VOSONDash 0.5.2
 
 ## Minor Changes:
-- Moved `rtweet` from package imports to suggests. 
+- Added the option to inherit node colors from loaded `graphml` files in plots.
+- Moved `rtweet` from package imports to suggests.
 
 ## Bug Fixes:
 - Fixed `reddit` URL formatting to support retrieving additional threads.

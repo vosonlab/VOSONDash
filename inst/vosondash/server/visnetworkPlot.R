@@ -69,10 +69,6 @@ visNetworkData <- reactive({
     verts$id <- verts$name
   }
   
-  if (input$graph_names_check == FALSE) {
-    verts$label <- "" 
-  }
-  
   # vertex colours (only if cat attr selected)
   if (length(categorical_attributes) > 0) { # only if have categorical attributes
     
@@ -89,11 +85,22 @@ visNetworkData <- reactive({
     }
   }
   
+  verts$sel_label <- NA
   if (length(verts_rows_selected) > 0) {
-    selected_row_names <- row.names(verts)[c(verts_rows_selected)]
-    verts$color.background[row.names(verts) %in% selected_row_names] <- gbl_plot_sel_vertex_color
-    verts$font.color[row.names(verts) %in% selected_row_names] <- gbl_plot_sel_vertex_color
+    sel_dt_row_names <- row.names(verts)[c(verts_rows_selected)] # get df row names for verts in dt selection
+    sel_subset <- row.names(verts) %in% sel_dt_row_names
+    
+    verts$color.background[sel_subset] <- gbl_plot_sel_vertex_color
+    verts$font.color[sel_subset] <- gbl_plot_sel_vertex_color
+    
+    verts$sel_label[sel_subset] <- verts$label[sel_subset]
   }
+  
+  if (input$graph_names_check == FALSE) {
+    verts$label <- ""
+  }
+  
+  verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$sel_label), .data$label, .data$sel_label), sel_label = NULL)
   
   edges <- edges %>% group_by(to, from) %>%
     summarise(width = n()) %>% 
