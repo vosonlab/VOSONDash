@@ -33,7 +33,8 @@ voson_txt_prefix <- "^vosonTxt_"
 gbl_rng_range <- c(1, 5000)
 gbl_plot_def_label_color <- "#333333"
 gbl_plot_def_vertex_color <- "orange"
-gbl_plot_sel_vertex_color <- "#006cb7"
+gbl_plot_sel_vertex_color <- "#74c6ff" # "#006cb7"
+gbl_sel_label_col <- "#006cb7"
 
 gbl_plot_palette <- function(n = 8) brewer.pal(n, "Dark2")
 gbl_plot_height <- 500

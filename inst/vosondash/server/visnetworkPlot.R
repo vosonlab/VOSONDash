@@ -91,7 +91,7 @@ visNetworkData <- reactive({
     sel_subset <- row.names(verts) %in% sel_dt_row_names
     
     verts$color.background[sel_subset] <- gbl_plot_sel_vertex_color
-    verts$font.color[sel_subset] <- gbl_plot_sel_vertex_color
+    verts$font.color[sel_subset] <- gbl_sel_label_col
     
     verts$sel_label[sel_subset] <- verts$label[sel_subset]
   }

@@ -4,6 +4,7 @@ disableGraphFilterControls <- function() {
   ui_controls <- c("graph_isolates_check",
                    "graph_multi_edge_check",
                    "graph_loops_edge_check",
+                   "node_index_check",
                    "graph_names_check",
                    "graph_cat_select",
                    "graph_sub_cats_select",
@@ -21,7 +22,8 @@ disableGraphFilterControls <- function() {
 resetEnableGraphFilterControls <- function() {
   ui_controls <- c("graph_isolates_check", 
                    "graph_multi_edge_check", 
-                   "graph_loops_edge_check", 
+                   "graph_loops_edge_check",
+                   "node_index_check",
                    "graph_names_check", 
                    "graph_node_size_degree_select",
                    "graph_node_size_slider",
@@ -72,7 +74,8 @@ enablePlotControls <- function() {
   
   # added "graph_multi_edge_check", "graph_loops_edge_check" for bug switching back to plot from visnetwork
   # and multi, loops checkbox remaining disabled
-  ui_controls <- c("graph_names_check",
+  ui_controls <- c("node_index_check",
+                   "graph_names_check",
                    "graph_reseed_button",
                    "graph_layout_select",
                    "graph_node_size_degree_select",

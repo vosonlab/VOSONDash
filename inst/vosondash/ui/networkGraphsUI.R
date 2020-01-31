@@ -23,8 +23,11 @@ tabItem(tabName = "network_graphs_tab",
                                 div("Graph Filters", style = "font-weight: bold;", class = "div_inline"),
                                 div(disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding:2px 8px;")), style = "float:right; margin-top:5px; font-size:0.98em;",
                                     vpopover(po_reseed_graph()$title, po_reseed_graph()$content)),
-
-                                disabled(checkboxInput("graph_names_check", "Node Labels", FALSE)),
+                                div(""),
+                                div(disabled(checkboxInput("node_index_check", "Node Index", FALSE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
+                                div(disabled(checkboxInput("graph_names_check", "Use Labels", FALSE)), class = "div_inline"),
+                                div(""),
+                                
                                 div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_loops_edge_check", "Loops", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_isolates_check", "Isolates", TRUE)), class = "div_inline"),

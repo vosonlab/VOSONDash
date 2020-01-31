@@ -20,6 +20,8 @@ standardPlotData <- reactive({
   node_degree_type <- input$graph_node_size_degree_select
   node_size_multiplier <- input$graph_node_size_slider  
   
+  node_index_check <- input$node_index_check
+  
   # ------------------
   # save and restore graphics parameters
   saved_par <- par(no.readonly = TRUE)  
@@ -92,10 +94,12 @@ standardPlotData <- reactive({
     selected_row_names <- row.names(graph_vertices)[c(selected_rows)]
   }
   
-  plot_parameters <- list(g, vertex.frame.color = "gray", edge.arrow.size = 0.4)
+  # vertex.frame.color = "gray", 
+  plot_parameters <- list(g, edge.arrow.size = 0.4)
   
   # set vertex color for vertices selected in graph data table
   plot_parameters[['vertex.color']] <- ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, V(g)$color)
+  plot_parameters[['vertex.frame.color']] = ifelse(V(g)$id %in% selected_row_names, "#000000", "gray")
   plot_parameters[['vertex.label.font']] <- ifelse(V(g)$id %in% selected_row_names, 2, 1)
   
   base_vertex_size <- 4
@@ -118,6 +122,16 @@ standardPlotData <- reactive({
   
   plot_parameters['vertex.label.family'] <- "Arial"
   
+  # --- start id labels
+  if (node_index_check) {
+    plot_parameters[['vertex.label']] <- V(g)$id
+    plot_parameters[['vertex.label.color']] <- "#000000"
+  }
+  # --- end id labels
+  
+  # --- start labels
+  if (!node_index_check) {
+    
   plot_parameters['vertex.label.cex'] <- base_label_size
   plot_parameters['vertex.label.dist'] <- label_dist
   plot_parameters['vertex.label.degree'] <- label_degree
@@ -143,9 +157,10 @@ standardPlotData <- reactive({
     }
   }
   
-  # plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, 
-  #                                                  gbl_plot_def_label_color)
-  plot_parameters[['vertex.label.color']] <- gbl_plot_def_label_color
+  plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_sel_label_col, 
+                                                   gbl_plot_def_label_color)
+  
+  # plot_parameters[['vertex.label.color']] <- gbl_plot_def_label_color
   
   plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
                                             "Degree" = (norm_values(V(g)$Degree)) + base_label_size,
@@ -154,6 +169,8 @@ standardPlotData <- reactive({
                                             "Betweenness" = (norm_values(V(g)$Betweenness)) + base_label_size,
                                             "Closeness" = (norm_values(V(g)$Closeness)) + base_label_size,
                                             "None" = base_label_size)
+  }
+  # --- end labels
   
   # must be set before graph layout
   if (!is.null(graph_seed)) {
