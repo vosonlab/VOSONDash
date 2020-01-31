@@ -111,6 +111,14 @@ standardPlotData <- reactive({
   igraph_vsize <- function(x) {
     base_vertex_size + (((norm_values(x) + 0.1) * norm_multi) * node_size_multiplier)
   }
+  
+  # --- start id labels
+  if (node_index_check) {
+    plot_parameters[['vertex.label']] <- sub("n", "", V(g)$id) # V(g)$id
+    plot_parameters[['vertex.label.color']] <- "#000000"
+    base_vertex_size <- 7
+  }
+  # --- end id labels  
 
   plot_parameters[['vertex.size']] <- switch(node_degree_type,
                                              "Degree" = igraph_vsize(V(g)$Degree),
@@ -121,13 +129,6 @@ standardPlotData <- reactive({
                                              "None" = (base_vertex_size + 0.1) * node_size_multiplier)
   
   plot_parameters['vertex.label.family'] <- "Arial"
-  
-  # --- start id labels
-  if (node_index_check) {
-    plot_parameters[['vertex.label']] <- V(g)$id
-    plot_parameters[['vertex.label.color']] <- "#000000"
-  }
-  # --- end id labels
   
   # --- start labels
   if (!node_index_check) {
@@ -200,6 +201,8 @@ standardPlotData <- reactive({
   plot_parameters['rescale'] <- FALSE
 
   plot_parameters[['layout']] <- graph_layout * graph_spread
+  
+  # plot_parameters['curve_multiple'] <- TRUE
   
   par(mar = rep(0, 4))
   do.call(plot.igraph, plot_parameters)

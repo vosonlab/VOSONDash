@@ -197,6 +197,11 @@ observeEvent(input$graph_reseed_button, {
   ng_rv$graph_seed <- sample(gbl_rng_range[1]:gbl_rng_range[2], 1)
 })
 
+# display seed value
+observeEvent(ng_rv$graph_seed, {
+  html("seed", ng_rv$graph_seed)
+})
+
 # check for redundancy
 # reset graph spread when a new layout is selected
 observeEvent(input$graph_layout_select, {
