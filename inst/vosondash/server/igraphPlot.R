@@ -142,7 +142,7 @@ standardPlotData <- reactive({
     labels <- TRUE
   }
     
-  if (input$graph_names_check == FALSE) {
+  if (input$node_labels_check == FALSE) {
     if (labels) {
       plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
                                                   ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
@@ -178,13 +178,15 @@ standardPlotData <- reactive({
     set.seed(graph_seed)
   }
   
+  graph_charge <- ifelse(is.null(input$graph_charge), 0.001, input$graph_charge)
+  
   graph_layout <- switch(chosen_layout,
                          "Auto" = layout_nicely(g, dim = 2),
-                         "FR" = layout_with_fr(g, dim = 2, niter = 500),
+                         "FR" = layout_with_fr(g, dim = 2, niter = input$graph_niter),
                          "KK" = layout_with_kk(g, dim = 2),
                          "DH" = layout_with_dh(g),
                          "LGL" = layout_with_lgl(g),
-                         "Graphopt" = layout_with_graphopt(g),
+                         "Graphopt" = layout_with_graphopt(g, niter = input$graph_niter, charge = graph_charge),
                          "DrL" = layout_with_drl(g),
                          "GEM" = layout_with_gem(g),
                          "MDS" = layout_with_mds(g),
@@ -196,6 +198,11 @@ standardPlotData <- reactive({
                          "Random" = layout_randomly(g),
                          layout_nicely(g, dim = 2)
   )
+  
+  # if (chosen_layout == "FR") {
+  #   e <- get.edgelist(g, names = FALSE)
+  #   graph_layout <- qgraph::qgraph.layout.fruchtermanreingold(e, vcount = vcount(g))
+  # }
   
   graph_layout <- norm_coords(graph_layout, ymin = -1, ymax = 1, xmin = -1, xmax = 1)
   plot_parameters['rescale'] <- FALSE

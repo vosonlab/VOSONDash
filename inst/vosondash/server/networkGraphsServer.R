@@ -197,7 +197,18 @@ observeEvent(input$graph_reseed_button, {
   ng_rv$graph_seed <- sample(gbl_rng_range[1]:gbl_rng_range[2], 1)
 })
 
-# display seed value
+observeEvent(input$node_index_check, {
+  if (input$node_index_check) {
+    updateCheckboxInput(session, "node_labels_check", value = FALSE)
+  }
+})
+
+observeEvent(input$node_labels_check, {
+  if (input$node_labels_check) {
+    updateCheckboxInput(session, "node_index_check", value = FALSE)
+  }  
+})
+
 observeEvent(ng_rv$graph_seed, {
   html("seed", ng_rv$graph_seed)
 })

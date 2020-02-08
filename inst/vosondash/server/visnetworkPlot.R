@@ -20,6 +20,7 @@ visNetworkData <- reactive({
   plot_height <- ng_rv$plot_height
   
   use_v_colors <- input$use_vertex_colors_check
+  node_index_check <- input$node_index_check
   
   graph_layout <- switch(chosen_layout,
                          "Auto" = "layout_nicely",
@@ -96,11 +97,18 @@ visNetworkData <- reactive({
     verts$sel_label[sel_subset] <- verts$label[sel_subset]
   }
   
-  if (input$graph_names_check == FALSE) {
-    verts$label <- ""
+  if (node_index_check) {
+    verts$title <- verts$label
+    verts$label <- sub("n", "", row.names(verts))
+    verts$shape <- "dot"
+  } else {
+    if (input$node_labels_check == FALSE) {
+      verts$label <- ""
+    } else {
+      verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$sel_label), .data$label, .data$sel_label), sel_label = NULL)  
+    }
+    verts$title <- row.names(verts)
   }
-  
-  verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$sel_label), .data$label, .data$sel_label), sel_label = NULL)
   
   edges <- edges %>% group_by(to, from) %>%
     summarise(width = n()) %>% 
@@ -112,17 +120,32 @@ visNetworkData <- reactive({
   }
   
   if ("color" %in% names(verts)) { verts <- dplyr::select(verts, -color) }
+
+  vis_net <- visNetwork::visNetwork(verts, edges, main = NULL)
   
-  visNetwork::visNetwork(verts, edges, main = NULL) %>%
-    visIgraphLayout(layout = graph_layout, 
-                    randomSeed = graph_seed) %>%
-    
-    visNetwork::visEdges(arrows = 'to',
-                         color = list(color = "#b0b0b0")) %>%
-    
-    visOptions(collapse = TRUE, 
-               highlightNearest = list(enabled = TRUE, hover = TRUE),
-               selectedBy = category_selection,
-               nodesIdSelection = TRUE,
-               height = plot_height)
+  l_params <- list(vis_net, layout = graph_layout, randomSeed = graph_seed)
+  if (chosen_layout %in% c("FR", "Graphopt")) { l_params['niter'] <- input$graph_niter }
+  if (chosen_layout == "Graphopt") { 
+    l_params['charge'] <- ifelse(is.null(input$graph_charge), 0.001, input$graph_charge)
+  }
+  vis_net <- do.call(visIgraphLayout, l_params)
+  
+  vis_net %>% visOptions(collapse = TRUE, 
+                        highlightNearest = list(enabled = TRUE, hover = TRUE),
+                        selectedBy = category_selection,
+                        nodesIdSelection = TRUE,
+                        height = plot_height)
+  
+  # visNetwork::visNetwork(verts, edges, main = NULL) %>%
+  #   visIgraphLayout(layout = graph_layout, 
+  #                   randomSeed = graph_seed) %>%
+  #   
+  #   visNetwork::visEdges(arrows = 'to',
+  #                        color = list(color = "#b0b0b0")) %>%
+  #   
+  #   visOptions(collapse = TRUE, 
+  #              highlightNearest = list(enabled = TRUE, hover = TRUE),
+  #              selectedBy = category_selection,
+  #              nodesIdSelection = TRUE,
+  #              height = plot_height)
 })

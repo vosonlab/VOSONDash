@@ -25,7 +25,7 @@ tabItem(tabName = "network_graphs_tab",
                                     vpopover(po_reseed_graph()$title, po_reseed_graph()$content)),
                                 div(""),
                                 div(disabled(checkboxInput("node_index_check", "Node Index", FALSE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
-                                div(disabled(checkboxInput("graph_names_check", "Use Labels", FALSE)), class = "div_inline"),
+                                div(disabled(checkboxInput("node_labels_check", "Use Labels", FALSE)), class = "div_inline"),
                                 div(""),
                                 
                                 div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
@@ -44,7 +44,18 @@ tabItem(tabName = "network_graphs_tab",
                                          disabled(sliderInput("graph_spread_slider", "Spread", min = 0.25, max = 2.5, step = 0.1, value = c(1), ticks = FALSE))
                                   )
                                 ),
-                                
+                                conditionalPanel(condition = 'input.graph_layout_select == "FR" | input.graph_layout_select == "Graphopt"',
+                                                 fluidRow(
+                                                         column(width = 6,
+                                                                numericInput(inputId = "graph_niter", "Iterations (niter)", value = 500, min = 1, max = 1000000)
+                                                         ),
+                                                         conditionalPanel(condition = 'input.graph_layout_select == "Graphopt"',
+                                                                          column(width = 6,
+                                                                                 numericInput(inputId = "graph_charge", "Charge", value = 0.001, min = 0.001, max = 1.0, step = 0.001)
+                                                                          ),              
+                                                         ),
+                                                 )
+                                ),
                                 fluidRow(
                                   column(width = 6,
                                          div("Node Size", style = "font-weight: bold;", class = "custom_node_size_div"),
