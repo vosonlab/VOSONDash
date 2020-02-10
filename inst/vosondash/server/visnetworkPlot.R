@@ -15,7 +15,7 @@ visNetworkData <- reactive({
   verts_rows_selected <- input$dt_vertices_rows_selected
   chosen_layout <- input$graph_layout_select
   graph_seed <- ng_rv$graph_seed
-  node_degree_type <- input$graph_node_size_degree_select
+  node_degree_type <- input$graph_node_size_select
   node_size_multiplier <- input$graph_node_size_slider
   plot_height <- ng_rv$plot_height
   
@@ -67,6 +67,7 @@ visNetworkData <- reactive({
     }
     
     verts$font.color <- gbl_plot_def_label_color
+    # verts$id <- row.names(verts)
     verts$id <- verts$name
   }
   
@@ -125,8 +126,11 @@ visNetworkData <- reactive({
   
   l_params <- list(vis_net, layout = graph_layout, randomSeed = graph_seed)
   if (chosen_layout %in% c("FR", "Graphopt")) { l_params['niter'] <- input$graph_niter }
-  if (chosen_layout == "Graphopt") { 
-    l_params['charge'] <- ifelse(is.null(input$graph_charge), 0.001, input$graph_charge)
+  if (chosen_layout == "Graphopt") {
+    l_params['charge'] = input$graph_charge
+    l_params['mass'] = input$graph_mass
+    l_params['spring.length'] = input$graph_spr_len
+    l_params['spring.constant'] = input$graph_spr_const    
   }
   vis_net <- do.call(visIgraphLayout, l_params)
   
@@ -134,7 +138,10 @@ visNetworkData <- reactive({
                         highlightNearest = list(enabled = TRUE, hover = TRUE),
                         selectedBy = category_selection,
                         nodesIdSelection = TRUE,
-                        height = plot_height)
+                        height = plot_height) %>%
+    visInteraction(multiselect = TRUE) %>%
+    visEvents(click = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }",
+              deselectNode = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }")
   
   # visNetwork::visNetwork(verts, edges, main = NULL) %>%
   #   visIgraphLayout(layout = graph_layout, 

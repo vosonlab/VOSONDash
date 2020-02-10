@@ -17,7 +17,7 @@ standardPlotData <- reactive({
   chosen_layout <- input$graph_layout_select
   graph_seed <- ng_rv$graph_seed
   graph_spread <- input$graph_spread_slider  
-  node_degree_type <- input$graph_node_size_degree_select
+  node_degree_type <- input$graph_node_size_select
   node_size_multiplier <- input$graph_node_size_slider  
   
   node_index_check <- input$node_index_check
@@ -178,15 +178,12 @@ standardPlotData <- reactive({
     set.seed(graph_seed)
   }
   
-  graph_charge <- ifelse(is.null(input$graph_charge), 0.001, input$graph_charge)
-  
   graph_layout <- switch(chosen_layout,
                          "Auto" = layout_nicely(g, dim = 2),
                          "FR" = layout_with_fr(g, dim = 2, niter = input$graph_niter),
                          "KK" = layout_with_kk(g, dim = 2),
                          "DH" = layout_with_dh(g),
                          "LGL" = layout_with_lgl(g),
-                         "Graphopt" = layout_with_graphopt(g, niter = input$graph_niter, charge = graph_charge),
                          "DrL" = layout_with_drl(g),
                          "GEM" = layout_with_gem(g),
                          "MDS" = layout_with_mds(g),
@@ -199,17 +196,18 @@ standardPlotData <- reactive({
                          layout_nicely(g, dim = 2)
   )
   
-  # if (chosen_layout == "FR") {
-  #   e <- get.edgelist(g, names = FALSE)
-  #   graph_layout <- qgraph::qgraph.layout.fruchtermanreingold(e, vcount = vcount(g))
-  # }
+  if (chosen_layout == "Graphopt") {
+    graph_layout <- layout_with_graphopt(g, niter = input$graph_niter, 
+                                         charge = input$graph_charge,
+                                         mass = input$graph_mass,
+                                         spring.length = input$graph_spr_len,
+                                         spring.constant = input$graph_spr_const)
+  }
   
-  graph_layout <- norm_coords(graph_layout, ymin = -1, ymax = 1, xmin = -1, xmax = 1)
+  graph_layout <- igraph::norm_coords(graph_layout, ymin = -1, ymax = 1, xmin = -1, xmax = 1)
   plot_parameters['rescale'] <- FALSE
 
   plot_parameters[['layout']] <- graph_layout * graph_spread
-  
-  # plot_parameters['curve_multiple'] <- TRUE
   
   par(mar = rep(0, 4))
   do.call(plot.igraph, plot_parameters)
