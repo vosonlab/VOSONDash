@@ -91,6 +91,16 @@ observeEvent(input$demo_data_select_button, {
   }
 })
 
+# node labels select
+# observeEvent(input$node_labels_check, {
+#   if (input$node_labels_check) {
+#     v <- names(dt_vertices_df())
+#     updateSelectInput(session, "node_label_select", label = NULL, choices = v,
+#                       selected = "label")
+#     shinyjs::enable("node_label_select")    
+#   }
+# })
+
 # when graphml data loaded or changed
 observeEvent(ng_rv$graph_data, {
   if (!is.null(ng_rv$graph_data)) {

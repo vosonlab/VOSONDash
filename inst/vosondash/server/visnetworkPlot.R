@@ -140,8 +140,7 @@ visNetworkData <- reactive({
                         nodesIdSelection = TRUE,
                         height = plot_height) %>%
     visInteraction(multiselect = TRUE) %>%
-    visEvents(click = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }",
-              deselectNode = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }")
+    visEvents(click = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }")
   
   # visNetwork::visNetwork(verts, edges, main = NULL) %>%
   #   visIgraphLayout(layout = graph_layout, 

@@ -26,6 +26,10 @@ tabItem(tabName = "network_graphs_tab",
                                 div(""),
                                 div(disabled(checkboxInput("node_index_check", "Node Index", FALSE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("node_labels_check", "Use Labels", FALSE)), class = "div_inline"),
+                                # conditionalPanel(condition = 'input.node_labels_check',
+                                #                  fluidRow(column(width = 6, shinyjs::disabled(selectInput("node_label_select", label = NULL, 
+                                #                                                         choices = c("None"), selected = NULL, multiple = FALSE))))
+                                # ),
                                 div(""),
                                 
                                 div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
