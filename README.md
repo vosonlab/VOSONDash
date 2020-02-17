@@ -17,9 +17,9 @@ Install the latest release via CRAN (v0.5.1):
 install.packages("VOSONDash")
 ```
 
-Install the latest release via GitHub (v0.5.1):
+Install the latest release via GitHub (v0.5.2):
 ```R
-install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.1/VOSONDash-0.5.1.tar.gz", 
+install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.2/VOSONDash-0.5.2.tar.gz", 
   repo = NULL, type = "source")
 ```
 
