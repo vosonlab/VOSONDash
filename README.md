@@ -3,7 +3,7 @@
 ![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)
 ![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)
 ![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=8065ac)
-![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.2&color=659DBD&logo=github)
+![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.3&color=659DBD&logo=github)
 ![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?color=659DBD&logo=github)
 
 `VOSONDash` is an interactive [R Shiny](https://shiny.rstudio.com/) web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the [vosonSML](https://github.com/vosonlab/vosonSML) R package.
@@ -17,13 +17,13 @@ Install the latest release via CRAN (v0.5.1):
 install.packages("VOSONDash")
 ```
 
-Install the latest release via GitHub (v0.5.1):
+Install the latest release via GitHub (v0.5.2):
 ```R
-install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.1/VOSONDash-0.5.1.tar.gz", 
+install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.2/VOSONDash-0.5.2.tar.gz", 
   repo = NULL, type = "source")
 ```
 
-Install the latest development version (v0.5.2):
+Install the latest development version (v0.5.3):
 ```R
 # library(devtools)
 devtools::install_github("vosonlab/VOSONDash")
@@ -45,8 +45,7 @@ For example:
 ```R
 > runVOSONDash()
 =================================================
-VOSONDash v0.4.4
-01 Aug 2019 09:35
+VOSONDash v0.5.3
 ...
 Checking packages...
 
@@ -57,7 +56,7 @@ Error: Required packages missing.
 Please install required packages before using VOSONDash:
 install.packages(c("visNetwork","syuzhet"))
 ```
-The missing packages can be installed using the generated package install command.
+The missing packages can be installed using the above `install.packages` command.
 
 After installing required packages and running again the `VOSONDash` Shiny app will open up in the default web browser.
 
