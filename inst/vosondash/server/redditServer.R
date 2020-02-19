@@ -196,11 +196,13 @@ observeEvent(input$clear_all_reddit_dt_columns, {
                            inline = TRUE)
 })
 
+# selected = c("comm_id", "comm_date", "subreddit", "user", "comment_score", "comment", "thread_id")
+# selected = c("subreddit", "thread_id", "comm_id", "comm_date", "user", "comment_score", "comment")
 observeEvent(input$reset_reddit_dt_columns, {
   updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
                            choices = isolate(red_rv$data_cols),
-                           selected = c("structure", "comm_date", "subreddit", "user", "comment_score", 
-                                        "comment", "thread_id"),
+                           selected = c("subreddit", "thread_id", "comm_id", "comm_date", "user", 
+                                        "comment_score", "comment"),
                            inline = TRUE)
 })
 
@@ -217,8 +219,8 @@ output$reddit_data_cols_ui <- renderUI({
                        actionButton("reset_reddit_dt_columns", "Reset")),
                    checkboxGroupInput("show_reddit_cols", label = NULL,
                                       choices = red_rv$data_cols,
-                                      selected = c("structure", "comm_date", "subreddit", "user", "comment_score", 
-                                                   "comment", "thread_id"),
+                                      selected = c("subreddit", "thread_id", "comm_id", "comm_date", "user", 
+                                                   "comment_score", "comment"),
                                       inline = TRUE, width = '98%')
   )
 })
@@ -306,7 +308,7 @@ redditArgumentsOutput <- function() {
   
   if (!is.null(reddit_url_list) && length(reddit_url_list) > 0) {
     thread_flag <- TRUE
-    output <- append(output, paste0("threads: ", trimws(paste0(reddit_url_list, collapse = ", "))))
+    output <- append(output, paste0("threads: ", trimws(paste0(reddit_url_list, collapse = ",\n"))))
   }
   
   # if thread urls have been inputed enable collect button

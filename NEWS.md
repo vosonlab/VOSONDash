@@ -1,7 +1,18 @@
+# VOSONDash 0.5.3
+
+## Minor Changes:
+- Added the option to inherit node colors from loaded `graphml` files in plots.
+- Clicking nodes in the `visnetwork` plot now also selects or deselects them in the data table below it.
+- Added a simpler node label option of `node index` which is the numeric index of the vertex.
+- Added the `niter` or "number of iterations" input field for `FR` and `GraphOpt` plots.
+- Added the `charge`, `mass`, `spring.length` and `spring.constant` input fields for `GraphOpt` plots.
+
+<br/>Refer to `igraph` documentation for further information on layout parameters at https://igraph.org/r/doc/layout_with_fr.html and https://igraph.org/r/doc/layout_with_graphopt.html.
+
 # VOSONDash 0.5.2
 
 ## Minor Changes:
-- Moved `rtweet` from package imports to suggests. 
+- Moved `rtweet` from package imports to suggests.
 
 ## Bug Fixes:
 - Fixed `reddit` URL formatting to support retrieving additional threads.

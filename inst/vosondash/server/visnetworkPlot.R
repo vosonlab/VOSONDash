@@ -15,9 +15,12 @@ visNetworkData <- reactive({
   verts_rows_selected <- input$dt_vertices_rows_selected
   chosen_layout <- input$graph_layout_select
   graph_seed <- ng_rv$graph_seed
-  node_degree_type <- input$graph_node_size_degree_select
+  node_degree_type <- input$graph_node_size_select
   node_size_multiplier <- input$graph_node_size_slider
   plot_height <- ng_rv$plot_height
+  
+  use_v_colors <- input$use_vertex_colors_check
+  node_index_check <- input$node_index_check
   
   graph_layout <- switch(chosen_layout,
                          "Auto" = "layout_nicely",
@@ -29,7 +32,7 @@ visNetworkData <- reactive({
                          "DrL" = "layout_with_drl",
                          "GEM" = "layout_with_gem",
                          "MDS" = "layout_with_mds",
-                         # "Tree" = "layout_as_tree",
+                         "Tree" = "layout_as_tree",
                          "Grid" = "layout_on_grid",
                          "Sphere" = "layout_on_sphere",
                          "Circle" = "layout_in_circle",
@@ -53,14 +56,19 @@ visNetworkData <- reactive({
                        "Closeness" = vis_vsize(verts$closeness),
                        "None" = (base_vertex_size + 0.1) * node_size_multiplier)
 
+  v_color_in_data <- FALSE
+  if ("color" %in% names(verts)) { v_color_in_data <- TRUE }
+  
   if (nrow(verts) > 0) {
     verts$color.background <- as.character(gbl_plot_def_vertex_color)
+
+    if (use_v_colors & v_color_in_data) { # added checkbox
+      verts$color.background <- verts$color
+    }
+    
     verts$font.color <- gbl_plot_def_label_color
+    # verts$id <- row.names(verts)
     verts$id <- verts$name
-  }
-  
-  if (input$graph_names_check == FALSE) {
-    verts$label <- "" 
   }
   
   # vertex colours (only if cat attr selected)
@@ -72,15 +80,35 @@ visNetworkData <- reactive({
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
         df$color <- gbl_plot_palette()[1:nrow(df)]
-        verts$color.background <- df$color[match(verts[[selected_categorical_attribute]], df$cat)]
+        if (use_v_colors == FALSE || !v_color_in_data) { # added checkbox
+          verts$color.background <- df$color[match(verts[[selected_categorical_attribute]], df$cat)]
+        }
       }
     }
   }
   
+  verts$sel_label <- NA
   if (length(verts_rows_selected) > 0) {
-    selected_row_names <- row.names(verts)[c(verts_rows_selected)]
-    verts$color.background[row.names(verts) %in% selected_row_names] <- gbl_plot_sel_vertex_color
-    verts$font.color[row.names(verts) %in% selected_row_names] <- gbl_plot_sel_vertex_color
+    sel_dt_row_names <- row.names(verts)[c(verts_rows_selected)] # get df row names for verts in dt selection
+    sel_subset <- row.names(verts) %in% sel_dt_row_names
+    
+    verts$color.background[sel_subset] <- gbl_plot_sel_vertex_color
+    verts$font.color[sel_subset] <- gbl_sel_label_col
+    
+    verts$sel_label[sel_subset] <- verts$label[sel_subset]
+  }
+  
+  if (node_index_check) {
+    verts$title <- verts$label
+    verts$label <- sub("n", "", row.names(verts))
+    verts$shape <- "dot"
+  } else {
+    if (input$node_labels_check == FALSE) {
+      verts$label <- ""
+    } else {
+      verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$sel_label), .data$label, .data$sel_label), sel_label = NULL)  
+    }
+    verts$title <- row.names(verts)
   }
   
   edges <- edges %>% group_by(to, from) %>%
@@ -92,16 +120,38 @@ visNetworkData <- reactive({
     category_selection <- list(variable = gcs, multiple = TRUE)
   }
   
-  visNetwork::visNetwork(verts, edges, main = NULL) %>%
-    visIgraphLayout(layout = graph_layout, 
-                    randomSeed = graph_seed) %>%
-    
-    visNetwork::visEdges(arrows = 'to',
-                         color = list(color = "#b0b0b0")) %>%
-    
-    visOptions(collapse = TRUE, 
-               highlightNearest = list(enabled = TRUE, hover = TRUE),
-               selectedBy = category_selection,
-               nodesIdSelection = TRUE,
-               height = plot_height)
+  if ("color" %in% names(verts)) { verts <- dplyr::select(verts, -color) }
+
+  vis_net <- visNetwork::visNetwork(verts, edges, main = NULL)
+  
+  l_params <- list(vis_net, layout = graph_layout, randomSeed = graph_seed)
+  if (chosen_layout %in% c("FR", "Graphopt")) { l_params['niter'] <- input$graph_niter }
+  if (chosen_layout == "Graphopt") {
+    l_params['charge'] = input$graph_charge
+    l_params['mass'] = input$graph_mass
+    l_params['spring.length'] = input$graph_spr_len
+    l_params['spring.constant'] = input$graph_spr_const    
+  }
+  vis_net <- do.call(visIgraphLayout, l_params)
+  
+  vis_net %>% visOptions(collapse = TRUE, 
+                        highlightNearest = list(enabled = TRUE, hover = TRUE),
+                        selectedBy = category_selection,
+                        nodesIdSelection = TRUE,
+                        height = plot_height) %>%
+    visInteraction(multiselect = TRUE) %>%
+    visEvents(click = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }")
+  
+  # visNetwork::visNetwork(verts, edges, main = NULL) %>%
+  #   visIgraphLayout(layout = graph_layout, 
+  #                   randomSeed = graph_seed) %>%
+  #   
+  #   visNetwork::visEdges(arrows = 'to',
+  #                        color = list(color = "#b0b0b0")) %>%
+  #   
+  #   visOptions(collapse = TRUE, 
+  #              highlightNearest = list(enabled = TRUE, hover = TRUE),
+  #              selectedBy = category_selection,
+  #              nodesIdSelection = TRUE,
+  #              height = plot_height)
 })

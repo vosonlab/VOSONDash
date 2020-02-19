@@ -17,8 +17,10 @@ standardPlotData <- reactive({
   chosen_layout <- input$graph_layout_select
   graph_seed <- ng_rv$graph_seed
   graph_spread <- input$graph_spread_slider  
-  node_degree_type <- input$graph_node_size_degree_select
+  node_degree_type <- input$graph_node_size_select
   node_size_multiplier <- input$graph_node_size_slider  
+  
+  node_index_check <- input$node_index_check
   
   # ------------------
   # save and restore graphics parameters
@@ -57,8 +59,17 @@ standardPlotData <- reactive({
   row.names(df) <- V(g)$id
   graph_vertices <- df
   
-  # set default vertex color
-  V(g)$color <- as.character(gbl_plot_def_vertex_color)
+  # set vertex color
+  v_color_in_data <- FALSE
+  if ("color" %in% vertex_attr_names(g)) { v_color_in_data <- TRUE }
+  
+  if (input$use_vertex_colors_check == FALSE) { # added checkbox
+    V(g)$color <- as.character(gbl_plot_def_vertex_color)  
+  } else {
+    if (!v_color_in_data) {
+      V(g)$color <- as.character(gbl_plot_def_vertex_color)
+    }
+  }
   
   # vertex colours (only if cat attr selected)
   if (length(categorical_attributes) > 0) { # only if have categorical attributes
@@ -68,10 +79,12 @@ standardPlotData <- reactive({
       categories <- categorical_attributes[[selected_categorical_attribute]]
       df <- data.frame('cat' = categories)
       if (nrow(df) > 0) {
-        df$color <- gbl_plot_palette()[1:nrow(df)]
         
-        va <- paste0('vosonCA_', selected_categorical_attribute)
-        V(g)$color <- df$color[match(vertex_attr(g, va), df$cat)]
+        if (input$use_vertex_colors_check == FALSE || !v_color_in_data) { # added checkbox
+          df$color <- gbl_plot_palette()[1:nrow(df)]
+          va <- paste0('vosonCA_', selected_categorical_attribute)
+          V(g)$color <- df$color[match(vertex_attr(g, va), df$cat)]  
+        }
       }
     }
   }
@@ -81,10 +94,12 @@ standardPlotData <- reactive({
     selected_row_names <- row.names(graph_vertices)[c(selected_rows)]
   }
   
-  plot_parameters <- list(g, vertex.frame.color = "gray", edge.arrow.size = 0.4)
+  # vertex.frame.color = "gray", 
+  plot_parameters <- list(g, edge.arrow.size = 0.4)
   
   # set vertex color for vertices selected in graph data table
   plot_parameters[['vertex.color']] <- ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, V(g)$color)
+  plot_parameters[['vertex.frame.color']] = ifelse(V(g)$id %in% selected_row_names, "#000000", "gray")
   plot_parameters[['vertex.label.font']] <- ifelse(V(g)$id %in% selected_row_names, 2, 1)
   
   base_vertex_size <- 4
@@ -96,6 +111,14 @@ standardPlotData <- reactive({
   igraph_vsize <- function(x) {
     base_vertex_size + (((norm_values(x) + 0.1) * norm_multi) * node_size_multiplier)
   }
+  
+  # --- start id labels
+  if (node_index_check) {
+    plot_parameters[['vertex.label']] <- sub("n", "", V(g)$id) # V(g)$id
+    plot_parameters[['vertex.label.color']] <- "#000000"
+    base_vertex_size <- 7
+  }
+  # --- end id labels  
 
   plot_parameters[['vertex.size']] <- switch(node_degree_type,
                                              "Degree" = igraph_vsize(V(g)$Degree),
@@ -107,6 +130,9 @@ standardPlotData <- reactive({
   
   plot_parameters['vertex.label.family'] <- "Arial"
   
+  # --- start labels
+  if (!node_index_check) {
+    
   plot_parameters['vertex.label.cex'] <- base_label_size
   plot_parameters['vertex.label.dist'] <- label_dist
   plot_parameters['vertex.label.degree'] <- label_degree
@@ -116,7 +142,7 @@ standardPlotData <- reactive({
     labels <- TRUE
   }
     
-  if (input$graph_names_check == FALSE) {
+  if (input$node_labels_check == FALSE) {
     if (labels) {
       plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
                                                   ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
@@ -132,9 +158,10 @@ standardPlotData <- reactive({
     }
   }
   
-  # plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_plot_sel_vertex_color, 
-  #                                                  gbl_plot_def_label_color)
-  plot_parameters[['vertex.label.color']] <- gbl_plot_def_label_color
+  plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_sel_label_col, 
+                                                   gbl_plot_def_label_color)
+  
+  # plot_parameters[['vertex.label.color']] <- gbl_plot_def_label_color
   
   plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
                                             "Degree" = (norm_values(V(g)$Degree)) + base_label_size,
@@ -143,6 +170,8 @@ standardPlotData <- reactive({
                                             "Betweenness" = (norm_values(V(g)$Betweenness)) + base_label_size,
                                             "Closeness" = (norm_values(V(g)$Closeness)) + base_label_size,
                                             "None" = base_label_size)
+  }
+  # --- end labels
   
   # must be set before graph layout
   if (!is.null(graph_seed)) {
@@ -151,15 +180,14 @@ standardPlotData <- reactive({
   
   graph_layout <- switch(chosen_layout,
                          "Auto" = layout_nicely(g, dim = 2),
-                         "FR" = layout_with_fr(g, dim = 2, niter = 500),
+                         "FR" = layout_with_fr(g, dim = 2, niter = input$graph_niter),
                          "KK" = layout_with_kk(g, dim = 2),
                          "DH" = layout_with_dh(g),
                          "LGL" = layout_with_lgl(g),
-                         "Graphopt" = layout_with_graphopt(g),
                          "DrL" = layout_with_drl(g),
                          "GEM" = layout_with_gem(g),
                          "MDS" = layout_with_mds(g),
-                         # "Tree" = layout_as_tree(g),
+                         "Tree" = layout_as_tree(g, circular = TRUE),
                          "Grid" = layout_on_grid(g),
                          "Sphere" = layout_on_sphere(g),
                          "Circle" = layout_in_circle(g),
@@ -168,7 +196,15 @@ standardPlotData <- reactive({
                          layout_nicely(g, dim = 2)
   )
   
-  graph_layout <- norm_coords(graph_layout, ymin = -1, ymax = 1, xmin = -1, xmax = 1)
+  if (chosen_layout == "Graphopt") {
+    graph_layout <- layout_with_graphopt(g, niter = input$graph_niter, 
+                                         charge = input$graph_charge,
+                                         mass = input$graph_mass,
+                                         spring.length = input$graph_spr_len,
+                                         spring.constant = input$graph_spr_const)
+  }
+  
+  graph_layout <- igraph::norm_coords(graph_layout, ymin = -1, ymax = 1, xmin = -1, xmax = 1)
   plot_parameters['rescale'] <- FALSE
 
   plot_parameters[['layout']] <- graph_layout * graph_spread

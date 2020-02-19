@@ -22,15 +22,8 @@ ng_rv <- reactiveValues(   # ng_rvalues
   prune_verts = c()
 )
 
-# list of user selected graph vertices to prune
-#prune_flag <- FALSE
-# pruning_rvalues <- reactiveValues(
-#   prune_verts = c()
-# )
-
 # proxy for vertices data table used for row manipulation
 dt_vertices_proxy <- dataTableProxy('dt_vertices')
-# dt_edges_proxy <- dataTableProxy('dt_edges')
 
 # disable network metrics and assortativity tabs when app loads
 addCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
@@ -39,12 +32,6 @@ addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_
 source("server/controls.R", local = TRUE)
 
 #### events ----------------------------------------------------------------------------------------------------------- #
-
-# observeEvent(input$graph_node_size_degree_select, {
-#   if (input$graph_node_size_degree_select != "None") {
-#     shinyjs::enable("graph_node_size_slider")
-#   }
-# }, ignoreInit = TRUE)
 
 # set reactive value plot height when height input changes
 observeEvent(input$plot_height, {
@@ -103,6 +90,16 @@ observeEvent(input$demo_data_select_button, {
     })
   }
 })
+
+# node labels select
+# observeEvent(input$node_labels_check, {
+#   if (input$node_labels_check) {
+#     v <- names(dt_vertices_df())
+#     updateSelectInput(session, "node_label_select", label = NULL, choices = v,
+#                       selected = "label")
+#     shinyjs::enable("node_label_select")    
+#   }
+# })
 
 # when graphml data loaded or changed
 observeEvent(ng_rv$graph_data, {
@@ -197,18 +194,26 @@ observeEvent(input$graph_reseed_button, {
   ng_rv$graph_seed <- sample(gbl_rng_range[1]:gbl_rng_range[2], 1)
 })
 
-# check for redundancy
-# reset graph spread when a new layout is selected
-observeEvent(input$graph_layout_select, {
-  shinyjs::reset("graph_spread_slider")
+observeEvent(input$node_index_check, {
+  if (input$node_index_check) {
+    updateCheckboxInput(session, "node_labels_check", value = FALSE)
+  }
+})
+
+observeEvent(input$node_labels_check, {
+  if (input$node_labels_check) {
+    updateCheckboxInput(session, "node_index_check", value = FALSE)
+  }  
+})
+
+observeEvent(ng_rv$graph_seed, {
+  html("seed", ng_rv$graph_seed)
 })
 
 #### graph vertex pruning ####
 
 # add selected data table rows to pruned vertices list
 observeEvent(input$prune_selected_rows_button, {
-  # if (length(input$dt_vertices_rows_selected) > 0) { prune_flag <<- TRUE }
-  
   # this updates prune list and triggers graph redraw
   pruneListAddNames()
   
@@ -225,15 +230,10 @@ observeEvent(input$prune_selected_rows_button, {
     prune_list <- temp
   }
   updateSelectInput(session, "pruned_vertices_select", choices = prune_list)
-  
-  # added to address bug with disappearing plot on pruning
-  # updateComponentSlider(ng_rv$graph_data, input$graph_component_type_select)
 })
 
 # add unselected data table rows to pruned vertices list
 observeEvent(input$prune_unselected_rows_button, {
-  # if (length(input$dt_vertices_rows_selected) > 0) { prune_flag <<- TRUE }
-  
   pruneListAddOtherNames()
   
   # update prune list select box
@@ -253,8 +253,6 @@ observeEvent(input$prune_unselected_rows_button, {
 
 # remove selected vertices from prune list
 observeEvent(input$prune_return_button, {
-  # if (length(input$pruned_vertices_select) > 0) { prune_flag <<- TRUE }
-  
   ng_rv$prune_verts <- ng_rv$prune_verts[!(ng_rv$prune_verts %in% input$pruned_vertices_select)]
   
   # update prune list select box
@@ -274,8 +272,6 @@ observeEvent(input$prune_return_button, {
 
 # reset prune list
 observeEvent(input$prune_reset_button, {
-  # if (length(isolate(ng_rv$prune_verts)) > 0) { prune_flag <- TRUE }
-  
   ng_rv$prune_verts <- c()
   
   updateSelectInput(session, "pruned_vertices_select", choices = character(0))
@@ -285,8 +281,39 @@ observeEvent(input$prune_reset_button, {
 })
 
 # deselect all data table selected rows
-observeEvent(input$prune_deselect_rows_button, {
-  selectRows(dt_vertices_proxy, NULL)
+observeEvent(input$prune_deselect_rows_button, { DT::selectRows(dt_vertices_proxy, NULL) })
+
+# nodes clicked event in visnetwork
+observeEvent(input$vis_node_select, {
+  dt_vertices <- isolate(dt_vertices_df())
+  
+  selected_rows <- row.names(dt_vertices)[c(input$dt_vertices_rows_selected)] # selected in dt
+  plot_sel_nodes <- row.names(dt_vertices)[dt_vertices$name %in% input$vis_node_select] # selected in plot
+  
+  deselect_nodes <- plot_sel_nodes[plot_sel_nodes %in% selected_rows] # deselect if already selected in dt
+  all_selected <- union(selected_rows, plot_sel_nodes)
+  
+  sel <- all_selected[!all_selected %in% deselect_nodes]
+  sel <- which(rownames(dt_vertices) %in% sel) # require indices not row names
+  
+  DT::selectRows(dt_vertices_proxy, sel)
+})
+
+# reset node size slider when changed to none
+observeEvent(input$graph_node_size_select, {
+  if (input$graph_node_size_select == "None") { shinyjs::reset("graph_node_size_slider") }
+})
+
+# on change layout event
+observeEvent(input$graph_layout_select, {
+  shinyjs::reset("graph_spread_slider") # reset graph spread when a new layout is selected
+  
+  if (input$graph_layout_select == "Graphopt") { 
+    shinyjs::reset("graph_charge")
+    shinyjs::reset("graph_mass")
+    shinyjs::reset("graph_spr_len")
+    shinyjs::reset("graph_spr_const")
+  }
 })
 
 #### output ----------------------------------------------------------------------------------------------------------- #
@@ -373,11 +400,7 @@ output$graph_download_button <- downloadHandler(
 # analysis graphml download button
 output$analysis_graphml_download_button <- downloadHandler(
   filename = function() { systemTimeFilename("analysis-graph", "graphml") },
-  
-  content = function(file) {
-    # print(graphFilters())
-    write_graph(graphFilters(), file, format = c("graphml"))
-  }
+  content = function(file) { write_graph(graphFilters(), file, format = c("graphml")) }
 )
 
 # graph vertices data table
@@ -416,7 +439,7 @@ output$dt_edges <- DT::renderDataTable({
   }
   
   if (!is.null(data)) {
-    DT::datatable(data, extensions = 'Buttons', filter = "top",
+    DT::datatable(data, extensions = 'Buttons', filter = "top", selection = "none", # rows not selectable
                   options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                   columnDefs = col_defs, dom = 'lBfrtip',
                   buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
@@ -429,28 +452,17 @@ output$standardPlot <- renderPlot({
 }, height = function() { as.numeric(ng_rv$plot_height) })
 
 # d3 force network graph
-output$force <- renderForceNetwork({
-  forceNetworkData()
-})
+output$force <- renderForceNetwork({ forceNetworkData() })
 
 # d3 simple network graph
-output$simple <- renderSimpleNetwork({
-  simpleNetworkData()
-})
+output$simple <- renderSimpleNetwork({ simpleNetworkData() })
 
 output$visNetworkPlot <- renderVisNetwork({
   data <- visNetworkData() 
-  if (!is.null(data)) {
-    visEvents(data, select = 
-    "function(nodes) {
-      Shiny.onInputChange('visnetwork_vertex_selection', nodes.nodes);
-    }")
-  }
+  # if (!is.null(data)) {
+  #   visEvents(data, select = "function(nodes) { Shiny.onInputChange('visnetwork_vertex_selection', nodes.nodes); }")
+  # }
 })
-
-# observeEvent(input$visnetwork_vertex_selection, {
-#   cat(paste0("selected: ", input$visnetwork_vertex_selection, "\n"))
-# })
 
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
@@ -461,14 +473,11 @@ source("server/visnetworkPlot.R", local = TRUE)
 filedata <- reactive({
   infile <- input$graphml_data_file
   
-  if (is.null(infile)) {
-    return(NULL)
-  }
+  if (is.null(infile)) { return(NULL) }
   
   # reads file as graphml and fails gracefully
   tryCatch({
     ng_rv$graph_data <<- igraph::read_graph(infile$datapath, format = c('graphml'))
-    
     ng_rv$graph_name <<- infile$name
     ng_rv$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rv$graph_data), 
                                      graph_attr(ng_rv$graph_data, "type"), "")
@@ -477,9 +486,7 @@ filedata <- reactive({
     createGraphCategoryList()
     
     updateCheckboxInput(session, "expand_demo_data_check", value = FALSE)
-  }, error = function(err) {
-    return(NULL)
-  })
+  }, error = function(err) { return(NULL) })
 })
 
 # apply filters except categorical to graph data and return modified graph
@@ -666,7 +673,6 @@ pruneListAddNames <- reactive({
   prune_list <- ng_rv$prune_verts
   
   selected_rows <- row.names(dt_vertices)[c(dt_selected_rows)]
-  # selected_rows <- dt_vertices$name[c(dt_selected_rows)]
   
   # add name if not already in list
   lapply(selected_rows, function(x) {
@@ -700,13 +706,16 @@ dt_vertices_df <- reactive({
   g <- graphFilters()
   
   if (is.null(g)) { return(NULL) }
-  
+
   df_parameters <- list()
   
   df_parameters[['name']] <- V(g)$name
   if (!(is.null(vertex_attr(g, "label")))) {
     df_parameters[['label']] <- V(g)$label
-  }  
+  }
+  if ("color" %in% vertex_attr_names(g)) {
+    df_parameters[['color']] <- V(g)$color
+  }
   df_parameters[['degree']] <- V(g)$Degree
   df_parameters[['indegree']] <- V(g)$Indegree
   df_parameters[['outdegree']] <- V(g)$Outdegree
@@ -730,6 +739,7 @@ dt_vertices_df <- reactive({
     }  
   }
 
+  df_parameters['stringsAsFactors'] <- FALSE
   df <- do.call(data.frame, df_parameters)
   
   row.names(df) <- V(g)$id
@@ -766,7 +776,7 @@ forceNetworkData <- reactive({
   if (is.null(network_d3)) { return(NULL) }
   
   dfr <- network_d3$links
-  #dfr = dfr-1
+  # dfr = dfr-1
   
   forceNetwork(Links = dfr,
                Nodes =network_d3$nodes, NodeID = "name",
@@ -840,7 +850,7 @@ setGraphView <- function(data, desc = "", type = "", name = "", seed = 1) {
   
   createGraphCategoryList()
   setGraphFilterControls()
-  #createGraphCategoryList()
+  
   updateTabItems(session, "sidebar_menu", selected = "network_graphs_tab")
 }
 
@@ -864,21 +874,14 @@ applyPruneFilterSrv <- function(g, selected_prune_verts) {
     verts <- which(V(g)$id %in% selected_prune_verts)
     g <- delete.vertices(g, verts) # selected_prune_verts
   }
-  
-  # toggle flag even if did not prune
-  # if (prune_flag == TRUE) {
-  #   prune_flag <<- FALSE
-  # }
-  
-  g
+  return(g)
 }
 
 # normalize continuous values
 norm_values <- function(x) {
   # all values the same
-  if (var(x) == 0) {
-    return(rep(0.1, length(x)))
-  }
+  if (var(x) == 0) { return(rep(0.1, length(x))) }
+  
   min_x <- min(x)
   diff_x <- max(x) - min_x
   s <- sapply(x, function(y) { (y - min_x) / diff_x })
