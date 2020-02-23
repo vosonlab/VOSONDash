@@ -101,6 +101,7 @@ observeEvent(input$demo_data_select_button, {
 #   }
 # })
 
+# *** does this cause a second render of plot as it updates ng_rv$graph_data
 # when graphml data loaded or changed
 observeEvent(ng_rv$graph_data, {
   if (!is.null(ng_rv$graph_data)) {
@@ -340,7 +341,7 @@ output$graph_summary_ui <- renderUI({
 output$vis_plot_ui <- renderUI({
   tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
          selected = input$selected_graph_tab, id = "selected_graph_tab",
-         tabPanel("igraph", plotOutput("standardPlot", width = "100%", height = "auto"), value = "Plot"),
+         tabPanel("igraph", plotOutput("igraphPlot", width = "100%", height = "auto"), value = "Plot"),
          tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",
                                                  height = paste0(ng_rv$plot_height, "px")), value = "visNetwork")
          
@@ -447,8 +448,8 @@ output$dt_edges <- DT::renderDataTable({
 })
 
 # standard network plot
-output$standardPlot <- renderPlot({
-  standardPlotData()
+output$igraphPlot <- renderPlot({
+  igraphData()
 }, height = function() { as.numeric(ng_rv$plot_height) })
 
 # d3 force network graph
@@ -490,21 +491,21 @@ filedata <- reactive({
 })
 
 # apply filters except categorical to graph data and return modified graph
-graphFiltersNoCategorical <- reactive({
-  g <- NULL
-
-  if (!is.null(ng_rv$graph_data)) {
-    g <- ng_rv$graph_data
-    g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
-    # isolate as graph_component_type_select has event
-    g <- applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
-    g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
-                                      input$graph_loops_edge_check)
-    g <- addAdditionalMeasures(g)
-  }
-
-  return(g)
-})
+# graphFiltersNoCategorical <- reactive({
+#   g <- NULL
+# 
+#   if (!is.null(ng_rv$graph_data)) {
+#     g <- ng_rv$graph_data
+#     g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
+#     # isolate as graph_component_type_select has event
+#     g <- applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
+#     g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
+#                                       input$graph_loops_edge_check)
+#     g <- addAdditionalMeasures(g)
+#   }
+# 
+#   return(g)
+# })
 
 # apply all filters to graph data and return modified graph
 graphFilters <- reactive({
@@ -514,6 +515,26 @@ graphFilters <- reactive({
   
   if (!is.null(ng_rv$graph_data)) {
     g <- ng_rv$graph_data
+    
+    # ----
+    # add vertex ids and labels if not present
+    attr_v <- vertex_attr_names(g)
+    if (!("id" %in% attr_v)) {
+      V(g)$id <- paste0("n", as.numeric(V(g))-1) # n0, n1 ..
+    }
+    
+    if ("label" %in% attr_v) {
+      # replace empty string labels
+      V(g)$label <- ifelse(nchar(V(g)$label) > 0, V(g)$label, "-")
+    } else {
+      # if no labels set label to vertex name
+      V(g)$label <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
+    }    
+    
+    # enable network metrics tab
+    removeCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
+    # ----
+    
     g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
     g <- applyCategoricalFilters(g, input$graph_cat_select, input$graph_sub_cats_select)
     # isolate as graph_component_type_select has event

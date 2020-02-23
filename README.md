@@ -3,7 +3,7 @@
 ![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)
 ![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)
 ![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=8065ac)
-![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.3&color=659DBD&logo=github)
+![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.4&color=659DBD&logo=github)
 ![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?color=659DBD&logo=github)
 
 `VOSONDash` is an interactive [R Shiny](https://shiny.rstudio.com/) web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the [vosonSML](https://github.com/vosonlab/vosonSML) R package.
@@ -23,7 +23,7 @@ install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.2
   repo = NULL, type = "source")
 ```
 
-Install the latest development version (v0.5.3):
+Install the latest development version (v0.5.4):
 ```R
 # library(devtools)
 devtools::install_github("vosonlab/VOSONDash")
