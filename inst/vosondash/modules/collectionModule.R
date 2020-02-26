@@ -18,17 +18,6 @@ collectNetworkButtonsUI <- function(id) {
 }
 
 collectGraphButtonsUI <- function(id) {
-  if (v029) { return(collectGraphButtonsUI_(id)) }
-  ns <- NS(id)
-  
-  tagList(
-    shinyjs::disabled(downloadButton(ns("dl_graph"), label = "Graphml", title = "Download Network Graphml File")),
-    shinyjs::disabled(downloadButton(ns("dl_graph_wt"), label = "Graphml (+text)", 
-                                     title = "Download Network Graphml File with Text"))
-  )
-}
-
-collectGraphButtonsUI_ <- function(id) {
   ns <- NS(id)
   
   tagList(
@@ -37,17 +26,6 @@ collectGraphButtonsUI_ <- function(id) {
 }
 
 collectViewGraphButtonsUI <- function(id) {
-  if (v029) { return(collectViewGraphButtonsUI_(id)) }
-  ns <- NS(id)
-  
-  tagList(
-    shinyjs::disabled(actionButton(ns("view_graph"), label = "Graph", title = "View Network Graph", icon("eye"))),
-    shinyjs::disabled(actionButton(ns("view_graph_wt"), label = "Graph (+text)", 
-                      title = "View Network Graph with Text", icon("eye")))
-  )
-}
-
-collectViewGraphButtonsUI_ <- function(id) {
   ns <- NS(id)
   
   tagList(

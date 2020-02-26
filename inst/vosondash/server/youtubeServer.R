@@ -80,23 +80,6 @@ observeEvent(input$youtube_collect_button, {
         return(NULL)
       })
       
-      if (!v029) {
-        incProgress(0.5, detail = "Creating network")
-        
-        # if youtube data collected create igraph graph object
-        if (!is.null(yt_rv$yt_data)) {
-          tryCatch({
-            # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
-            netList <- createYoutubeNetwork(yt_rv$yt_data)
-            yt_rv$yt_graphml <- netList$network
-            yt_rv$yt_wt_graphml <- netList$networkWT   # "with text" (edge attribute)          
-          }, error = function(err) {
-            incProgress(1, detail = "Error")
-            cat(paste('youtube graphml error:', err))
-            return(NULL)
-          })
-        }
-      }
       incProgress(1, detail = "Finished")
       updateTabItems(session, "youtube_control_tabset", selected = "Create Network")
       
@@ -162,18 +145,9 @@ callModule(collectDataButtons, "youtube", data = reactive({ yt_rv$yt_data }), fi
 
 callModule(collectNetworkButtons, "youtube", network = reactive({ yt_rv$yt_network }), file_prefix = "youtube")
 
-if (v029) {
-  callModule(collectGraphButtons_, "youtube", graph_data = reactive({ yt_rv$yt_graphml }), file_prefix = "youtube")
-  
-  youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", graph_data = reactive({ yt_rv$yt_graphml }))  
-} else {
-  callModule(collectGraphButtons, "youtube", graph_data = reactive({ yt_rv$yt_graphml }), 
-             graph_wt_data = reactive({ yt_rv$yt_wt_graphml }), file_prefix = "youtube")
-  
-  youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", 
-                                     graph_data = reactive({ yt_rv$yt_graphml }), 
-                                     graph_wt_data = reactive({ yt_rv$yt_wt_graphml }))
-}
+callModule(collectGraphButtons_, "youtube", graph_data = reactive({ yt_rv$yt_graphml }), file_prefix = "youtube")
+
+youtube_view_rvalues <- callModule(collectViewGraphButtons, "youtube", graph_data = reactive({ yt_rv$yt_graphml }))  
 
 observeEvent(youtube_view_rvalues$data, {
   setGraphView(data = isolate(youtube_view_rvalues$data), 
@@ -226,11 +200,7 @@ observeEvent(input$clear_all_youtube_dt_columns, {
 })
 
 dt_yt_cols <- function() {
-  if (v029) {
-    return(c("Comment", "AuthorDisplayName", "VideoID", "PublishedAt"))
-  } else {
-    return(c("Comment", "User", "PublishTime"))
-  }
+  return(c("Comment", "AuthorDisplayName", "VideoID", "PublishedAt"))
 }
 
 observeEvent(input$reset_youtube_dt_columns, {

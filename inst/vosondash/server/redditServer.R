@@ -60,23 +60,6 @@ observeEvent(input$reddit_collect_button, {
         return(NULL)
       })
       
-      if (!v029) {
-        incProgress(0.5, detail = "Creating network")
-        
-        # if reddit data collected create igraph graph object
-        if (!is.null(red_rv$reddit_data)) {
-          tryCatch({
-            netList <- createRedditActorNetwork(red_rv$reddit_data)
-            red_rv$reddit_graphml <- netList$network
-            red_rv$reddit_wt_graphml <- netList$networkWT
-          }, error = function(err) {
-            incProgress(1, detail = "Error")
-            cat(paste('reddit graphml error:', err))
-            return(NULL)
-          })
-        }
-      }
-      
       incProgress(1, detail = "Finished")
       updateTabItems(session, "reddit_control_tabset", selected = "Create Network")
       
@@ -138,18 +121,10 @@ callModule(collectDataButtons, "reddit", data = reactive({ red_rv$reddit_data })
 
 callModule(collectNetworkButtons, "reddit", network = reactive({ red_rv$reddit_network }), file_prefix = "reddit")
 
-if (v029) {
-  callModule(collectGraphButtons_, "reddit", graph_data = reactive({ red_rv$reddit_graphml }), file_prefix = "reddit")
-  
-  reddit_view_rvalues <- callModule(collectViewGraphButtons, "reddit", graph_data = reactive({ red_rv$reddit_graphml }))  
-} else {
-  callModule(collectGraphButtons, "reddit", graph_data = reactive({ red_rv$reddit_graphml }), 
-             graph_wt_data = reactive({ red_rv$reddit_wt_graphml }), file_prefix = "reddit")
-  
-  reddit_view_rvalues <- callModule(collectViewGraphButtons, "reddit", 
-                                     graph_data = reactive({ red_rv$reddit_graphml }), 
-                                     graph_wt_data = reactive({ red_rv$reddit_wt_graphml }))
-}
+
+callModule(collectGraphButtons_, "reddit", graph_data = reactive({ red_rv$reddit_graphml }), file_prefix = "reddit")
+
+reddit_view_rvalues <- callModule(collectViewGraphButtons, "reddit", graph_data = reactive({ red_rv$reddit_graphml }))
 
 observeEvent(reddit_view_rvalues$data, {
   setGraphView(data = isolate(reddit_view_rvalues$data), 

@@ -1,7 +1,5 @@
 # voson dashboard shiny app globals
 
-v029 <- isVosonSML0290()
-
 # app version
 app_version <- paste0("v", VOSONDash::getVOSONDashVer())
 

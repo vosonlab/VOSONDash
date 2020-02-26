@@ -163,22 +163,6 @@ observeEvent(input$twitter_collect_button, {
       })
       )
       
-      if (!v029) {
-        # if twitter data collected create igraph graph object
-        if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data) > 0) {
-          incProgress(0.5, detail = "Creating network")
-          tryCatch({
-            # tw_rv$tw_graphml <<- createTwitterActorNetwork(tw_rv$tw_data)
-            netList <- VOSONDash::createTwitterActorNetwork(tw_rv$tw_data)
-            tw_rv$tw_graphml <- netList$network
-            tw_rv$twitterWT_graphml <- netList$networkWT   # "with text" (edge attribute)
-          }, error = function(err) {
-            incProgress(1, detail = "Error")
-            cat(paste("twitter graphml error: ", err))
-          })
-        }
-      }
-      
       incProgress(1, detail = "Finished")
       updateTabItems(session, "twitter_control_tabset", selected = "Create Network")
       
@@ -270,18 +254,9 @@ callModule(collectDataButtons, "twitter", data = reactive({ tw_rv$tw_data }), fi
 
 callModule(collectNetworkButtons, "twitter", network = reactive({ tw_rv$tw_network }), file_prefix = "twitter")
 
-if (v029) {
-  callModule(collectGraphButtons_, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), file_prefix = "twitter")
+callModule(collectGraphButtons_, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), file_prefix = "twitter")
   
-  twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }))  
-} else {
-  callModule(collectGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }), 
-             graph_wt_data = reactive({ tw_rv$twitterWT_graphml }), file_prefix = "twitter")
-  
-  twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", 
-                                     graph_data = reactive({ tw_rv$tw_graphml }), 
-                                     graph_wt_data = reactive({ tw_rv$twitterWT_graphml }))
-}
+twitter_view_rvalues <- callModule(collectViewGraphButtons, "twitter", graph_data = reactive({ tw_rv$tw_graphml }))
 
 observeEvent(twitter_view_rvalues$data, {
   setGraphView(data = isolate(twitter_view_rvalues$data), 
