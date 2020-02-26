@@ -6,7 +6,7 @@ tabItem(tabName = "network_graphs_tab",
                    # graph controls
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
                                 fileInput('graphml_data_file', 'Choose graphml file', accept = c('.graphml')),
-                                checkboxInput('expand_demo_data_check', div("Demonstration Data"), FALSE),
+                                checkboxInput('expand_demo_data_check', div("Package Datasets"), FALSE),
                                 conditionalPanel(condition = 'input.expand_demo_data_check',
                                                  fluidRow(
                                                          column(width = 12,

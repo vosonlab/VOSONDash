@@ -70,10 +70,10 @@ observeEvent(input$youtube_collect_button, {
       
       # collect youtube data and print any output to console
       tryCatch({
-        yt_rv$yt_data <<- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
+        yt_rv$yt_data <- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
                                                             youtube_max_comments)
         
-        yt_rv$data_cols <<- names(yt_rv$yt_data)
+        yt_rv$data_cols <- names(yt_rv$yt_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('youtube collection error:', err))
@@ -88,8 +88,8 @@ observeEvent(input$youtube_collect_button, {
           tryCatch({
             # yt_rv$yt_graphml <<- createYoutubeNetwork(yt_rv$yt_data)
             netList <- createYoutubeNetwork(yt_rv$yt_data)
-            yt_rv$yt_graphml <<- netList$network
-            yt_rv$yt_wt_graphml <<- netList$networkWT   # "with text" (edge attribute)          
+            yt_rv$yt_graphml <- netList$network
+            yt_rv$yt_wt_graphml <- netList$networkWT   # "with text" (edge attribute)          
           }, error = function(err) {
             incProgress(1, detail = "Error")
             cat(paste('youtube graphml error:', err))
@@ -98,6 +98,7 @@ observeEvent(input$youtube_collect_button, {
         }
       }
       incProgress(1, detail = "Finished")
+      updateTabItems(session, "youtube_control_tabset", selected = "Create Network")
       
     }) # withConsoleRedirect
     

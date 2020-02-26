@@ -52,8 +52,8 @@ observeEvent(input$reddit_collect_button, {
       
       # collect reddit data and print any output to console
       tryCatch({
-        red_rv$reddit_data <<- collectRedditData(url_list)
-        red_rv$data_cols <<- names(red_rv$reddit_data)
+        red_rv$reddit_data <- collectRedditData(url_list)
+        red_rv$data_cols <- names(red_rv$reddit_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste('reddit collection error:', err))
@@ -67,8 +67,8 @@ observeEvent(input$reddit_collect_button, {
         if (!is.null(red_rv$reddit_data)) {
           tryCatch({
             netList <- createRedditActorNetwork(red_rv$reddit_data)
-            red_rv$reddit_graphml <<- netList$network
-            red_rv$reddit_wt_graphml <<- netList$networkWT
+            red_rv$reddit_graphml <- netList$network
+            red_rv$reddit_wt_graphml <- netList$networkWT
           }, error = function(err) {
             incProgress(1, detail = "Error")
             cat(paste('reddit graphml error:', err))
@@ -78,6 +78,7 @@ observeEvent(input$reddit_collect_button, {
       }
       
       incProgress(1, detail = "Finished")
+      updateTabItems(session, "reddit_control_tabset", selected = "Create Network")
       
     }) # withConsoleRedirect
     

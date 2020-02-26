@@ -1,6 +1,6 @@
 visNetworkData <- reactive({
-  verts <- dt_vertices_df()
-  edges <- dt_edges_df()
+  verts <- graphNodes()
+  edges <- graphEdges()
   
   if (is.null(verts) | is.null(edges)) { return(NULL) }
   if (nrow(verts) < 1) { return(NULL) }
@@ -142,17 +142,4 @@ visNetworkData <- reactive({
     visInteraction(multiselect = TRUE) %>%
     visEvents(click = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }") %>%
     visEdges(arrows = "to", color = list(color = "#b0b0b0"))
-  
-  # visNetwork::visNetwork(verts, edges, main = NULL) %>%
-  #   visIgraphLayout(layout = graph_layout, 
-  #                   randomSeed = graph_seed) %>%
-  #   
-  #   visNetwork::visEdges(arrows = 'to',
-  #                        color = list(color = "#b0b0b0")) %>%
-  #   
-  #   visOptions(collapse = TRUE, 
-  #              highlightNearest = list(enabled = TRUE, hover = TRUE),
-  #              selectedBy = category_selection,
-  #              nodesIdSelection = TRUE,
-  #              height = plot_height)
 })

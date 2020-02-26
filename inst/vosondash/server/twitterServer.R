@@ -143,15 +143,15 @@ observeEvent(input$twitter_collect_button, {
         # tw_api_keyring, search_term, search_type, tweet_count, 
         # include_retweets, retry_on_rate_limit,
         # language, date_until, since_id, max_id
-        tw_data <<- suppressWarnings({
+        tw_data <- suppressWarnings({
           VOSONDash::collectTwitterData(cred = creds_rv$use_token, search_term, search_type,
                                         twitter_tweet_count, twitter_retweets, twitter_retry, 
                                         twitter_language, twitter_date_until,
                                         twitter_since_id, twitter_max_id) })
         
-        tw_rv$tw_data <<- tw_data
+        tw_rv$tw_data <- tw_data
         
-        tw_rv$data_cols <<- names(tw_rv$tw_data)
+        tw_rv$data_cols <- names(tw_rv$tw_data)
       }, error = function(err) {
         incProgress(1, detail = "Error")
         cat(paste("twitter collection error: ", err))
@@ -170,8 +170,8 @@ observeEvent(input$twitter_collect_button, {
           tryCatch({
             # tw_rv$tw_graphml <<- createTwitterActorNetwork(tw_rv$tw_data)
             netList <- VOSONDash::createTwitterActorNetwork(tw_rv$tw_data)
-            tw_rv$tw_graphml <<- netList$network
-            tw_rv$twitterWT_graphml <<- netList$networkWT   # "with text" (edge attribute)
+            tw_rv$tw_graphml <- netList$network
+            tw_rv$twitterWT_graphml <- netList$networkWT   # "with text" (edge attribute)
           }, error = function(err) {
             incProgress(1, detail = "Error")
             cat(paste("twitter graphml error: ", err))
@@ -180,6 +180,7 @@ observeEvent(input$twitter_collect_button, {
       }
       
       incProgress(1, detail = "Finished")
+      updateTabItems(session, "twitter_control_tabset", selected = "Create Network")
       
     }) # withConsoleRedirect
     

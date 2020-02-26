@@ -94,14 +94,13 @@ observeEvent(input$demo_data_select_button, {
 # node labels select
 # observeEvent(input$node_labels_check, {
 #   if (input$node_labels_check) {
-#     v <- names(dt_vertices_df())
+#     v <- names(graphNodes())
 #     updateSelectInput(session, "node_label_select", label = NULL, choices = v,
 #                       selected = "label")
 #     shinyjs::enable("node_label_select")    
 #   }
 # })
 
-# *** does this cause a second render of plot as it updates ng_rv$graph_data
 # when graphml data loaded or changed
 observeEvent(ng_rv$graph_data, {
   if (!is.null(ng_rv$graph_data)) {
@@ -286,7 +285,7 @@ observeEvent(input$prune_deselect_rows_button, { DT::selectRows(dt_vertices_prox
 
 # nodes clicked event in visnetwork
 observeEvent(input$vis_node_select, {
-  dt_vertices <- isolate(dt_vertices_df())
+  dt_vertices <- isolate(graphNodes())
   
   selected_rows <- row.names(dt_vertices)[c(input$dt_vertices_rows_selected)] # selected in dt
   plot_sel_nodes <- row.names(dt_vertices)[dt_vertices$name %in% input$vis_node_select] # selected in plot
@@ -344,9 +343,6 @@ output$vis_plot_ui <- renderUI({
          tabPanel("igraph", plotOutput("igraphPlot", width = "100%", height = "auto"), value = "Plot"),
          tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",
                                                  height = paste0(ng_rv$plot_height, "px")), value = "visNetwork")
-         
-         # tabPanel("D3 Force", forceNetworkOutput("force", width = "100%", height = "500px")),
-         # tabPanel("D3 Simple", simpleNetworkOutput("simple", width = "100%", height = "500px"))
   )
 })
 
@@ -406,7 +402,7 @@ output$analysis_graphml_download_button <- downloadHandler(
 
 # graph vertices data table
 output$dt_vertices <- DT::renderDataTable({
-  data <- dt_vertices_df()
+  data <- graphNodes()
   
   # truncate text in column cells
   col_defs <- NULL
@@ -430,7 +426,7 @@ output$dt_vertices <- DT::renderDataTable({
 
 # graph edges data table
 output$dt_edges <- DT::renderDataTable({
-  data <- dt_edges_df()
+  data <- graphEdges()
   
   # truncate text in column cells
   col_defs <- NULL
@@ -447,22 +443,12 @@ output$dt_edges <- DT::renderDataTable({
   }
 })
 
-# standard network plot
 output$igraphPlot <- renderPlot({
   igraphData()
 }, height = function() { as.numeric(ng_rv$plot_height) })
 
-# d3 force network graph
-output$force <- renderForceNetwork({ forceNetworkData() })
-
-# d3 simple network graph
-output$simple <- renderSimpleNetwork({ simpleNetworkData() })
-
 output$visNetworkPlot <- renderVisNetwork({
-  data <- visNetworkData() 
-  # if (!is.null(data)) {
-  #   visEvents(data, select = "function(nodes) { Shiny.onInputChange('visnetwork_vertex_selection', nodes.nodes); }")
-  # }
+  visNetworkData()
 })
 
 #### reactives -------------------------------------------------------------------------------------------------------- #
@@ -478,11 +464,11 @@ filedata <- reactive({
   
   # reads file as graphml and fails gracefully
   tryCatch({
-    ng_rv$graph_data <<- igraph::read_graph(infile$datapath, format = c('graphml'))
-    ng_rv$graph_name <<- infile$name
-    ng_rv$graph_type <<- ifelse("type" %in% graph_attr_names(ng_rv$graph_data), 
+    ng_rv$graph_data <- igraph::read_graph(infile$datapath, format = c('graphml'))
+    ng_rv$graph_name <- infile$name
+    ng_rv$graph_type <- ifelse("type" %in% graph_attr_names(ng_rv$graph_data), 
                                      graph_attr(ng_rv$graph_data, "type"), "")
-    ng_rv$graph_desc <<- "Network loaded from file."
+    ng_rv$graph_desc <- "Network loaded from file."
     
     createGraphCategoryList()
     
@@ -490,29 +476,10 @@ filedata <- reactive({
   }, error = function(err) { return(NULL) })
 })
 
-# apply filters except categorical to graph data and return modified graph
-# graphFiltersNoCategorical <- reactive({
-#   g <- NULL
-# 
-#   if (!is.null(ng_rv$graph_data)) {
-#     g <- ng_rv$graph_data
-#     g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
-#     # isolate as graph_component_type_select has event
-#     g <- applyComponentFilter(g, isolate(input$graph_component_type_select), input$graph_component_slider)
-#     g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
-#                                       input$graph_loops_edge_check)
-#     g <- addAdditionalMeasures(g)
-#   }
-# 
-#   return(g)
-# })
-
 # apply all filters to graph data and return modified graph
 graphFilters <- reactive({
   g <- NULL
 
-  # initial plot this is triggered 3 times - need to fix at some stage
-  
   if (!is.null(ng_rv$graph_data)) {
     g <- ng_rv$graph_data
     
@@ -530,9 +497,6 @@ graphFilters <- reactive({
       # if no labels set label to vertex name
       V(g)$label <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
     }    
-    
-    # enable network metrics tab
-    removeCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
     # ----
     
     g <- applyPruneFilterSrv(g, ng_rv$prune_verts)
@@ -542,6 +506,9 @@ graphFilters <- reactive({
     g <- applyGraphFilters(g, input$graph_isolates_check, input$graph_multi_edge_check, 
                                       input$graph_loops_edge_check)
     g <- addAdditionalMeasures(g)
+    
+    # enable network metrics tab
+    removeCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
   }
   
   return(g)
@@ -644,35 +611,18 @@ setGraphTabControls <- reactive({
   # enable or disable controls based on network graph tab
   switch(input$selected_graph_tab,
          "Plot" = { enablePlotControls() },
-         "D3 Simple" = { enableD3Controls() },
-         "D3 Force" = { enableD3Controls() },
          "visNetwork" = { enableVisNetworkControls() })
-})
-
-# create d3 network from igraph
-d3data <- reactive({
-  g <- graphFilters()
-  
-  if (is.null(g) || vcount(g) <= 0) { return(NULL) }
-  
-  wc <- cluster_walktrap(g)
-  members <- membership(wc)
-  igraph_to_networkD3(g, group = members)
 })
 
 # network graph save file name based on selected network graph tab
 saveGraphFileName <- reactive({
   switch(input$selected_graph_tab,
-         "D3 Simple" = systemTimeFilename("d3simple-graph", "html"),
-         "D3 Force" = systemTimeFilename("d3force-graph", "html"),
          "visNetwork" = systemTimeFilename("visNetwork-graph", "html"))
 })
 
 # network graph data based on selected network graph tab
 saveGraphFileData <- reactive({
   data <- switch(input$selected_graph_tab,
-         "D3 Simple" = simpleNetworkData(),
-         "D3 Force" = forceNetworkData(),
          "visNetwork" = visNetworkData())
   
   if (input$selected_graph_tab == "visNetwork") {
@@ -689,7 +639,7 @@ saveGraphFileData <- reactive({
 
 # add selected data table row name values to pruned vertices list
 pruneListAddNames <- reactive({
-  dt_vertices <- isolate(dt_vertices_df())
+  dt_vertices <- isolate(graphNodes())
   dt_selected_rows <- input$dt_vertices_rows_selected
   prune_list <- ng_rv$prune_verts
   
@@ -703,7 +653,7 @@ pruneListAddNames <- reactive({
 
 # add deselected data table row name values to pruned vertices list
 pruneListAddOtherNames <- reactive({
-  dt_vertices <- isolate(dt_vertices_df())
+  dt_vertices <- isolate(graphNodes())
   dt_selected_rows <- input$dt_vertices_rows_selected
   prune_list <- ng_rv$prune_verts
   
@@ -722,21 +672,20 @@ pruneListAddOtherNames <- reactive({
   }
 })
 
-# graph vertices data as dataframe
-dt_vertices_df <- reactive({
+# graph nodes as dataframe
+graphNodes <- reactive({
   g <- graphFilters()
   
   if (is.null(g)) { return(NULL) }
 
+  # igraph::as_data_frame(g, what = c("vertices"))
+  # "name", "id", "vosonCA_Stance", ...
+  
   df_parameters <- list()
   
   df_parameters[['name']] <- V(g)$name
-  if (!(is.null(vertex_attr(g, "label")))) {
-    df_parameters[['label']] <- V(g)$label
-  }
-  if ("color" %in% vertex_attr_names(g)) {
-    df_parameters[['color']] <- V(g)$color
-  }
+  if (!(is.null(vertex_attr(g, "label")))) { df_parameters[['label']] <- V(g)$label }
+  if ("color" %in% vertex_attr_names(g)) { df_parameters[['color']] <- V(g)$color }
   df_parameters[['degree']] <- V(g)$Degree
   df_parameters[['indegree']] <- V(g)$Indegree
   df_parameters[['outdegree']] <- V(g)$Outdegree
@@ -768,42 +717,13 @@ dt_vertices_df <- reactive({
   return(df)
 })
 
-# graph edges data as dataframe
-dt_edges_df <- reactive({
+# graph edges as dataframe
+graphEdges <- reactive({
   g <- graphFilters()
   
   if (is.null(g)) { return(NULL) }
   
   igraph::as_data_frame(g, what = c("edges"))
-})
-
-# d3 simple network graph
-simpleNetworkData <- reactive({
-  network_d3 <- d3data()
-  
-  if (is.null(network_d3)) { return(NULL) }
-  
-  dfr <- network_d3$links
-  dfr = dfr - 1
-  
-  simpleNetwork(dfr, Source = "source", Target = "target",
-                fontSize = 10, fontFamily = "arial", opacity = 1)
-})
-
-# d3 force network graph
-forceNetworkData <- reactive({
-  network_d3 <- d3data()
-  
-  if (is.null(network_d3)) { return(NULL) }
-  
-  dfr <- network_d3$links
-  # dfr = dfr-1
-  
-  forceNetwork(Links = dfr,
-               Nodes =network_d3$nodes, NodeID = "name",
-               Group ="group", Source = "source", Target = "target",
-               fontSize = 16, fontFamily = "arial",
-               bounded = TRUE, zoom = TRUE, opacity = 1)
 })
 
 # graph summary
@@ -861,13 +781,13 @@ graphComponentSummary <- reactive({
 setGraphView <- function(data, desc = "", type = "", name = "", seed = 1) {
   shinyjs::reset("graphml_data_file")
   
-  ng_rv$graph_data <<- data
-  ng_rv$graph_desc <<- desc
-  ng_rv$graph_type <<- type
-  ng_rv$graph_name <<- name
-  ng_rv$graph_seed <<- seed
-  ng_rv$graph_cats <<- c()
-  ng_rv$graph_cat_selected <<- ""
+  ng_rv$graph_data <- data
+  ng_rv$graph_desc <- desc
+  ng_rv$graph_type <- type
+  ng_rv$graph_name <- name
+  ng_rv$graph_seed <- seed
+  ng_rv$graph_cats <- c()
+  ng_rv$graph_cat_selected <- ""
   
   createGraphCategoryList()
   setGraphFilterControls()
