@@ -8,25 +8,36 @@
 
 <title>Changelog • VOSONDash</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -55,7 +66,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -69,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.4</span>
       </span>
     </div>
 
@@ -95,9 +106,35 @@
     Reference
   </a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://vosonlab.github.io/VOSONDashDocs/">VOSON Dashboard User Guide</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="http://vosonlab.net/">
+    <span class="fa fa-flask fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/vosonlab">
+    <span class="fa fa-twitter-square fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/vosonlab/VOSONDash">
     <span class="fa fa-github fa-lg"></span>
      
@@ -116,34 +153,48 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
+      <h1 data-toc-skip>Changelog <small></small></h1>
       <small>Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="vosondash-053" class="section level1">
-<h1 class="page-header">
-<a href="#vosondash-053" class="anchor"></a>VOSONDash 0.5.3<small> Unreleased </small>
+    <div id="vosondash-054" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.4">
+<a href="#vosondash-054" class="anchor"></a>VOSONDash 0.5.4<small> Unreleased </small>
 </h1>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor Changes:</h2>
 <ul>
+<li>Removed code support for older <code>vosonSML</code> versions prior to <code>0.29</code>.</li>
+<li>Code refactoring and removal of <code>networkD3</code> plots.</li>
+<li>Added new hex sticker to package documentation.</li>
+</ul>
+</div>
+</div>
+    <div id="vosondash-053" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.3">
+<a href="#vosondash-053" class="anchor"></a>VOSONDash 0.5.3<small> Unreleased </small>
+</h1>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>Minor Changes:</h2>
+<ul>
 <li>Added the option to inherit node colors from loaded <code>graphml</code> files in plots.</li>
 <li>Clicking nodes in the <code>visnetwork</code> plot now also selects or deselects them in the data table below it.</li>
-<li>Added a simpler node label option of <code>node index</code> which is the numeric index of the vertex.</li>
-<li>Added the <code>niter</code> or “number of iterations” input field for <code>FR</code> and <code>GraphOpt</code> plots.</li>
+<li>Added a more simple node label option of <code>node index</code> which is the numeric index of the vertex.</li>
+<li>Added the <code>niter</code> or ânumber of iterationsâ input field for <code>FR</code> and <code>GraphOpt</code> plots.</li>
 <li>Added the <code>charge</code>, <code>mass</code>, <code>spring.length</code> and <code>spring.constant</code> input fields for <code>GraphOpt</code> plots.</li>
 </ul>
 <p><br>Refer to <code>igraph</code> documentation for further information on layout parameters at <a href="https://igraph.org/r/doc/layout_with_fr.html" class="uri">https://igraph.org/r/doc/layout_with_fr.html</a> and <a href="https://igraph.org/r/doc/layout_with_graphopt.html" class="uri">https://igraph.org/r/doc/layout_with_graphopt.html</a>.</p>
 </div>
 </div>
     <div id="vosondash-052" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.5.2">
 <a href="#vosondash-052" class="anchor"></a>VOSONDash 0.5.2<small> Unreleased </small>
 </h1>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-2" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Moved <code>rtweet</code> from package imports to suggests.</li>
 </ul>
@@ -157,12 +208,12 @@
 </div>
 </div>
     <div id="vosondash-051" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.5.1">
 <a href="#vosondash-051" class="anchor"></a>VOSONDash 0.5.1<small> 2019-11-23 </small>
 </h1>
-<div id="minor-changes-2" class="section level2">
+<div id="minor-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-2" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-3" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Renamed <code>bimodal</code> networks to <code>twomode</code>.</li>
 <li>Added percentage sliders to twitter <code>semantic</code> network creation tab.</li>
@@ -170,7 +221,7 @@
 </div>
 </div>
     <div id="vosondash-050" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.5.0">
 <a href="#vosondash-050" class="anchor"></a>VOSONDash 0.5.0<small> Unreleased </small>
 </h1>
 <div id="major-changes" class="section level2">
@@ -211,9 +262,9 @@
 <p><br>Refer to <code>vosonSML</code> documentation for further information on network types and options at <a href="https://vosonlab.github.io/vosonSML/reference/index.html" class="uri">https://vosonlab.github.io/vosonSML/reference/index.html</a>.</p>
 </div>
 </div>
-<div id="minor-changes-3" class="section level2">
+<div id="minor-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-3" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-4" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Added a new <code>Collect</code> data download button named <code>Network</code> to allow the <code>nodes</code> and <code>edges</code> dataframes to be downloaded after <code>Create Network</code>. The data is downloaded as an R object in a <code>.rds</code> file that can be loaded into R using the <code><a href="https://rdrr.io/r/base/readRDS.html">readRDS()</a></code> function.</li>
 </ul>
@@ -227,16 +278,16 @@
 </div>
 </div>
     <div id="vosondash-044" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.4.4">
 <a href="#vosondash-044" class="anchor"></a>VOSONDash 0.4.4<small> 2019-08-09 </small>
 </h1>
-<div id="minor-changes-4" class="section level2">
+<div id="minor-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-4" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-5" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Changed the required package check to be more efficient by calling <code>required()</code> instead of <code><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages()</a></code>.</li>
 <li>Changed the app startup messages to use <code><a href="https://rdrr.io/r/base/message.html">message()</a></code> instead of <code><a href="https://rdrr.io/r/base/cat.html">cat()</a></code> so if desired they can be suppressed.</li>
-<li>Added <code>pkgStartupMsgs</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to hide the app’s required package startup messages.</li>
+<li>Added <code>pkgStartupMsgs</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to hide the appâs required package startup messages.</li>
 <li>Added optional <code>isLocal</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to manually set local or server flag if desired. If not set app will detect if it is running in server mode.</li>
 <li>Disabled the loading and saving of keys and tokens in server mode.</li>
 <li>Added a tooltip to <code>Create Web Auth Token</code> to add some further information on process and note.</li>
@@ -244,12 +295,12 @@
 </div>
 </div>
     <div id="vosondash-043" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.4.3">
 <a href="#vosondash-043" class="anchor"></a>VOSONDash 0.4.3<small> Unreleased </small>
 </h1>
-<div id="minor-changes-5" class="section level2">
+<div id="minor-changes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-5" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-6" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Changed the node size controls in <code>Network Graphs</code> to be based on normalized continuous values.</li>
 <li>Moved the calculation of network metrics to the <code><a href="../reference/getNetworkMetrics.html">getNetworkMetrics()</a></code> package function.</li>
@@ -260,7 +311,7 @@
 </div>
 </div>
     <div id="vosondash-042" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.4.2">
 <a href="#vosondash-042" class="anchor"></a>VOSONDash 0.4.2<small> Unreleased </small>
 </h1>
 <div id="bug-fixes-2" class="section level2">
@@ -275,17 +326,17 @@
 <a href="#major-changes-1" class="anchor"></a>Major Changes:</h2>
 <ul>
 <li>
-<code>VOSONDash</code> Shiny app has been re-structured into an R package. Have started moving some of the ‘business logic’ away from the app server and into the general package.</li>
+<code>VOSONDash</code> Shiny app has been re-structured into an R package. Have started moving some of the âbusiness logicâ away from the app server and into the general package.</li>
 <li>Social Media API keys are no longer saved to the users working directory. API keys and tokens are now saved to files in the users home directory as specified by the system environment variable <code>HOME</code>. This location can be found in the <code>VOSONDash</code> start up information, in the apps <code>API Keys</code> tab or by using the following R function in <code>RStudio</code>: <code><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv("HOME")</a></code>. The keys and tokens files are named <code>vosondash_keys.rds</code> and <code>vosondash_tokens.rds</code> respectively.</li>
 <li>Twitter no longer creates an API authentication token for each twitter collection. Instead twitter tokens are now created and managed in the <code>API Keys</code> tab and should be saved and re-used.</li>
-<li>A twitter web authorization token can now be created and used for API access without the need for a Developer account. This still requires a twitter app and Consumer API keys but means if a user has access to these that the user can authorize the twitter app against their account and use <code>VOSONDash</code> to perform twitter collections. Using this token API rate-limiting will be applied to the users account not the app. Twitter refers to this method of authentication as ‘Application-user authentication: OAuth 1a (access token for user context)’. This feature uses the <code>rtweet</code> packages interactive web authorization as implemented by the <code><a href="https://rdrr.io/pkg/rtweet/man/create_token.html">rtweet::create_token</a></code> function. As stated above once a token has been created it should be saved and re-used.</li>
+<li>A twitter web authorization token can now be created and used for API access without the need for a Developer account. This still requires a twitter app and Consumer API keys but means if a user has access to these that the user can authorize the twitter app against their account and use <code>VOSONDash</code> to perform twitter collections. Using this token API rate-limiting will be applied to the users account not the app. Twitter refers to this method of authentication as âApplication-user authentication: OAuth 1a (access token for user context)â. This feature uses the <code>rtweet</code> packages interactive web authorization as implemented by the <code><a href="https://rdrr.io/pkg/rtweet/man/create_token.html">rtweet::create_token</a></code> function. As stated above once a token has been created it should be saved and re-used.</li>
 </ul>
 </div>
-<div id="minor-changes-6" class="section level2">
+<div id="minor-changes-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-6" class="anchor"></a>Minor Changes:</h2>
+<a href="#minor-changes-7" class="anchor"></a>Minor Changes:</h2>
 <ul>
-<li>Demonstration data has been included in the package and is accessible by a new selection box below the graphml file loader in <code>Network Graphs</code>. If there is a file with the same name as the demonstration graphml file but with an additional ‘.txt’ extension in the packages demonstration data folder it will be loaded as the graph description.</li>
+<li>Demonstration data has been included in the package and is accessible by a new selection box below the graphml file loader in <code>Network Graphs</code>. If there is a file with the same name as the demonstration graphml file but with an additional â.txtâ extension in the packages demonstration data folder it will be loaded as the graph description.</li>
 <li>Added graph summary information for <code>Network Graphs</code> plots as an overlay in the bottom left corner.</li>
 <li>Added a select box in the top right corner of the graph plots that the user can use to select the render plot height in pixels.</li>
 <li>Changed selected row and vertex highlighting colors in graph data table and plot.</li>
@@ -300,19 +351,10 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#vosondash-053">0.5.3</a></li>
-        <li><a href="#vosondash-052">0.5.2</a></li>
-        <li><a href="#vosondash-051">0.5.1</a></li>
-        <li><a href="#vosondash-050">0.5.0</a></li>
-        <li><a href="#vosondash-044">0.4.4</a></li>
-        <li><a href="#vosondash-043">0.4.3</a></li>
-        <li><a href="#vosondash-042">0.4.2</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -324,7 +366,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.9000.</p>
 </div>
 
       </footer>

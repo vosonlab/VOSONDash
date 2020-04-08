@@ -6,7 +6,7 @@ tabItem(tabName = "reddit_collection_tab",
                    # sidebarPanel(width = 12, class = "custom_well_for_controls_collect",
                          
                    tabBox(title = NULL,
-                          id = "twitter_control_tabset",
+                          id = "reddit_control_tabset",
                           width = 12,
                           tabPanel("Collect Data",
                                          

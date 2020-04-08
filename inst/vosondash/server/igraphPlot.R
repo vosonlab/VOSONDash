@@ -1,5 +1,5 @@
 # create graph data for a standard network plot
-standardPlotData <- reactive({
+igraphData <- reactive({
   g <- graphFilters()
   
   if (is.null(g)) { return(emptyPlotMessage("No graph data.")) }
