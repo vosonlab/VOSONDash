@@ -1,10 +1,10 @@
-# VOSONDash
+# VOSONDash <img src="https://vosonlab.github.io/VOSONDash/images/logo.png" width="140px" align="right" />
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
-![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)
-![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)
-![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=8065ac)
-![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.4&color=659DBD&logo=github)
-![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?color=659DBD&logo=github)
+[![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
+[![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
+[![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=8065ac)](https://github.com/vosonlab/VOSONDash/releases)
+[![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.4&color=659DBD&logo=github)](https://github.com/vosonlab/VOSONDash)
+[![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?color=659DBD&logo=github)](https://github.com/vosonlab/VOSONDash/commits/master)
 
 `VOSONDash` is an interactive [R Shiny](https://shiny.rstudio.com/) web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the [vosonSML](https://github.com/vosonlab/vosonSML) R package.
 

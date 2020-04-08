@@ -26,7 +26,7 @@ Encoding: UTF-8
 Author: Bryan Gertzel, Robert Ackland
 Maintainer: Bryan Gertzel <bryan.gertzel@anu.edu.au>
 License: GPL (>= 3)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 NeedsCompilation: no
 URL: https://github.com/vosonlab/VOSONDash
 BugReports: https://github.com/vosonlab/VOSONDash/issues

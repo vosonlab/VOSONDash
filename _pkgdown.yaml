@@ -12,7 +12,11 @@ navbar:
     - home
     - news
     - reference
-    right: github
+    - articles
+    right:
+    - vosonlab
+    - twitter
+    - github
   components:
     home:
       icon: fa-home fa-lg
@@ -25,6 +29,18 @@ navbar:
       icon: fa-cubes
       text: "Reference"
       href: reference/index.html
+    articles:
+      icon: fa-book
+      text: Articles
+      menu:
+      - text: "VOSON Dashboard User Guide"
+        href: https://vosonlab.github.io/VOSONDashDocs/
+    vosonlab:
+      icon: fa-flask fa-lg
+      href: http://vosonlab.net/
+    twitter:
+      icon: fa-twitter-square fa-lg
+      href: https://twitter.com/vosonlab    
     github:
       icon: fa-github fa-lg
       href: https://github.com/vosonlab/VOSONDash
@@ -61,3 +77,6 @@ reference:
   - '`getRedditUrlSubreddit`'
   - '`getRedditUrlThreadId`'
   - '`getYoutubeVideoId`'  
+
+toc:
+  depth: 2
