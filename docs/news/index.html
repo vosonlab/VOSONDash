@@ -182,7 +182,7 @@
 <li>Added the option to inherit node colors from loaded <code>graphml</code> files in plots.</li>
 <li>Clicking nodes in the <code>visnetwork</code> plot now also selects or deselects them in the data table below it.</li>
 <li>Added a more simple node label option of <code>node index</code> which is the numeric index of the vertex.</li>
-<li>Added the <code>niter</code> or ânumber of iterationsâ input field for <code>FR</code> and <code>GraphOpt</code> plots.</li>
+<li>Added the <code>niter</code> or “number of iterations” input field for <code>FR</code> and <code>GraphOpt</code> plots.</li>
 <li>Added the <code>charge</code>, <code>mass</code>, <code>spring.length</code> and <code>spring.constant</code> input fields for <code>GraphOpt</code> plots.</li>
 </ul>
 <p><br>Refer to <code>igraph</code> documentation for further information on layout parameters at <a href="https://igraph.org/r/doc/layout_with_fr.html" class="uri">https://igraph.org/r/doc/layout_with_fr.html</a> and <a href="https://igraph.org/r/doc/layout_with_graphopt.html" class="uri">https://igraph.org/r/doc/layout_with_graphopt.html</a>.</p>
@@ -287,7 +287,7 @@
 <ul>
 <li>Changed the required package check to be more efficient by calling <code>required()</code> instead of <code><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages()</a></code>.</li>
 <li>Changed the app startup messages to use <code><a href="https://rdrr.io/r/base/message.html">message()</a></code> instead of <code><a href="https://rdrr.io/r/base/cat.html">cat()</a></code> so if desired they can be suppressed.</li>
-<li>Added <code>pkgStartupMsgs</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to hide the appâs required package startup messages.</li>
+<li>Added <code>pkgStartupMsgs</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to hide the app’s required package startup messages.</li>
 <li>Added optional <code>isLocal</code> parameter to <code><a href="../reference/runVOSONDash.html">runVOSONDash()</a></code> to manually set local or server flag if desired. If not set app will detect if it is running in server mode.</li>
 <li>Disabled the loading and saving of keys and tokens in server mode.</li>
 <li>Added a tooltip to <code>Create Web Auth Token</code> to add some further information on process and note.</li>
@@ -326,17 +326,17 @@
 <a href="#major-changes-1" class="anchor"></a>Major Changes:</h2>
 <ul>
 <li>
-<code>VOSONDash</code> Shiny app has been re-structured into an R package. Have started moving some of the âbusiness logicâ away from the app server and into the general package.</li>
+<code>VOSONDash</code> Shiny app has been re-structured into an R package. Have started moving some of the ‘business logic’ away from the app server and into the general package.</li>
 <li>Social Media API keys are no longer saved to the users working directory. API keys and tokens are now saved to files in the users home directory as specified by the system environment variable <code>HOME</code>. This location can be found in the <code>VOSONDash</code> start up information, in the apps <code>API Keys</code> tab or by using the following R function in <code>RStudio</code>: <code><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv("HOME")</a></code>. The keys and tokens files are named <code>vosondash_keys.rds</code> and <code>vosondash_tokens.rds</code> respectively.</li>
 <li>Twitter no longer creates an API authentication token for each twitter collection. Instead twitter tokens are now created and managed in the <code>API Keys</code> tab and should be saved and re-used.</li>
-<li>A twitter web authorization token can now be created and used for API access without the need for a Developer account. This still requires a twitter app and Consumer API keys but means if a user has access to these that the user can authorize the twitter app against their account and use <code>VOSONDash</code> to perform twitter collections. Using this token API rate-limiting will be applied to the users account not the app. Twitter refers to this method of authentication as âApplication-user authentication: OAuth 1a (access token for user context)â. This feature uses the <code>rtweet</code> packages interactive web authorization as implemented by the <code><a href="https://rdrr.io/pkg/rtweet/man/create_token.html">rtweet::create_token</a></code> function. As stated above once a token has been created it should be saved and re-used.</li>
+<li>A twitter web authorization token can now be created and used for API access without the need for a Developer account. This still requires a twitter app and Consumer API keys but means if a user has access to these that the user can authorize the twitter app against their account and use <code>VOSONDash</code> to perform twitter collections. Using this token API rate-limiting will be applied to the users account not the app. Twitter refers to this method of authentication as ‘Application-user authentication: OAuth 1a (access token for user context)’. This feature uses the <code>rtweet</code> packages interactive web authorization as implemented by the <code><a href="https://rdrr.io/pkg/rtweet/man/create_token.html">rtweet::create_token</a></code> function. As stated above once a token has been created it should be saved and re-used.</li>
 </ul>
 </div>
 <div id="minor-changes-7" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes-7" class="anchor"></a>Minor Changes:</h2>
 <ul>
-<li>Demonstration data has been included in the package and is accessible by a new selection box below the graphml file loader in <code>Network Graphs</code>. If there is a file with the same name as the demonstration graphml file but with an additional â.txtâ extension in the packages demonstration data folder it will be loaded as the graph description.</li>
+<li>Demonstration data has been included in the package and is accessible by a new selection box below the graphml file loader in <code>Network Graphs</code>. If there is a file with the same name as the demonstration graphml file but with an additional ‘.txt’ extension in the packages demonstration data folder it will be loaded as the graph description.</li>
 <li>Added graph summary information for <code>Network Graphs</code> plots as an overlay in the bottom left corner.</li>
 <li>Added a select box in the top right corner of the graph plots that the user can use to select the render plot height in pixels.</li>
 <li>Changed selected row and vertex highlighting colors in graph data table and plot.</li>
@@ -366,7 +366,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
