@@ -3,38 +3,22 @@
 #' Network metrics and line plots.
 #'
 
-#### values -----------------------------------------------------------------------------------------------------------
-#### events -----------------------------------------------------------------------------------------------------------
-#### output -----------------------------------------------------------------------------------------------------------
+#### values ---------------------------------------------------------------------------------------------------------- #
+#### events ---------------------------------------------------------------------------------------------------------- #
+#### output ---------------------------------------------------------------------------------------------------------- #
 
-output$network_metrics_details_output <- renderText({
-  networkMetricsDetailsOutput()
-})
+output$network_metrics_details_output <- renderText({ networkMetricsDetailsOutput() })
+output$componentDistPlot <- renderPlot({ componentDistPlotData() })
+output$degreeDistPlot <- renderPlot({ degreeDistPlotData() })
+output$indegreeDistPlot <- renderPlot({ indegreeDistPlotData() })
+output$outdegreeDistPlot <- renderPlot({ outdegreeDistPlotData() })
 
-output$componentDistPlot <- renderPlot({
-  componentDistPlotData()
-})
-
-output$degreeDistPlot <- renderPlot({
-  degreeDistPlotData()
-})
-
-output$indegreeDistPlot <- renderPlot({
-  indegreeDistPlotData()
-})
-
-output$outdegreeDistPlot <- renderPlot({
-  outdegreeDistPlotData()
-})
-
-#### reactives --------------------------------------------------------------------------------------------------------
+#### reactives ------------------------------------------------------------------------------------------------------- #
 
 componentDistPlotData <- reactive({
   g <- graphFilters()
   
-  if (is.null(g)) {
-    return(VOSONDash::emptyPlotMessage("No graph data."))
-  }
+  if (is.null(g)) { return(VOSONDash::emptyPlotMessage("No graph data.")) }
   
   cc <- components(g, mode = input$graph_component_type_select)
   plot(table(cc$csize), type = "b", xlab = paste0("Size of component (", input$graph_component_type_select, ")"), 
@@ -44,9 +28,7 @@ componentDistPlotData <- reactive({
 degreeDistPlotData <- reactive({
   g <- graphFilters()
   
-  if (is.null(g)) {
-    return(VOSONDash::emptyPlotMessage("No graph data."))
-  }
+  if (is.null(g)) { return(VOSONDash::emptyPlotMessage("No graph data.")) }
   
   if (is.directed(g)) {
     VOSONDash::emptyPlotMessage("Not defined for network.")
@@ -58,9 +40,7 @@ degreeDistPlotData <- reactive({
 indegreeDistPlotData <- reactive({
   g <- graphFilters()
   
-  if (is.null(g)) {
-    return(VOSONDash::emptyPlotMessage("No graph data."))
-  }
+  if (is.null(g)) { return(VOSONDash::emptyPlotMessage("No graph data.")) }
   
   if (is.directed(g)){
     plot(table(degree(g, mode="in")), type = "b", xlab = "Indegree", ylab = "N")
@@ -72,9 +52,7 @@ indegreeDistPlotData <- reactive({
 outdegreeDistPlotData <- reactive({
   g <- graphFilters()
   
-  if (is.null(g)) {
-    return(VOSONDash::emptyPlotMessage("No graph data."))
-  }
+  if (is.null(g)) { return(VOSONDash::emptyPlotMessage("No graph data.")) }
   
   if (is.directed(g)){
     plot(table(degree(g, mode="out")), type="b", xlab="Outdegree", ylab="N")

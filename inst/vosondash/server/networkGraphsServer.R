@@ -3,19 +3,19 @@
 #' Network data, measures, filters and graph visualisations.
 #'
 
-#### values ----------------------------------------------------------------------------------------------------------- #
+#### values ---------------------------------------------------------------------------------------------------------- #
 
-ng_rv <- reactiveValues(   # ng_rvalues
-  data = NULL,                  # vosonsml df
-  graph_data = NULL,            # igraph graph object
-  graph_seed = NULL,            # plot seed value
+ng_rv <- reactiveValues(
+  data = NULL,       # vosonsml df
+  graph_data = NULL, # igraph graph object
+  graph_seed = NULL, # plot seed value
   
-  graph_desc = "",              # some graph attributes
+  graph_desc = "",   # some graph attributes
   graph_name = "",
   graph_type = "",
   
-  graph_cats = c(),             # list of categories in the data # graph_CA
-  graph_cat_selected = "",       # selected category # graph_CA_selected
+  graph_cats = c(),        # list of categories in the data # graph_CA
+  graph_cat_selected = "", # selected category # graph_CA_selected
   
   plot_height = gbl_plot_height,
   
@@ -31,15 +31,14 @@ addCssClass(selector = "a[data-value = 'assortativity_tab']", class = "inactive_
 
 source("server/controls.R", local = TRUE)
 
-#### events ----------------------------------------------------------------------------------------------------------- #
+#### events ---------------------------------------------------------------------------------------------------------- #
 
 # set reactive value plot height when height input changes
 observeEvent(input$plot_height, {
   ng_rv$plot_height <- input$plot_height
 }, ignoreInit = TRUE)
 
-# create list of demo files found in extdata
-# do once at startup
+# create list of demo files found in extdata - do once at startup
 check_demo_files <- TRUE
 observeEvent(check_demo_files, {
   tryCatch({
@@ -91,16 +90,6 @@ observeEvent(input$demo_data_select_button, {
   }
 })
 
-# node labels select
-# observeEvent(input$node_labels_check, {
-#   if (input$node_labels_check) {
-#     v <- names(graphNodes())
-#     updateSelectInput(session, "node_label_select", label = NULL, choices = v,
-#                       selected = "label")
-#     shinyjs::enable("node_label_select")    
-#   }
-# })
-
 # when graphml data loaded or changed
 observeEvent(ng_rv$graph_data, {
   if (!is.null(ng_rv$graph_data)) {
@@ -135,9 +124,8 @@ observeEvent(ng_rv$graph_cat_selected, {
   }
 })
 
-# check this is not redundant **
+# ** check this is not redundant
 # update component slider when graph component or category changed
-# added ng_rv$prune_verts
 observeEvent({ input$graph_component_type_select
                input$graph_sub_cats_select
                ng_rv$prune_verts
@@ -316,7 +304,7 @@ observeEvent(input$graph_layout_select, {
   }
 })
 
-#### output ----------------------------------------------------------------------------------------------------------- #
+#### output ---------------------------------------------------------------------------------------------------------- #
 
 output$plot_height_ui <- renderUI({
   tagList(div(div(
@@ -678,9 +666,6 @@ graphNodes <- reactive({
   
   if (is.null(g)) { return(NULL) }
 
-  # igraph::as_data_frame(g, what = c("vertices"))
-  # "name", "id", "vosonCA_Stance", ...
-  
   df_parameters <- list()
   
   df_parameters[['name']] <- V(g)$name
@@ -775,7 +760,7 @@ graphComponentSummary <- reactive({
   paste0(output, collapse = '\n')
 })
 
-#### functions -------------------------------------------------------------------------------------------------------- #
+#### functions ------------------------------------------------------------------------------------------------------- #
 
 # set graph manually
 setGraphView <- function(data, desc = "", type = "", name = "", seed = 1) {

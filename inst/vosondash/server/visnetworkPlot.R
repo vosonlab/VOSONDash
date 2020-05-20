@@ -6,7 +6,7 @@ visNetworkData <- reactive({
   if (nrow(verts) < 1) { return(NULL) }
   
   isolate({
-    # already dependencies of graphFilters / verts / edges
+    # already dependencies of graphFilters, verts, edges
     categorical_attributes <- ng_rv$graph_cats
     selected_categorical_attribute <- input$graph_cat_select
     gcs <- ng_rv$graph_cat_selected
@@ -24,9 +24,9 @@ visNetworkData <- reactive({
   
   graph_layout <- switch(chosen_layout,
                          "Auto" = "layout_nicely",
-                         "FR" = "layout_with_fr", # Fruchterman-Reingold
-                         "KK" = "layout_with_kk", # Kamada-Kawai
-                         "DH" = "layout_with_dh", # Davidson-Harel
+                         "FR" = "layout_with_fr",   # Fruchterman-Reingold
+                         "KK" = "layout_with_kk",   # Kamada-Kawai
+                         "DH" = "layout_with_dh",   # Davidson-Harel
                          "LGL" = "layout_with_lgl", # Large Graph Layout
                          "Graphopt" = "layout_with_graphopt",
                          "DrL" = "layout_with_drl",
@@ -106,7 +106,8 @@ visNetworkData <- reactive({
     if (input$node_labels_check == FALSE) {
       verts$label <- ""
     } else {
-      verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$sel_label), .data$label, .data$sel_label), sel_label = NULL)  
+      verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$sel_label), .data$label, .data$sel_label),
+                             sel_label = NULL)  
     }
     verts$title <- row.names(verts)
   }

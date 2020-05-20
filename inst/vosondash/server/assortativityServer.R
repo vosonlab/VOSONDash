@@ -3,15 +3,15 @@
 #' Measures of assortative mixing and homophily in network.
 #'
 
-#### values ----------------------------------------------------------------------------------------------------------- #
+#### values ---------------------------------------------------------------------------------------------------------- #
 
 assort_rvalues <- reactiveValues(
-  mixmat_message = NULL            # displays a message if problem with mixing matrix
+  mixmat_message = NULL # displays a message if problem with mixing matrix
 )
 
-#### events ----------------------------------------------------------------------------------------------------------- #
+#### events ---------------------------------------------------------------------------------------------------------- #
 
-#### output ----------------------------------------------------------------------------------------------------------- #
+#### output ---------------------------------------------------------------------------------------------------------- #
 
 output$assortativity_details_output <- renderText({
   assortativityPrelimOutput()
@@ -29,7 +29,7 @@ output$mixing_matrix_details_output <- renderText({
   assort_rvalues$mixmat_message
 })
 
-#### reactives -------------------------------------------------------------------------------------------------------- #
+#### reactives ------------------------------------------------------------------------------------------------------- #
 
 # returns selected categorical attribute output message
 assortativityPrelimOutput <- reactive({
@@ -42,14 +42,8 @@ assortativityPrelimOutput <- reactive({
     if (nchar(CA_sel) && CA_sel != "All") {   # eventually will have cat attr selected by default...
       output <- append(output, paste0("Selected categorical attribute is: ", CA_sel))
       output <- append(output, "")
-    }else{
-      return(NULL)
-      # output <- append(output, paste0("Categorical attribute not present, or not selected."))
-    }
-  }else{
-    return(NULL)
-    # output <- append(output, paste0("No data."))
-  }
+    } else { return(NULL) }
+  } else { return(NULL) }
   
   paste0(output, collapse = '\n')
 })
@@ -83,7 +77,6 @@ homophilyOutput <- reactive({
   if (!is.null(g)) {
     CA_sel <- ng_rv$graph_cat_selected
     if (nchar(CA_sel) && CA_sel != "All") {   # eventually will have cat attr selected by default...
-      # output <- append(output, paste0("Selected categorical attribute is: ", CA_sel))
       vattr <- paste0('vosonCA_', CA_sel)
       mm <- VOSONDash::mixmat(g, paste0("vosonCA_", CA_sel), use_density = FALSE)
       

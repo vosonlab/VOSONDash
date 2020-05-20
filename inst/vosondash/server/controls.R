@@ -1,5 +1,3 @@
-#### batch reset, enable and disable graph contols ####
-
 disableGraphFilterControls <- function() {
   ui_controls <- c("graph_isolates_check",
                    "graph_multi_edge_check",

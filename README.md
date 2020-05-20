@@ -12,14 +12,14 @@
 
 `VOSONDash` is an R package and must be installed before the app can be run.
 
-Install the latest release via CRAN (v0.5.1):
+Install the latest release via CRAN (v0.5.4):
 ```R
 install.packages("VOSONDash")
 ```
 
-Install the latest release via GitHub (v0.5.2):
+Install the latest release via GitHub (v0.5.4):
 ```R
-install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.2/VOSONDash-0.5.2.tar.gz", 
+install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.4/VOSONDash-0.5.4.tar.gz", 
   repo = NULL, type = "source")
 ```
 
@@ -75,7 +75,7 @@ Network and text analysis of graph data.
 
 ![VOSONDash Network Graphs Analysis](https://vosonlab.github.io/VOSONDash/images/network-graphs-1420x847.jpg)
 
-Fig 1. Environmental activist site hyperlink network loaded from a `graphml` file and plotted by the `visNetwork` package.
+Figure 1. Environmental activist site hyperlink network loaded from a `graphml` file and plotted by the `visNetwork` package.
 
 ### Collection and Network Creation
 
@@ -86,11 +86,11 @@ Graphical interfaces for collecting network data from social media API's.
 
 ![VOSONDash Twitter Collection](https://vosonlab.github.io/VOSONDash/images/collection-twitter-1420x980.jpg)
 
-Fig 2. Collection of recent `#auspol` tweets and generation of an actor network with the `vosonSML` package.
+Figure 2. Collection of recent `#auspol` tweets and generation of an actor network with the `vosonSML` package.
 
 ![VOSONDash Twitter Network Creation](https://vosonlab.github.io/VOSONDash/images/creation-twitter-1420x848.jpg)
 
-Fig 3. Create an actor network and add tweet text to the network.
+Figure 3. Create an actor network and add tweet text to the network.
 
 ### API Keys and Tokens
 
@@ -98,7 +98,7 @@ Fig 3. Create an actor network and add tweet text to the network.
 
 ![VOSONDash Keys and Tokens Interface](https://vosonlab.github.io/VOSONDash/images/api-twitter-1420x848.jpg)
 
-Fig 4. Twitter API token creation and selection.
+Figure 4. Twitter API token creation and selection.
 
 ## Special thanks
 

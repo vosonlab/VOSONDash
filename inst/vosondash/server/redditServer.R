@@ -3,7 +3,7 @@
 #' Collects Reddit thread comments and creates an actor network using the vosonSML package.
 #'
 
-#### values ----------------------------------------------------------------------------------------------------------- #
+#### values ---------------------------------------------------------------------------------------------------------- #
 
 red_rv <- reactiveValues(
   reddit_data = NULL,      # dataframe returned by vosonSML collection
@@ -16,7 +16,7 @@ red_rv <- reactiveValues(
 
 reddit_url_list <- c()   # list of reddit threads to collect on
 
-#### events ----------------------------------------------------------------------------------------------------------- #
+#### events ---------------------------------------------------------------------------------------------------------- #
 
 # when the reddit add thread url button is pushed update the list and input fields
 observeEvent(input$reddit_add_url_button, {
@@ -45,9 +45,6 @@ observeEvent(input$reddit_collect_button, {
   withProgress(message = 'Collecting threads', value = 0.5, {
     
     withConsoleRedirect("reddit_console", {
-      # withCallingHandlers({
-      # shinyjs::html(id = "reddit_console", html = "")
-      
       url_list <- sapply(reddit_url_list, function(x) paste0("https://reddit.com/", x))
       
       # collect reddit data and print any output to console
@@ -62,7 +59,6 @@ observeEvent(input$reddit_collect_button, {
       
       incProgress(1, detail = "Finished")
       updateTabItems(session, "reddit_control_tabset", selected = "Create Network")
-      
     }) # withConsoleRedirect
     
   }) # withProgress
@@ -90,28 +86,24 @@ observeEvent(input$reddit_create_button, {
   
   withProgress(message = 'Creating network', value = 0.5, {
     
-  withConsoleRedirect("reddit_console", {
-    if (net_type == "activity") {
-      network <- vosonSML::Create(isolate(red_rv$reddit_data), "activity", verbose = TRUE)
-      if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
-    } else if (net_type == "actor") {
-      network <- vosonSML::Create(isolate(red_rv$reddit_data), "actor", verbose = TRUE)
-      if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
-    }
-    if (!is.null(network)) {
-      red_rv$reddit_network <- network
-      red_rv$reddit_graphml <- vosonSML::Graph(network) 
-    }
-  })
+    withConsoleRedirect("reddit_console", {
+      if (net_type == "activity") {
+        network <- vosonSML::Create(isolate(red_rv$reddit_data), "activity", verbose = TRUE)
+        if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
+      } else if (net_type == "actor") {
+        network <- vosonSML::Create(isolate(red_rv$reddit_data), "actor", verbose = TRUE)
+        if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
+      }
+      if (!is.null(network)) {
+        red_rv$reddit_network <- network
+        red_rv$reddit_graphml <- vosonSML::Graph(network) 
+      }
+    }) # withConsoleRedirect
   
-  incProgress(1, detail = "Finished")
-  })
+    incProgress(1, detail = "Finished")
+  }) # withProgress
   
   shinyjs::enable("reddit_create_button")
-  # shinyjs::runjs("jQuery( function() { var pre = jQuery('#reddit_console');
-  #                                      pre.scrollTop( pre.prop('scrollHeight')+200 ); }); ")
-  # 
-  # scrollIntoView()
   
   delay(gbl_scroll_delay, js$scroll_console("reddit_console"))
 })
@@ -138,7 +130,7 @@ observeEvent(reddit_view_rvalues$data, {
 observeEvent(input$clear_reddit_console, {
   resetConsole("reddit_console")
 })
-#### output ----------------------------------------------------------------------------------------------------------- #
+#### output ---------------------------------------------------------------------------------------------------------- #
 
 # render reddit collection arguments
 output$reddit_arguments_output <- renderText({
@@ -146,8 +138,10 @@ output$reddit_arguments_output <- renderText({
   input$reddit_remove_url_button
   
   # do not update arguments text on input field or list changes
-  isolate({input$reddit_url_input
-    input$reddit_url_list_output})
+  isolate({
+    input$reddit_url_input
+    input$reddit_url_list_output
+  })
   
   # get reddit collection arguments output
   redditArgumentsOutput()
@@ -172,8 +166,6 @@ observeEvent(input$clear_all_reddit_dt_columns, {
                            inline = TRUE)
 })
 
-# selected = c("comm_id", "comm_date", "subreddit", "user", "comment_score", "comment", "thread_id")
-# selected = c("subreddit", "thread_id", "comm_id", "comm_date", "user", "comment_score", "comment")
 observeEvent(input$reset_reddit_dt_columns, {
   updateCheckboxGroupInput(session, "show_reddit_cols", label = NULL,
                            choices = isolate(red_rv$data_cols),
@@ -185,9 +177,7 @@ observeEvent(input$reset_reddit_dt_columns, {
 output$reddit_data_cols_ui <- renderUI({
   data <- red_rv$data_cols
   
-  if (is.null(data)) {
-    return(NULL)
-  }
+  if (is.null(data)) { return(NULL) }
   
   conditionalPanel(condition = 'input.expand_show_reddit_cols',
                    div(actionButton("select_all_reddit_dt_columns", "Select all"), 
@@ -201,7 +191,7 @@ output$reddit_data_cols_ui <- renderUI({
   )
 })
 
-#### reactives -------------------------------------------------------------------------------------------------------- #
+#### reactives ------------------------------------------------------------------------------------------------------- #
 
 # add to the list of reddit thread urls to collect on
 urlListAdd <- reactive({
@@ -209,9 +199,7 @@ urlListAdd <- reactive({
   
   url <- createRedditRequestUrl(url)
   
-  if (is.null(url) || url == "") {
-    return(NULL)
-  }
+  if (is.null(url) || url == "") { return(NULL) }
   
   # only add if not already in list
   if (!(url %in% reddit_url_list)) {
@@ -235,23 +223,15 @@ urlListRemove <- reactive({
 datatableRedditData <- reactive({
   data <- red_rv$reddit_data
   
-  if (is.null(data)) {
-    return(NULL)
-  }
+  if (is.null(data)) { return(NULL) }
   
   if (!is.null(input$show_reddit_cols)) {
     if (length(input$show_reddit_cols) > 0) {
       data <- dplyr::select(red_rv$reddit_data, input$show_reddit_cols)
-    } else {
-      return(NULL)
-    }
-  } else {
-    return(NULL)
-  }
+    } else { return(NULL) }
+  } else { return(NULL) }
   
-  if (nrow(data) < 1) {
-    return(NULL)
-  }
+  if (nrow(data) < 1) { return(NULL) }
   
   col_classes <- sapply(data, class)
   for (i in seq(1, length(col_classes))) {
@@ -270,11 +250,12 @@ datatableRedditData <- reactive({
     DT::datatable(data, extensions = 'Buttons', filter = "top",
                   options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
-                                 buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
+                                 buttons = c('copy', 'csv', 'excel', 'print')),
+                  class = 'cell-border stripe compact hover')
   }
 })
 
-#### functions -------------------------------------------------------------------------------------------------------- #
+#### functions ------------------------------------------------------------------------------------------------------- #
 
 # format reddit collection arguments output
 redditArgumentsOutput <- function() {

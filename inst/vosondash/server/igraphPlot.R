@@ -94,7 +94,6 @@ igraphData <- reactive({
     selected_row_names <- row.names(graph_vertices)[c(selected_rows)]
   }
   
-  # vertex.frame.color = "gray", 
   plot_parameters <- list(g, edge.arrow.size = 0.4)
   
   # set vertex color for vertices selected in graph data table
@@ -160,9 +159,7 @@ igraphData <- reactive({
   
   plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_sel_label_col, 
                                                    gbl_plot_def_label_color)
-  
-  # plot_parameters[['vertex.label.color']] <- gbl_plot_def_label_color
-  
+
   plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
                                             "Degree" = (norm_values(V(g)$Degree)) + base_label_size,
                                             "Indegree" = (norm_values(V(g)$Indegree)) + base_label_size,
