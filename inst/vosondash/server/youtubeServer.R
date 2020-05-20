@@ -3,7 +3,7 @@
 #' Collects Youtube video comments and creates an actor network using the vosonSML package.
 #'
 
-#### values ----------------------------------------------------------------------------------------------------------- #
+#### values ---------------------------------------------------------------------------------------------------------- #
 
 yt_rv <- reactiveValues(
   yt_data = NULL,
@@ -18,7 +18,7 @@ youtube_api_key <- NULL        # youtube api key
 youtube_video_id_list <- c()   # list of youtube video ids to collect on
 youtube_max_comments <- 200
 
-#### events ----------------------------------------------------------------------------------------------------------- #
+#### events ---------------------------------------------------------------------------------------------------------- #
 
 # update youtube api key when field input changes
 observeEvent(input$youtube_api_key_input, {
@@ -62,16 +62,12 @@ observeEvent(input$youtube_collect_button, {
   withProgress(message = 'Collecting comments', value = 0.5, {
     
     withConsoleRedirect("youtube_console", {
-      # withCallingHandlers({
-      # shinyjs::html(id = "youtube_console", html = "")
-      
       youtube_video_id_list <- sapply(youtube_video_id_list, 
                                       function(x) gsub("^v=", "", x, ignore.case = TRUE, perl = TRUE))
       
       # collect youtube data and print any output to console
       tryCatch({
-        yt_rv$yt_data <- collectYoutubeData(youtube_api_key, youtube_video_id_list, 
-                                                            youtube_max_comments)
+        yt_rv$yt_data <- collectYoutubeData(youtube_api_key, youtube_video_id_list, youtube_max_comments)
         
         yt_rv$data_cols <- names(yt_rv$yt_data)
       }, error = function(err) {
@@ -110,38 +106,38 @@ observeEvent(input$youtube_create_button, {
   
   withProgress(message = 'Creating network', value = 0.5, {
     
-  withConsoleRedirect("youtube_console", {
-    if (net_type == "activity") {
-      network <- vosonSML::Create(isolate(yt_rv$yt_data), "activity", verbose = TRUE)
-      if (add_text) { 
-        network <- vosonSML::AddText(network, isolate(yt_rv$yt_data))
+    withConsoleRedirect("youtube_console", {
+      if (net_type == "activity") {
+        network <- vosonSML::Create(isolate(yt_rv$yt_data), "activity", verbose = TRUE)
+        if (add_text) { 
+          network <- vosonSML::AddText(network, isolate(yt_rv$yt_data))
+        }
+      } else if (net_type == "actor") {
+        network <- vosonSML::Create(isolate(yt_rv$yt_data), "actor", verbose = TRUE)
+        if (add_text) {
+            if (is2910) {
+              # vosonSML changed param name
+              network <- vosonSML::AddText(network, isolate(yt_rv$yt_data), 
+                                           repliesFromText = input$youtube_network_replies_from_text)
+            } else {
+              network <- vosonSML::AddText(network, isolate(yt_rv$yt_data), 
+                                           replies_from_text = input$youtube_network_replies_from_text) 
+            }
+        }
+        if (input$youtube_network_video_data) { 
+          creds <- vosonSML::Authenticate("youtube", apiKey = youtube_api_key)
+          network <- vosonSML::AddVideoData(network, youtubeAuth = creds,
+                                            actorSubOnly = input$youtube_network_video_subs)
+        }
       }
-    } else if (net_type == "actor") {
-      network <- vosonSML::Create(isolate(yt_rv$yt_data), "actor", verbose = TRUE)
-      if (add_text) {
-          if (utils::packageVersion("vosonSML") >= "0.29.10") {
-            # vosonSML changed param name
-            network <- vosonSML::AddText(network, isolate(yt_rv$yt_data), 
-                                         repliesFromText = input$youtube_network_replies_from_text)   
-          } else {
-            network <- vosonSML::AddText(network, isolate(yt_rv$yt_data), 
-                                         replies_from_text = input$youtube_network_replies_from_text) 
-          }
+      if (!is.null(network)) { 
+        yt_rv$yt_network <- network
+        yt_rv$yt_graphml <- vosonSML::Graph(network)
       }
-      if (input$youtube_network_video_data) { 
-        creds <- vosonSML::Authenticate("youtube", apiKey = youtube_api_key)
-        network <- vosonSML::AddVideoData(network, youtubeAuth = creds,
-                                          actorSubOnly = input$youtube_network_video_subs)
-      }
-    }
-    if (!is.null(network)) { 
-      yt_rv$yt_network <- network
-      yt_rv$yt_graphml <- vosonSML::Graph(network)
-    }
-  })
-    
-  incProgress(1, detail = "Finished")
-  })
+    }) # withConsoleRedirect
+      
+    incProgress(1, detail = "Finished")
+  }) # withProgress
   
   shinyjs::enable("youtube_create_button")
   
@@ -171,7 +167,7 @@ observeEvent(input$clear_youtube_console, {
   resetConsole("youtube_console")
 })
 
-#### output ----------------------------------------------------------------------------------------------------------- #
+#### output ---------------------------------------------------------------------------------------------------------- #
 
 # render youtube collection arguments
 output$youtube_arguments_output <- renderText({
@@ -221,9 +217,7 @@ observeEvent(input$reset_youtube_dt_columns, {
 output$youtube_data_cols_ui <- renderUI({
   data <- yt_rv$data_cols
   
-  if (is.null(data)) {
-    return(NULL)
-  }
+  if (is.null(data)) { return(NULL) }
   
   conditionalPanel(condition = 'input.expand_show_youtube_cols',
                    div(actionButton("select_all_youtube_dt_columns", "Select all"), 
@@ -232,11 +226,10 @@ output$youtube_data_cols_ui <- renderUI({
                    checkboxGroupInput("show_youtube_cols", label = NULL,
                                       choices = yt_rv$data_cols,
                                       selected = dt_yt_cols(),
-                                      inline = TRUE, width = '98%')
-  )
+                                      inline = TRUE, width = '98%'))
 })
 
-#### reactives -------------------------------------------------------------------------------------------------------- #
+#### reactives ------------------------------------------------------------------------------------------------------- #
 
 setYoutubeAPIKey <- reactive({
   youtube_api_key <<- trimws(input$youtube_api_key_input)
@@ -251,11 +244,8 @@ videoListAdd <- reactive({
   }
   
   video_id <- getYoutubeVideoId(input$youtube_video_id_input)
-  if (is.null(video_id)) {
-    return(NULL)
-  }
+  if (is.null(video_id)) { return(NULL) }
   
-  # video_id <- paste0("id:", video_id)
   # only add if not already in list
   if (!(trimws(video_id) %in% youtube_video_id_list)) {
     youtube_video_id_list <<- append(youtube_video_id_list, trimws(video_id))
@@ -278,23 +268,15 @@ videoListRemove <- reactive({
 datatableYoutubeData <- reactive({
   data <- yt_rv$yt_data
   
-  if (is.null(data)) {
-    return(NULL)
-  }
+  if (is.null(data)) { return(NULL) }
   
   if (!is.null(input$show_youtube_cols)) {
     if (length(input$show_youtube_cols) > 0) {
       data <- dplyr::select(yt_rv$yt_data, input$show_youtube_cols)
-    } else {
-      return(NULL)
-    }
-  } else {
-    return(NULL)
-  }
+    } else { return(NULL) }
+  } else { return(NULL) }
   
-  if (nrow(data) < 1) {
-    return(NULL)
-  }
+  if (nrow(data) < 1) { return(NULL) }
 
   col_classes <- sapply(data, class)
   for (i in seq(1, length(col_classes))) {
@@ -313,11 +295,12 @@ datatableYoutubeData <- reactive({
     DT::datatable(data, extensions = 'Buttons', filter = "top",
                   options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
-                                 buttons = c('copy', 'csv', 'excel', 'print')), class = 'cell-border stripe compact hover')
+                                 buttons = c('copy', 'csv', 'excel', 'print')),
+                  class = 'cell-border stripe compact hover')
   }
 })
 
-#### functions -------------------------------------------------------------------------------------------------------- #
+#### functions ------------------------------------------------------------------------------------------------------- #
 
 # format youtube collection arguments output
 youtubeArgumentsOutput <- function() {
@@ -347,4 +330,3 @@ youtubeArgumentsOutput <- function() {
   
   paste0(output, collapse = '\n')
 }
-

@@ -3,7 +3,7 @@
 #' Network text analysis and filters. Word frequency and cloud visualisations.
 #'
 
-#### values ----------------------------------------------------------------------------------------------------------- #
+#### values ---------------------------------------------------------------------------------------------------------- #
 
 ta_rv <- reactiveValues(
   plot_data_list = list(),          # list of base text corpus data sets
@@ -12,7 +12,7 @@ ta_rv <- reactiveValues(
   txt_attr_name = ""                # text attribute name in graphml
 )
 
-#### events ----------------------------------------------------------------------------------------------------------- #
+#### events ---------------------------------------------------------------------------------------------------------- #
 
 # ui has a disable issue
 disableTextAnalysisControls()
@@ -320,7 +320,7 @@ taPlotListData <- reactive({
   })
 })
 
-#### functions -------------------------------------------------------------------------------------------------------- #
+#### functions ------------------------------------------------------------------------------------------------------- #
 
 # return base text corpus data for category and attributes
 taTextCorpusData <- function(graph_attr, simple = FALSE) {

@@ -23,6 +23,11 @@ source("packages.R", local = TRUE)
 ifelse(isLocal, options(shiny.maxRequestSize = 128*1024^2), # 128 MB
                 options(shiny.maxRequestSize = 48*1024^2))  # 48 MB
 
+is2910 <- FALSE
+if (utils::packageVersion("vosonSML") >= "0.29.10") {
+  is2910 <- TRUE
+}
+
 # graph data
 voson_cat_prefix <- "^vosonCA_"
 voson_txt_prefix <- "^vosonTxt_"

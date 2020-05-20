@@ -7,19 +7,20 @@ dashboardPage(
   
   dashboardHeader(
     tags$li(class = "dropdown",
-            tags$style(".main-header {min-height: 35px; line-height: 35px}"),
-            tags$style(".main-header .logo {height: 35px; line-height: 35px}"),
-            tags$style(".sidebar-toggle {height: 35px; padding-top: 1px !important;}"),
-            tags$style(".navbar {min-height:35px !important}")),
+            tags$style(".main-header {min-height: 40px; line-height: 40px}"),
+            tags$style(".main-header .logo {height: 40px; line-height: 40px}"),
+            tags$style(".sidebar-toggle {height: 40px; padding-top: 1px !important;}"),
+            tags$style(".navbar {min-height:40px !important}")),
             
             title = span(icon("project-diagram"), "VOSON Dashboard", 
-                    span(app_version, class = "version")), 
+                    span(app_version, class = "version")),
+    
             titleWidth = 300
     ),
   
   # sidebar menu items
   dashboardSidebar(useShinyjs(), width = 180,
-                   tags$style(".left-side, .main-sidebar {padding-top: 35px}"),
+                   tags$style(".left-side, .main-sidebar {padding-top: 40px}"),
                    sidebarMenu(id = "sidebar_menu",
                                # menuItem("Home", tabName = "home_tab", icon = icon("university")),
                                h4("Analysis", style = "padding-left:20px; font-size:16px;"),

@@ -80,6 +80,16 @@ po_twit_results <- function() {
   list(title = title, content = content)
 }
 
+po_twit_assoc <- function() {
+  title <- "Concept Relations"
+  content <- paste0("<code>Limited</code> option includes only ties between most frequently ",
+                    "occurring hashtags and terms. If unchecked the network will include ties between most ",
+                    "frequently occurring hashtags and terms, hashtags and hashtags, and terms and terms."
+  )
+  
+  list(title = title, content = content)
+}
+
 po_yt_url <- function() {
   title <- "Youtube Video URL"
   content <- paste0("Enter a Youtube video URL in either long or short format.<br><br>",
