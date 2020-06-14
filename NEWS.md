@@ -1,3 +1,8 @@
+# VOSONDash 0.5.5
+
+## Bug Fixes:
+- Fixed an issue with custom classes assigned to dataframes causing an vctrs error when using dplyr functions. The classes are not required so they are simply removed.
+
 # VOSONDash 0.5.4
 
 ## Minor Changes:

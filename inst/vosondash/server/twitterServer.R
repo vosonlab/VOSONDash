@@ -399,10 +399,13 @@ datatableTwitterData <- reactive({
   
   if (is.null(data)) { return(NULL) }
   
+  cls_lst <- class(data)
+  class(data) <- cls_lst[!cls_lst %in% c("datasource", "twitter")]
+  
   if (!is.null(input$show_twitter_cols)) {
     if (length(input$show_twitter_cols) > 0) {
-      data <- dplyr::select(tw_rv$tw_data, input$show_twitter_cols)
-    
+      # data <- dplyr::select(tw_rv$tw_data, input$show_twitter_cols)
+      data <- dplyr::select(data, input$show_twitter_cols)
     } else { return(NULL) }
   } else { return(NULL) }
   

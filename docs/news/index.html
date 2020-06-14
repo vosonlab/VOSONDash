@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.5</span>
       </span>
     </div>
 
@@ -157,9 +157,21 @@
       <small>Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="vosondash-055" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.5">
+<a href="#vosondash-055" class="anchor"></a>VOSONDash 0.5.5<small> Unreleased </small>
+</h1>
+<div id="bug-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug Fixes:</h2>
+<ul>
+<li>Fixed an issue with custom classes assigned to dataframes causing an vctrs error when using dplyr functions. The classes are not required so they are simply removed.</li>
+</ul>
+</div>
+</div>
     <div id="vosondash-054" class="section level1">
 <h1 class="page-header" data-toc-text="0.5.4">
-<a href="#vosondash-054" class="anchor"></a>VOSONDash 0.5.4<small> Unreleased </small>
+<a href="#vosondash-054" class="anchor"></a>VOSONDash 0.5.4<small> 2020-05-20 </small>
 </h1>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
@@ -199,9 +211,9 @@
 <li>Moved <code>rtweet</code> from package imports to suggests.</li>
 </ul>
 </div>
-<div id="bug-fixes" class="section level2">
+<div id="bug-fixes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>Bug Fixes:</h2>
+<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes:</h2>
 <ul>
 <li>Fixed <code>reddit</code> URL formatting to support retrieving additional threads.</li>
 </ul>
@@ -269,9 +281,9 @@
 <li>Added a new <code>Collect</code> data download button named <code>Network</code> to allow the <code>nodes</code> and <code>edges</code> dataframes to be downloaded after <code>Create Network</code>. The data is downloaded as an R object in a <code>.rds</code> file that can be loaded into R using the <code><a href="https://rdrr.io/r/base/readRDS.html">readRDS()</a></code> function.</li>
 </ul>
 </div>
-<div id="bug-fixes-1" class="section level2">
+<div id="bug-fixes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes:</h2>
+<a href="#bug-fixes-2" class="anchor"></a>Bug Fixes:</h2>
 <ul>
 <li>Fixed the console scrolling in the <code>Collect</code> section of the interface to scroll to the bottom when there is new text output.</li>
 </ul>
@@ -314,9 +326,9 @@
 <h1 class="page-header" data-toc-text="0.4.2">
 <a href="#vosondash-042" class="anchor"></a>VOSONDash 0.4.2<small> Unreleased </small>
 </h1>
-<div id="bug-fixes-2" class="section level2">
+<div id="bug-fixes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-2" class="anchor"></a>Bug Fixes:</h2>
+<a href="#bug-fixes-3" class="anchor"></a>Bug Fixes:</h2>
 <ul>
 <li>Fixed problem with <code>visNetwork</code> graphs rendering slightly off the canvas.</li>
 </ul>
