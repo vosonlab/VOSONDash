@@ -270,9 +270,13 @@ datatableYoutubeData <- reactive({
   
   if (is.null(data)) { return(NULL) }
   
+  cls_lst <- class(data)
+  class(data) <- cls_lst[!cls_lst %in% c("datasource", "youtube")]
+  
   if (!is.null(input$show_youtube_cols)) {
     if (length(input$show_youtube_cols) > 0) {
-      data <- dplyr::select(yt_rv$yt_data, input$show_youtube_cols)
+      # data <- dplyr::select(yt_rv$yt_data, input$show_youtube_cols)
+      data <- dplyr::select(data, input$show_youtube_cols)
     } else { return(NULL) }
   } else { return(NULL) }
   

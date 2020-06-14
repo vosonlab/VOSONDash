@@ -225,9 +225,13 @@ datatableRedditData <- reactive({
   
   if (is.null(data)) { return(NULL) }
   
+  cls_lst <- class(data)
+  class(data) <- cls_lst[!cls_lst %in% c("datasource", "reddit")]
+  
   if (!is.null(input$show_reddit_cols)) {
     if (length(input$show_reddit_cols) > 0) {
-      data <- dplyr::select(red_rv$reddit_data, input$show_reddit_cols)
+      # data <- dplyr::select(red_rv$reddit_data, input$show_reddit_cols)
+      data <- dplyr::select(data, input$show_reddit_cols)
     } else { return(NULL) }
   } else { return(NULL) }
   
