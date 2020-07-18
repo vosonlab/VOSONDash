@@ -1,3 +1,12 @@
+# VOSONDash 0.5.6
+
+## Minor Changes:
+- Set `visNetwork` plot edge width if weight column present in edges.
+- Removed arrows from `visNetwork` plot if graph undirected.
+- Fixed a groups parameter warning from `dplyr::summarise`. 
+- Cleaned up package dependencies.
+- CRAN version update.
+
 # VOSONDash 0.5.5
 
 ## Bug Fixes:

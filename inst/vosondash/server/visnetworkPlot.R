@@ -112,9 +112,25 @@ visNetworkData <- reactive({
     verts$title <- row.names(verts)
   }
   
-  edges <- edges %>% group_by(to, from) %>%
-    summarise(width = n()) %>% 
-    ungroup()
+  if (!"width" %in% names(edges)) {
+    if ("weight" %in% names(edges)) {
+      edges$width <- edges$weight
+    } else {
+      medge <- isolate(input$graph_multi_edge_check)
+      if (medge == FALSE) {
+        edges <- edges %>%
+          group_by(to, from) %>%
+          summarise(width = n(), .groups = "drop") %>% 
+          ungroup()
+      }
+    }
+  }
+  
+  # edges <- edges %>%
+  #   group_by(to, from) %>%
+  #   summarise(width = n()) %>% 
+  #   ungroup()
+  # .groups = "drop"
   
   category_selection <- NULL
   if (!is.null(gcs) && (!(gcs %in% c("All", "")))) {
@@ -136,12 +152,20 @@ visNetworkData <- reactive({
   }
   vis_net <- do.call(visIgraphLayout, l_params)
   
-  vis_net %>% visOptions(collapse = TRUE, 
-                        highlightNearest = list(enabled = TRUE, hover = TRUE),
-                        selectedBy = category_selection,
-                        nodesIdSelection = TRUE,
-                        height = plot_height) %>%
+  vis_net <- vis_net %>%
+    visOptions(collapse = TRUE, 
+               highlightNearest = list(enabled = TRUE, hover = TRUE),
+               selectedBy = category_selection,
+               nodesIdSelection = TRUE,
+               height = plot_height) %>%
     visInteraction(multiselect = TRUE) %>%
-    visEvents(click = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }") %>%
-    visEdges(arrows = "to", color = list(color = "#b0b0b0"))
+    visEvents(click = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }")
+  
+  if (ng_rv$graph_dir) { 
+    vis_net <- vis_net %>% visEdges(arrows = "to", color = list(color = "#b0b0b0"))
+  } else {
+    vis_net <- vis_net %>% visEdges(color = list(color = "#b0b0b0"))
+  }
+  
+  vis_net
 })

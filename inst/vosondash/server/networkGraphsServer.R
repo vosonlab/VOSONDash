@@ -14,6 +14,8 @@ ng_rv <- reactiveValues(
   graph_name = "",
   graph_type = "",
   
+  graph_dir = TRUE, # directed
+  
   graph_cats = c(),        # list of categories in the data # graph_CA
   graph_cat_selected = "", # selected category # graph_CA_selected
   
@@ -108,7 +110,10 @@ observeEvent(ng_rv$graph_data, {
       # if no labels set label to vertex name
       V(ng_rv$graph_data)$label <- ifelse(nchar(V(ng_rv$graph_data)$name) > 0,
                                                V(ng_rv$graph_data)$name, "-")
-    }    
+    }
+    
+    # set directed
+    isolate({ ng_rv$graph_dir <- igraph::is_directed(ng_rv$graph_data) })
     
     # enable network metrics tab
     removeCssClass(selector = "a[data-value = 'network_metrics_tab']", class = "inactive_menu_link")
