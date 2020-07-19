@@ -19,7 +19,7 @@ install.packages("VOSONDash")
 
 Install the latest release via GitHub (v0.5.6):
 ```R
-install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.5/VOSONDash-0.5.6.tar.gz", 
+install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.6/VOSONDash-0.5.6.tar.gz", 
   repo = NULL, type = "source")
 ```
 
