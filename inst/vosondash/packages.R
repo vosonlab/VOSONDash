@@ -1,13 +1,13 @@
 # required packages
-requiredPackages <- c("htmlwidgets",
+requiredPackages <- c("dplyr",
+                      "DT",
+                      "htmlwidgets",
+                      "igraph",
+                      "RColorBrewer",
                       "shinydashboard",
                       "shinyjs",
-                      "DT",
-                      "igraph",
-                      "visNetwork",
                       "tm",
-                      "dplyr",
-                      "RColorBrewer",
+                      "visNetwork",
                       "wordcloud")
 
 # if app is local print package information
