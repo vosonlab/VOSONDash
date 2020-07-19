@@ -12,7 +12,7 @@
 
 `VOSONDash` is an R package and must be installed before the app can be run.
 
-Install the latest release via CRAN (v0.5.6):
+Install the latest release on CRAN (v0.5.4):
 ```R
 install.packages("VOSONDash")
 ```
