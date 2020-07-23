@@ -80,7 +80,8 @@ tabItem(tabName = "network_graphs_tab",
                                 conditionalPanel(condition = 'input.expand_categorical_filter_check',
                                                  fluidRow(
                                                    column(width = 6,
-                                                          disabled(selectInput("graph_cat_select", div("Category", style = "font-weight: normal;"), choices = c("All"), multiple = FALSE)) # selectize = TRUE graph_catAttr_select
+                                                          disabled(selectInput("graph_cat_select", div("Category", style = "font-weight: normal;"), choices = c("All"), multiple = FALSE)), # selectize = TRUE graph_catAttr_select
+                                                          checkboxInput("graph_legend_check", "Legend", TRUE)
                                                    ),
                                                    column(width = 6,
                                                           disabled(selectInput("graph_sub_cats_select", div("View", style = "font-weight: normal;"), choices = c("All"), multiple = TRUE, selected = "All", selectize = FALSE, size = 3))
@@ -115,6 +116,7 @@ tabItem(tabName = "network_graphs_tab",
                    uiOutput("vis_plot_ui"),
                    uiOutput("plot_height_ui"),
                    uiOutput("graph_summary_ui"),
+                   uiOutput("graph_legend_ui"),
                    
                    # graph info and download buttons
                    sidebarPanel(id = "graph_info_well", width = 12, class = "custom_well_for_buttons",

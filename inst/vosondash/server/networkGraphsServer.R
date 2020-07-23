@@ -330,6 +330,14 @@ output$graph_summary_ui <- renderUI({
     style = "position:relative; z-index:0;"))
 })
 
+output$graph_legend_ui <- renderUI({
+  tagList(div(div(
+    HTML(graphLegendOutput()),
+    style = paste0("position:absolute; z-index:1; top:", 85, # (as.numeric(ng_rv$plot_height)-5), 
+                   "px; left:18px; font-size:0.97em;")),
+    style = "position:relative; z-index:0;"))
+})
+
 output$vis_plot_ui <- renderUI({
   tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
          selected = input$selected_graph_tab, id = "selected_graph_tab",
@@ -343,9 +351,9 @@ output$component_summary_ui <- renderText({
   graphComponentSummary()
 })
 
-output$graph_summary_output <- renderText({
-  graphSummaryOutput()
-})
+# output$graph_summary_output <- renderText({
+#   graphSummaryOutput()
+# })
 
 output$graph_name <- renderText({
   output <- ifelse(nchar(ng_rv$graph_name), ng_rv$graph_name, "Not set")
@@ -733,6 +741,55 @@ graphSummaryOutput <- reactive({
   }
   
   paste0(output, collapse = '<br>') # \n
+})
+
+graphLegendOutput <- reactive({
+  l <- input$graph_legend_check
+  if (l == FALSE) {
+    return("")
+  }
+  g <- graphFilters()
+  
+  output <- c()
+  
+  if (!is.null(g)) {
+    # output <- append(output, paste0("Nodes: ", vcount(g)))
+
+    isolate({
+      categorical_attributes <- ng_rv$graph_cats
+      selected_categorical_attribute <- input$graph_cat_select
+    })
+    
+    output <- append(output, paste0(""))
+    
+    if (length(categorical_attributes) > 0) {
+      if (nchar(selected_categorical_attribute) && selected_categorical_attribute != "All") {
+        categories <- categorical_attributes[[selected_categorical_attribute]]
+        df <- data.frame('cat' = categories)
+        if (nrow(df) > 0) {
+          if (!("color" %in% vertex_attr_names(g) & input$use_vertex_colors_check == TRUE)) {
+            output <- append(output, paste0("<table><tbody><tr><td colspan='3'>",
+                                            selected_categorical_attribute, "</td></tr>"))
+            df$color <- gbl_plot_palette()[1:nrow(df)]
+            for (row in 1:nrow(df)) {
+              output <- append(output,
+                paste0("<tr><td style='vertical-align:middle'><span style='height:12px; width:12px;",
+                  "border-radius:50%; display: inline-block;",
+                  "background-color:", df[row, 2], ";'></span></td>",
+                  "<td>&nbsp;</td><td style='vertical-align:middle'>", df[row, 1], "</td></tr>"))
+            }
+            output <- append(output, "</tbody></table>")
+          }
+        }
+      }
+    }
+    
+  } else {
+    output <- append(output, paste0(""))
+  }
+  
+  # paste0(output, collapse = '<br>') # \n
+  output
 })
 
 graphComponentSummary <- reactive({

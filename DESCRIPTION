@@ -1,5 +1,5 @@
 Package: VOSONDash
-Version: 0.5.6
+Version: 0.5.7
 Title: User Interface for Collecting and Analysing Social Networks
 Description: A 'Shiny' application for the interactive visualisation and
     analysis of networks that also provides a web interface for collecting
@@ -26,6 +26,7 @@ Suggests:
     rtweet (>= 0.6.8),
     shinydashboard,
     shinyjs,
+    SnowballC,
     visNetwork
 Depends: R (>= 3.2.0)
 Encoding: UTF-8
