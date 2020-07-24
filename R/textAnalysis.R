@@ -176,11 +176,14 @@ wordSentChart <- function(corp, pcolors = NULL) {
 #' @param min_freq Numeric. Minimum word frequency to include a word in the word cloud. Default is \code{1}.
 #' @param max_words Numeric. Maximum number of words to render in the word cloud. Default is \code{50}.
 #' @param pcolors List. Colors to assign categorical variable in the plot. Default is \code{NULL}.
+#' @param random_color Logical. Assign random colors to words. Default is \code{FALSE}.
+#' @param random_order Logical. Random word order. Default is \code{FALSE}.
 #' 
 #' @return A wordcloud plot.
 #' 
 #' @export
-wordCloudPlot <- function(corp, seed = NULL, min_freq = 1, max_words = 50, pcolors = NULL) {
+wordCloudPlot <- function(corp, seed = NULL, min_freq = 1, max_words = 50, pcolors = NULL,
+                          random_color = FALSE, random_order = FALSE) {
   
   # returns empty plot with message if no data to plot
   if (is.null(corp) || length(corp) < 1) {
@@ -194,10 +197,25 @@ wordCloudPlot <- function(corp, seed = NULL, min_freq = 1, max_words = 50, pcolo
   saved_par <- par(no.readonly = TRUE)
   on.exit(par(saved_par))
   
+  # par(mar = rep(0, 4))
+  # wordcloud::wordcloud(corp,
+  #                      min.freq = min_freq,
+  #                      max.words = max_words,
+  #                      random.order = random_order,
+  #                      colors = pcolors)
+  
+  plot_parameters <- list(words = corp, 
+                          min.freq = min_freq,
+                          max.words = max_words,
+                          random.order = random_order)
+
+  if (random_color) {
+    plot_parameters[['colors']] <- RColorBrewer::brewer.pal(8, "Dark2")
+    plot_parameters['random.color'] <- TRUE
+  } else {
+    plot_parameters[['colors']] <- pcolors
+  }
+
   par(mar = rep(0, 4))
-  wordcloud::wordcloud(corp, 
-                       min.freq = min_freq, 
-                       max.words = max_words, 
-                       random.order = FALSE, 
-                       colors = pcolors)
+  do.call(wordcloud::wordcloud, plot_parameters)
 }

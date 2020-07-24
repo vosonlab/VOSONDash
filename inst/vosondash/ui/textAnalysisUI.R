@@ -45,7 +45,10 @@ tabItem(tabName="text_analysis_tab",
                                             fluidRow(
                                               div(sidebarPanel(width = 12, class = "custom_well_for_controls",
                                                                sliderInput("ta_wc_min_word_freq", "Minimum Frequency:", min = 1, max = 50, value = 1),
-                                                               sliderInput("ta_wc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 50)
+                                                               sliderInput("ta_wc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 50),
+                                                               div(actionButton("wc_reseed_button", label = icon("refresh"), style = "padding:2px 8px;"),
+                                                                   div(id = "wc_seed", "", class = "div_inline")),
+                                                               checkboxInput("wc_random_col", "Random Colors", FALSE)
                                               ), style = "margin-right:10px;"))
                                      )
                                    )

@@ -9,7 +9,8 @@ ta_rv <- reactiveValues(
   plot_data_list = list(),          # list of base text corpus data sets
   has_text = FALSE,                 # does graphml have voson text data
   txt_attr_type = "",               # is text atttribute a vertex or edge
-  txt_attr_name = ""                # text attribute name in graphml
+  txt_attr_name = "",               # text attribute name in graphml
+  wc_seed = 100
 )
 
 #### events ---------------------------------------------------------------------------------------------------------- #
@@ -51,7 +52,8 @@ observeEvent({ input$sidebar_menu
 
 # replot when word cloud sliders change
 observeEvent({ input$ta_wc_min_word_freq
-               input$ta_wc_max_word_count }, {
+               input$ta_wc_max_word_count
+               input$wc_random_col }, {
   
   plotWordClouds()           
 }, ignoreInit = TRUE)
@@ -78,6 +80,16 @@ observeEvent(input$ta_user_stopwords_check, {
 
 observeEvent(input$ta_user_stopwords_input, {
   updateCheckboxInput(session, "ta_user_stopwords_check", value = FALSE)
+})
+
+observeEvent(input$wc_reseed_button, {
+  ta_rv$wc_seed <- sample(gbl_rng_range[1]:gbl_rng_range[2], 1)
+  
+  plotWordClouds()
+}, ignoreInit = TRUE)
+
+observeEvent(ta_rv$wc_seed, {
+  html("wc_seed", ta_rv$wc_seed)
 })
 
 #### output ----------------------------------------------------------------------------------------------------------- #
@@ -122,12 +134,15 @@ plotSentiments <- reactive({
 plotWordClouds <- reactive({
   min_freq <- input$ta_wc_min_word_freq
   max_words <- input$ta_wc_max_word_count
+  wc_seed <- ta_rv$wc_seed
+  wc_random_col <- input$wc_random_col
   
   # create placeholders and plot word clouds from list of base text corpus data
   withProgress(message = "Processing word clouds...", {      
     callModule(taPlotPlaceholders, "word_clouds", ta_rv$plot_data_list)
     callModule(taPlotList, "word_clouds", ta_rv$plot_data_list, isolate(ng_rv$graph_seed), 
-               isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc", col_palette = gbl_plot_palette())
+               isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc",
+               col_palette = gbl_plot_palette(), wc_seed, wc_random_col)
   })
 })
 

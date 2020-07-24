@@ -85,11 +85,14 @@ taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
 #' @param max_words maximum number of words to render in word clouds
 #' @param top_count number of words to render in word frequency charts
 #' @param type code for type of plots "wf" word frequencies or "wc" word clouds
+#' @param col_palette color palette for plots
+#' @param wc_seed wordcloud plot seed value
+#' @param wc_random_col wordcloud random colors
 #' 
 #' @return None
 #'
 taPlotList <- function(input, output, session, data, seed, categories, min_freq, max_words, top_count, type, 
-                       col_palette) {
+                       col_palette, wc_seed = 100, wc_random_col = FALSE) {
   ns <- session$ns
   
   wordFreqPlotList <- reactive({
@@ -141,7 +144,8 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
                                  unlist(data_item$graph_attr$sub_cats), 
                                  "#000000", col_palette)
             
-            VOSONDash::wordCloudPlot(corp = data_item$corp, seed, min_freq, max_words, pcolors)
+            VOSONDash::wordCloudPlot(corp = data_item$corp, wc_seed, min_freq, max_words, pcolors,
+                                     random_color = wc_random_col)
           })
         })
       }
