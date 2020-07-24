@@ -374,11 +374,11 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
       words <- words[-toRemove]
     }
     
-    if (VOSONDash::isMac()) {
-      words <- iconv(words, to = 'utf-8-mac')
-    } else {
-      words <- iconv(words, to = 'utf-8')
-    }
+    # if (VOSONDash::isMac()) {
+    #   words <- iconv(words, to = 'utf-8-mac')
+    # } else {
+    #   words <- iconv(words, to = 'utf-8')
+    # }
     
     if (simple) {
       return(list(graph_attr, words))

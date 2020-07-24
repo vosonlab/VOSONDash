@@ -744,17 +744,11 @@ graphSummaryOutput <- reactive({
 })
 
 graphLegendOutput <- reactive({
-  l <- input$graph_legend_check
-  if (l == FALSE) {
-    return("")
-  }
+  if (input$graph_legend_check == FALSE) { return("") }
   g <- graphFilters()
-  
   output <- c()
   
   if (!is.null(g)) {
-    # output <- append(output, paste0("Nodes: ", vcount(g)))
-
     isolate({
       categorical_attributes <- ng_rv$graph_cats
       selected_categorical_attribute <- input$graph_cat_select
@@ -773,8 +767,8 @@ graphLegendOutput <- reactive({
             df$color <- gbl_plot_palette()[1:nrow(df)]
             for (row in 1:nrow(df)) {
               output <- append(output,
-                paste0("<tr><td style='vertical-align:middle'><span style='height:12px; width:12px;",
-                  "border-radius:50%; display: inline-block;",
+                paste0("<tr><td style='vertical-align:middle'>",
+                  "<span style='height:12px; width:12px; border-radius:50%; display:inline-block;",
                   "background-color:", df[row, 2], ";'></span></td>",
                   "<td>&nbsp;</td><td style='vertical-align:middle'>", df[row, 1], "</td></tr>"))
             }
@@ -788,7 +782,6 @@ graphLegendOutput <- reactive({
     output <- append(output, paste0(""))
   }
   
-  # paste0(output, collapse = '<br>') # \n
   output
 })
 
