@@ -40,7 +40,12 @@ observeEvent({ input$sidebar_menu
                input$ta_stopwords_check
                input$ta_twitter_hashtags_check
                input$ta_twitter_usernames_check
-               input$ta_stem_check }, {
+               input$ta_stem_check
+               input$ta_rem_url_check
+               input$ta_rem_num_check
+               input$ta_html_decode_check
+               input$ta_iconv_check
+               input$ta_rem_punc_check }, {
 
   if (input$sidebar_menu == "text_analysis_tab") {
     taPlotListData()
@@ -389,19 +394,31 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
       words <- words[-toRemove]
     }
     
-    # if (VOSONDash::isMac()) {
-    #   words <- iconv(words, to = 'utf-8-mac')
-    # } else {
-    #   words <- iconv(words, to = 'utf-8')
-    # }
+    # corp <- tm_map(corp, function(x) iconv(enc2utf8(x), sub = "byte"))
+    if (input$ta_iconv_check == TRUE) {
+      if (VOSONDash::isMac()) {
+        words <- iconv(words, to = 'utf-8-mac')
+      } else {
+        words <- iconv(words, to = 'utf-8')
+      }
+    }
     
     if (simple) {
       return(list(graph_attr, words))
     }
     
     corp <- VCorpus(VectorSource(words))
+    
+    if (input$ta_html_decode_check == TRUE) {
+      corp <- tm_map(corp, content_transformer(textutils::HTMLdecode))  
+    }
+    
     corp <- tm_map(corp, content_transformer(tolower))
-    corp <- tm_map(corp, content_transformer(remHTTP))
+    
+    if (input$ta_rem_url_check == TRUE) {
+      # corp <- tm_map(corp, content_transformer(remHTTP))
+      corp <- tm_map(corp, content_transformer(remURL))
+    }
     
     if (input$ta_twitter_hashtags_check == TRUE) {
       corp <- tm_map(corp, content_transformer(removeHashTags))
@@ -410,17 +427,13 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
       corp <- tm_map(corp, content_transformer(removeTwitterHandles))
     }
 
-    if (!is.null(igraph::get.graph.attribute(g, "type"))) {
-      if (igraph::get.graph.attribute(g, "type") == "twitter") {
-        corp <- tm_map(corp, content_transformer(repHTMLApos))
-        corp <- tm_map(corp, content_transformer(repHTMLQuote))
-        corp <- tm_map(corp, content_transformer(repHTMLAmper))
-        corp <- tm_map(corp, content_transformer(remPartAmpGt))
-      }      
+    if (input$ta_rem_num_check == TRUE) {
+      corp <- tm_map(corp, removeNumbers)
     }
-
-    corp <- tm_map(corp, removeNumbers)
-    corp <- tm_map(corp, removePunctuation)
+    
+    if (input$ta_rem_punc_check == TRUE) {
+      corp <- tm_map(corp, removePunctuation)
+    }
     
     if (input$ta_stopwords_check == TRUE) {
       corp <- tm_map(corp, removeWords, stopwords("english"), lazy = TRUE)
@@ -446,14 +459,8 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
   }
 }
 
-remHTTP <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https tokens
-# remHTTP <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url
+# url_regex <- "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+remURL <- function(x) gsub("http[s]?://[^[:space:]]+", "", x)
 
 removeHashTags <- function(x) gsub("#\\S+", "", x)
 removeTwitterHandles <- function(x) gsub("@\\S+", "", x)
-
-# replace html encoding with escaped characters in twitter text
-repHTMLApos <- function(x) gsub("&apos;", "\'", x)    # apostrophe
-repHTMLQuote <- function(x) gsub("&quot;", "\"", x)   # quote
-repHTMLAmper <- function(x) gsub("&amp;", "&", x)     # ampersand
-remPartAmpGt <- function(x) gsub("amp;|gt;", "", x)   # 
