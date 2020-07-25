@@ -58,7 +58,8 @@ observeEvent({ input$sidebar_menu
 # replot when word cloud sliders change
 observeEvent({ input$ta_wc_min_word_freq
                input$ta_wc_max_word_count
-               input$wc_random_col }, {
+               input$wc_random_col
+               input$ta_wc_vert_prop }, {
   
   plotWordClouds()           
 }, ignoreInit = TRUE)
@@ -140,14 +141,17 @@ plotWordClouds <- reactive({
   min_freq <- input$ta_wc_min_word_freq
   max_words <- input$ta_wc_max_word_count
   wc_seed <- ta_rv$wc_seed
+  wc_random_order <- FALSE
   wc_random_col <- input$wc_random_col
-  
+  wc_vert_prop <- (input$ta_wc_vert_prop/100)
+
   # create placeholders and plot word clouds from list of base text corpus data
   withProgress(message = "Processing word clouds...", {      
     callModule(taPlotPlaceholders, "word_clouds", ta_rv$plot_data_list)
     callModule(taPlotList, "word_clouds", ta_rv$plot_data_list, isolate(ng_rv$graph_seed), 
                isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc",
-               col_palette = gbl_plot_palette(), wc_seed, wc_random_col)
+               col_palette = gbl_plot_palette(),
+               wc_seed, wc_random_order, wc_random_col, wc_vert_prop)
   })
 })
 
