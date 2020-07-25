@@ -4,7 +4,14 @@
 \alias{wordCloudPlot}
 \title{Create a Word Cloud plot}
 \usage{
-wordCloudPlot(corp, seed = NULL, min_freq = 1, max_words = 50, pcolors = NULL)
+wordCloudPlot(
+  corp,
+  seed = NULL,
+  min_freq = 1,
+  max_words = 50,
+  pcolors = NULL,
+  ...
+)
 }
 \arguments{
 \item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
@@ -15,7 +22,16 @@ wordCloudPlot(corp, seed = NULL, min_freq = 1, max_words = 50, pcolors = NULL)
 
 \item{max_words}{Numeric. Maximum number of words to render in the word cloud. Default is \code{50}.}
 
-\item{pcolors}{List. Colors to assign categorical variable in the plot. Default is \code{NULL}.}
+\item{pcolors}{List. Colors to assign categorical variable in the plot or palette to use if \code{random.color}.
+Default is \code{NULL}.}
+
+\item{...}{
+  Arguments passed on to \code{\link[wordcloud:wordcloud]{wordcloud::wordcloud}}
+  \describe{
+    \item{\code{random.order}}{plot words in random order. If false, they will be plotted in decreasing frequency}
+    \item{\code{random.color}}{choose colors randomly from the colors. If false, the color is chosen based on the frequency}
+    \item{\code{rot.per}}{proportion words with 90 degree rotation}
+  }}
 }
 \value{
 A wordcloud plot.

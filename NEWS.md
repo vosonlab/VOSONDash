@@ -1,3 +1,12 @@
+# VOSONDash 0.5.7
+
+## Minor Changes:
+- Added a legend to network plots with vertex categorical attributes.
+- Removed automatic `iconv` conversion of text for text analysis.
+- Made removal URL's, numbers and punctuation optional for text analysis.
+- Added some additional `wordcloud` controls.
+- CRAN version update.
+
 # VOSONDash 0.5.6
 
 ## Minor Changes:
@@ -5,7 +14,6 @@
 - Removed arrows from `visNetwork` plot if graph undirected.
 - Fixed a groups parameter warning from `dplyr::summarise`. 
 - Cleaned up package dependencies.
-- CRAN version update.
 
 # VOSONDash 0.5.5
 

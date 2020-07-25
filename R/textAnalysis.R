@@ -175,8 +175,9 @@ wordSentChart <- function(corp, pcolors = NULL) {
 #' @param seed Numeric. Seed value can be supplied to reproduce a word cloud layout.
 #' @param min_freq Numeric. Minimum word frequency to include a word in the word cloud. Default is \code{1}.
 #' @param max_words Numeric. Maximum number of words to render in the word cloud. Default is \code{50}.
-#' @param pcolors List. Colors to assign categorical variable in the plot. Default is \code{NULL}.
-#' @inheritDotParams wordcloud -random.order -random.color -rot.per
+#' @param pcolors List. Colors to assign categorical variable in the plot or palette to use if \code{random.color}.
+#' Default is \code{NULL}.
+#' @inheritDotParams wordcloud::wordcloud random.order random.color rot.per
 #' 
 #' @return A wordcloud plot.
 #' 

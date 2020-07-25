@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.7</span>
       </span>
     </div>
 
@@ -163,7 +163,14 @@
     <p>This function creates a wordcloud plot of words in a text corpus.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wordCloudPlot</span>(<span class='no'>corp</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>min_freq</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>max_words</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>wordCloudPlot</span>(
+  <span class='no'>corp</span>,
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>min_freq</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>max_words</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,7 +193,17 @@
     </tr>
     <tr>
       <th>pcolors</th>
-      <td><p>List. Colors to assign categorical variable in the plot. Default is <code>NULL</code>.</p></td>
+      <td><p>List. Colors to assign categorical variable in the plot or palette to use if <code>random.color</code>.
+Default is <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='https://rdrr.io/pkg/wordcloud/man/wordcloud.html'>wordcloud::wordcloud</a></code></p><dl'>
+    <dt><code>random.order</code></dt><dd><p>plot words in random order. If false, they will be plotted in decreasing frequency</p></dd>
+    <dt><code>random.color</code></dt><dd><p>choose colors randomly from the colors. If false, the color is chosen based on the frequency</p></dd>
+    <dt><code>rot.per</code></dt><dd><p>proportion words with 90 degree rotation</p></dd>
+  
+</dl></td>
     </tr>
     </table>
 
