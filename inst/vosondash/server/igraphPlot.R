@@ -127,7 +127,17 @@ igraphData <- reactive({
                                              "Closeness" = igraph_vsize(V(g)$Closeness),
                                              "None" = (base_vertex_size + 0.1) * node_size_multiplier)
   
-  plot_parameters['vertex.label.family'] <- "Arial"
+  # if (.Platform$OS.type == "windows") { 
+  #   plot_parameters['vertex.label.family'] <- "Arial" # Arial Unicode MS # Arial
+  # } else {
+  #   plot_parameters['vertex.label.family'] <- "sans" # Arial Unicode MS # Arial  
+  # }
+  if (.Platform$OS.type != "windows" & 
+      ("Arial Unicode MS" %in% unique(systemfonts::system_fonts()$family))) {
+    plot_parameters['vertex.label.family'] <- "Arial Unicode MS"
+  } else {
+    plot_parameters['vertex.label.family'] <- "Arial"
+  }
   
   # --- start labels
   if (!node_index_check) {
