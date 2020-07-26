@@ -4,10 +4,10 @@
 \alias{wordSentValenceChart}
 \title{Create an NRC Positive and Negative Sentiment valence chart}
 \usage{
-wordSentValenceChart(corp)
+wordSentValenceChart(data)
 }
 \arguments{
-\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
+\item{data}{nrc emotions table.}
 }
 \value{
 A barchart plot.

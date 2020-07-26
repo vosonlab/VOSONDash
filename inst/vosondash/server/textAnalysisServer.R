@@ -31,7 +31,9 @@ observeEvent(ta_rv$has_text, {
 observeEvent(input$selected_text_analysis_tab, {
   plotWordFrequencies()
   plotWordClouds()
-  plotSentiments()
+  if (input$selected_text_analysis_tab == "Sentiment") {
+    plotSentiments()  
+  }
 }, ignoreInit = TRUE)
 
 # enter text analysis section or controls toggled
@@ -52,7 +54,7 @@ observeEvent({ input$sidebar_menu
     taPlotListData()
     plotWordFrequencies()
     plotWordClouds()
-    plotSentiments()
+    # plotSentiments()
   }
 }, ignoreInit = TRUE)
 
@@ -81,7 +83,7 @@ observeEvent(input$ta_user_stopwords_check, {
     taPlotListData()
     plotWordFrequencies()
     plotWordClouds()
-    plotSentiments()
+    # plotSentiments()
   }
 }, ignoreInit = TRUE)
 
@@ -119,21 +121,26 @@ output$comparison_cloud_plot <- renderPlot({
 plotWordFrequencies <- reactive({
   top_count <- input$ta_wf_top_count
   min_freq <- input$ta_wf_min_word_freq
+  word_len <- input$ta_word_length_slider
   
   # create placeholders and plot word frequency charts from list of base text corpus data
   withProgress(message = "Processing word frequencies...", {
     callModule(taPlotPlaceholders, "word_freqs", ta_rv$plot_data_list)
     callModule(taPlotList, "word_freqs", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
-               min_freq, NULL, top_count, "wf", col_palette = gbl_plot_palette())
+               min_freq, NULL, top_count, "wf", col_palette = gbl_plot_palette(),
+               word_len)
   })
 })
 
 plotSentiments <- reactive({
+  word_len <- input$ta_word_length_slider
+  
   # create placeholders and plot charts from list of base text corpus data
   withProgress(message = "Processing sentiment...", {
     callModule(taPlotPlaceholders, "word_sentiments", ta_rv$plot_data_list, sub_plots = 2)
     callModule(taPlotList, "word_sentiments", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
-               NULL, NULL, NULL, "ws", col_palette = gbl_plot_palette())
+               NULL, NULL, NULL, "ws", col_palette = gbl_plot_palette(),
+               word_len)
   })
 })
 
@@ -145,6 +152,7 @@ plotWordClouds <- reactive({
   wc_random_order <- FALSE
   wc_random_col <- input$wc_random_col
   wc_vert_prop <- (input$ta_wc_vert_prop/100)
+  word_len <- input$ta_word_length_slider
 
   # create placeholders and plot word clouds from list of base text corpus data
   withProgress(message = "Processing word clouds...", {      
@@ -152,6 +160,7 @@ plotWordClouds <- reactive({
     callModule(taPlotList, "word_clouds", ta_rv$plot_data_list, isolate(ng_rv$graph_seed), 
                isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc",
                col_palette = gbl_plot_palette(),
+               word_len,
                wc_seed, wc_random_order, wc_random_col, wc_vert_prop)
   })
 })
@@ -163,6 +172,7 @@ comparisonCloudPlotData <- reactive({
   # cats <- isolate(ng_rv$graph_cats)
   
   max_words <- input$ta_cc_max_word_count
+  word_len <- input$ta_word_length_slider
   
   if (is.null(plot_data_list)) { return(VOSONDash::emptyPlotMessage("No text data.")) }
   
@@ -181,10 +191,10 @@ comparisonCloudPlotData <- reactive({
       df <- rbind(df, data.frame(catval = tmp, text = paste(df_t$text, collapse = " ", stringsAsFactors = FALSE)))
     }
     
-    corp <- VCorpus(VectorSource(df$text))
-    corp <- tm_map(corp, stripWhitespace)   # do not need to do any more text processing, already done in base corpus
-    tdm <- TermDocumentMatrix(corp, control = list(wordLengths = c(0, Inf)))
-    # tdm <- removeSparseTerms(tdm, 0.98)
+    corp <- tm::VCorpus(tm::VectorSource(df$text))
+    corp <- tm::tm_map(corp, tm::stripWhitespace)   # do not need to do any more text processing, already done in base corpus
+    tdm <- tm::TermDocumentMatrix(corp, control = list(wordLengths = word_len)) # wordLengths = c(0, Inf)
+    tdm <- removeSparseTerms(tdm, 0.99)
     tdm <- as.matrix(tdm)
     colnames(tdm) <- df$catval
     
@@ -260,7 +270,12 @@ textAnalysisDetailsOutput <- reactive({
           #dtmx <- DocumentTermMatrix(plot_data_list[[i]]$corp)
           #freq_terms <- colSums(as.matrix(dtmx))
           #output <- append(output, paste("Words:", sum(freq_terms)))
-          output <- append(output, paste("Words:", sum(plot_data_list[[i]]$corp)))
+          isolate({
+          wf <- wordFreqFromCorpus(plot_data_list[[i]]$corp,
+                                   word_len = input$ta_word_length_slider)
+          })
+          
+          output <- append(output, paste("Words:", sum(wf$freq)))
           output <- append(output, "")
         }
       }
@@ -348,8 +363,69 @@ taPlotListData <- reactive({
 
 #### functions ------------------------------------------------------------------------------------------------------- #
 
+taTextCorpusData <- function(graph_attr) {
+  g <- graphFilters()
+  
+  if (is.null(g)) { return(NULL) }
+  
+  plot_cat <- plot_sub_cats <- ""
+  
+  if (missing(graph_attr)) {
+    graph_attr <- NULL
+  } else {
+    plot_cat <- graph_attr[1]
+    plot_sub_cats <- graph_attr[[2]]
+  }
+  
+  if (plot_cat != "") { g <- VOSONDash::applyCategoricalFilters(g, plot_cat, plot_sub_cats) }
+  
+  # voson text attributes
+  attr_v <- igraph::vertex_attr_names(g)
+  attr_v <- attr_v[grep(voson_txt_prefix, attr_v, perl = TRUE)]
+  attr_e <- igraph::edge_attr_names(g)
+  attr_e <- attr_e[grep(voson_txt_prefix, attr_e, perl = TRUE)]
+  
+  ta_rv$has_text <- FALSE
+  if (length(attr_v)) {
+    attr <- c(attr_v[1], 'vertex')
+    ta_rv$has_text <- TRUE
+  } else if (length(attr_e)) {
+    i <- attr_e[1]
+    attr <- c(attr_e[1], 'edge')
+    ta_rv$has_text <- TRUE
+  }
+  
+  if (ta_rv$has_text) {
+    ta_rv$txt_attr_type <- attr[2]
+    ta_rv$txt_attr_name <- gsub(voson_txt_prefix, "", attr[1]) # "vosonTxt_"
+    
+    sw <- usw <- NULL
+    if (input$ta_stopwords_check) { sw <- "SMART" }
+    if (input$ta_user_stopwords_check) { usw <- input$ta_user_stopwords_input }
+    
+    corp <- VOSONDash::corpusFromGraph(g,
+      txt_attr = attr[1],
+      type = ta_rv$txt_attr_type,
+      iconv = input$ta_iconv_check,
+      html_decode = input$ta_html_decode_check,
+      rm_url = input$ta_rem_url_check,
+      rm_num = TRUE,
+      rm_punct = TRUE,
+      rm_twit_hashtags = input$ta_twitter_hashtags_check,
+      rm_twit_users = input$ta_twitter_usernames_check,
+      sw_kind = sw,
+      rm_words = usw,
+      stem = input$ta_stem_check)
+
+    return(list(graph_attr = list(cat = graph_attr[1], sub_cats = graph_attr[2]), 
+                corp = corp))
+  } else {
+    return(NULL)
+  }
+}
+
 # return base text corpus data for category and attributes
-taTextCorpusData <- function(graph_attr, simple = FALSE) {
+taTextCorpusData_ <- function(graph_attr, simple = FALSE) {
   g <- graphFilters()
   
   if (is.null(g)) { return(NULL) }
@@ -386,14 +462,14 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
   }
   
   if (ta_rv$has_text) {
+    ta_rv$txt_attr_type <- attr[2]
+    ta_rv$txt_attr_name <- gsub(voson_txt_prefix, "", attr[1]) # "vosonTxt_"
+    
     if (attr[2] == "vertex") {
       words <- igraph::vertex_attr(g, attr[1])
     } else {
       words <- igraph::edge_attr(g, attr[1])
     }
-    
-    ta_rv$txt_attr_type <- attr[2]
-    ta_rv$txt_attr_name <- gsub(voson_txt_prefix, "", attr[1]) # "vosonTxt_"
     
     toRemove <- which(words == "")
     if (isTRUE(length(toRemove) != 0)) {

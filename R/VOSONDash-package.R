@@ -11,6 +11,7 @@
 #' @docType package
 #' @author Bryan Gertzel and Robert Ackland.
 #' 
+#' @importFrom data.table data.table
 #' @importFrom graphics plot text title par barplot
 #' @import httpuv
 #' @importFrom httr parse_url

@@ -4,10 +4,10 @@
 \alias{wordFreqChart}
 \title{Create a Word Frequency chart}
 \usage{
-wordFreqChart(corp, min_freq = 1, top_count = 20, pcolors = NULL)
+wordFreqChart(word_freqs, min_freq = 1, top_count = 20, pcolors = NULL)
 }
 \arguments{
-\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
+\item{word_freqs}{Table. Table of word frequencies.}
 
 \item{min_freq}{Numeric. Minimum frequency for a word to be included in the chart. Default is \code{1}.}
 

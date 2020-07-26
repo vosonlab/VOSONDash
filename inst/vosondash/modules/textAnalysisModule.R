@@ -94,7 +94,7 @@ taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
 #' @return None
 #'
 taPlotList <- function(input, output, session, data, seed, categories, min_freq, max_words, top_count, type, 
-                       col_palette,
+                       col_palette, word_length = c(10, 12),
                        wc_seed = 100, wc_random_order = FALSE, wc_random_col = FALSE, wc_vert_prop = 0.1) {
   ns <- session$ns
   
@@ -114,8 +114,13 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
                                  unlist(data_item$graph_attr$cat), 
                                  unlist(data_item$graph_attr$sub_cats), 
                                  "#f5f5f5", col_palette)
-
-            VOSONDash::wordFreqChart(corp = data_item$corp, min_freq, top_count, pcolors)
+            
+            wf <- VOSONDash::wordFreqFromCorpus(data_item$corp, word_len = word_length)
+            
+            VOSONDash::wordFreqChart(wf,
+                                     min_freq,
+                                     top_count,
+                                     pcolors)
           })
         })
       }
@@ -151,7 +156,10 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
               pcolors <- col_palette
             }
             
-            VOSONDash::wordCloudPlot(corp = data_item$corp, wc_seed, min_freq, max_words, pcolors,
+            wf <- VOSONDash::wordFreqFromCorpus(data_item$corp, word_len = word_length)
+            
+            VOSONDash::wordCloudPlot(wf,
+                                     wc_seed, min_freq, max_words, pcolors,
                                      random.order = wc_random_order, random.color = wc_random_col,
                                      rot.per = wc_vert_prop)
           })
@@ -180,7 +188,7 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
                                unlist(data_item$graph_attr$sub_cats), 
                                "#f5f5f5", col_palette)          
           
-          sent_data <- VOSONDash::wordSentData(corp = data_item$corp)
+          sent_data <- VOSONDash::wordSentData(corp = data_item$corp, word_len = word_length)
 
           plot_id <- paste0(plot_ids[local_i], "-a")
           output[[plot_id]] <- renderPlot({

@@ -5,7 +5,7 @@
 \title{Create a Word Cloud plot}
 \usage{
 wordCloudPlot(
-  corp,
+  word_freqs,
   seed = NULL,
   min_freq = 1,
   max_words = 50,
@@ -14,7 +14,7 @@ wordCloudPlot(
 )
 }
 \arguments{
-\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
+\item{word_freqs}{Table. Table of word frequencies.}
 
 \item{seed}{Numeric. Seed value can be supplied to reproduce a word cloud layout.}
 

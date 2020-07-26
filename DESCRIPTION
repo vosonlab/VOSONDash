@@ -6,6 +6,7 @@ Description: A 'Shiny' application for the interactive visualisation and
     social media data using 'vosonSML'.
 Type: Package
 Imports:
+    data.table,
     graphics,
     httpuv,
     httr,

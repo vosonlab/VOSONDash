@@ -13,8 +13,8 @@ emptyPlotMessage(message = "No plot available.")
 An empty plot with text message.
 }
 \description{
-This function creates an empty plot that can be used to display a text message. Intended to be used in 
-a series of plots to indicate that an individual plot cannot be created for some reason and still maintain a plot 
+This function creates an empty plot that can be used to display a text message. Intended to be used in
+a series of plots to indicate that an individual plot cannot be created for some reason and still maintain a plot
 aesthetic.
 }
 \keyword{internal}
