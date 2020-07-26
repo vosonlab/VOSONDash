@@ -46,6 +46,13 @@ wordFreqChart <- function(corp, min_freq = 1, top_count = 20, pcolors = NULL) {
   on.exit(par(saved_par))
   
   par(mar = rep(0, 4))
+  if (.Platform$OS.type != "windows" & 
+      ("Arial Unicode MS" %in% unique(systemfonts::system_fonts()$family))) {
+    return(barchart(freq_terms[order_terms[1:top_count]], 
+                    col = pcolors, 
+                    xlab = "Frequency",
+                    scales = list(fontfamily = "Arial Unicode MS")))
+  }
   return(barchart(freq_terms[order_terms[1:top_count]], 
                   col = pcolors, 
                   xlab = "Frequency"))
@@ -201,6 +208,11 @@ wordCloudPlot <- function(corp, seed = NULL, min_freq = 1, max_words = 50, pcolo
                           max.words = max_words)
 
   plot_parameters[['colors']] <- pcolors
+  
+  if (.Platform$OS.type != "windows" & 
+      ("Arial Unicode MS" %in% unique(systemfonts::system_fonts()$family))) {
+    plot_parameters['family'] <- "Arial Unicode MS"
+  }
 
   dots <- list(...)
   plot_parameters <- append(plot_parameters, dots)
