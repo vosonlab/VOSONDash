@@ -41,6 +41,7 @@ observeEvent({ input$sidebar_menu
                input$ta_twitter_hashtags_check
                input$ta_twitter_usernames_check
                input$ta_stem_check
+               input$ta_word_length_slider
                input$ta_rem_url_check
                input$ta_rem_num_check
                input$ta_html_decode_check
@@ -256,9 +257,10 @@ textAnalysisDetailsOutput <- reactive({
           title <- paste0(title, paste0(title_attr, collapse = ' / '), "", sep = "")
           output <- append(output, title)
           # removing urls when building base corpus so do not require max word length
-          dtmx <- DocumentTermMatrix(plot_data_list[[i]]$corp)
-          freq_terms <- colSums(as.matrix(dtmx))
-          output <- append(output, paste("Words:", sum(freq_terms)))
+          #dtmx <- DocumentTermMatrix(plot_data_list[[i]]$corp)
+          #freq_terms <- colSums(as.matrix(dtmx))
+          #output <- append(output, paste("Words:", sum(freq_terms)))
+          output <- append(output, paste("Words:", sum(plot_data_list[[i]]$corp)))
           output <- append(output, "")
         }
       }
@@ -455,9 +457,17 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
     
     corp <- tm_map(corp, stripWhitespace, lazy = TRUE)
     
+    dtm <- tm::DocumentTermMatrix(corp, control = list(wordLengths = c(input$ta_word_length_slider[1], 
+                                                                       input$ta_word_length_slider[2]))) # , 
+    #                                                    bounds = list(global = c(min_freq, Inf))))
+    dtm_sparse_removed <- tm::removeSparseTerms(dtm, 0.98)
+
+    freq_terms <- colSums(as.matrix(dtm_sparse_removed))
+    # order_terms <- order(freq_terms, decreasing = TRUE)
+    
     return(list(graph_attr = list(cat = graph_attr[1], 
                                   sub_cats = graph_attr[2]), 
-                corp = corp))
+                corp = freq_terms))
   } else {
     return(NULL)
   }

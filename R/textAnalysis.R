@@ -35,18 +35,19 @@ wordFreqChart <- function(corp, min_freq = 1, top_count = 20, pcolors = NULL) {
   }
   
   # min freq uses bounds control
-  dtm <- tm::DocumentTermMatrix(corp, control = list(wordLengths = c(3, 20), 
-                                                     bounds = list(global = c(min_freq, Inf))))
-  dtm_sparse_removed <- tm::removeSparseTerms(dtm, 0.98)
-  
-  freq_terms <- colSums(as.matrix(dtm_sparse_removed))
-  order_terms <- order(freq_terms, decreasing = TRUE)
+  # dtm <- tm::DocumentTermMatrix(corp, control = list(wordLengths = c(3, 20), 
+  #                                                    bounds = list(global = c(min_freq, Inf))))
+  # dtm_sparse_removed <- tm::removeSparseTerms(dtm, 0.98)
+  # 
+  # freq_terms <- colSums(as.matrix(dtm_sparse_removed))
+  corp <- corp[corp >= min_freq]
+  order_terms <- order(corp, decreasing = TRUE) # freq_terms
   
   saved_par <- par(no.readonly = TRUE)
   on.exit(par(saved_par))
   
   par(mar = rep(0, 4))
-  return(barchart(freq_terms[order_terms[1:top_count]], 
+  return(barchart(corp[order_terms[1:top_count]],  # freq_terms
                   col = pcolors, 
                   xlab = "Frequency"))
 }
@@ -63,17 +64,14 @@ wordFreqChart <- function(corp, min_freq = 1, top_count = 20, pcolors = NULL) {
 #' @return A barchart plot.
 #' 
 #' @export
-wordSentValenceChart <- function(corp) {
+wordSentValenceChart <- function(data) {
   # returns empty plot with message if no data to chart
-  if (is.null(corp) || length(corp) < 1) {
+  if (is.null(data) || length(data) < 1) {
     return(emptyPlotMessage("No text data."))
   }
   
-  ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
-  nrc_sent_df <- syuzhet::get_nrc_sentiment(unlist(ws_df[, 1]))
-  
-  chart_data <- colSums(nrc_sent_df[c(9:10)])
-  valence <- ((nrc_sent_df[, 9]*-1) + nrc_sent_df[, 10])
+  chart_data <- colSums(data[c(9:10)])
+  valence <- ((data[, 9]*-1) + data[, 10])
   chart_data["valence"] <- sum(valence)
   chart_data["negative"] <- chart_data["negative"]*-1
   # chart_data["mean valence"] <- mean(valence)
@@ -111,6 +109,22 @@ wordSentValenceChart <- function(corp) {
   sent_plot_summary
 }
 
+#' @title Create NRC Emotion data from words
+#' 
+#' @description This function creates NRC data.
+#' 
+#' @param corp \pkg{tm} package document \code{\link[tm]{Corpus}} object.
+#' 
+#' @return A barchart plot.
+#' 
+#' @export
+wordSentData <- function(corp) {
+  words <- c()
+  df <- data.frame(word = names(corp), freq = corp)
+  for (i in 1:nrow(df)) { words <- c(words, rep(c(df[i, 1]), each = as.numeric(df[i, 2]))) }
+  nrc_sent_df <- syuzhet::get_nrc_sentiment(words)
+}
+
 #' @title Create an NRC Emotion chart 
 #' 
 #' @description This function creates a horizontal barchart measuring and sorting the eight NRC lexicon emotions in 
@@ -125,16 +139,14 @@ wordSentValenceChart <- function(corp) {
 #' @return A barchart plot.
 #' 
 #' @export
-wordSentChart <- function(corp, pcolors = NULL) {
+wordSentChart <- function(data, pcolors = NULL) {
   
   # returns empty plot with message if no data to chart
-  if (is.null(corp) || length(corp) < 1) {
+  if (is.null(data) || length(data) < 1) {
     return(emptyPlotMessage("No text data."))
   }
   
-  ws_df <- data.frame(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
-  nrc_sent_df <- syuzhet::get_nrc_sentiment(unlist(ws_df[, 1]))
-  chart_data <- sort(colSums(prop.table(nrc_sent_df[, 1:8]))*100)
+  chart_data <- sort(colSums(prop.table(data[, 1:8]))*100)
   
   colx <- pcolors
   if (is.null(colx)) {
@@ -196,7 +208,8 @@ wordCloudPlot <- function(corp, seed = NULL, min_freq = 1, max_words = 50, pcolo
   saved_par <- par(no.readonly = TRUE)
   on.exit(par(saved_par))
   
-  plot_parameters <- list(words = corp, 
+  plot_parameters <- list(words = names(corp),
+                          freq = corp,
                           min.freq = min_freq,
                           max.words = max_words)
 

@@ -180,15 +180,17 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
                                unlist(data_item$graph_attr$sub_cats), 
                                "#f5f5f5", col_palette)          
           
+          sent_data <- VOSONDash::wordSentData(corp = data_item$corp)
+
           plot_id <- paste0(plot_ids[local_i], "-a")
           output[[plot_id]] <- renderPlot({
-            out <- VOSONDash::wordSentChart(corp = data_item$corp, pcolors)
+            plots <- VOSONDash::wordSentChart(sent_data, pcolors)
           })
           
           plot_id <- paste0(plot_ids[local_i], "-b")
           output[[plot_id]] <- renderPlot({
-            out <- VOSONDash::wordSentValenceChart(corp = data_item$corp)
-          })        
+            plots <- VOSONDash::wordSentValenceChart(sent_data)
+          })       
         })
       }
       

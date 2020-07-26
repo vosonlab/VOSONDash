@@ -14,7 +14,9 @@ tabItem(tabName="text_analysis_tab",
                                 checkboxInput("ta_rem_punc_check", "Remove punctuation", TRUE),
                                 hr(),
                                 disabled(checkboxInput("ta_twitter_hashtags_check", "Remove Twitter hashtags", TRUE)),
-                                disabled(checkboxInput("ta_twitter_usernames_check", "Remove Twitter usernames", TRUE)),                                
+                                disabled(checkboxInput("ta_twitter_usernames_check", "Remove Twitter usernames", TRUE)),
+                                sliderInput("ta_word_length_slider", div("Word length", style = "font-weight: normal;"),
+                                            min = 1, max = 50, value = c(3, 26), ticks = FALSE)
                    ),
                  ),
                  fluidRow(
