@@ -42,6 +42,10 @@ shinyServer(function(input, output, session) {
     shinyjs::enable("twitter_semantic_assoc") 
   }
   
+  if (VOSONDash::isMac()) {
+    shinyjs::enable("macos_font_check")
+  }
+  
   # reset collect consoles on startup
   observeEvent(input$sidebar_menu, {
     resetConsole("twitter_console", FALSE)

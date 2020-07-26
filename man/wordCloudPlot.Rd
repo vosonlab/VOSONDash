@@ -10,6 +10,7 @@ wordCloudPlot(
   min_freq = 1,
   max_words = 50,
   pcolors = NULL,
+  family = NULL,
   ...
 )
 }

@@ -4,7 +4,13 @@
 \alias{wordFreqChart}
 \title{Create a Word Frequency chart}
 \usage{
-wordFreqChart(word_freqs, min_freq = 1, top_count = 20, pcolors = NULL)
+wordFreqChart(
+  word_freqs,
+  min_freq = 1,
+  top_count = 20,
+  pcolors = NULL,
+  family = NULL
+)
 }
 \arguments{
 \item{word_freqs}{Table. Table of word frequencies.}

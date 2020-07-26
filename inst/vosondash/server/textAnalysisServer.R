@@ -122,13 +122,14 @@ plotWordFrequencies <- reactive({
   top_count <- input$ta_wf_top_count
   min_freq <- input$ta_wf_min_word_freq
   word_len <- input$ta_word_length_slider
+  mac_arial <- input$macos_font_check
   
   # create placeholders and plot word frequency charts from list of base text corpus data
   withProgress(message = "Processing word frequencies...", {
     callModule(taPlotPlaceholders, "word_freqs", ta_rv$plot_data_list)
     callModule(taPlotList, "word_freqs", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
                min_freq, NULL, top_count, "wf", col_palette = gbl_plot_palette(),
-               word_len)
+               word_len, mac_arial)
   })
 })
 
@@ -153,6 +154,7 @@ plotWordClouds <- reactive({
   wc_random_col <- input$wc_random_col
   wc_vert_prop <- (input$ta_wc_vert_prop/100)
   word_len <- input$ta_word_length_slider
+  mac_arial <- input$macos_font_check
 
   # create placeholders and plot word clouds from list of base text corpus data
   withProgress(message = "Processing word clouds...", {      
@@ -160,7 +162,7 @@ plotWordClouds <- reactive({
     callModule(taPlotList, "word_clouds", ta_rv$plot_data_list, isolate(ng_rv$graph_seed), 
                isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc",
                col_palette = gbl_plot_palette(),
-               word_len,
+               word_len, mac_arial,
                wc_seed, wc_random_order, wc_random_col, wc_vert_prop)
   })
 })
@@ -173,6 +175,7 @@ comparisonCloudPlotData <- reactive({
   
   max_words <- input$ta_cc_max_word_count
   word_len <- input$ta_word_length_slider
+  mac_arial <- input$macos_font_check
   
   if (is.null(plot_data_list)) { return(VOSONDash::emptyPlotMessage("No text data.")) }
   
@@ -197,6 +200,8 @@ comparisonCloudPlotData <- reactive({
     tdm <- removeSparseTerms(tdm, 0.99)
     tdm <- as.matrix(tdm)
     colnames(tdm) <- df$catval
+    
+    # if (!is.null(family)) { plot_parameters['family'] <- family }
     
     if (ncol(tdm) < 2) {
       VOSONDash::emptyPlotMessage("No comparison plot: only one categorical variable present.")
@@ -423,134 +428,3 @@ taTextCorpusData <- function(graph_attr) {
     return(NULL)
   }
 }
-
-# return base text corpus data for category and attributes
-taTextCorpusData_ <- function(graph_attr, simple = FALSE) {
-  g <- graphFilters()
-  
-  if (is.null(g)) { return(NULL) }
-  
-  plot_cat <- plot_sub_cats <- ""
-  
-  if (missing(graph_attr)) {
-    graph_attr <- NULL
-  } else {
-    plot_cat <- graph_attr[1]
-    plot_sub_cats <- graph_attr[[2]]
-  }
-  
-  # create filtered graph object for category and attribute value passed to the function
-  if (plot_cat != "") {
-    # g <- graphFilters()
-    g <- VOSONDash::applyCategoricalFilters(g, plot_cat, plot_sub_cats)
-  }
-  
-  # voson text attributes
-  attr_v <- igraph::vertex_attr_names(g)
-  attr_v <- attr_v[grep(voson_txt_prefix, attr_v, perl = TRUE)]
-  attr_e <- igraph::edge_attr_names(g)
-  attr_e <- attr_e[grep(voson_txt_prefix, attr_e, perl = TRUE)]
-  
-  ta_rv$has_text <- FALSE
-  if (length(attr_v)) {
-    attr <- c(attr_v[1], 'vertex')
-    ta_rv$has_text <- TRUE
-  } else if (length(attr_e)) {
-    i <- attr_e[1]
-    attr <- c(attr_e[1], 'edge')
-    ta_rv$has_text <- TRUE
-  }
-  
-  if (ta_rv$has_text) {
-    ta_rv$txt_attr_type <- attr[2]
-    ta_rv$txt_attr_name <- gsub(voson_txt_prefix, "", attr[1]) # "vosonTxt_"
-    
-    if (attr[2] == "vertex") {
-      words <- igraph::vertex_attr(g, attr[1])
-    } else {
-      words <- igraph::edge_attr(g, attr[1])
-    }
-    
-    toRemove <- which(words == "")
-    if (isTRUE(length(toRemove) != 0)) {
-      words <- words[-toRemove]
-    }
-    
-    # corp <- tm_map(corp, function(x) iconv(enc2utf8(x), sub = "byte"))
-    if (input$ta_iconv_check == TRUE) {
-      if (VOSONDash::isMac()) {
-        words <- iconv(words, to = 'utf-8-mac')
-      } else {
-        words <- iconv(words, to = 'utf-8')
-      }
-    }
-    
-    if (simple) {
-      return(list(graph_attr, words))
-    }
-    
-    corp <- VCorpus(VectorSource(words))
-    
-    if (input$ta_html_decode_check == TRUE) {
-      corp <- tm_map(corp, content_transformer(textutils::HTMLdecode))  
-    }
-    
-    corp <- tm_map(corp, content_transformer(tolower))
-    
-    if (input$ta_rem_url_check == TRUE) {
-      # corp <- tm_map(corp, content_transformer(remHTTP))
-      corp <- tm_map(corp, content_transformer(remURL))
-    }
-    
-    if (input$ta_twitter_hashtags_check == TRUE) {
-      corp <- tm_map(corp, content_transformer(removeHashTags))
-    }
-    if (input$ta_twitter_usernames_check == TRUE) {
-      corp <- tm_map(corp, content_transformer(removeTwitterHandles))
-    }
-
-    if (input$ta_rem_num_check == TRUE) {
-      corp <- tm_map(corp, removeNumbers)
-    }
-    
-    if (input$ta_rem_punc_check == TRUE) {
-      corp <- tm_map(corp, removePunctuation)
-    }
-    
-    if (input$ta_stopwords_check == TRUE) {
-      corp <- tm_map(corp, removeWords, stopwords("english"), lazy = TRUE)
-    }
-    
-    if (input$ta_user_stopwords_check == TRUE) {
-      sw <- tolower(input$ta_user_stopwords_input)
-      sw <- trimws(unlist(strsplit(sw, ",")))
-      corp <- tm_map(corp, removeWords, sw)
-    }
-    
-    if (input$ta_stem_check == TRUE) {
-      corp <- tm_map(corp, stemDocument)
-    }
-    
-    corp <- tm_map(corp, stripWhitespace, lazy = TRUE)
-    
-    dtm <- tm::DocumentTermMatrix(corp, control = list(wordLengths = c(input$ta_word_length_slider[1], 
-                                                                       input$ta_word_length_slider[2]))) # , 
-    #                                                    bounds = list(global = c(min_freq, Inf))))
-    dtm_sparse_removed <- tm::removeSparseTerms(dtm, 0.98)
-
-    freq_terms <- colSums(as.matrix(dtm_sparse_removed))
-    # order_terms <- order(freq_terms, decreasing = TRUE)
-    
-    return(list(graph_attr = list(cat = graph_attr[1], 
-                                  sub_cats = graph_attr[2]), 
-                corp = freq_terms))
-  } else {
-    return(NULL)
-  }
-}
-
-# url_regex <- "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
-remURL <- function(x) gsub("http[s]?://[^[:space:]]+", "", x)
-
-removeHashTags <- function(x) gsub("#\\S+", "", x)
-removeTwitterHandles <- function(x) gsub("@\\S+", "", x)

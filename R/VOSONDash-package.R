@@ -23,6 +23,7 @@
 #' @importFrom magrittr '%>%' '%<>%'
 #' @importFrom RColorBrewer brewer.pal
 #' @import shiny
+#' @importFrom systemfonts system_fonts
 #' @importFrom syuzhet get_nrc_sentiment
 #' @importFrom tm DocumentTermMatrix removeSparseTerms
 #' @importFrom utils packageVersion

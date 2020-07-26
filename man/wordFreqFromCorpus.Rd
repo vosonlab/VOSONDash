@@ -7,7 +7,7 @@
 wordFreqFromCorpus(
   corp,
   rm_sparse = 0.99,
-  word_len = c(3, 26),
+  word_len = c(8, 32),
   word_freq = c(1, Inf)
 )
 }

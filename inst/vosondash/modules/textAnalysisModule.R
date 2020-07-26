@@ -86,6 +86,8 @@ taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
 #' @param top_count number of words to render in word frequency charts
 #' @param type code for type of plots "wf" word frequencies or "wc" word clouds
 #' @param col_palette color palette for plots
+#' @param word_length word bounds min max
+#' @param mac_arial use arial unicode for macos
 #' @param wc_seed wordcloud plot seed value
 #' @param wc_random_order wordcloud random word order
 #' @param wc_random_col wordcloud random colors
@@ -94,7 +96,7 @@ taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
 #' @return None
 #'
 taPlotList <- function(input, output, session, data, seed, categories, min_freq, max_words, top_count, type, 
-                       col_palette, word_length = c(10, 12),
+                       col_palette, word_length = c(3, 26), mac_arial = TRUE,
                        wc_seed = 100, wc_random_order = FALSE, wc_random_col = FALSE, wc_vert_prop = 0.1) {
   ns <- session$ns
   
@@ -116,11 +118,12 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
                                  "#f5f5f5", col_palette)
             
             wf <- VOSONDash::wordFreqFromCorpus(data_item$corp, word_len = word_length)
-            
+
             VOSONDash::wordFreqChart(wf,
                                      min_freq,
                                      top_count,
-                                     pcolors)
+                                     pcolors,
+                                     family = setArialUnicodeMS(mac_arial))
           })
         })
       }
@@ -161,7 +164,8 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
             VOSONDash::wordCloudPlot(wf,
                                      wc_seed, min_freq, max_words, pcolors,
                                      random.order = wc_random_order, random.color = wc_random_col,
-                                     rot.per = wc_vert_prop)
+                                     rot.per = wc_vert_prop,
+                                     family = setArialUnicodeMS(mac_arial))
           })
         })
       }
@@ -220,6 +224,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   } else if (type == "ws") {
     wordSentPlotList()
   }
+}
+
+setArialUnicodeMS <- function(enabled) {
+  if (.Platform$OS.type != "windows" & ("Arial Unicode MS" %in% VOSONDash::getSystemFontFamilies()) &
+      enabled) {
+    return("Arial Unicode MS")
+  }
+  NULL
 }
 
 getColors <- function(categories, plot_category, plot_category_attrs, default_col, col_palette) {

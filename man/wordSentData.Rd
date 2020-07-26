@@ -4,7 +4,7 @@
 \alias{wordSentData}
 \title{Create NRC Emotion data from words}
 \usage{
-wordSentData(corp)
+wordSentData(corp, word_len = c(3, 4), word_freq = c(1, Inf))
 }
 \arguments{
 \item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}

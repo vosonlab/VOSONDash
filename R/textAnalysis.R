@@ -30,7 +30,8 @@ emptyPlotMessage <- function(message = "No plot available.") {
 wordFreqChart <- function(word_freqs,
                           min_freq = 1,
                           top_count = 20,
-                          pcolors = NULL) {
+                          pcolors = NULL,
+                          family = NULL) {
 
   # returns empty plot with message if no data to chart
   if (is.null(word_freqs) || nrow(word_freqs) < 1) {
@@ -44,21 +45,16 @@ wordFreqChart <- function(word_freqs,
   word_freqs <- word_freqs[order(word_freqs, -freq)]
   word_freqs <- word_freqs[1:top_count, ]
   word_freqs$word <- factor(word_freqs$word, levels = rev(word_freqs$word))
-  # sizes <- factor(sizes, levels=rev(levels(sizes)))
+  
+  plot_parameters <- list(word ~ freq,
+                          data = word_freqs,
+                          col = pcolors,
+                          xlab = "Frequency")
+  
+  if (!is.null(family)) { plot_parameters[['scales']] <- list(fontfamily = family) }
   
   par(mar = rep(0, 4))
-  if (.Platform$OS.type != "windows" &
-      ("Arial Unicode MS" %in% unique(systemfonts::system_fonts()$family))) {
-    return(barchart(word ~ freq,
-                    data = word_freqs[1:top_count, ],
-                    col = pcolors,
-                    xlab = "Frequency",
-                    scales = list(fontfamily = "Arial Unicode MS")))
-  }
-  return(barchart(word ~ freq,
-                  data = word_freqs[1:top_count, ],
-                  col = pcolors,
-                  xlab = "Frequency"))
+  do.call(lattice::barchart, plot_parameters)
 }
 
 #' @title Create an NRC Positive and Negative Sentiment valence chart
@@ -83,7 +79,6 @@ wordSentValenceChart <- function(data) {
   valence <- ((data[, 9]*-1) + data[, 10])
   chart_data["valence"] <- sum(valence)
   chart_data["negative"] <- chart_data["negative"]*-1
-  # chart_data["mean valence"] <- mean(valence)
 
   valence_col <- "gainsboro"
   if (sum(valence) < 0) {
@@ -127,10 +122,10 @@ wordSentValenceChart <- function(data) {
 #' @return A nrc sentiment dataframe.
 #' 
 #' @export
-wordSentData <- function(corp, word_len = c(3, 4), word_freq = c(1, Inf)) {
+wordSentData <- function(corp, word_len = c(3, 26), word_freq = c(1, Inf)) {
   if (word_len[1] <= word_len[2]) {
-    corp <- tm::tm_map(corp, tm::content_transformer(function(x) gsub(paste0("\\b.{1,", word_len[1], "}\\b"), "", x)))
-    corp <- tm::tm_map(corp, tm::content_transformer(function(x) gsub(paste0("\\b.{", word_len[2], ", }\\b"), "", x)))
+    corp <- tm::tm_map(corp, tm::content_transformer(function(x) gsub(paste0("\\b[.]{1,", word_len[1], "}\\b"), "", x)))
+    corp <- tm::tm_map(corp, tm::content_transformer(function(x) gsub(paste0("\\b[.]{", word_len[2], ", }\\b"), "", x)))
   }
 
   ws_df <- data.table::data.table(content = unlist(sapply(corp, `[`, "content")), stringsAsFactors = FALSE)
@@ -212,6 +207,7 @@ wordCloudPlot <- function(word_freqs,
                           min_freq = 1,
                           max_words = 50,
                           pcolors = NULL,
+                          family = NULL,
                           ...) {
 
   # returns empty plot with message if no data to plot
@@ -235,11 +231,8 @@ wordCloudPlot <- function(word_freqs,
 
   plot_parameters[['colors']] <- pcolors
 
-  if (.Platform$OS.type != "windows" &
-      ("Arial Unicode MS" %in% unique(systemfonts::system_fonts()$family))) {
-    plot_parameters['family'] <- "Arial Unicode MS"
-  }
-
+  if (!is.null(family)) { plot_parameters['family'] <- family }
+  
   dots <- list(...)
   plot_parameters <- append(plot_parameters, dots)
 
