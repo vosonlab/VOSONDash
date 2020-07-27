@@ -6,8 +6,6 @@ requiredPackages <- c("dplyr",
                       "RColorBrewer",
                       "shinydashboard",
                       "shinyjs",
-                      "SnowballC",
-                      "textutils",
                       "tm",
                       "visNetwork",
                       "wordcloud")

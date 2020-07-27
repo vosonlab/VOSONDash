@@ -24,8 +24,7 @@ tabItem(tabName="text_analysis_tab",
                       checkboxInput('expand_ta_adv_check', div("Advanced", style = "font-weight:bold;"), FALSE),
                       conditionalPanel(condition = 'input.expand_ta_adv_check',
                         checkboxInput("ta_html_decode_check", "HTML Decode", TRUE),
-                        checkboxInput("ta_iconv_check", "iconv UTF8", FALSE),
-                        disabled(checkboxInput("macos_font_check", "Arial Unicode MS", TRUE)))
+                        checkboxInput("ta_iconv_check", "iconv UTF8", FALSE))
                    )                  
                  ),
                  fluidRow(

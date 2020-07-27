@@ -28,6 +28,9 @@
     <loc>http://vosonlab.github.io/VOSONDash/reference/collectYoutubeData.html</loc>
   </url>
   <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/corpusFromGraph.html</loc>
+  </url>
+  <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/createRedditActorNetwork.html</loc>
   </url>
   <url>
@@ -49,6 +52,12 @@
     <loc>http://vosonlab.github.io/VOSONDash/reference/createYoutubeNetwork.html</loc>
   </url>
   <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/dtbGraph.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/eawGraph.html</loc>
+  </url>
+  <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/emptyPlotMessage.html</loc>
   </url>
   <url>
@@ -59,6 +68,9 @@
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/getRedditUrlThreadId.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/getSystemFontFamilies.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/getVertexCategories.html</loc>
@@ -85,7 +97,7 @@
     <loc>http://vosonlab.github.io/VOSONDash/reference/isVosonSML0290.html</loc>
   </url>
   <url>
-    <loc>http://vosonlab.github.io/VOSONDash/reference/loadDemoGraph.html</loc>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/loadPackageGraph.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/logMessage.html</loc>
@@ -109,7 +121,13 @@
     <loc>http://vosonlab.github.io/VOSONDash/reference/wordFreqChart.html</loc>
   </url>
   <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/wordFreqFromCorpus.html</loc>
+  </url>
+  <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/wordSentChart.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/wordSentData.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/wordSentValenceChart.html</loc>

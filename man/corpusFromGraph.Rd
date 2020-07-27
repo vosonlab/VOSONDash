@@ -23,9 +23,9 @@ corpusFromGraph(
 \arguments{
 \item{g}{an \pkg{igraph} graph object.}
 
-\item{txt_attr}{Character. Name of graph text attribute. Default is \code{NULL}.}
+\item{txt_attr}{Character string. Name of graph text attribute. Default is \code{NULL}.}
 
-\item{type}{Character. Graph attribute type. Default is \code{"vertex"}.}
+\item{type}{Character string. Graph attribute type. Default is \code{"vertex"}.}
 
 \item{iconv}{Logical. Use the \code{iconv} function to attempt UTF8 conversion. Default is \code{FALSE}.}
 
@@ -41,9 +41,10 @@ corpusFromGraph(
 
 \item{rm_twit_users}{Logical. Remove twitter user names. Default is \code{FALSE}.}
 
-\item{sw_kind}{Character. Stopword dictionary. Refer \code{stopwords} \code{kind} parameter. Default is \code{"SMART"}.}
+\item{sw_kind}{Character string. Stopword dictionary. Refer \code{stopwords} \code{kind} parameter.
+Default is \code{"SMART"}.}
 
-\item{rm_words}{Character. User defined stopwords. Default is \code{NULL}.}
+\item{rm_words}{Character vector. User defined stopwords. Default is \code{NULL}.}
 
 \item{stem}{Logical. Apply word stemming. Default is \code{FALSE}.}
 }
@@ -51,5 +52,5 @@ corpusFromGraph(
 A \pkg{tm} text corpus object.
 }
 \description{
-This function creates a text corpus from node or edge text attribute data in a graph.
+This function creates a text corpus from node or edge text attribute data in an igraph.
 }

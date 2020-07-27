@@ -166,9 +166,16 @@
 <a href="#minor-changes" class="anchor"></a>Minor Changes:</h2>
 <ul>
 <li>Added a legend to network plots with vertex categorical attributes.</li>
-<li>Removed automatic <code>iconv</code> conversion of text for text analysis.</li>
-<li>Made removal URL’s, numbers and punctuation optional for text analysis.</li>
-<li>Added some additional <code>wordcloud</code> controls.</li>
+<li>Removed automatic <code>iconv</code> conversion of text for text analysis. So unicode should display properly for plots in most cases.</li>
+<li>Made <code>Arial Unicode MS</code> the default plot font for macOS systems that have it installed. This is to avoid problems with unicode characters. It can be disabled in the <code>Network Graphs</code> section.</li>
+<li>Added an option for HTML decoding text.</li>
+<li>Made removal of URL’s, numbers and punctuation optional for text analysis.</li>
+<li>Added text analysis word length control.</li>
+<li>Added some additional <code>wordcloud</code> controls such as re-seed.</li>
+<li>Cleaned up text corpus, word frequency and text analysis plot functions.</li>
+<li>Improved speed of sentiment analysis plots. They will also now only update when the <code>Sentiment Analysis</code> tab is open or clicked on.</li>
+<li>Added convenience functions <code><a href="../reference/dtbGraph.html">dtbGraph()</a></code> and <code><a href="../reference/eawGraph.html">eawGraph()</a></code>. These load package included “Divided They Blog” and “Enviro Activist Websites 2006” igraph graphs.</li>
+<li>Cleaned up package dependencies.</li>
 <li>CRAN version update.</li>
 </ul>
 </div>

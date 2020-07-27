@@ -50,11 +50,11 @@ VOSONDash v0.5.7
 Checking packages...
 
 Error: Required packages missing.
+- shinyjs
 - visNetwork
-- syuzhet
 
 Please install required packages before using VOSONDash:
-install.packages(c("visNetwork","syuzhet"))
+install.packages(c("shinyjs", "visNetwork"))
 ```
 The missing packages can be installed using the above `install.packages` command.
 

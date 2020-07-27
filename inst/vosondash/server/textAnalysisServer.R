@@ -10,7 +10,7 @@ ta_rv <- reactiveValues(
   has_text = FALSE,                 # does graphml have voson text data
   txt_attr_type = "",               # is text atttribute a vertex or edge
   txt_attr_name = "",               # text attribute name in graphml
-  wc_seed = 100
+  wc_seed = 100                     # wordcloud seed value
 )
 
 #### events ---------------------------------------------------------------------------------------------------------- #
@@ -39,40 +39,42 @@ observeEvent(input$selected_text_analysis_tab, {
 # enter text analysis section or controls toggled
 # generate plots data and plot
 observeEvent({ input$sidebar_menu
-               input$ta_stopwords_check
-               input$ta_twitter_hashtags_check
-               input$ta_twitter_usernames_check
-               input$ta_stem_check
-               input$ta_word_length_slider
-               input$ta_rem_url_check
-               input$ta_rem_num_check
-               input$ta_html_decode_check
-               input$ta_iconv_check
-               input$ta_rem_punc_check }, {
-
-  if (input$sidebar_menu == "text_analysis_tab") {
-    taPlotListData()
-    plotWordFrequencies()
-    plotWordClouds()
-    # plotSentiments()
-  }
-}, ignoreInit = TRUE)
+  input$ta_stopwords_check
+  input$ta_twitter_hashtags_check
+  input$ta_twitter_usernames_check
+  input$ta_stem_check
+  input$ta_word_length_slider
+  input$ta_rem_url_check
+  input$ta_rem_num_check
+  input$ta_html_decode_check
+  input$ta_iconv_check
+  input$ta_rem_punc_check }, {
+    
+    if (input$sidebar_menu == "text_analysis_tab") {
+      taPlotListData()
+      plotWordFrequencies()
+      plotWordClouds()
+      if (input$selected_text_analysis_tab == "Sentiment") {
+        plotSentiments()  
+      }
+    }
+  }, ignoreInit = TRUE)
 
 # replot when word cloud sliders change
 observeEvent({ input$ta_wc_min_word_freq
-               input$ta_wc_max_word_count
-               input$wc_random_col
-               input$ta_wc_vert_prop }, {
-  
-  plotWordClouds()           
-}, ignoreInit = TRUE)
+  input$ta_wc_max_word_count
+  input$wc_random_col
+  input$ta_wc_vert_prop }, {
+    
+    plotWordClouds()           
+  }, ignoreInit = TRUE)
 
 # replot when word frequency sliders change
 observeEvent({ input$ta_wf_top_count
-               input$ta_wf_min_word_freq }, {
+  input$ta_wf_min_word_freq }, {
     
-  plotWordFrequencies()           
-}, ignoreInit = TRUE)
+    plotWordFrequencies()           
+  }, ignoreInit = TRUE)
 
 # generate plots data and plot if user stop words selected
 observeEvent(input$ta_user_stopwords_check, {
@@ -83,7 +85,9 @@ observeEvent(input$ta_user_stopwords_check, {
     taPlotListData()
     plotWordFrequencies()
     plotWordClouds()
-    # plotSentiments()
+    if (input$selected_text_analysis_tab == "Sentiment") {
+      plotSentiments()  
+    }
   }
 }, ignoreInit = TRUE)
 
@@ -155,7 +159,7 @@ plotWordClouds <- reactive({
   wc_vert_prop <- (input$ta_wc_vert_prop/100)
   word_len <- input$ta_word_length_slider
   mac_arial <- input$macos_font_check
-
+  
   # create placeholders and plot word clouds from list of base text corpus data
   withProgress(message = "Processing word clouds...", {      
     callModule(taPlotPlaceholders, "word_clouds", ta_rv$plot_data_list)
@@ -175,7 +179,7 @@ comparisonCloudPlotData <- reactive({
   
   max_words <- input$ta_cc_max_word_count
   word_len <- input$ta_word_length_slider
-  mac_arial <- input$macos_font_check
+  mac_arial <- setArialUnicodeMS(input$macos_font_check)
   
   if (is.null(plot_data_list)) { return(VOSONDash::emptyPlotMessage("No text data.")) }
   
@@ -189,29 +193,31 @@ comparisonCloudPlotData <- reactive({
     df <- NULL
     for (i in 2:length(plot_data_list)) {   # first corpus in list is "All"
       df_t <- data.frame(text = unlist(sapply(plot_data_list[[i]]$corp, `[`, "content")), stringsAsFactors = FALSE)
-
+      
       tmp <- paste0(unlist(plot_data_list[[i]]$graph_attr$sub_cats), collapse = " / ")
       df <- rbind(df, data.frame(catval = tmp, text = paste(df_t$text, collapse = " ", stringsAsFactors = FALSE)))
     }
     
     corp <- tm::VCorpus(tm::VectorSource(df$text))
     corp <- tm::tm_map(corp, tm::stripWhitespace)   # do not need to do any more text processing, already done in base corpus
-    tdm <- tm::TermDocumentMatrix(corp, control = list(wordLengths = word_len)) # wordLengths = c(0, Inf)
+    tdm <- tm::TermDocumentMatrix(corp, control = list(wordLengths = word_len))
     tdm <- removeSparseTerms(tdm, 0.99)
     tdm <- as.matrix(tdm)
     colnames(tdm) <- df$catval
     
-    # if (!is.null(family)) { plot_parameters['family'] <- family }
-    
     if (ncol(tdm) < 2) {
       VOSONDash::emptyPlotMessage("No comparison plot: only one categorical variable present.")
     } else {
-      comparison.cloud(tdm, 
-                       max.words = max_words, 
-                       random.order = FALSE, 
-                       use.r.layout = FALSE, 
-                       title.size = 2, 
-                       colors = gbl_plot_palette()) # colors may need a re-think
+      plot_parameters <- list(tdm,
+                              max.words = max_words,
+                              random.order = FALSE,
+                              use.r.layout = FALSE, 
+                              title.size = 2, 
+                              colors = gbl_plot_palette())
+      
+      if (!is.null(mac_arial)) { plot_parameters['family'] <- mac_arial }
+      
+      do.call(wordcloud::comparison.cloud, plot_parameters)
     }
   }
 })
@@ -224,7 +230,7 @@ getFiltersDesc <- reactive({
       output <- append(output, paste0(input$graph_sub_cats_select, collapse = ', '))
     }
   }
-
+  
   output <- append(output, paste0("Filter Component Size: ", 
                                   input$graph_component_slider[1], " - ", 
                                   input$graph_component_slider[2]))
@@ -261,7 +267,7 @@ textAnalysisDetailsOutput <- reactive({
       
       if (length(plot_data_list) > 0) {
         data_names <- names(plot_data_list)
-
+        
         for (i in seq_along(plot_data_list)) {
           title_cat <- unlist(plot_data_list[[i]]$graph_attr$cat)
           title_attr <- unlist(plot_data_list[[i]]$graph_attr$sub_cats)
@@ -271,13 +277,10 @@ textAnalysisDetailsOutput <- reactive({
           }
           title <- paste0(title, paste0(title_attr, collapse = ' / '), "", sep = "")
           output <- append(output, title)
-          # removing urls when building base corpus so do not require max word length
-          #dtmx <- DocumentTermMatrix(plot_data_list[[i]]$corp)
-          #freq_terms <- colSums(as.matrix(dtmx))
-          #output <- append(output, paste("Words:", sum(freq_terms)))
+          
           isolate({
-          wf <- wordFreqFromCorpus(plot_data_list[[i]]$corp,
-                                   word_len = input$ta_word_length_slider)
+            wf <- wordFreqFromCorpus(plot_data_list[[i]]$corp,
+                                     word_len = input$ta_word_length_slider)
           })
           
           output <- append(output, paste("Words:", sum(wf$freq)))
@@ -409,19 +412,19 @@ taTextCorpusData <- function(graph_attr) {
     if (input$ta_user_stopwords_check) { usw <- input$ta_user_stopwords_input }
     
     corp <- VOSONDash::corpusFromGraph(g,
-      txt_attr = attr[1],
-      type = ta_rv$txt_attr_type,
-      iconv = input$ta_iconv_check,
-      html_decode = input$ta_html_decode_check,
-      rm_url = input$ta_rem_url_check,
-      rm_num = TRUE,
-      rm_punct = TRUE,
-      rm_twit_hashtags = input$ta_twitter_hashtags_check,
-      rm_twit_users = input$ta_twitter_usernames_check,
-      sw_kind = sw,
-      rm_words = usw,
-      stem = input$ta_stem_check)
-
+                                       txt_attr = attr[1],
+                                       type = ta_rv$txt_attr_type,
+                                       iconv = input$ta_iconv_check,
+                                       html_decode = input$ta_html_decode_check,
+                                       rm_url = input$ta_rem_url_check,
+                                       rm_num = input$ta_rem_num_check,
+                                       rm_punct = input$ta_rem_punc_check,
+                                       rm_twit_hashtags = input$ta_twitter_hashtags_check,
+                                       rm_twit_users = input$ta_twitter_usernames_check,
+                                       sw_kind = sw,
+                                       rm_words = usw,
+                                       stem = input$ta_stem_check)
+    
     return(list(graph_attr = list(cat = graph_attr[1], sub_cats = graph_attr[2]), 
                 corp = corp))
   } else {

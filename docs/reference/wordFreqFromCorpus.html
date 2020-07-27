@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a word frequency chart — wordFreqChart • VOSONDash</title>
+<title>Create a word frequency dataframe — wordFreqFromCorpus • VOSONDash</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Create a word frequency chart — wordFreqChart" />
-<meta property="og:description" content="This function creates a horizontal barchart of word frequencies." />
+<meta property="og:title" content="Create a word frequency dataframe — wordFreqFromCorpus" />
+<meta property="og:description" content="Create a word frequency dataframe from a text corpus." />
 
 
 
@@ -154,51 +154,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a word frequency chart</h1>
+    <h1>Create a word frequency dataframe</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/textAnalysis.R'><code>R/textAnalysis.R</code></a></small>
-    <div class="hidden name"><code>wordFreqChart.Rd</code></div>
+    <div class="hidden name"><code>wordFreqFromCorpus.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function creates a horizontal barchart of word frequencies.</p>
+    <p>Create a word frequency dataframe from a text corpus.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wordFreqChart</span>(
-  <span class='no'>word_freqs</span>,
-  <span class='kw'>min_freq</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>top_count</span> <span class='kw'>=</span> <span class='fl'>20</span>,
-  <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>family</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+    <pre class="usage"><span class='fu'>wordFreqFromCorpus</span>(
+  <span class='no'>corp</span>,
+  <span class='kw'>rm_sparse</span> <span class='kw'>=</span> <span class='fl'>0.99</span>,
+  <span class='kw'>word_len</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>26</span>),
+  <span class='kw'>word_freq</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>Inf</span>)
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>word_freqs</th>
-      <td><p>Dataframe. Word frequencies.</p></td>
+      <th>corp</th>
+      <td><p>a <span class="pkg">tm</span> text corpus object.</p></td>
     </tr>
     <tr>
-      <th>min_freq</th>
-      <td><p>Numeric. Minimum frequency for a word to be included in the chart. Default is <code>1</code>.</p></td>
+      <th>rm_sparse</th>
+      <td><p>Logical. Remove proportion of sparse terms. Default is <code>0.99</code>.</p></td>
     </tr>
     <tr>
-      <th>top_count</th>
-      <td><p>Numeric. Top count of words to render in word frequency chart. Default is <code>20</code>.</p></td>
+      <th>word_len</th>
+      <td><p>Numeric vector. Min and max length of words to include. Default is <code><a href='https://rdrr.io/r/base/c.html'>c(3, 26)</a></code>.</p></td>
     </tr>
     <tr>
-      <th>pcolors</th>
-      <td><p>List. Colors to assign categorical variable in the plot. Default is <code>NULL</code>.</p></td>
-    </tr>
-    <tr>
-      <th>family</th>
-      <td><p>Character string. Set a font family for plot labels. Default is <code>NULL</code>.</p></td>
+      <th>word_freq</th>
+      <td><p>Numeric vector. Min and max frequency of words to include. Default is <code><a href='https://rdrr.io/r/base/c.html'>c(1, Inf)</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A barchart plot.</p>
+    <p>A data.table of word frequencies.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -18,14 +18,17 @@
 #' @importFrom igraph vertex_attr as_edgelist gsize delete_vertices components simplify vcount 
 #' betweenness closeness set_graph_attr V 'V<-' E 'E<-' degree edge_attr_names vertex_attr_names
 #' reciprocity transitivity mean_distance graph.density is.directed ecount count_components
-#' centr_degree centr_betw centr_clo
+#' centr_degree centr_betw centr_clo is.igraph
 #' @importFrom lattice barchart
 #' @importFrom magrittr '%>%' '%<>%'
 #' @importFrom RColorBrewer brewer.pal
 #' @import shiny
+#' @import SnowballC
 #' @importFrom systemfonts system_fonts
 #' @importFrom syuzhet get_nrc_sentiment
-#' @importFrom tm DocumentTermMatrix removeSparseTerms
+#' @importFrom tm VCorpus VectorSource tm_map content_transformer DocumentTermMatrix
+#' removeSparseTerms removeNumbers removePunctuation stopwords stemDocument
+#' @importFrom textutils HTMLdecode
 #' @importFrom utils packageVersion
 #' @importFrom vosonSML Authenticate Collect Create
 #' @importFrom wordcloud wordcloud

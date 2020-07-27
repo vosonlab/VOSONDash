@@ -30,7 +30,7 @@ This function removes vertices that are not in the selected categories values li
 \dontrun{
 # return a graph containing only vertices that have the vertex category 
 # attribute "vosonCA_Stance" value "liberal"
-g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
 
 g <- applyCategoricalFilters(g, "Stance", c("liberal"))
 }

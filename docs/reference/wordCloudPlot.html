@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a Word Cloud plot — wordCloudPlot • VOSONDash</title>
+<title>Create a wordcloud plot — wordCloudPlot • VOSONDash</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Create a Word Cloud plot — wordCloudPlot" />
-<meta property="og:description" content="This function creates a wordcloud plot of words in a text corpus." />
+<meta property="og:title" content="Create a wordcloud plot — wordCloudPlot" />
+<meta property="og:description" content="This function creates a wordcloud plot from word frequencies." />
 
 
 
@@ -154,21 +154,22 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a Word Cloud plot</h1>
+    <h1>Create a wordcloud plot</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/textAnalysis.R'><code>R/textAnalysis.R</code></a></small>
     <div class="hidden name"><code>wordCloudPlot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function creates a wordcloud plot of words in a text corpus.</p>
+    <p>This function creates a wordcloud plot from word frequencies.</p>
     </div>
 
     <pre class="usage"><span class='fu'>wordCloudPlot</span>(
-  <span class='no'>corp</span>,
+  <span class='no'>word_freqs</span>,
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>min_freq</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>max_words</span> <span class='kw'>=</span> <span class='fl'>50</span>,
   <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>family</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -176,8 +177,8 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>corp</th>
-      <td><p><span class="pkg">tm</span> package document <code><a href='https://rdrr.io/pkg/tm/man/Corpus.html'>Corpus</a></code> object.</p></td>
+      <th>word_freqs</th>
+      <td><p>Table. Table of word frequencies.</p></td>
     </tr>
     <tr>
       <th>seed</th>
@@ -195,6 +196,10 @@
       <th>pcolors</th>
       <td><p>List. Colors to assign categorical variable in the plot or palette to use if <code>random.color</code>.
 Default is <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
+      <th>family</th>
+      <td><p>Character. Set a font family for plot labels. Default is <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>

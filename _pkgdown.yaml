@@ -55,7 +55,7 @@ reference:
   - '`runVOSONDash`' 
 - title: Network Graphs
   contents:
-  - '`loadDemoGraph`'
+  - '`loadPackageGraph`'
   - '`addAdditionalMeasures`'
   - '`applyGraphFilters`'
   - '`applyComponentFilter`'
@@ -67,11 +67,14 @@ reference:
   - '`getNetworkMetrics`'  
 - title: Text Analysis
   contents:
-  - '`mixmat`'
+  - '`corpusFromGraph`'
+  - '`wordFreqFromCorpus`'
   - '`wordCloudPlot`'
   - '`wordFreqChart`'
+  - '`wordSentData`'
   - '`wordSentChart`'
   - '`wordSentValenceChart`'
+  - '`mixmat`'  
 - title: Social Media
   contents:
   - '`getRedditUrlSubreddit`'

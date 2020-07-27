@@ -2,7 +2,7 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordCloudPlot}
 \alias{wordCloudPlot}
-\title{Create a Word Cloud plot}
+\title{Create a wordcloud plot}
 \usage{
 wordCloudPlot(
   word_freqs,
@@ -26,6 +26,8 @@ wordCloudPlot(
 \item{pcolors}{List. Colors to assign categorical variable in the plot or palette to use if \code{random.color}.
 Default is \code{NULL}.}
 
+\item{family}{Character. Set a font family for plot labels. Default is \code{NULL}.}
+
 \item{...}{
   Arguments passed on to \code{\link[wordcloud:wordcloud]{wordcloud::wordcloud}}
   \describe{
@@ -38,5 +40,5 @@ Default is \code{NULL}.}
 A wordcloud plot.
 }
 \description{
-This function creates a wordcloud plot of words in a text corpus.
+This function creates a wordcloud plot from word frequencies.
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a word frequency chart — wordFreqChart • VOSONDash</title>
+<title>Load package included network graph — loadPackageGraph • VOSONDash</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Create a word frequency chart — wordFreqChart" />
-<meta property="og:description" content="This function creates a horizontal barchart of word frequencies." />
+<meta property="og:title" content="Load package included network graph — loadPackageGraph" />
+<meta property="og:description" content="This function loads a network graph included in the extdata directory of the 
+VOSONDash package by file name." />
 
 
 
@@ -154,52 +155,36 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a word frequency chart</h1>
-    <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/textAnalysis.R'><code>R/textAnalysis.R</code></a></small>
-    <div class="hidden name"><code>wordFreqChart.Rd</code></div>
+    <h1>Load package included network graph</h1>
+    <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/networkGraphs.R'><code>R/networkGraphs.R</code></a></small>
+    <div class="hidden name"><code>loadPackageGraph.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function creates a horizontal barchart of word frequencies.</p>
+    <p>This function loads a network graph included in the <code>extdata</code> directory of the 
+<code>VOSONDash</code> package by file name.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wordFreqChart</span>(
-  <span class='no'>word_freqs</span>,
-  <span class='kw'>min_freq</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>top_count</span> <span class='kw'>=</span> <span class='fl'>20</span>,
-  <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>family</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>loadPackageGraph</span>(<span class='no'>fname</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>word_freqs</th>
-      <td><p>Dataframe. Word frequencies.</p></td>
-    </tr>
-    <tr>
-      <th>min_freq</th>
-      <td><p>Numeric. Minimum frequency for a word to be included in the chart. Default is <code>1</code>.</p></td>
-    </tr>
-    <tr>
-      <th>top_count</th>
-      <td><p>Numeric. Top count of words to render in word frequency chart. Default is <code>20</code>.</p></td>
-    </tr>
-    <tr>
-      <th>pcolors</th>
-      <td><p>List. Colors to assign categorical variable in the plot. Default is <code>NULL</code>.</p></td>
-    </tr>
-    <tr>
-      <th>family</th>
-      <td><p>Character string. Set a font family for plot labels. Default is <code>NULL</code>.</p></td>
+      <th>fname</th>
+      <td><p>Character string. Name of demonstration <code>graphml</code> file.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A barchart plot.</p>
+    <p>An igraph graph object.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'># load the "Divided They Blog" package included network graph by file name</span>
+<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'>loadPackageGraph</span>(<span class='st'>"DividedTheyBlog_40Alist_release.graphml"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

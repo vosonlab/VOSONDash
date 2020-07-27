@@ -2,16 +2,21 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordSentData}
 \alias{wordSentData}
-\title{Create NRC Emotion data from words}
+\title{Create NRC emotion data}
 \usage{
-wordSentData(corp, word_len = c(3, 4), word_freq = c(1, Inf))
+wordSentData(corp, word_len = c(3, 26))
 }
 \arguments{
 \item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
+
+\item{word_len}{Numeric vector. Min and max length of words to include. Default is \code{c(3, 26)}.}
 }
 \value{
-A nrc sentiment dataframe.
+An NRC sentiment dataframe.
 }
 \description{
-This function creates NRC data.
+This function creates an NRC emotion dataframe from a text corpus.
+}
+\note{
+Uses the \pkg{syuzhet} package implementation of Saif Mohammad’s NRC emotion lexicon.
 }
