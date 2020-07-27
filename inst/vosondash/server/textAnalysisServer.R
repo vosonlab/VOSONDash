@@ -9,7 +9,8 @@ ta_rv <- reactiveValues(
   plot_data_list = list(),          # list of base text corpus data sets
   has_text = FALSE,                 # does graphml have voson text data
   txt_attr_type = "",               # is text atttribute a vertex or edge
-  txt_attr_name = ""                # text attribute name in graphml
+  txt_attr_name = "",               # text attribute name in graphml
+  wc_seed = 100                     # wordcloud seed value
 )
 
 #### events ---------------------------------------------------------------------------------------------------------- #
@@ -30,38 +31,50 @@ observeEvent(ta_rv$has_text, {
 observeEvent(input$selected_text_analysis_tab, {
   plotWordFrequencies()
   plotWordClouds()
-  plotSentiments()
+  if (input$selected_text_analysis_tab == "Sentiment") {
+    plotSentiments()  
+  }
 }, ignoreInit = TRUE)
 
 # enter text analysis section or controls toggled
 # generate plots data and plot
 observeEvent({ input$sidebar_menu
-               input$ta_stopwords_check
-               input$ta_twitter_hashtags_check
-               input$ta_twitter_usernames_check
-               input$ta_stem_check }, {
-
-  if (input$sidebar_menu == "text_analysis_tab") {
-    taPlotListData()
-    plotWordFrequencies()
-    plotWordClouds()
-    plotSentiments()
-  }
-}, ignoreInit = TRUE)
+  input$ta_stopwords_check
+  input$ta_twitter_hashtags_check
+  input$ta_twitter_usernames_check
+  input$ta_stem_check
+  input$ta_word_length_slider
+  input$ta_rem_url_check
+  input$ta_rem_num_check
+  input$ta_html_decode_check
+  input$ta_iconv_check
+  input$ta_rem_punc_check }, {
+    
+    if (input$sidebar_menu == "text_analysis_tab") {
+      taPlotListData()
+      plotWordFrequencies()
+      plotWordClouds()
+      if (input$selected_text_analysis_tab == "Sentiment") {
+        plotSentiments()  
+      }
+    }
+  }, ignoreInit = TRUE)
 
 # replot when word cloud sliders change
 observeEvent({ input$ta_wc_min_word_freq
-               input$ta_wc_max_word_count }, {
-  
-  plotWordClouds()           
-}, ignoreInit = TRUE)
+  input$ta_wc_max_word_count
+  input$wc_random_col
+  input$ta_wc_vert_prop }, {
+    
+    plotWordClouds()           
+  }, ignoreInit = TRUE)
 
 # replot when word frequency sliders change
 observeEvent({ input$ta_wf_top_count
-               input$ta_wf_min_word_freq }, {
+  input$ta_wf_min_word_freq }, {
     
-  plotWordFrequencies()           
-}, ignoreInit = TRUE)
+    plotWordFrequencies()           
+  }, ignoreInit = TRUE)
 
 # generate plots data and plot if user stop words selected
 observeEvent(input$ta_user_stopwords_check, {
@@ -72,12 +85,24 @@ observeEvent(input$ta_user_stopwords_check, {
     taPlotListData()
     plotWordFrequencies()
     plotWordClouds()
-    plotSentiments()
+    if (input$selected_text_analysis_tab == "Sentiment") {
+      plotSentiments()  
+    }
   }
 }, ignoreInit = TRUE)
 
 observeEvent(input$ta_user_stopwords_input, {
   updateCheckboxInput(session, "ta_user_stopwords_check", value = FALSE)
+})
+
+observeEvent(input$wc_reseed_button, {
+  ta_rv$wc_seed <- sample(gbl_rng_range[1]:gbl_rng_range[2], 1)
+  
+  plotWordClouds()
+}, ignoreInit = TRUE)
+
+observeEvent(ta_rv$wc_seed, {
+  html("wc_seed", ta_rv$wc_seed)
 })
 
 #### output ----------------------------------------------------------------------------------------------------------- #
@@ -100,21 +125,27 @@ output$comparison_cloud_plot <- renderPlot({
 plotWordFrequencies <- reactive({
   top_count <- input$ta_wf_top_count
   min_freq <- input$ta_wf_min_word_freq
+  word_len <- input$ta_word_length_slider
+  mac_arial <- input$macos_font_check
   
   # create placeholders and plot word frequency charts from list of base text corpus data
   withProgress(message = "Processing word frequencies...", {
     callModule(taPlotPlaceholders, "word_freqs", ta_rv$plot_data_list)
     callModule(taPlotList, "word_freqs", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
-               min_freq, NULL, top_count, "wf", col_palette = gbl_plot_palette())
+               min_freq, NULL, top_count, "wf", col_palette = gbl_plot_palette(),
+               word_len, mac_arial)
   })
 })
 
 plotSentiments <- reactive({
+  word_len <- input$ta_word_length_slider
+  
   # create placeholders and plot charts from list of base text corpus data
   withProgress(message = "Processing sentiment...", {
     callModule(taPlotPlaceholders, "word_sentiments", ta_rv$plot_data_list, sub_plots = 2)
     callModule(taPlotList, "word_sentiments", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
-               NULL, NULL, NULL, "ws", col_palette = gbl_plot_palette())
+               NULL, NULL, NULL, "ws", col_palette = gbl_plot_palette(),
+               word_len)
   })
 })
 
@@ -122,12 +153,21 @@ plotSentiments <- reactive({
 plotWordClouds <- reactive({
   min_freq <- input$ta_wc_min_word_freq
   max_words <- input$ta_wc_max_word_count
+  wc_seed <- ta_rv$wc_seed
+  wc_random_order <- FALSE
+  wc_random_col <- input$wc_random_col
+  wc_vert_prop <- (input$ta_wc_vert_prop/100)
+  word_len <- input$ta_word_length_slider
+  mac_arial <- input$macos_font_check
   
   # create placeholders and plot word clouds from list of base text corpus data
   withProgress(message = "Processing word clouds...", {      
     callModule(taPlotPlaceholders, "word_clouds", ta_rv$plot_data_list)
     callModule(taPlotList, "word_clouds", ta_rv$plot_data_list, isolate(ng_rv$graph_seed), 
-               isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc", col_palette = gbl_plot_palette())
+               isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc",
+               col_palette = gbl_plot_palette(),
+               word_len, mac_arial,
+               wc_seed, wc_random_order, wc_random_col, wc_vert_prop)
   })
 })
 
@@ -138,6 +178,8 @@ comparisonCloudPlotData <- reactive({
   # cats <- isolate(ng_rv$graph_cats)
   
   max_words <- input$ta_cc_max_word_count
+  word_len <- input$ta_word_length_slider
+  mac_arial <- setArialUnicodeMS(input$macos_font_check)
   
   if (is.null(plot_data_list)) { return(VOSONDash::emptyPlotMessage("No text data.")) }
   
@@ -151,27 +193,31 @@ comparisonCloudPlotData <- reactive({
     df <- NULL
     for (i in 2:length(plot_data_list)) {   # first corpus in list is "All"
       df_t <- data.frame(text = unlist(sapply(plot_data_list[[i]]$corp, `[`, "content")), stringsAsFactors = FALSE)
-
+      
       tmp <- paste0(unlist(plot_data_list[[i]]$graph_attr$sub_cats), collapse = " / ")
       df <- rbind(df, data.frame(catval = tmp, text = paste(df_t$text, collapse = " ", stringsAsFactors = FALSE)))
     }
     
-    corp <- VCorpus(VectorSource(df$text))
-    corp <- tm_map(corp, stripWhitespace)   # do not need to do any more text processing, already done in base corpus
-    tdm <- TermDocumentMatrix(corp, control = list(wordLengths = c(0, Inf)))
-    # tdm <- removeSparseTerms(tdm, 0.98)
+    corp <- tm::VCorpus(tm::VectorSource(df$text))
+    corp <- tm::tm_map(corp, tm::stripWhitespace)   # do not need to do any more text processing, already done in base corpus
+    tdm <- tm::TermDocumentMatrix(corp, control = list(wordLengths = word_len))
+    tdm <- removeSparseTerms(tdm, 0.99)
     tdm <- as.matrix(tdm)
     colnames(tdm) <- df$catval
     
     if (ncol(tdm) < 2) {
       VOSONDash::emptyPlotMessage("No comparison plot: only one categorical variable present.")
     } else {
-      comparison.cloud(tdm, 
-                       max.words = max_words, 
-                       random.order = FALSE, 
-                       use.r.layout = FALSE, 
-                       title.size = 2, 
-                       colors = gbl_plot_palette()) # colors may need a re-think
+      plot_parameters <- list(tdm,
+                              max.words = max_words,
+                              random.order = FALSE,
+                              use.r.layout = FALSE, 
+                              title.size = 2, 
+                              colors = gbl_plot_palette())
+      
+      if (!is.null(mac_arial)) { plot_parameters['family'] <- mac_arial }
+      
+      do.call(wordcloud::comparison.cloud, plot_parameters)
     }
   }
 })
@@ -184,7 +230,7 @@ getFiltersDesc <- reactive({
       output <- append(output, paste0(input$graph_sub_cats_select, collapse = ', '))
     }
   }
-
+  
   output <- append(output, paste0("Filter Component Size: ", 
                                   input$graph_component_slider[1], " - ", 
                                   input$graph_component_slider[2]))
@@ -221,7 +267,7 @@ textAnalysisDetailsOutput <- reactive({
       
       if (length(plot_data_list) > 0) {
         data_names <- names(plot_data_list)
-
+        
         for (i in seq_along(plot_data_list)) {
           title_cat <- unlist(plot_data_list[[i]]$graph_attr$cat)
           title_attr <- unlist(plot_data_list[[i]]$graph_attr$sub_cats)
@@ -231,10 +277,13 @@ textAnalysisDetailsOutput <- reactive({
           }
           title <- paste0(title, paste0(title_attr, collapse = ' / '), "", sep = "")
           output <- append(output, title)
-          # removing urls when building base corpus so do not require max word length
-          dtmx <- DocumentTermMatrix(plot_data_list[[i]]$corp)
-          freq_terms <- colSums(as.matrix(dtmx))
-          output <- append(output, paste("Words:", sum(freq_terms)))
+          
+          isolate({
+            wf <- wordFreqFromCorpus(plot_data_list[[i]]$corp,
+                                     word_len = input$ta_word_length_slider)
+          })
+          
+          output <- append(output, paste("Words:", sum(wf$freq)))
           output <- append(output, "")
         }
       }
@@ -322,8 +371,7 @@ taPlotListData <- reactive({
 
 #### functions ------------------------------------------------------------------------------------------------------- #
 
-# return base text corpus data for category and attributes
-taTextCorpusData <- function(graph_attr, simple = FALSE) {
+taTextCorpusData <- function(graph_attr) {
   g <- graphFilters()
   
   if (is.null(g)) { return(NULL) }
@@ -337,11 +385,7 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
     plot_sub_cats <- graph_attr[[2]]
   }
   
-  # create filtered graph object for category and attribute value passed to the function
-  if (plot_cat != "") {
-    # g <- graphFilters()
-    g <- VOSONDash::applyCategoricalFilters(g, plot_cat, plot_sub_cats)
-  }
+  if (plot_cat != "") { g <- VOSONDash::applyCategoricalFilters(g, plot_cat, plot_sub_cats) }
   
   # voson text attributes
   attr_v <- igraph::vertex_attr_names(g)
@@ -360,85 +404,30 @@ taTextCorpusData <- function(graph_attr, simple = FALSE) {
   }
   
   if (ta_rv$has_text) {
-    if (attr[2] == "vertex") {
-      words <- igraph::vertex_attr(g, attr[1])
-    } else {
-      words <- igraph::edge_attr(g, attr[1])
-    }
-    
     ta_rv$txt_attr_type <- attr[2]
     ta_rv$txt_attr_name <- gsub(voson_txt_prefix, "", attr[1]) # "vosonTxt_"
     
-    toRemove <- which(words == "")
-    if (isTRUE(length(toRemove) != 0)) {
-      words <- words[-toRemove]
-    }
+    sw <- usw <- NULL
+    if (input$ta_stopwords_check) { sw <- "SMART" }
+    if (input$ta_user_stopwords_check) { usw <- input$ta_user_stopwords_input }
     
-    if (VOSONDash::isMac()) {
-      words <- iconv(words, to = 'utf-8-mac')
-    } else {
-      words <- iconv(words, to = 'utf-8')
-    }
+    corp <- VOSONDash::corpusFromGraph(g,
+                                       txt_attr = attr[1],
+                                       type = ta_rv$txt_attr_type,
+                                       iconv = input$ta_iconv_check,
+                                       html_decode = input$ta_html_decode_check,
+                                       rm_url = input$ta_rem_url_check,
+                                       rm_num = input$ta_rem_num_check,
+                                       rm_punct = input$ta_rem_punc_check,
+                                       rm_twit_hashtags = input$ta_twitter_hashtags_check,
+                                       rm_twit_users = input$ta_twitter_usernames_check,
+                                       sw_kind = sw,
+                                       rm_words = usw,
+                                       stem = input$ta_stem_check)
     
-    if (simple) {
-      return(list(graph_attr, words))
-    }
-    
-    corp <- VCorpus(VectorSource(words))
-    corp <- tm_map(corp, content_transformer(tolower))
-    corp <- tm_map(corp, content_transformer(remHTTP))
-    
-    if (input$ta_twitter_hashtags_check == TRUE) {
-      corp <- tm_map(corp, content_transformer(removeHashTags))
-    }
-    if (input$ta_twitter_usernames_check == TRUE) {
-      corp <- tm_map(corp, content_transformer(removeTwitterHandles))
-    }
-
-    if (!is.null(igraph::get.graph.attribute(g, "type"))) {
-      if (igraph::get.graph.attribute(g, "type") == "twitter") {
-        corp <- tm_map(corp, content_transformer(repHTMLApos))
-        corp <- tm_map(corp, content_transformer(repHTMLQuote))
-        corp <- tm_map(corp, content_transformer(repHTMLAmper))
-        corp <- tm_map(corp, content_transformer(remPartAmpGt))
-      }      
-    }
-
-    corp <- tm_map(corp, removeNumbers)
-    corp <- tm_map(corp, removePunctuation)
-    
-    if (input$ta_stopwords_check == TRUE) {
-      corp <- tm_map(corp, removeWords, stopwords("english"), lazy = TRUE)
-    }
-    
-    if (input$ta_user_stopwords_check == TRUE) {
-      sw <- tolower(input$ta_user_stopwords_input)
-      sw <- trimws(unlist(strsplit(sw, ",")))
-      corp <- tm_map(corp, removeWords, sw)
-    }
-    
-    if (input$ta_stem_check == TRUE) {
-      corp <- tm_map(corp, stemDocument)
-    }
-    
-    corp <- tm_map(corp, stripWhitespace, lazy = TRUE)
-    
-    return(list(graph_attr = list(cat = graph_attr[1], 
-                                  sub_cats = graph_attr[2]), 
+    return(list(graph_attr = list(cat = graph_attr[1], sub_cats = graph_attr[2]), 
                 corp = corp))
   } else {
     return(NULL)
   }
 }
-
-remHTTP <- function(x) gsub("http[[:alnum:][:punct:]]*", "", x)   # removes http and https tokens
-# remHTTP <- function(x) gsub("http[^[:space:]]*", "", x)         # might need if non-ascii characters in url
-
-removeHashTags <- function(x) gsub("#\\S+", "", x)
-removeTwitterHandles <- function(x) gsub("@\\S+", "", x)
-
-# replace html encoding with escaped characters in twitter text
-repHTMLApos <- function(x) gsub("&apos;", "\'", x)    # apostrophe
-repHTMLQuote <- function(x) gsub("&quot;", "\"", x)   # quote
-repHTMLAmper <- function(x) gsub("&amp;", "&", x)     # ampersand
-remPartAmpGt <- function(x) gsub("amp;|gt;", "", x)   # 

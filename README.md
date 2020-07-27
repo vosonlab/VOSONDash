@@ -3,7 +3,7 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 [![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 [![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=8065ac)](https://github.com/vosonlab/VOSONDash/releases)
-[![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.6&color=659DBD&logo=github)](https://github.com/vosonlab/VOSONDash)
+[![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.7&color=659DBD&logo=github)](https://github.com/vosonlab/VOSONDash)
 [![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?color=659DBD&logo=github)](https://github.com/vosonlab/VOSONDash/commits/master)
 
 `VOSONDash` is an interactive [R Shiny](https://shiny.rstudio.com/) web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the [vosonSML](https://github.com/vosonlab/vosonSML) R package.
@@ -12,18 +12,18 @@
 
 `VOSONDash` is an R package and must be installed before the app can be run.
 
-Install the latest release on CRAN (v0.5.4):
+Install the latest release on CRAN (v0.5.7):
 ```R
 install.packages("VOSONDash")
 ```
 
-Install the latest release via GitHub (v0.5.6):
+Install the latest release via GitHub (v0.5.7):
 ```R
-install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.6/VOSONDash-0.5.6.tar.gz", 
+install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.7/VOSONDash-0.5.7.tar.gz", 
   repo = NULL, type = "source")
 ```
 
-Install the latest development version (v0.5.6):
+Install the latest development version (v0.5.7):
 ```R
 # library(devtools)
 devtools::install_github("vosonlab/VOSONDash")
@@ -45,16 +45,16 @@ For example:
 ```R
 > runVOSONDash()
 =================================================
-VOSONDash v0.5.6
+VOSONDash v0.5.7
 ...
 Checking packages...
 
 Error: Required packages missing.
+- shinyjs
 - visNetwork
-- syuzhet
 
 Please install required packages before using VOSONDash:
-install.packages(c("visNetwork","syuzhet"))
+install.packages(c("shinyjs", "visNetwork"))
 ```
 The missing packages can be installed using the above `install.packages` command.
 

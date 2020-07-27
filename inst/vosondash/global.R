@@ -4,16 +4,12 @@
 app_version <- paste0("v", VOSONDash::getVOSONDashVer())
 
 isLocal <- Sys.getenv('SHINY_PORT') == ""
-# if (exists(".VOSONIsLocal")) {
 if (!is.null(getShinyOption("VOSONIsLocal"))) {
-  # isLocal <- .VOSONIsLocal
   isLocal <- getShinyOption("VOSONIsLocal")
 }
 
 pkgMsgs <- TRUE
-# if (exists(".VOSONPkgMsgs")) {
 if (!is.null(getShinyOption("VOSONPkgMsgs"))) {
-  # pkgMsgs <- .VOSONPkgMsgs
   pkgMsgs <- getShinyOption("VOSONPkgMsgs")
 }
 
@@ -24,9 +20,7 @@ ifelse(isLocal, options(shiny.maxRequestSize = 128*1024^2), # 128 MB
                 options(shiny.maxRequestSize = 48*1024^2))  # 48 MB
 
 is2910 <- FALSE
-if (utils::packageVersion("vosonSML") >= "0.29.10") {
-  is2910 <- TRUE
-}
+if (utils::packageVersion("vosonSML") >= "0.29.10") { is2910 <- TRUE }
 
 # graph data
 voson_cat_prefix <- "^vosonCA_"
@@ -67,7 +61,6 @@ vpopover <- function(title, content) {
                  "data-html = \"true\"",
                  "data-trigger = \"focus\"",
                  "tabindex = \"0\"",
-                 #"data-original-title = \"\"",
                  "title = \"", title, "\"",
                  ">",
                  "<i class=\"fa fa-question-circle\" style = \"font-size:0.90em;vertical-align:top;\"></i></a>"))
@@ -97,6 +90,10 @@ disable_tab_css <- "
     cursor: not-allowed !important;
     border-color: #f5f5f5 !important;
   }"
+
+# for shiny javascript conditional
+js_is_mac <- "false"
+if (VOSONDash::isMac()) { js_is_mac <- "true" }
 
 # collection
 gbl_def_tweet_count <- 100

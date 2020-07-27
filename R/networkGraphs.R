@@ -125,7 +125,7 @@ addAdditionalMeasures <- function(g) {
 #' @examples
 #' \dontrun{
 #' # get a list of voson vertex categories and values
-#' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+#' g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
 #' 
 #' vcats <- getVertexCategories(g)
 #' 
@@ -197,7 +197,7 @@ hasVosonTextData <- function(g) {
 #' \dontrun{
 #' # return a graph containing only vertices that have the vertex category 
 #' # attribute "vosonCA_Stance" value "liberal"
-#' g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+#' g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
 #' 
 #' g <- applyCategoricalFilters(g, "Stance", c("liberal"))
 #' }
@@ -242,9 +242,9 @@ applyPruneFilter <- function(g, selected_prune_verts) {
   g
 }
 
-#' @title Load package demonstration network graph
+#' @title Load package included network graph
 #'
-#' @description This function loads a demonstration network graph included in the \code{extdata} directory of the 
+#' @description This function loads a network graph included in the \code{extdata} directory of the 
 #' \code{VOSONDash} package by file name. 
 #' 
 #' @param fname Character string. Name of demonstration \code{graphml} file.
@@ -253,15 +253,12 @@ applyPruneFilter <- function(g, selected_prune_verts) {
 #' 
 #' @examples
 #' \dontrun{
-#' # load the "DividedTheyBlog" demonstration network graph
-#' g_demo_div <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
-#' 
-#' # load the "enviroActivistWebsites" demonstration network graph
-#' g_demo_env <- loadDemoGraph("enviroActivistWebsites_2006.graphml")
+#' # load the "Divided They Blog" package included network graph by file name
+#' g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
 #' }
 #' 
 #' @export
-loadDemoGraph <- function(fname) {
+loadPackageGraph <- function(fname) {
   tryCatch({
     f <- system.file("extdata", fname, package = "VOSONDash", mustWork = TRUE)
     g <- igraph::read_graph(f, format = c('graphml'))  
@@ -270,4 +267,40 @@ loadDemoGraph <- function(fname) {
   })
   
   g
+}
+
+#' @title Load the package included "Divided They Blog" network graph
+#'
+#' @description This is a convenience function to load the "DividedTheyBlog_40Alist_release.graphml" graph. 
+#' 
+#' @return An igraph graph object.
+#' 
+#' @examples
+#' \dontrun{
+#' # load the "Divided They Blog" network graph
+#' g <- dtbGraph()
+#' }
+#' 
+#' @keywords internal
+#' @export
+dtbGraph <- function() {
+  loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
+}
+
+#' @title Load the package included "Enviro Activist Websites 2006" network graph
+#'
+#' @description This is a convenience function to load the "enviroActivistWebsites_2006.graphml" graph. 
+#' 
+#' @return An igraph graph object.
+#' 
+#' @examples
+#' \dontrun{
+#' # load the "Enviro Activist Websites 2006" network graph
+#' g <- eawGraph()
+#' }
+#' 
+#' @keywords internal
+#' @export
+eawGraph <- function() {
+  loadPackageGraph("enviroActivistWebsites_2006.graphml")
 }

@@ -1,3 +1,19 @@
+# VOSONDash 0.5.7
+
+## Minor Changes:
+- Added a legend to network plots with vertex categorical attributes.
+- Removed automatic `iconv` conversion of text for text analysis. So unicode should display properly for plots in most cases.
+- Made `Arial Unicode MS` the default plot font for macOS systems that have it installed. This is to avoid problems with unicode characters. It can be disabled in the `Network Graphs` section.
+- Added an option for HTML decoding text.
+- Made removal of URL's, numbers and punctuation optional for text analysis.
+- Added text analysis word length control.
+- Added some additional `wordcloud` controls such as re-seed.
+- Cleaned up text corpus, word frequency and text analysis plot functions.
+- Improved speed of sentiment analysis plots. They will also now only update when the `Sentiment Analysis` tab is open or clicked on.
+- Added convenience functions `dtbGraph()` and `eawGraph()`. These load package included "Divided They Blog" and "Enviro Activist Websites 2006" igraph graphs.
+- Cleaned up package dependencies.
+- CRAN version update.
+
 # VOSONDash 0.5.6
 
 ## Minor Changes:
@@ -5,7 +21,6 @@
 - Removed arrows from `visNetwork` plot if graph undirected.
 - Fixed a groups parameter warning from `dplyr::summarise`. 
 - Cleaned up package dependencies.
-- CRAN version update.
 
 # VOSONDash 0.5.5
 

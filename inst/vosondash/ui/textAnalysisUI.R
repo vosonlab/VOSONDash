@@ -8,15 +8,30 @@ tabItem(tabName="text_analysis_tab",
                                 disabled(checkboxInput("ta_stopwords_check", "Remove standard stopwords", TRUE)),
                                 disabled(textInput("ta_user_stopwords_input", label = "User-defined stopwords", value = "")),
                                 disabled(checkboxInput("ta_user_stopwords_check", "Remove user-defined stopwords", FALSE)),
+                                disabled(checkboxInput("ta_stem_check", "Apply word stemming", FALSE)),
+                                checkboxInput("ta_rem_url_check", "Remove URLs", TRUE),
+                                checkboxInput("ta_rem_num_check", "Remove numbers", TRUE),
+                                checkboxInput("ta_rem_punc_check", "Remove punctuation", TRUE),
+                                hr(),
                                 disabled(checkboxInput("ta_twitter_hashtags_check", "Remove Twitter hashtags", TRUE)),
                                 disabled(checkboxInput("ta_twitter_usernames_check", "Remove Twitter usernames", TRUE)),
-                                disabled(checkboxInput("ta_stem_check", "Apply word stemming", FALSE))
+                                sliderInput("ta_word_length_slider", div("Word length", style = "font-weight: normal;"),
+                                            min = 1, max = 50, value = c(3, 26), ticks = FALSE)
                    ),
+                 ),
+                 fluidRow(
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                div("Current Network Graph", style = "font-weight: bold;", style = "margin-bottom:5px;"),
+                      checkboxInput('expand_ta_adv_check', div("Advanced", style = "font-weight:bold;"), FALSE),
+                      conditionalPanel(condition = 'input.expand_ta_adv_check',
+                        checkboxInput("ta_html_decode_check", "HTML Decode", TRUE),
+                        checkboxInput("ta_iconv_check", "iconv UTF8", FALSE))
+                   )                  
+                 ),
+                 fluidRow(
+                   sidebarPanel(width = 12, class = "custom_well_for_controls",
+                                div("Current Network Graph", style = "font-weight:bold;margin-bottom:5px;"),
                                 div("These values summarise the current state of the network graph including any filtering by category and component controls.", style = "margin-bottom:5px;"),
-                                verbatimTextOutput("ta_details_output", placeholder = TRUE)
-                   )
+                                verbatimTextOutput("ta_details_output", placeholder = TRUE))
                  )
           ),
           
@@ -45,7 +60,11 @@ tabItem(tabName="text_analysis_tab",
                                             fluidRow(
                                               div(sidebarPanel(width = 12, class = "custom_well_for_controls",
                                                                sliderInput("ta_wc_min_word_freq", "Minimum Frequency:", min = 1, max = 50, value = 1),
-                                                               sliderInput("ta_wc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 50)
+                                                               sliderInput("ta_wc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 50),
+                                                               sliderInput("ta_wc_vert_prop", "% Vertical Words:", min = 0, max = 100, value = 20),
+                                                               div(actionButton("wc_reseed_button", label = icon("refresh"), style = "padding:2px 8px;"),
+                                                                   div(id = "wc_seed", "", class = "div_inline")),
+                                                               checkboxInput("wc_random_col", "Random Colors", FALSE)
                                               ), style = "margin-right:10px;"))
                                      )
                                    )

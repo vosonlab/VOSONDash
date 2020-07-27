@@ -26,12 +26,7 @@ tabItem(tabName = "network_graphs_tab",
                                 div(""),
                                 div(disabled(checkboxInput("node_index_check", "Node Index", FALSE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("node_labels_check", "Use Labels", FALSE)), class = "div_inline"),
-                                # conditionalPanel(condition = 'input.node_labels_check',
-                                #                  fluidRow(column(width = 6, shinyjs::disabled(selectInput("node_label_select", label = NULL, 
-                                #                                                         choices = c("None"), selected = NULL, multiple = FALSE))))
-                                # ),
                                 div(""),
-                                
                                 div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_loops_edge_check", "Loops", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
                                 div(disabled(checkboxInput("graph_isolates_check", "Isolates", TRUE)), class = "div_inline"),
@@ -80,7 +75,8 @@ tabItem(tabName = "network_graphs_tab",
                                 conditionalPanel(condition = 'input.expand_categorical_filter_check',
                                                  fluidRow(
                                                    column(width = 6,
-                                                          disabled(selectInput("graph_cat_select", div("Category", style = "font-weight: normal;"), choices = c("All"), multiple = FALSE)) # selectize = TRUE graph_catAttr_select
+                                                          disabled(selectInput("graph_cat_select", div("Category", style = "font-weight: normal;"), choices = c("All"), multiple = FALSE)), # selectize = TRUE graph_catAttr_select
+                                                          checkboxInput("graph_legend_check", "Legend", TRUE)
                                                    ),
                                                    column(width = 6,
                                                           disabled(selectInput("graph_sub_cats_select", div("View", style = "font-weight: normal;"), choices = c("All"), multiple = TRUE, selected = "All", selectize = FALSE, size = 3))
@@ -103,6 +99,9 @@ tabItem(tabName = "network_graphs_tab",
                                                                 verbatimTextOutput("component_summary_ui"))
                                                  )
                                                  
+                                ),
+                                conditionalPanel(condition = js_is_mac,
+                                                 disabled(checkboxInput("macos_font_check", "Arial Unicode MS", TRUE))
                                 )
                                 
                    )
@@ -115,6 +114,7 @@ tabItem(tabName = "network_graphs_tab",
                    uiOutput("vis_plot_ui"),
                    uiOutput("plot_height_ui"),
                    uiOutput("graph_summary_ui"),
+                   uiOutput("graph_legend_ui"),
                    
                    # graph info and download buttons
                    sidebarPanel(id = "graph_info_well", width = 12, class = "custom_well_for_buttons",

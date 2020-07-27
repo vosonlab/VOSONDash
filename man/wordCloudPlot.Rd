@@ -2,12 +2,20 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordCloudPlot}
 \alias{wordCloudPlot}
-\title{Create a Word Cloud plot}
+\title{Create a wordcloud plot}
 \usage{
-wordCloudPlot(corp, seed = NULL, min_freq = 1, max_words = 50, pcolors = NULL)
+wordCloudPlot(
+  word_freqs,
+  seed = NULL,
+  min_freq = 1,
+  max_words = 50,
+  pcolors = NULL,
+  family = NULL,
+  ...
+)
 }
 \arguments{
-\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
+\item{word_freqs}{Table. Table of word frequencies.}
 
 \item{seed}{Numeric. Seed value can be supplied to reproduce a word cloud layout.}
 
@@ -15,11 +23,22 @@ wordCloudPlot(corp, seed = NULL, min_freq = 1, max_words = 50, pcolors = NULL)
 
 \item{max_words}{Numeric. Maximum number of words to render in the word cloud. Default is \code{50}.}
 
-\item{pcolors}{List. Colors to assign categorical variable in the plot. Default is \code{NULL}.}
+\item{pcolors}{List. Colors to assign categorical variable in the plot or palette to use if \code{random.color}.
+Default is \code{NULL}.}
+
+\item{family}{Character. Set a font family for plot labels. Default is \code{NULL}.}
+
+\item{...}{
+  Arguments passed on to \code{\link[wordcloud:wordcloud]{wordcloud::wordcloud}}
+  \describe{
+    \item{\code{random.order}}{plot words in random order. If false, they will be plotted in decreasing frequency}
+    \item{\code{random.color}}{choose colors randomly from the colors. If false, the color is chosen based on the frequency}
+    \item{\code{rot.per}}{proportion words with 90 degree rotation}
+  }}
 }
 \value{
 A wordcloud plot.
 }
 \description{
-This function creates a wordcloud plot of words in a text corpus.
+This function creates a wordcloud plot from word frequencies.
 }

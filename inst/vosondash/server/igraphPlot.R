@@ -28,10 +28,7 @@ igraphData <- reactive({
   
   # avoid unknown font warnings on windows by setting TT font
   saved_win_font <- NULL
-  # if (.Platform$OS.type != "unix") {
   if (.Platform$OS.type == "windows") {
-    # win_font <- unlist(windowsFonts("sans"), use.names = FALSE)
-    
     saved_win_font <- windowsFonts()$Arial
     windowsFonts(Arial = windowsFont("TT Arial"))
   }
@@ -127,7 +124,13 @@ igraphData <- reactive({
                                              "Closeness" = igraph_vsize(V(g)$Closeness),
                                              "None" = (base_vertex_size + 0.1) * node_size_multiplier)
   
-  plot_parameters['vertex.label.family'] <- "Arial"
+  if (.Platform$OS.type != "windows" & 
+      ("Arial Unicode MS" %in% VOSONDash::getSystemFontFamilies()) &
+      input$macos_font_check) {
+    plot_parameters['vertex.label.family'] <- "Arial Unicode MS"
+  } else {
+    plot_parameters['vertex.label.family'] <- "Arial"
+  }
   
   # --- start labels
   if (!node_index_check) {

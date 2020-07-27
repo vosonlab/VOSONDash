@@ -2,20 +2,17 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordSentValenceChart}
 \alias{wordSentValenceChart}
-\title{Create an NRC Positive and Negative Sentiment valence chart}
+\title{Create an NRC sentiment valence chart}
 \usage{
-wordSentValenceChart(corp)
+wordSentValenceChart(data)
 }
 \arguments{
-\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
+\item{data}{Dataframe. NRC emotions table.}
 }
 \value{
 A barchart plot.
 }
 \description{
-This function creates a vertical barchart of negative, positive and the sum of the sentiment values or
-valence in a text corpus.
-}
-\note{
-Uses the \pkg{syuzhet} package implementation of Saif Mohammad’s NRC Emotion lexicon.
+This function creates a vertical barchart of the sum of negative and positive sentiments, and the
+valence or net sentiment in a text corpus.
 }

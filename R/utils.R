@@ -167,12 +167,20 @@ getYoutubeVideoId <- function(url) {
 #' @export
 isMac <- function() {
   macMatch <- grep("darwin", R.Version()$os)
-  
-  if (length(macMatch) != 0) {
-    return(TRUE)
-  }
-  
+  if (length(macMatch) != 0) {  return(TRUE) }
   FALSE
+}
+
+#' @title Check system fonts
+#' 
+#' @description Looks up installed system fonts.
+#' 
+#' @return Returns installed system font families.
+#' 
+#' @keywords internal
+#' @export
+getSystemFontFamilies <- function() {
+  unique(systemfonts::system_fonts()$family)
 }
 
 #' @title Add message to log queue

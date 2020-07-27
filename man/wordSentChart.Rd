@@ -2,12 +2,12 @@
 % Please edit documentation in R/textAnalysis.R
 \name{wordSentChart}
 \alias{wordSentChart}
-\title{Create an NRC Emotion chart}
+\title{Create an NRC emotion chart}
 \usage{
-wordSentChart(corp, pcolors = NULL)
+wordSentChart(data, pcolors = NULL)
 }
 \arguments{
-\item{corp}{\pkg{tm} package document \code{\link[tm]{Corpus}} object.}
+\item{data}{Dataframe. NRC emotions table.}
 
 \item{pcolors}{List. Colors to assign categorical variable in the plot. Default is \code{NULL}.}
 }
@@ -15,8 +15,8 @@ wordSentChart(corp, pcolors = NULL)
 A barchart plot.
 }
 \description{
-This function creates a horizontal barchart measuring and sorting the eight NRC lexicon emotions in 
-the text corpus. Emotions are measured as the proportion of the total value of the eight emotions in the text as a 
+This function creates a horizontal barchart measuring and sorting the eight NRC lexicon emotions.
+Emotions are measured as the proportion of the total value of the eight emotions in the text as a
 percentage.
 }
 \note{

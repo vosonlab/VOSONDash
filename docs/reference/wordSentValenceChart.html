@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create an NRC Positive and Negative Sentiment valence chart — wordSentValenceChart • VOSONDash</title>
+<title>Create an NRC sentiment valence chart — wordSentValenceChart • VOSONDash</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,9 +48,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Create an NRC Positive and Negative Sentiment valence chart — wordSentValenceChart" />
-<meta property="og:description" content="This function creates a vertical barchart of negative, positive and the sum of the sentiment values or
-valence in a text corpus." />
+<meta property="og:title" content="Create an NRC sentiment valence chart — wordSentValenceChart" />
+<meta property="og:description" content="This function creates a vertical barchart of the sum of negative and positive sentiments, and the
+valence or net sentiment in a text corpus." />
 
 
 
@@ -82,7 +82,7 @@ valence in a text corpus." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.7</span>
       </span>
     </div>
 
@@ -155,33 +155,30 @@ valence in a text corpus." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create an NRC Positive and Negative Sentiment valence chart</h1>
+    <h1>Create an NRC sentiment valence chart</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/textAnalysis.R'><code>R/textAnalysis.R</code></a></small>
     <div class="hidden name"><code>wordSentValenceChart.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function creates a vertical barchart of negative, positive and the sum of the sentiment values or
-valence in a text corpus.</p>
+    <p>This function creates a vertical barchart of the sum of negative and positive sentiments, and the
+valence or net sentiment in a text corpus.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wordSentValenceChart</span>(<span class='no'>corp</span>)</pre>
+    <pre class="usage"><span class='fu'>wordSentValenceChart</span>(<span class='no'>data</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>corp</th>
-      <td><p><span class="pkg">tm</span> package document <code><a href='https://rdrr.io/pkg/tm/man/Corpus.html'>Corpus</a></code> object.</p></td>
+      <th>data</th>
+      <td><p>Dataframe. NRC emotions table.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A barchart plot.</p>
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>Uses the <span class="pkg">syuzhet</span> package implementation of Saif Mohammad’s NRC Emotion lexicon.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

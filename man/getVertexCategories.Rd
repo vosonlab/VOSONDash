@@ -21,7 +21,7 @@ format and their unique values.
 \examples{
 \dontrun{
 # get a list of voson vertex categories and values
-g <- loadDemoGraph("DividedTheyBlog_40Alist_release.graphml")
+g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
 
 vcats <- getVertexCategories(g)
 

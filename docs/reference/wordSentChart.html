@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create an NRC Emotion chart — wordSentChart • VOSONDash</title>
+<title>Create an NRC emotion chart — wordSentChart • VOSONDash</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,9 +48,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Create an NRC Emotion chart — wordSentChart" />
-<meta property="og:description" content="This function creates a horizontal barchart measuring and sorting the eight NRC lexicon emotions in 
-the text corpus. Emotions are measured as the proportion of the total value of the eight emotions in the text as a 
+<meta property="og:title" content="Create an NRC emotion chart — wordSentChart" />
+<meta property="og:description" content="This function creates a horizontal barchart measuring and sorting the eight NRC lexicon emotions.
+Emotions are measured as the proportion of the total value of the eight emotions in the text as a
 percentage." />
 
 
@@ -83,7 +83,7 @@ percentage." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.7</span>
       </span>
     </div>
 
@@ -156,25 +156,25 @@ percentage." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create an NRC Emotion chart</h1>
+    <h1>Create an NRC emotion chart</h1>
     <small class="dont-index">Source: <a href='https://github.com/vosonlab/VOSONDash/blob/master/R/textAnalysis.R'><code>R/textAnalysis.R</code></a></small>
     <div class="hidden name"><code>wordSentChart.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function creates a horizontal barchart measuring and sorting the eight NRC lexicon emotions in 
-the text corpus. Emotions are measured as the proportion of the total value of the eight emotions in the text as a 
+    <p>This function creates a horizontal barchart measuring and sorting the eight NRC lexicon emotions.
+Emotions are measured as the proportion of the total value of the eight emotions in the text as a
 percentage.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wordSentChart</span>(<span class='no'>corp</span>, <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>wordSentChart</span>(<span class='no'>data</span>, <span class='kw'>pcolors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>corp</th>
-      <td><p><span class="pkg">tm</span> package document <code><a href='https://rdrr.io/pkg/tm/man/Corpus.html'>Corpus</a></code> object.</p></td>
+      <th>data</th>
+      <td><p>Dataframe. NRC emotions table.</p></td>
     </tr>
     <tr>
       <th>pcolors</th>

@@ -85,11 +85,19 @@ taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
 #' @param max_words maximum number of words to render in word clouds
 #' @param top_count number of words to render in word frequency charts
 #' @param type code for type of plots "wf" word frequencies or "wc" word clouds
-#' 
+#' @param col_palette color palette for plots
+#' @param word_length word bounds min max
+#' @param mac_arial use arial unicode for macos
+#' @param wc_seed wordcloud plot seed value
+#' @param wc_random_order wordcloud random word order
+#' @param wc_random_col wordcloud random colors
+#' @param wc_vert_prop wordcloud proportion of vertical words
+#'  
 #' @return None
 #'
 taPlotList <- function(input, output, session, data, seed, categories, min_freq, max_words, top_count, type, 
-                       col_palette) {
+                       col_palette, word_length = c(3, 26), mac_arial = TRUE,
+                       wc_seed = 100, wc_random_order = FALSE, wc_random_col = FALSE, wc_vert_prop = 0.1) {
   ns <- session$ns
   
   wordFreqPlotList <- reactive({
@@ -108,8 +116,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
                                  unlist(data_item$graph_attr$cat), 
                                  unlist(data_item$graph_attr$sub_cats), 
                                  "#f5f5f5", col_palette)
+            
+            wf <- VOSONDash::wordFreqFromCorpus(data_item$corp, word_len = word_length)
 
-            VOSONDash::wordFreqChart(corp = data_item$corp, min_freq, top_count, pcolors)
+            VOSONDash::wordFreqChart(wf,
+                                     min_freq,
+                                     top_count,
+                                     pcolors,
+                                     family = setArialUnicodeMS(mac_arial))
           })
         })
       }
@@ -141,7 +155,17 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
                                  unlist(data_item$graph_attr$sub_cats), 
                                  "#000000", col_palette)
             
-            VOSONDash::wordCloudPlot(corp = data_item$corp, seed, min_freq, max_words, pcolors)
+            if (wc_random_col) {
+              pcolors <- col_palette
+            }
+            
+            wf <- VOSONDash::wordFreqFromCorpus(data_item$corp, word_len = word_length)
+            
+            VOSONDash::wordCloudPlot(wf,
+                                     wc_seed, min_freq, max_words, pcolors,
+                                     random.order = wc_random_order, random.color = wc_random_col,
+                                     rot.per = wc_vert_prop,
+                                     family = setArialUnicodeMS(mac_arial))
           })
         })
       }
@@ -168,15 +192,17 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
                                unlist(data_item$graph_attr$sub_cats), 
                                "#f5f5f5", col_palette)          
           
+          sent_data <- VOSONDash::wordSentData(corp = data_item$corp, word_len = word_length)
+
           plot_id <- paste0(plot_ids[local_i], "-a")
           output[[plot_id]] <- renderPlot({
-            out <- VOSONDash::wordSentChart(corp = data_item$corp, pcolors)
+            plots <- VOSONDash::wordSentChart(sent_data, pcolors)
           })
           
           plot_id <- paste0(plot_ids[local_i], "-b")
           output[[plot_id]] <- renderPlot({
-            out <- VOSONDash::wordSentValenceChart(corp = data_item$corp)
-          })        
+            plots <- VOSONDash::wordSentValenceChart(sent_data)
+          })       
         })
       }
       
@@ -198,6 +224,14 @@ taPlotList <- function(input, output, session, data, seed, categories, min_freq,
   } else if (type == "ws") {
     wordSentPlotList()
   }
+}
+
+setArialUnicodeMS <- function(enabled) {
+  if (.Platform$OS.type != "windows" & ("Arial Unicode MS" %in% VOSONDash::getSystemFontFamilies()) &
+      enabled) {
+    return("Arial Unicode MS")
+  }
+  NULL
 }
 
 getColors <- function(categories, plot_category, plot_category_attrs, default_col, col_palette) {
