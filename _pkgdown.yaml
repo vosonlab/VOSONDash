@@ -1,10 +1,10 @@
 title: VOSONDash
 url: http://vosonlab.github.io/VOSONDash
 
-authors:
-  Bryan Gertzel:
-    href: "https://vosonlab.net"
-    html: "<span>VOSON Lab</span>"
+# authors:
+  # Bryan Gertzel:
+    # href: "https://vosonlab.net"
+    # html: "<span>VOSON Lab</span>"
 
 navbar:
   structure:

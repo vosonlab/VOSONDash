@@ -1,3 +1,7 @@
+# VOSONDash 0.5.8.9000
+
+## Minor Changes:
+
 # VOSONDash 0.5.7
 
 ## Minor Changes:

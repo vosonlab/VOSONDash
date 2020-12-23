@@ -1,5 +1,5 @@
 Package: VOSONDash
-Version: 0.5.7
+Version: 0.5.8.9000
 Title: User Interface for Collecting and Analysing Social Networks
 Description: A 'Shiny' application for the interactive visualisation and
     analysis of networks that also provides a web interface for collecting
@@ -33,8 +33,9 @@ Suggests:
     visNetwork
 Depends: R (>= 3.2.0)
 Encoding: UTF-8
-Author: Bryan Gertzel, Robert Ackland
-Maintainer: Bryan Gertzel <bryan.gertzel@anu.edu.au>
+Authors@R: c( 
+    person("Bryan", "Gertzel", email = "bryan.gertzel@anu.edu.au", role = c("aut", "cre")), 
+    person("Robert", "Ackland", email = "robert.ackland@anu.edu.au", role = "aut", comment = c(ORCID = "0000-0002-0008-1766")))
 License: GPL (>= 3)
 RoxygenNote: 7.1.1
 NeedsCompilation: no
