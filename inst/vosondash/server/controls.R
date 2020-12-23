@@ -4,6 +4,7 @@ disableGraphFilterControls <- function() {
                    "graph_loops_edge_check",
                    "node_index_check",
                    "node_labels_check",
+                   "node_sel_labels_check",
                    "graph_niter",
                    "graph_charge",
                    "graph_mass",
@@ -28,6 +29,7 @@ resetEnableGraphFilterControls <- function() {
                    "graph_loops_edge_check",
                    "node_index_check",
                    "node_labels_check",
+                   "node_sel_labels_check",
                    "graph_niter",
                    "graph_charge",
                    "graph_mass",
@@ -82,6 +84,7 @@ enablePlotControls <- function() {
   
   ui_controls <- c("node_index_check",
                    "node_labels_check",
+                   "node_sel_labels_check",
                    "graph_niter",
                    "graph_charge",
                    "graph_mass",

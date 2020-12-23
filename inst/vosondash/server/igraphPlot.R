@@ -133,43 +133,45 @@ igraphData <- reactive({
   }
   
   # --- start labels
-  if (!node_index_check) {
-    
-  plot_parameters['vertex.label.cex'] <- base_label_size
-  plot_parameters['vertex.label.dist'] <- label_dist
-  plot_parameters['vertex.label.degree'] <- label_degree
-  
-  labels <- FALSE
-  if (!(is.null(vertex_attr(g, "label")))) {
-    labels <- TRUE
-  }
-    
-  if (input$node_labels_check == FALSE) {
-    if (labels) {
-      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
-                                                  ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
-    } else {
-      plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
-                                                  ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
+  if (node_index_check == FALSE) {
+    if (input$node_labels_check == FALSE) {
+      plot_parameters[['vertex.label']] <- NA
     }
-  } else {
-    if (labels) {
-      plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$label) > 0, V(g)$label, "-")
-    } else {
-      plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
-    }
-  }
+    
+    plot_parameters['vertex.label.cex'] <- base_label_size
+    plot_parameters['vertex.label.dist'] <- label_dist
+    plot_parameters['vertex.label.degree'] <- label_degree
   
-  plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_sel_label_col, 
-                                                   gbl_plot_def_label_color)
+    labels <- ifelse(!is.null(vertex_attr(g, "label")), TRUE, FALSE)
+  
+    if (input$node_labels_check == FALSE) {
+      if (input$node_sel_labels_check == TRUE) {
+        if (labels) {
+          plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
+                                                      ifelse(nchar(V(g)$label) > 0, V(g)$label, "-"), NA)
+        } else {
+          plot_parameters[['vertex.label']] <- ifelse(V(g)$id %in% selected_row_names, 
+                                                      ifelse(nchar(V(g)$name) > 0, V(g)$name, "-"), NA)
+        }
+      }
+    } else {
+      if (labels) {
+        plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$label) > 0, V(g)$label, "-")
+      } else {
+        plot_parameters[['vertex.label']] <- ifelse(nchar(V(g)$name) > 0, V(g)$name, "-")
+      }
+    }
+  
+    plot_parameters[['vertex.label.color']] = ifelse(V(g)$id %in% selected_row_names, gbl_sel_label_col, 
+                                                     gbl_plot_def_label_color)
 
-  plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
-                                            "Degree" = (norm_values(V(g)$Degree)) + base_label_size,
-                                            "Indegree" = (norm_values(V(g)$Indegree)) + base_label_size,
-                                            "Outdegree" = (norm_values(V(g)$Outdegree)) + base_label_size,
-                                            "Betweenness" = (norm_values(V(g)$Betweenness)) + base_label_size,
-                                            "Closeness" = (norm_values(V(g)$Closeness)) + base_label_size,
-                                            "None" = base_label_size)
+    plot_parameters[['vertex.label.cex']] <- switch(node_degree_type,
+                                              "Degree" = (norm_values(V(g)$Degree)) + base_label_size,
+                                              "Indegree" = (norm_values(V(g)$Indegree)) + base_label_size,
+                                              "Outdegree" = (norm_values(V(g)$Outdegree)) + base_label_size,
+                                              "Betweenness" = (norm_values(V(g)$Betweenness)) + base_label_size,
+                                              "Closeness" = (norm_values(V(g)$Closeness)) + base_label_size,
+                                              "None" = base_label_size)
   }
   # --- end labels
   

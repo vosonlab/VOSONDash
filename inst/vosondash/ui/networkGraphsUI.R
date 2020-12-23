@@ -20,18 +20,24 @@ tabItem(tabName = "network_graphs_tab",
                                 )
                    ),
                    sidebarPanel(width = 12, class = "custom_well_for_controls",
-                                div("Graph Filters", style = "font-weight: bold;", class = "div_inline"),
-                                div(div(id = "seed", "", class = "div_inline"), disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding:2px 8px;")), style = "float:right; margin-top:5px; font-size:0.98em;",
-                                    vpopover(po_reseed_graph()$title, po_reseed_graph()$content)),
-                                div(""),
-                                div(disabled(checkboxInput("node_index_check", "Node Index", FALSE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
-                                div(disabled(checkboxInput("node_labels_check", "Use Labels", FALSE)), class = "div_inline"),
-                                div(""),
-                                div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
-                                div(disabled(checkboxInput("graph_loops_edge_check", "Loops", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
-                                div(disabled(checkboxInput("graph_isolates_check", "Isolates", TRUE)), class = "div_inline"),
                                 fluidRow(
-                                  column(width = 6,
+                                        column(width = 12,
+                                          div("Labels", style = "font-weight: bold;"),
+                                          div(disabled(checkboxInput("node_index_check", "Index", FALSE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
+                                          div(disabled(checkboxInput("node_labels_check", "Label Attribute", FALSE)), class = "div_inline"),
+                                          div(disabled(checkboxInput("node_sel_labels_check", "Selected Nodes", TRUE)), class = "div_inline")
+                                        )
+                                ),
+                                fluidRow(
+                                        column(width = 12,
+                                          div("Graph Filters", style = "font-weight: bold;"),
+                                          div(disabled(checkboxInput("graph_multi_edge_check", "Multiple Edges", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
+                                          div(disabled(checkboxInput("graph_loops_edge_check", "Loops", TRUE)), class = "div_inline", style = "margin-right:8px; margin-top:0px;"),
+                                          div(disabled(checkboxInput("graph_isolates_check", "Isolates", TRUE)), class = "div_inline")
+                                        )
+                                ),
+                                fluidRow(
+                                  column(width = 4,
                                          div(tags$b("Graph Layout"), 
                                              vpopover(po_graph_layout()$title, po_graph_layout()$content), 
                                              style = "margin-bottom:5px;"),
@@ -41,6 +47,10 @@ tabItem(tabName = "network_graphs_tab",
                                   ),
                                   column(width = 6,
                                          disabled(sliderInput("graph_spread_slider", "Spread", min = 0.25, max = 2.5, step = 0.1, value = c(1), ticks = FALSE))
+                                  ),
+                                  column(width = 2,
+                                         div(div(id = "seed", "", class = "div_inline"), disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding:2px 8px;")), style = "float:right; margin-top:5px; font-size:0.98em;",
+                                             vpopover(po_reseed_graph()$title, po_reseed_graph()$content))       
                                   )
                                 ),
                                 conditionalPanel(condition = 'input.graph_layout_select == "FR" | input.graph_layout_select == "Graphopt"',
@@ -53,7 +63,7 @@ tabItem(tabName = "network_graphs_tab",
                                                           column(width = 6, numericInput(inputId = "graph_spr_const", "Constant", value = 1, min = 1, max = 1000)))
                                 ),
                                 fluidRow(
-                                  column(width = 6,
+                                  column(width = 4,
                                          div("Node Size", style = "font-weight: bold;", class = "custom_node_size_div"),
                                          disabled(selectInput("graph_node_size_select", label = NULL, choices = c("None", "Degree", "Indegree", "Outdegree", "Betweenness", "Closeness"),
                                                               multiple = FALSE, selectize = TRUE))
@@ -100,6 +110,24 @@ tabItem(tabName = "network_graphs_tab",
                                                  )
                                                  
                                 ),
+                                checkboxInput('expand_nbh_check', div("Neighbourhood Select", style = "font-weight: bold;"), FALSE),
+                                conditionalPanel(condition = 'input.expand_nbh_check',
+                                                 fluidRow(
+                                                         column(width = 4,
+                                                                selectInput("nbh_order_select", div("Order", style = "font-weight: normal;"), choices = c(1:10), selected = 1, multiple = FALSE)
+                                                         ),
+                                                         column(width = 8,
+                                                                fluidRow(actionButton("nbh_select_button", label = "Select Nodes"),
+                                                                         actionButton("nbh_prune_unselected", label = icon("scissors"))
+                                                                        ),
+                                                                fluidRow(disabled(actionButton("nbh_undo_button", label = "Undo")),
+                                                                         actionButton("nbh_deselct_button", "Deselect All"),
+                                                                         actionButton("nbh_reset_button", "Reset")
+                                                                         )
+                                                        )
+                                                 )
+                                                 
+                                ),                                
                                 conditionalPanel(condition = js_is_mac,
                                                  disabled(checkboxInput("macos_font_check", "Arial Unicode MS", TRUE))
                                 )
