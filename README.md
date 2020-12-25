@@ -20,14 +20,15 @@ install.packages("VOSONDash")
 
 Install the latest release via GitHub (v0.5.7):
 ```R
-install.packages("https://github.com/vosonlab/VOSONDash/releases/download/v0.5.7/VOSONDash-0.5.7.tar.gz", 
+install.packages(
+  pkgs = "https://github.com/vosonlab/VOSONDash/releases/download/v0.5.7/VOSONDash-0.5.7.tar.gz", 
   repo = NULL, type = "source")
 ```
 
 Install the latest development version (v0.5.8.9000):
 ```R
-# library(devtools)
-devtools::install_github("vosonlab/VOSONDash")
+install.packages("remotes")
+remotes::install_github("vosonlab/VOSONDash")
 ```
 
 Once the VOSON Dashboard package is installed and loaded the Shiny web application can be run from the RStudio console using the `runVOSONDash()` function.

@@ -13,15 +13,16 @@ requiredPackages <- c("dplyr",
 # if app is local print package information
 if (isLocal) {
   message("=================================================\n",
-          paste("VOSONDash", paste0("v", utils::packageVersion("VOSONDash")), "\n"),
-          paste0(utils::packageDate("VOSONDash"), "\n\n"),
+          paste0("VOSONDash",
+                 " v", utils::packageVersion("VOSONDash"),
+                 " (", utils::packageDate("VOSONDash"), ")\n\n"),
   
           paste0(trimws(paste(Sys.getenv("os"), R.Version()$platform)), "\n"),
           paste0(R.version.string, "\n"),
-          paste("R shiny", utils::packageVersion("shiny"), "\n"),
+          paste0("R shiny v", utils::packageVersion("shiny"), "\n"),
   
-          paste("\nHome:", Sys.getenv("HOME"), "\n\n", 
-                "Checking packages...\n"))
+          paste0("\nHome: ", Sys.getenv("HOME"), "\n\n"), 
+          paste0("Checking packages...\n"))
 }
 
 if (pkgMsgs == FALSE) {

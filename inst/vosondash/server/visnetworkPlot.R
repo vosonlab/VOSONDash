@@ -101,13 +101,20 @@ visNetworkData <- reactive({
   if (node_index_check) {
     verts$title <- verts$label
     verts$label <- sub("n", "", row.names(verts))
-    verts$shape <- "dot"
+    verts$shape <- "circle"
   } else {
+    verts$shape <- "dot"
     if (input$node_labels_check == FALSE) {
-      verts$label <- ""
+      if (input$node_sel_labels_check == TRUE) {
+        verts <- dplyr::mutate(verts, label = ifelse(!is.na(.data$sel_label), .data$sel_label, ""),
+                               sel_label = NULL)
+      } else {
+        verts$label <- ""  
+      }
     } else {
-      verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$sel_label), .data$label, .data$sel_label),
-                             sel_label = NULL)  
+      # verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$sel_label), .data$label, .data$sel_label),
+      #                        sel_label = NULL)
+      verts <- dplyr::mutate(verts, label = ifelse(is.na(.data$label), .data$name, .data$label))
     }
     verts$title <- row.names(verts)
   }
@@ -159,7 +166,13 @@ visNetworkData <- reactive({
                nodesIdSelection = TRUE,
                height = plot_height) %>%
     visInteraction(multiselect = TRUE) %>%
-    visEvents(click = "function(v) { Shiny.onInputChange('vis_node_select', v.nodes); }")
+    visEvents(click = "function(v) { 
+                // if (v.event.srcEvent.ctrlKey) {
+                //   Shiny.onInputChange('vis_nbh_node_select', v.nodes);
+                // } else {
+                  Shiny.onInputChange('vis_node_select', v.nodes);
+                // }
+                }")
   
   if (ng_rv$graph_dir) { 
     vis_net <- vis_net %>% visEdges(arrows = "to", color = list(color = "#b0b0b0"))
