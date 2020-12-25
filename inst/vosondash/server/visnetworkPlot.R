@@ -160,7 +160,7 @@ visNetworkData <- reactive({
   vis_net <- do.call(visIgraphLayout, l_params)
   
   vis_net <- vis_net %>%
-    visOptions(collapse = TRUE, 
+    visOptions(collapse = FALSE, 
                highlightNearest = list(enabled = TRUE, hover = TRUE),
                selectedBy = category_selection,
                nodesIdSelection = TRUE,
@@ -174,11 +174,13 @@ visNetworkData <- reactive({
                 // }
                 }")
   
-  if (ng_rv$graph_dir) { 
-    vis_net <- vis_net %>% visEdges(arrows = "to", color = list(color = "#b0b0b0"))
-  } else {
-    vis_net <- vis_net %>% visEdges(color = list(color = "#b0b0b0"))
-  }
+  e_arrows <- e_smooth <- NULL
+  if (ng_rv$graph_dir) { e_arrows <- "to" }
+  if (input$graph_multi_edge_check) { e_smooth <- list(enabled = TRUE, type = "diagonalCross") }
+  
+  vis_net <- vis_net %>% visEdges(arrows = e_arrows,
+                                  smooth = e_smooth,
+                                  color = list(color = "#b0b0b0"))
   
   vis_net
 })

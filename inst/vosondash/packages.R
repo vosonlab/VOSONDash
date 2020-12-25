@@ -16,10 +16,11 @@ if (isLocal) {
           paste0("VOSONDash",
                  " v", utils::packageVersion("VOSONDash"),
                  " (", utils::packageDate("VOSONDash"), ")\n\n"),
-  
+          
           paste0(trimws(paste(Sys.getenv("os"), R.Version()$platform)), "\n"),
           paste0(R.version.string, "\n"),
-          paste0("R shiny v", utils::packageVersion("shiny"), "\n"),
+          paste0("shiny v", utils::packageVersion("shiny"), "\n"),
+          paste0("vosonSML v", utils::packageVersion("vosonSML"), "\n"),          
   
           paste0("\nHome: ", Sys.getenv("HOME"), "\n\n"), 
           paste0("Checking packages...\n"))

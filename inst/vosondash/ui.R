@@ -22,7 +22,6 @@ dashboardPage(
   dashboardSidebar(useShinyjs(), width = 180,
                    tags$style(".left-side, .main-sidebar {padding-top: 40px}"),
                    sidebarMenu(id = "sidebar_menu",
-                               # menuItem("Home", tabName = "home_tab", icon = icon("university")),
                                h4("Analysis", style = "padding-left:20px; font-size:16px;"),
                                menuItem("Network Graphs", tabName = "network_graphs_tab", icon = icon("share-alt"), 
                                         selected = TRUE),
@@ -30,7 +29,6 @@ dashboardPage(
                                menuItem("Text Analysis", tabName = "text_analysis_tab", icon = icon("bar-chart")),
                                menuItem("Assortativity", tabName = "assortativity_tab", icon = icon("bar-chart")),
                                h4("Collection", style = "padding-left:20px; font-size:16px;"),
-                               # sidebarMenuOutput("vosonSML_version_field"),
                                menuItem("Twitter", tabName = "twitter_collection_tab", icon = icon("twitter")),
                                menuItem("Youtube", tabName = "youtube_collection_tab", icon = icon("youtube")),
                                menuItem("Reddit", tabName = "reddit_collection_tab", icon = icon("reddit")),
@@ -46,7 +44,6 @@ dashboardPage(
     extendShinyjs(text = disable_tab_jscode, functions = c("disableTab")),
     inlineCSS(disable_tab_css),
     
-    #use_tippy(),
     extendShinyjs(text = gbl_scroll_console, functions = c("scroll_console")),
     # custom ui stylesheet
     tags$head(
