@@ -13,20 +13,22 @@ requiredPackages <- c("dplyr",
 # if app is local print package information
 if (isLocal) {
   message("=================================================\n",
-          paste("VOSONDash", paste0("v", VOSONDash::getVOSONDashVer()), "\n"),
-          paste0(format(Sys.time(), "%d %b %Y %H:%M"), "\n\n"),
-  
+          paste0("VOSONDash",
+                 " v", utils::packageVersion("VOSONDash"),
+                 " (", utils::packageDate("VOSONDash"), ")\n\n"),
+          
           paste0(trimws(paste(Sys.getenv("os"), R.Version()$platform)), "\n"),
           paste0(R.version.string, "\n"),
-          paste("R shiny", packageVersion("shiny"), "\n"),
+          paste0("shiny v", utils::packageVersion("shiny"), "\n"),
+          paste0("vosonSML v", utils::packageVersion("vosonSML"), "\n"),          
   
-          paste("\nHome:", Sys.getenv("HOME"), "\n\n", 
-                "Checking packages...\n"))
+          paste0("\nHome: ", Sys.getenv("HOME"), "\n\n"), 
+          paste0("Checking packages...\n"))
 }
 
 if (pkgMsgs == FALSE) {
   loadedPackages <- sapply(requiredPackages, function(x) { 
-    suppressPackageStartupMessages(require(x, character.only = TRUE))
+    suppressWarnings(suppressPackageStartupMessages(require(x, character.only = TRUE)))
   })
 } else {
   loadedPackages <- sapply(requiredPackages, function(x) { require(x, character.only = TRUE) })  

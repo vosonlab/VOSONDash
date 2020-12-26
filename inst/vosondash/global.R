@@ -41,8 +41,8 @@ ta_plot_height <- "450px"
 # data tables
 options(htmlwidgets.TOJSON_ARGS = list(na = 'string'))
 
-gbl_dt_menu_len <- list(c(10, 50, -1), c('10', '50', 'All'))
-gbl_dt_page_len <- 10
+gbl_dt_menu_len <- list(c(20, 40, 60, 100, -1), c('20', '40', '60', '100', 'All'))
+gbl_dt_page_len <- 20
 
 gbl_dt_col_defs <- list(list(
   render = JS(

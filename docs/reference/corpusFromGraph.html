@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.8.9000</span>
       </span>
     </div>
 
@@ -89,27 +89,27 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
+    <span class="fas fa-newspaper-o"></span>
      
     Changelog
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-cubes"></span>
+    <span class="fas fa-cubes"></span>
      
     Reference
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-book"></span>
+    <span class="fas fa-book"></span>
      
     Articles
      
@@ -125,7 +125,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://vosonlab.net/">
-    <span class="fa fa-flask fa-lg"></span>
+    <span class="fas fa-flask fa-lg"></span>
      
   </a>
 </li>
@@ -163,21 +163,21 @@
     <p>This function creates a text corpus from node or edge text attribute data in an igraph.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>corpusFromGraph</span>(
-  <span class='kw'>g</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>txt_attr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"vertex"</span>,
-  <span class='kw'>iconv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>html_decode</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>rm_url</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>rm_num</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>rm_punct</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>rm_twit_hashtags</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>rm_twit_users</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>sw_kind</span> <span class='kw'>=</span> <span class='st'>"SMART"</span>,
-  <span class='kw'>rm_words</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>stem</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>corpusFromGraph</span><span class='op'>(</span>
+  g <span class='op'>=</span> <span class='cn'>NULL</span>,
+  txt_attr <span class='op'>=</span> <span class='cn'>NULL</span>,
+  type <span class='op'>=</span> <span class='st'>"vertex"</span>,
+  iconv <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  html_decode <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  rm_url <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  rm_num <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  rm_punct <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  rm_twit_hashtags <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  rm_twit_users <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  sw_kind <span class='op'>=</span> <span class='st'>"SMART"</span>,
+  rm_words <span class='op'>=</span> <span class='cn'>NULL</span>,
+  stem <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -252,11 +252,11 @@ Default is <code>"SMART"</code>.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://vosonlab.net'><span>VOSON Lab</span></a>.</p>
+  <p>Developed by Bryan Gertzel, Robert Ackland.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

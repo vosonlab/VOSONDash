@@ -1,3 +1,10 @@
+# VOSONDash 0.5.8.9000
+
+## Minor Changes:
+- Added neighborhood select feature to enable selection of ego networks from graphs.
+- Added node labels selection and checkbox for displaying labels for selected nodes only.
+- visNetwork plot now displays multiple edges.
+
 # VOSONDash 0.5.7
 
 ## Minor Changes:

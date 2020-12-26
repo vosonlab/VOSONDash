@@ -24,6 +24,8 @@ ng_rv <- reactiveValues(
   prune_verts = c()
 )
 
+dt_prev_sel <- reactiveValues(nodes = c())
+
 # proxy for vertices data table used for row manipulation
 dt_vertices_proxy <- dataTableProxy('dt_vertices')
 
@@ -172,7 +174,7 @@ observeEvent(input$selected_graph_tab, {
 
 # graphml file uploaded
 observeEvent(input$graphml_data_file, {
-  filedata()
+  setGraphFile()
   
   # set a random number to seed plots
   ng_rv$graph_seed <- sample(gbl_rng_range[1]:gbl_rng_range[2], 1)
@@ -197,6 +199,12 @@ observeEvent(input$node_labels_check, {
   if (input$node_labels_check) {
     updateCheckboxInput(session, "node_index_check", value = FALSE)
   }  
+})
+
+observeEvent(input$node_label_select, {
+  if (!is.null(ng_rv$graph_data)) {
+    V(ng_rv$graph_data)$label <- vertex_attr(ng_rv$graph_data, input$node_label_select)
+  }
 })
 
 observeEvent(ng_rv$graph_seed, {
@@ -226,7 +234,8 @@ observeEvent(input$prune_selected_rows_button, {
 })
 
 # add unselected data table rows to pruned vertices list
-observeEvent(input$prune_unselected_rows_button, {
+observeEvent({ input$prune_unselected_rows_button
+               input$nbh_prune_unselected }, {
   pruneListAddOtherNames()
   
   # update prune list select box
@@ -242,6 +251,7 @@ observeEvent(input$prune_unselected_rows_button, {
     prune_list <- temp
   }
   updateSelectInput(session, "pruned_vertices_select", choices = prune_list)
+  # DT::selectRows(dt_vertices_proxy, rownames(graphNodes()))
 })
 
 # remove selected vertices from prune list
@@ -264,7 +274,8 @@ observeEvent(input$prune_return_button, {
 })
 
 # reset prune list
-observeEvent(input$prune_reset_button, {
+observeEvent({ input$prune_reset_button 
+               input$nbh_reset_button }, {
   ng_rv$prune_verts <- c()
   
   updateSelectInput(session, "pruned_vertices_select", choices = character(0))
@@ -274,7 +285,8 @@ observeEvent(input$prune_reset_button, {
 })
 
 # deselect all data table selected rows
-observeEvent(input$prune_deselect_rows_button, { DT::selectRows(dt_vertices_proxy, NULL) })
+observeEvent({ input$prune_deselect_rows_button 
+               input$nbh_deselct_button }, { DT::selectRows(dt_vertices_proxy, NULL) })
 
 # nodes clicked event in visnetwork
 observeEvent(input$vis_node_select, {
@@ -290,6 +302,36 @@ observeEvent(input$vis_node_select, {
   sel <- which(rownames(dt_vertices) %in% sel) # require indices not row names
   
   DT::selectRows(dt_vertices_proxy, sel)
+})
+
+observeEvent(input$nbh_select_button, {
+  if (length(input$dt_vertices_rows_selected) < 1) { return() }
+  g <- graphFilters()
+  dt_vertices <- graphNodes()
+  sel_rows <- row.names(dt_vertices)[c(input$dt_vertices_rows_selected)]
+  
+  dt_prev_sel$nodes <- sel_rows
+  shinyjs::enable("nbh_undo_button")
+  
+  sel_row_names <- V(g)[V(g)$id %in% sel_rows]$name
+  
+  order <- input$nbh_order_select
+  g_ego <- make_ego_graph(g, order = order, nodes = sel_row_names, mode = "all", mindist = 0)
+  ids <- unlist(sapply(g_ego, function(x) V(x)$id))
+  sel <- which(rownames(dt_vertices) %in% ids)
+  
+  DT::selectRows(dt_vertices_proxy, sel)
+})
+
+observeEvent(input$nbh_undo_button, {
+  if (length(dt_prev_sel$nodes) > 0) {
+    DT::selectRows(dt_vertices_proxy, NULL)
+    sel <- which(rownames(graphNodes()) %in% dt_prev_sel$nodes)
+    DT::selectRows(dt_vertices_proxy, sel)
+    
+    dt_prev_sel$nodes <- c()
+    shinyjs::disable("nbh_undo_button")
+  }
 })
 
 # reset node size slider when changed to none
@@ -350,10 +392,6 @@ output$vis_plot_ui <- renderUI({
 output$component_summary_ui <- renderText({
   graphComponentSummary()
 })
-
-# output$graph_summary_output <- renderText({
-#   graphSummaryOutput()
-# })
 
 output$graph_name <- renderText({
   output <- ifelse(nchar(ng_rv$graph_name), ng_rv$graph_name, "Not set")
@@ -458,7 +496,7 @@ source("server/igraphPlot.R", local = TRUE)
 source("server/visnetworkPlot.R", local = TRUE)
 
 # set file data when a file is uploaded
-filedata <- reactive({
+setGraphFile <- reactive({
   infile <- input$graphml_data_file
   
   if (is.null(infile)) { return(NULL) }
@@ -470,6 +508,13 @@ filedata <- reactive({
     ng_rv$graph_type <- ifelse("type" %in% graph_attr_names(ng_rv$graph_data), 
                                      graph_attr(ng_rv$graph_data, "type"), "")
     ng_rv$graph_desc <- "Network loaded from file."
+    
+    isolate({
+      attr_v <- vertex_attr_names(ng_rv$graph_data)
+      setLabels(attr_v)
+      
+      addNodeContinuous()
+    })
     
     createGraphCategoryList()
     
@@ -548,6 +593,9 @@ setGraphFilterControls <- reactive({
     shinyjs::enable("graph_component_slider")
 
     updateComponentSlider(g, isolate(input$graph_component_type_select))
+    
+    dt_prev_sel$nodes <- c()
+    shinyjs::reset("nbh_undo_button")
     
     # update the categorical attribute select box
     if (!is.null(ng_rv$graph_cats) && length(ng_rv$graph_cats) > 0) {
@@ -817,6 +865,31 @@ graphComponentSummary <- reactive({
 
 #### functions ------------------------------------------------------------------------------------------------------- #
 
+addNodeContinuous <- function() {
+  if (!is.null(ng_rv$graph_data)) {
+    
+    add_attrs <- sapply(vertex_attr_names(ng_rv$graph_data),
+                        function(x) if (all(sapply(vertex_attr(ng_rv$graph_data, x), is.numeric))) x)
+    
+    updateSelectInput(session, "graph_node_size_select", label = NULL,
+                      choices = append(c("None", "Degree", "Indegree", "Outdegree", "Betweenness", "Closeness"), add_attrs),
+                      selected = "None")
+  }
+}
+
+setLabels <- function(attr_v) {
+  sel <- NULL
+  if ("label" %in% attr_v) {
+    V(ng_rv$graph_data)$imported_Label <- V(ng_rv$graph_data)$label
+    attr_v <- append(attr_v, "imported_Label")
+    sel <- "imported_Label"
+  }
+  label_list <- sort(attr_v[!attr_v %in% c("label")])
+  if (is.null(sel)) { sel <- "id" }
+  shinyjs::enable("node_label_select")
+  updateSelectInput(session, "node_label_select", label = NULL, choices = label_list, selected = sel)
+}
+
 # set graph manually
 setGraphView <- function(data, desc = "", type = "", name = "", seed = 1) {
   shinyjs::reset("graphml_data_file")
@@ -826,6 +899,12 @@ setGraphView <- function(data, desc = "", type = "", name = "", seed = 1) {
   ng_rv$graph_type <- type
   ng_rv$graph_name <- name
   ng_rv$graph_seed <- seed
+  
+  attr_v <- vertex_attr_names(data)
+  setLabels(attr_v)
+  
+  addNodeContinuous()
+  
   ng_rv$graph_cats <- c()
   ng_rv$graph_cat_selected <- ""
   
