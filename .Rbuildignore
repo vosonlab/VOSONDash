@@ -23,3 +23,5 @@
 ^TestGraph2\.graphml$
 ^.*\.csv$
 ^.*\.pdf$
+^Meta$
+^\.github$
