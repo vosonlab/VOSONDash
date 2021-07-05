@@ -225,7 +225,12 @@ observeEvent(input$prune_selected_rows_button, {
   } else {
     temp <- list()
     for (i in prune_list) {
-      n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$label # name
+      # n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$label # name
+      if (is.null(igraph::vertex_attr(isolate(ng_rv$graph_data), "label"))) {
+        n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
+      } else {
+        n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$label
+      }
       temp[paste0(i, " - ", n_value)] <- i
     }
     prune_list <- temp
@@ -234,8 +239,7 @@ observeEvent(input$prune_selected_rows_button, {
 })
 
 # add unselected data table rows to pruned vertices list
-observeEvent({ input$prune_unselected_rows_button
-               input$nbh_prune_unselected }, {
+observeEvent({ input$prune_unselected_rows_button }, {
   pruneListAddOtherNames()
   
   # update prune list select box
@@ -245,7 +249,12 @@ observeEvent({ input$prune_unselected_rows_button
   } else {
     temp <- list()
     for (i in prune_list) {
-      n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
+      if (is.null(igraph::vertex_attr(isolate(ng_rv$graph_data), "label"))) {
+        n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
+      } else {
+        n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$label
+      }
+      
       temp[paste0(i, " - ", n_value)] <- i
     }
     prune_list <- temp
@@ -253,6 +262,28 @@ observeEvent({ input$prune_unselected_rows_button
   updateSelectInput(session, "pruned_vertices_select", choices = prune_list)
   # DT::selectRows(dt_vertices_proxy, rownames(graphNodes()))
 })
+
+observeEvent({ input$nbh_prune_unselected }, {
+    pruneListAddOtherNames()
+    
+    prune_list <- isolate(ng_rv$prune_verts)
+    if (is.null(prune_list)) { 
+      prune_list <- character(0) 
+    } else {
+      temp <- list()
+      for (i in prune_list) {
+        if (is.null(igraph::vertex_attr(isolate(ng_rv$graph_data), "label"))) {
+          n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
+        } else {
+          n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$label
+        }
+        
+        temp[paste0(i, " - ", n_value)] <- i
+      }
+      prune_list <- temp
+    }
+    updateSelectInput(session, "pruned_vertices_select", choices = prune_list)
+  })
 
 # remove selected vertices from prune list
 observeEvent(input$prune_return_button, {
@@ -265,7 +296,12 @@ observeEvent(input$prune_return_button, {
   } else {
     temp <- list()
     for (i in prune_list) {
-      n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
+      if (is.null(igraph::vertex_attr(isolate(ng_rv$graph_data), "label"))) {
+        n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
+      } else {
+        n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$label
+      }
+      # n_value <- V(isolate(ng_rv$graph_data))[which(V(isolate(ng_rv$graph_data))$id == i)]$name
       temp[paste0(i, " - ", n_value)] <- i
     }
     prune_list <- temp
@@ -274,19 +310,23 @@ observeEvent(input$prune_return_button, {
 })
 
 # reset prune list
-observeEvent({ input$prune_reset_button 
-               input$nbh_reset_button }, {
+observeEvent({ input$prune_reset_button }, {
   ng_rv$prune_verts <- c()
-  
   updateSelectInput(session, "pruned_vertices_select", choices = character(0))
   
   # added to address bug with disappearing plot on pruning
   updateComponentSlider(ng_rv$graph_data, input$graph_component_type_select)  
 })
 
+observeEvent({ input$nbh_reset_button }, {
+    ng_rv$prune_verts <- c()
+    updateSelectInput(session, "pruned_vertices_select", choices = character(0))
+    updateComponentSlider(ng_rv$graph_data, input$graph_component_type_select)  
+  })
+
 # deselect all data table selected rows
-observeEvent({ input$prune_deselect_rows_button 
-               input$nbh_deselct_button }, { DT::selectRows(dt_vertices_proxy, NULL) })
+observeEvent({ input$prune_deselect_rows_button }, { DT::selectRows(dt_vertices_proxy, NULL) })
+observeEvent({ input$nbh_deselct_button }, { DT::selectRows(dt_vertices_proxy, NULL) })
 
 # nodes clicked event in visnetwork
 observeEvent(input$vis_node_select, {

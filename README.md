@@ -2,9 +2,9 @@
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 [![Downloads](https://cranlogs.r-pkg.org/badges/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 [![Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
-[![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github&colorB=8065ac)](https://github.com/vosonlab/VOSONDash/releases)
-[![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.8.9000&color=659DBD&logo=github)](https://github.com/vosonlab/VOSONDash)
-[![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?color=659DBD&logo=github)](https://github.com/vosonlab/VOSONDash/commits/master)
+[![Github Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github)](https://github.com/vosonlab/VOSONDash/releases)
+[![Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.9.9000&logo=github)](https://github.com/vosonlab/VOSONDash)
+[![Last Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?logo=github)](https://github.com/vosonlab/VOSONDash/commits/master)
 [![R build status](https://github.com/vosonlab/VOSONDash/workflows/R-CMD-check/badge.svg)](https://github.com/vosonlab/VOSONDash/actions)
 
 `VOSONDash` is an interactive [R Shiny](https://shiny.rstudio.com/) web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the [vosonSML](https://github.com/vosonlab/vosonSML) R package.
@@ -13,19 +13,19 @@
 
 `VOSONDash` is an R package and must be installed before the app can be run.
 
-Install the latest release on CRAN (v0.5.7):
+Install the latest release on CRAN:
 ```R
 install.packages("VOSONDash")
 ```
 
-Install the latest release via GitHub (v0.5.7):
+Install the latest release via GitHub:
 ```R
 install.packages(
   pkgs = "https://github.com/vosonlab/VOSONDash/releases/download/v0.5.7/VOSONDash-0.5.7.tar.gz", 
   repo = NULL, type = "source")
 ```
 
-Install the latest development version (v0.5.8.9000):
+Install the latest development version:
 ```R
 install.packages("remotes")
 remotes::install_github("vosonlab/VOSONDash")
@@ -47,7 +47,7 @@ For example:
 ```R
 > runVOSONDash()
 =================================================
-VOSONDash v0.5.8
+VOSONDash v0.5.9
 ...
 Checking packages...
 

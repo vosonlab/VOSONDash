@@ -1,4 +1,7 @@
-# VOSONDash 0.5.8.9000
+# VOSONDash 0.5.9.9000
+
+## Bug Fixes:
+- Fixed the issue with pruning un-selected failing.
 
 ## Minor Changes:
 - Added neighborhood select feature to enable selection of ego networks from graphs.
