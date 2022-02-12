@@ -143,3 +143,10 @@ analysis with support from [tm](https://CRAN.R-project.org/package=tm),
 [SnowballC](https://CRAN.R-project.org/package=SnowballC),
 [wordcloud](https://CRAN.R-project.org/package=wordcloud) and
 [syuzhet](https://CRAN.R-project.org/package=syuzhet) packages.
+
+## Code of Conduct
+
+Please note that the VOSON Lab projects are released with a [Contributor
+Code of
+Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
