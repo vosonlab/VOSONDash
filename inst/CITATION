@@ -1,0 +1,15 @@
+if (!exists("meta") || is.null(meta)) meta <- packageDescription("VOSONDash")
+note <- paste("R package version", meta$Version)
+year <- sub("-.*", "", meta$Date)
+if (is.null(meta$Date)) year <- sub("-.*", "", packageDate("VOSONDash"))
+
+bibentry(bibtype = "Manual",
+         header = "To cite package 'VOSONDash' in publications use:",
+         title = "VOSONDash: User Interface for Collecting and Analysing Social Networks",
+         author = c(person("Bryan", "Gertzel"),
+                    person("Francisca", "Borquez"),
+                    person("Robert", "Ackland")),
+         organization = "VOSON Lab, Virtual Observatory for the Study of Online Networks",
+         year = year,
+         note = note,
+         url = "https://github.com/vosonlab/VOSONDash")

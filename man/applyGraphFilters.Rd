@@ -19,7 +19,7 @@ applyGraphFilters(g, isolates = TRUE, multi_edge = TRUE, loops_edge = TRUE)
 An igraph graph object.
 }
 \description{
-This function removes isolate vertices, multiple edges between vertices and or vertex edge loops from a 
+This function removes isolate vertices, multiple edges between vertices and or vertex edge loops from a
 graph.
 }
 \note{

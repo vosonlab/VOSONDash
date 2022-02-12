@@ -13,7 +13,7 @@ loadPackageGraph(fname)
 An igraph graph object.
 }
 \description{
-This function loads a network graph included in the \code{extdata} directory of the 
+This function loads a network graph included in the \code{extdata} directory of the
 \code{VOSONDash} package by file name.
 }
 \examples{

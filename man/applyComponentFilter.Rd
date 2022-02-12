@@ -9,7 +9,7 @@ applyComponentFilter(g, component_type = "strong", component_range)
 \arguments{
 \item{g}{\pkg{igraph} \code{graph} object.}
 
-\item{component_type}{Character string. Use strongly or weakly connected components by specifying \code{"strong"} or 
+\item{component_type}{Character string. Use strongly or weakly connected components by specifying \code{"strong"} or
 \code{"weak"}. Ignored for undirected graphs. Default is \code{"strong"}.}
 
 \item{component_range}{Numeric vector. Min and max values or size range of component.}
@@ -18,6 +18,6 @@ applyComponentFilter(g, component_type = "strong", component_range)
 An igraph graph object.
 }
 \description{
-This function removes any graph vertices that are in components that fall outside of the specified 
+This function removes any graph vertices that are in components that fall outside of the specified
 component size range.
 }
