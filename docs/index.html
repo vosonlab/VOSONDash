@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">VOSONDash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.10</span>
       </span>
     </div>
 
@@ -54,14 +56,14 @@
 </li>
 <li>
   <a href="news/index.html">
-    <span class="fa fa-newspaper-o"></span>
+    <span class="fa fa-newspaper"></span>
      
     Changelog
   </a>
 </li>
 <li>
   <a href="reference/index.html">
-    <span class="fa fa-cubes"></span>
+    <span class="fa fa-cubes fa-lg"></span>
      
     Reference
   </a>
@@ -76,26 +78,58 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://vosonlab.github.io/VOSONDashDocs/">VOSON Dashboard User Guide</a>
+      <a href="https://vosonlab.github.io/VOSONDashDocs/" class="external-link">
+        <span class="far fa-file-alt"></span>
+         
+        VOSON Dashboard User Guide
+      </a>
+    </li>
+    <li>
+      <a href="https://vosonlab.github.io/posts/2021-12-06-collecting-youtube-comments-with-vosondash" class="external-link">
+        <span class="far fa-file-alt"></span>
+         
+        Collecting YouTube comments with VOSONDash
+      </a>
+    </li>
+    <li>
+      <a href="https://vosonlab.github.io/posts/2021-11-25-collecting-twitter-data-with-vosondash" class="external-link">
+        <span class="far fa-file-alt"></span>
+         
+        Collecting Twitter data with VOSONDash
+      </a>
+    </li>
+    <li>
+      <a href="https://vosonlab.github.io/posts/2021-08-05-exploring-issues-in-reddit-using-voson-dash" class="external-link">
+        <span class="far fa-file-alt"></span>
+         
+        Exploring issues in Reddit using VOSON Dash
+      </a>
+    </li>
+    <li>
+      <a href="https://vosonlab.github.io/posts/2021-08-06-analysing-online-networks-with-vosondash" class="external-link">
+        <span class="far fa-file-alt"></span>
+         
+        Analysing online networks with VOSONDash
+      </a>
     </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="http://vosonlab.net/">
+  <a href="http://vosonlab.net/" class="external-link">
     <span class="fa fa-flask fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://twitter.com/vosonlab">
+  <a href="https://twitter.com/vosonlab" class="external-link">
     <span class="fa fa-twitter-square fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/vosonlab/VOSONDash">
+  <a href="https://github.com/vosonlab/VOSONDash" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -112,60 +146,58 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="vosondash-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#vosondash-" class="anchor"></a>VOSONDash <img src="https://vosonlab.github.io/VOSONDash/images/logo.png" width="140px" align="right">
+<div class="section level1">
+<div class="page-header"><h1 id="vosondash---shiny-dashboard-app">VOSONDash - Shiny Dashboard App<img src="https://vosonlab.github.io/VOSONDash/images/logo.png" width="140px" align="right"><a class="anchor" aria-label="anchor" href="#vosondash---shiny-dashboard-app"></a>
 </h1></div>
 
-<p><code>VOSONDash</code> is an interactive <a href="https://shiny.rstudio.com/">R Shiny</a> web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the <a href="https://github.com/vosonlab/vosonSML">vosonSML</a> R package.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p><code>VOSONDash</code> is an R package and must be installed before the app can be run.</p>
-<p>Install the latest release on CRAN:</p>
+<p><code>VOSONDash</code> is an interactive <a href="https://shiny.rstudio.com/" class="external-link">R Shiny</a> web application for the visualisation and analysis of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs, performing text analysis, displaying network metrics and the collection of network data using the <a href="https://github.com/vosonlab/vosonSML" class="external-link">vosonSML</a> R package.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Install the latest release via CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"VOSONDash"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"VOSONDash"</span><span class="op">)</span></code></pre></div>
 <p>Install the latest release via GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span>
-  pkgs <span class="op">=</span> <span class="st">"https://github.com/vosonlab/VOSONDash/releases/download/v0.5.7/VOSONDash-0.5.7.tar.gz"</span>, 
-  repo <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></code></pre></div>
-<p>Install the latest development version:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"https://api.github.com/repos/vosonlab/VOSONDash/tarball/v0.5.7"</span>,
+                 repo <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></code></pre></div>
+<p>Install the development version:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"vosonlab/VOSONDash"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># library(remotes)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"vosonlab/VOSONDash"</span><span class="op">)</span></code></pre></div>
 <p>Once the VOSON Dashboard package is installed and loaded the Shiny web application can be run from the RStudio console using the <code><a href="reference/runVOSONDash.html">runVOSONDash()</a></code> function.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/vosonlab/VOSONDash">VOSONDash</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/vosonlab/VOSONDash" class="external-link">VOSONDash</a></span><span class="op">)</span>
 <span class="fu"><a href="reference/runVOSONDash.html">runVOSONDash</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="running-the-app-for-the-first-time" class="section level3">
-<h3 class="hasAnchor">
-<a href="#running-the-app-for-the-first-time" class="anchor"></a>Running the app for the first time</h3>
+<div class="section level3">
+<h3 id="running-the-app-for-the-first-time">Running the app for the first time<a class="anchor" aria-label="anchor" href="#running-the-app-for-the-first-time"></a>
+</h3>
 <p>When run the <code>VOSONDash</code> app will check that all of the R packages that are required to make it work are installed. It is likely that some packages will be missing and the app will print a message indicating the missing packages and a command that can be used to install them.</p>
 <p>For example:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">runVOSONDash</span>()</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="sc">==</span><span class="er">===============================================</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>VOSONDash v0.<span class="fl">5.9</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>...</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>Checking packages...</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Error<span class="sc">:</span> Required packages missing.</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> shinyjs</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> visNetwork</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>Please install required packages before using VOSONDash<span class="sc">:</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"shinyjs"</span>, <span class="st">"visNetwork"</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/runVOSONDash.html">runVOSONDash</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># =================================================</span>
+<span class="co"># VOSONDash v0.5.10</span>
+<span class="co"># ...</span>
+<span class="co"># Checking packages...</span>
+<span class="co"># </span>
+<span class="co"># Error: Required packages missing.</span>
+<span class="co"># - shinyjs</span>
+<span class="co"># - visNetwork</span>
+<span class="co"># </span>
+<span class="co"># Please install required packages before using VOSONDash:</span>
+<span class="co"># install.packages(c("shinyjs", "visNetwork"))</span></code></pre></div>
 <p>The missing packages can be installed using the above <code>install.packages</code> command.</p>
 <p>After installing required packages and running again the <code>VOSONDash</code> Shiny app will open up in the default web browser.</p>
 </div>
 </div>
-<div id="voson-dashboard" class="section level2">
-<h2 class="hasAnchor">
-<a href="#voson-dashboard" class="anchor"></a>VOSON Dashboard</h2>
-<p><code>VOSONDash</code> features an intuitive web interface with a section for ‘Analysis’ of graph data loaded from <a href="https://igraph.org/r/">igraph</a> objects and a section for the ‘Collection’ of social media data using <a href="https://github.com/vosonlab/vosonSML">vosonSML</a>.</p>
-<div id="analysis" class="section level3">
-<h3 class="hasAnchor">
-<a href="#analysis" class="anchor"></a>Analysis</h3>
+<div class="section level2">
+<h2 id="voson-dashboard">VOSON Dashboard<a class="anchor" aria-label="anchor" href="#voson-dashboard"></a>
+</h2>
+<p><code>VOSONDash</code> features an intuitive web interface with a section for ‘Analysis’ of graph data loaded from <a href="https://igraph.org/r/" class="external-link">igraph</a> objects and a section for the ‘Collection’ of social media data using <a href="https://github.com/vosonlab/vosonSML" class="external-link">vosonSML</a>.</p>
+<div class="section level3">
+<h3 id="analysis">Analysis<a class="anchor" aria-label="anchor" href="#analysis"></a>
+</h3>
 <p>Network and text analysis of graph data.</p>
 <ul>
 <li>Network Graphs: Visualise and modify networks</li>
@@ -173,88 +205,107 @@
 <li>Text Analysis: Word frequency, word clouds and sentiment</li>
 <li>Assortativity: Calculate homogeneity and homophily indexes (if VOSON categorical node attributes present)</li>
 </ul>
-<p><img src="https://vosonlab.github.io/VOSONDash/images/network-graphs-1420x847.jpg" alt="VOSONDash Network Graphs Analysis"></p>
+<div class="figure">
+<img src="https://vosonlab.github.io/VOSONDash/images/network-graphs-1420x847.jpg" alt=""><p class="caption">VOSONDash Network Graphs Analysis</p>
+</div>
 <p>Figure 1. Environmental activist site hyperlink network loaded from a <code>graphml</code> file and plotted by the <code>visNetwork</code> package.</p>
 </div>
-<div id="collection-and-network-creation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#collection-and-network-creation" class="anchor"></a>Collection and Network Creation</h3>
+<div class="section level3">
+<h3 id="collection-and-network-creation">Collection and Network Creation<a class="anchor" aria-label="anchor" href="#collection-and-network-creation"></a>
+</h3>
 <p>Graphical interfaces for collecting network data from social media API’s.</p>
 <ul>
 <li>Collect: Twitter, youtube and reddit network data</li>
 <li>Create: different types of networks from the data such as activity, actor, twomode and semantic networks</li>
 </ul>
-<p><img src="https://vosonlab.github.io/VOSONDash/images/collection-twitter-1420x980.jpg" alt="VOSONDash Twitter Collection"></p>
+<div class="figure">
+<img src="https://vosonlab.github.io/VOSONDash/images/collection-twitter-1420x980.jpg" alt=""><p class="caption">VOSONDash Twitter Collection</p>
+</div>
 <p>Figure 2. Collection of recent <code>#auspol</code> tweets and generation of an actor network with the <code>vosonSML</code> package.</p>
-<p><img src="https://vosonlab.github.io/VOSONDash/images/creation-twitter-1420x848.jpg" alt="VOSONDash Twitter Network Creation"></p>
+<div class="figure">
+<img src="https://vosonlab.github.io/VOSONDash/images/creation-twitter-1420x848.jpg" alt=""><p class="caption">VOSONDash Twitter Network Creation</p>
+</div>
 <p>Figure 3. Create an actor network and add tweet text to the network.</p>
 </div>
-<div id="api-keys-and-tokens" class="section level3">
-<h3 class="hasAnchor">
-<a href="#api-keys-and-tokens" class="anchor"></a>API Keys and Tokens</h3>
+<div class="section level3">
+<h3 id="api-keys-and-tokens">API Keys and Tokens<a class="anchor" aria-label="anchor" href="#api-keys-and-tokens"></a>
+</h3>
 <ul>
 <li>API Keys: Enter, save, load API keys and create access tokens</li>
 </ul>
-<p><img src="https://vosonlab.github.io/VOSONDash/images/api-twitter-1420x848.jpg" alt="VOSONDash Keys and Tokens Interface"></p>
+<div class="figure">
+<img src="https://vosonlab.github.io/VOSONDash/images/api-twitter-1420x848.jpg" alt=""><p class="caption">VOSONDash Keys and Tokens Interface</p>
+</div>
 <p>Figure 4. Twitter API token creation and selection.</p>
 </div>
 </div>
-<div id="special-thanks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#special-thanks" class="anchor"></a>Special thanks</h2>
-<p>This application would not be possible without key packages by other authors in the R community, particularly the <a href="https://github.com/rstudio/shiny">shiny</a>, <a href="https://github.com/rstudio/shinydashboard">shinydashboard</a>, <a href="https://github.com/rstudio/DT">DT</a> and <a href="https://github.com/daattali/shinyjs">shinyjs</a> packages. Graph visualisations created with <a href="https://github.com/igraph/rigraph">igraph</a> and <a href="https://github.com/datastorm-open/visNetwork">visNetwork</a>, and text analysis with support from <a href="https://CRAN.R-project.org/package=tm">tm</a>, <a href="https://CRAN.R-project.org/package=SnowballC">SnowballC</a>, <a href="https://CRAN.R-project.org/package=wordcloud">wordcloud</a> and <a href="https://CRAN.R-project.org/package=syuzhet">syuzhet</a> packages.</p>
+<div class="section level2">
+<h2 id="special-thanks">Special thanks<a class="anchor" aria-label="anchor" href="#special-thanks"></a>
+</h2>
+<p>This application would not be possible without key packages by other authors in the R community, particularly the <a href="https://github.com/rstudio/shiny" class="external-link">shiny</a>, <a href="https://github.com/rstudio/shinydashboard" class="external-link">shinydashboard</a>, <a href="https://github.com/rstudio/DT" class="external-link">DT</a> and <a href="https://github.com/daattali/shinyjs" class="external-link">shinyjs</a> packages. Graph visualisations created with <a href="https://github.com/igraph/rigraph" class="external-link">igraph</a> and <a href="https://github.com/datastorm-open/visNetwork" class="external-link">visNetwork</a>, and text analysis with support from <a href="https://CRAN.R-project.org/package=tm" class="external-link">tm</a>, <a href="https://CRAN.R-project.org/package=SnowballC" class="external-link">SnowballC</a>, <a href="https://CRAN.R-project.org/package=wordcloud" class="external-link">wordcloud</a> and <a href="https://CRAN.R-project.org/package=syuzhet" class="external-link">syuzhet</a> packages.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=VOSONDash">https://​cloud.r-project.org/​package=VOSONDash</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/vosonlab/VOSONDash/">https://​github.com/​vosonlab/​VOSONDash/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/vosonlab/VOSONDash/issues">https://​github.com/​vosonlab/​VOSONDash/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=VOSONDash" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/vosonlab/VOSONDash/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/vosonlab/VOSONDash/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 3)</li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Bryan Gertzel <br><small class="roles"> Author, maintainer </small>  </li>
-<li>Robert Ackland <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-0008-1766" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing VOSONDash</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://CRAN.R-project.org/package=VOSONDash"><img src="https://www.r-pkg.org/badges/version/VOSONDash" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://CRAN.R-project.org/package=VOSONDash"><img src="https://cranlogs.r-pkg.org/badges/VOSONDash" alt="Downloads"></a></li>
-<li><a href="https://CRAN.R-project.org/package=VOSONDash"><img src="https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash" alt="Total"></a></li>
-<li><a href="https://github.com/vosonlab/VOSONDash/releases"><img src="https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github" alt="Github Release"></a></li>
-<li><a href="https://github.com/vosonlab/VOSONDash"><img src="https://img.shields.io/static/v1?label=dev&amp;message=v0.5.9.9000&amp;logo=github" alt="Dev"></a></li>
-<li><a href="https://github.com/vosonlab/VOSONDash/commits/master"><img src="https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?logo=github" alt="Last Commit"></a></li>
-<li><a href="https://github.com/vosonlab/VOSONDash/actions"><img src="https://github.com/vosonlab/VOSONDash/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li>Bryan Gertzel <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Robert Ackland <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-0008-1766" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://CRAN.R-project.org/package=VOSONDash" class="external-link"><img src="https://www.r-pkg.org/badges/version/VOSONDash" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://CRAN.R-project.org/package=VOSONDash" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/VOSONDash" alt="CRAN_Monthly"></a></li>
+<li><a href="https://CRAN.R-project.org/package=VOSONDash" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash" alt="CRAN_Total"></a></li>
+<li><a href="https://github.com/vosonlab/VOSONDash/releases" class="external-link"><img src="https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github" alt="Github_Release"></a></li>
+<li><a href="https://github.com/vosonlab/VOSONDash" class="external-link"><img src="https://img.shields.io/static/v1?label=dev&amp;message=v0.5.10&amp;logo=github" alt="Github_Dev"></a></li>
+<li><a href="https://github.com/vosonlab/VOSONDash/commits/master" class="external-link"><img src="https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?&amp;logo=github" alt="Last_Commit"></a></li>
+<li><a href="https://github.com/vosonlab/VOSONDash/actions" class="external-link"><img src="https://github.com/vosonlab/VOSONDash/workflows/R-CMD-check/badge.svg" alt="Build_Status"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Bryan Gertzel, Robert Ackland.</p>
+  <p></p>
+<p>Developed by Bryan Gertzel, Robert Ackland.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -262,6 +313,8 @@
 
   
 
+
+  
 
   </body>
 </html>
