@@ -15,7 +15,7 @@ getVertexCategories(g, cat_prefix = "vosonCA_")
 A named list of vertex category attributes and values.
 }
 \description{
-This function returns a list of graph vertex attribute names that match a category attribute prefix 
+This function returns a list of graph vertex attribute names that match a category attribute prefix
 format and their unique values.
 }
 \examples{

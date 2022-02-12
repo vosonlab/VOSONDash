@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://vosonlab.github.io/VOSONDash/404.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/authors.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/CODE_OF_CONDUCT.html</loc>
+  </url>
+  <url>
     <loc>http://vosonlab.github.io/VOSONDash/index.html</loc>
   </url>
   <url>
+    <loc>http://vosonlab.github.io/VOSONDash/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/news/index.html</loc>
+  </url>
+  <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/addAdditionalMeasures.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/addLine.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/applyCategoricalFilters.html</loc>
@@ -17,6 +35,9 @@
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/applyPruneFilter.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/applyPruneFilterX.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/collectRedditData.html</loc>
@@ -88,10 +109,19 @@
     <loc>http://vosonlab.github.io/VOSONDash/reference/hasVosonTextData.html</loc>
   </url>
   <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/index.html</loc>
+  </url>
+  <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/isMac.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/isNullOrEmpty.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/isVosonSML0290.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/loadDemoGraph.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/loadPackageGraph.html</loc>
@@ -122,6 +152,9 @@
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/wordSentChart.html</loc>
+  </url>
+  <url>
+    <loc>http://vosonlab.github.io/VOSONDash/reference/wordSentChartSummary.html</loc>
   </url>
   <url>
     <loc>http://vosonlab.github.io/VOSONDash/reference/wordSentData.html</loc>

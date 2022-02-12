@@ -15,8 +15,8 @@ createTwitterDevToken(app_name, keys)
 A vosonSML twitter credential object.
 }
 \description{
-This function is a wrapper for \code{vosonSML::Authenticate} with twitter app developer keys. The 
-properties \code{type} and \code{created} are added to the credential object to assist with \pkg{VOSONDash} token 
+This function is a wrapper for \code{vosonSML::Authenticate} with twitter app developer keys. The
+properties \code{type} and \code{created} are added to the credential object to assist with \pkg{VOSONDash} token
 management.
 }
 \keyword{internal}

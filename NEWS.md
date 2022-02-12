@@ -1,4 +1,9 @@
-# VOSONDash 0.5.9.9000
+# VOSONDash 0.5.10
+
+## Minor Changes
+- Updated standard package documentation, added citation and README.Rmd.
+
+# VOSONDash 0.5.9
 
 ## Bug Fixes:
 - Fixed the issue with pruning un-selected failing.
@@ -6,7 +11,7 @@
 ## Minor Changes:
 - Added neighborhood select feature to enable selection of ego networks from graphs.
 - Added node labels selection and checkbox for displaying labels for selected nodes only.
-- visNetwork plot now displays multiple edges.
+- `visNetwork` plot now displays multiple edges.
 
 # VOSONDash 0.5.7
 

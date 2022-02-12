@@ -19,7 +19,7 @@ logMessage(messages, add_message, txt = FALSE, count = 20)
 Messages as vector or character string.
 }
 \description{
-This function adds a text message to a queue or list with a count limiting how many messages are 
+This function adds a text message to a queue or list with a count limiting how many messages are
 stored. The queue stores count messages based on first in first out.
 }
 \keyword{internal}

@@ -22,11 +22,11 @@ navbar:
       icon: fa-home fa-lg
       href: index.html
     news:
-      icon: fa-newspaper-o
+      icon: fa-newspaper
       text: "Changelog"
       href: news/index.html        
     reference:
-      icon: fa-cubes
+      icon: fa-cubes fa-lg
       text: "Reference"
       href: reference/index.html
     articles:
@@ -35,6 +35,19 @@ navbar:
       menu:
       - text: "VOSON Dashboard User Guide"
         href: https://vosonlab.github.io/VOSONDashDocs/
+        icon: far fa-file-alt
+      - text: "Collecting YouTube comments with VOSONDash"
+        href: https://vosonlab.github.io/posts/2021-12-06-collecting-youtube-comments-with-vosondash
+        icon: far fa-file-alt
+      - text: "Collecting Twitter data with VOSONDash"
+        href: https://vosonlab.github.io/posts/2021-11-25-collecting-twitter-data-with-vosondash
+        icon: far fa-file-alt
+      - text: "Exploring issues in Reddit using VOSON Dash"
+        href: https://vosonlab.github.io/posts/2021-08-05-exploring-issues-in-reddit-using-voson-dash
+        icon: far fa-file-alt
+      - text: "Analysing online networks with VOSONDash"
+        href: https://vosonlab.github.io/posts/2021-08-06-analysing-online-networks-with-vosondash
+        icon: far fa-file-alt      
     vosonlab:
       icon: fa-flask fa-lg
       href: http://vosonlab.net/

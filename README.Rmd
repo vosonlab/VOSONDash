@@ -1,0 +1,140 @@
+---
+output: github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+pkg <- "VOSONDash"
+```
+# VOSONDash - Shiny Dashboard App<img src="https://vosonlab.github.io/VOSONDash/images/logo.png" width="140px" align="right" />
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/`r pkg`)](https://CRAN.R-project.org/package=`r pkg`)
+[![CRAN_Monthly](https://cranlogs.r-pkg.org/badges/`r pkg`)](https://CRAN.R-project.org/package=`r pkg`)
+[![CRAN_Total](https://cranlogs.r-pkg.org/badges/grand-total/`r pkg`)](https://CRAN.R-project.org/package=`r pkg`)
+[![Github_Release](https://img.shields.io/github/release-pre/vosonlab/`r pkg`.svg?logo=github)](https://github.com/vosonlab/`r pkg`/releases)
+[![Github_Dev](https://img.shields.io/static/v1?label=dev&message=v`r packageVersion(pkg)`&logo=github)](https://github.com/vosonlab/`r pkg`)
+[![Last_Commit](https://img.shields.io/github/last-commit/vosonlab/`r pkg`.svg?&logo=github)](https://github.com/vosonlab/`r pkg`/commits/master)
+[![Build_Status](https://github.com/vosonlab/`r pkg`/workflows/R-CMD-check/badge.svg)](https://github.com/vosonlab/`r pkg`/actions)
+
+`VOSONDash` is an interactive [R Shiny](https://shiny.rstudio.com/) web application for the visualisation and analysis
+of social network data. The app has a dashboard layout with sections for visualising and manipulating network graphs,
+performing text analysis, displaying network metrics and the collection of network data using the
+[vosonSML](https://github.com/vosonlab/vosonSML) R package.
+
+## Installation
+
+Install the latest release via CRAN:
+``` r
+install.packages("`r pkg`")
+```
+
+```{r release, include=FALSE}
+rel_path <- NULL
+if (all(sapply(c("httr", "dplyr", "jsonlite"), require, character.only = TRUE))) {
+  rel_resp <- GET(paste0("https://api.github.com/repos/vosonlab/", pkg, "/releases"),
+                  add_headers(Accept = "application/vnd.github.v3+json"))
+  if (rel_resp$status_code == 200) {
+    resp_content <- fromJSON(rawToChar(rel_resp$content))
+    if ("tag_name" %in% names(resp_content)) {
+      meta <- select(slice_head(resp_content), tag_name, tarball_url)
+      rel_path <- pull(meta, tarball_url, tag_name)
+      rel_inst <- paste0("Install the latest release via GitHub:\n\n",
+                         "``` r\n",
+                         "install.packages(\"", rel_path, "\",\n",
+                         "                 repo = NULL, type = \"source\")\n",
+                         "```\n")
+    }
+  }
+}
+```
+`r if(!is.null(rel_path)) rel_inst`
+
+Install the development version:
+``` r
+# library(remotes)
+remotes::install_github("vosonlab/`r pkg`")
+```
+
+Once the VOSON Dashboard package is installed and loaded the Shiny web application can be run from the RStudio console
+using the `runVOSONDash()` function.
+
+```R
+library(VOSONDash)
+runVOSONDash()
+```
+
+### Running the app for the first time
+
+When run the `VOSONDash` app will check that all of the R packages that are required to make it work are installed. It
+is likely that some packages will be missing and the app will print a message indicating the missing packages and a
+command that can be used to install them.
+
+For example:
+
+```r
+runVOSONDash()
+# =================================================
+# VOSONDash v`r packageVersion(pkg)`
+# ...
+# Checking packages...
+# 
+# Error: Required packages missing.
+# - shinyjs
+# - visNetwork
+# 
+# Please install required packages before using VOSONDash:
+# install.packages(c("shinyjs", "visNetwork"))
+```
+
+The missing packages can be installed using the above `install.packages` command.
+
+After installing required packages and running again the `VOSONDash` Shiny app will open up in the default web browser.
+
+## VOSON Dashboard
+
+`VOSONDash` features an intuitive web interface with a section for 'Analysis' of graph data loaded from
+[igraph](https://igraph.org/r/) objects and a section for the 'Collection' of social media data using
+[vosonSML](https://github.com/vosonlab/vosonSML).
+
+### Analysis
+
+Network and text analysis of graph data.
+
+* Network Graphs: Visualise and modify networks
+* Network Metrics: Calculate node and network level metrics
+* Text Analysis: Word frequency, word clouds and sentiment
+* Assortativity: Calculate homogeneity and homophily indexes (if VOSON categorical node attributes present)
+
+![VOSONDash Network Graphs Analysis](https://vosonlab.github.io/VOSONDash/images/network-graphs-1420x847.jpg)
+
+Figure 1. Environmental activist site hyperlink network loaded from a `graphml` file and plotted by the `visNetwork`
+package.
+
+### Collection and Network Creation
+
+Graphical interfaces for collecting network data from social media API's.
+
+* Collect: Twitter, youtube and reddit network data
+* Create: different types of networks from the data such as activity, actor, twomode and semantic networks
+
+![VOSONDash Twitter Collection](https://vosonlab.github.io/VOSONDash/images/collection-twitter-1420x980.jpg)
+
+Figure 2. Collection of recent `#auspol` tweets and generation of an actor network with the `vosonSML` package.
+
+![VOSONDash Twitter Network Creation](https://vosonlab.github.io/VOSONDash/images/creation-twitter-1420x848.jpg)
+
+Figure 3. Create an actor network and add tweet text to the network.
+
+### API Keys and Tokens
+
+* API Keys: Enter, save, load API keys and create access tokens
+
+![VOSONDash Keys and Tokens Interface](https://vosonlab.github.io/VOSONDash/images/api-twitter-1420x848.jpg)
+
+Figure 4. Twitter API token creation and selection.
+
+## Special thanks
+
+This application would not be possible without key packages by other authors in the R community, particularly the [shiny](https://github.com/rstudio/shiny), [shinydashboard](https://github.com/rstudio/shinydashboard), [DT](https://github.com/rstudio/DT) and [shinyjs](https://github.com/daattali/shinyjs) packages. Graph visualisations created with [igraph](https://github.com/igraph/rigraph) and [visNetwork](https://github.com/datastorm-open/visNetwork), and text analysis with support from [tm](https://CRAN.R-project.org/package=tm), [SnowballC](https://CRAN.R-project.org/package=SnowballC), [wordcloud](https://CRAN.R-project.org/package=wordcloud) and [syuzhet](https://CRAN.R-project.org/package=syuzhet) packages.
+
+## Code of Conduct
+  
+Please note that the VOSON Lab projects are released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

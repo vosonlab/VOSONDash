@@ -15,8 +15,8 @@ createTwitterWebToken(app_name, keys)
 A \pkg{vosonSML} twitter credential object.
 }
 \description{
-This function creates a \code{vosonSML::Authenticate} credential object with twitter app consumer keys 
-and interactive web authorization. \code{rtweet::create_token} is used to create the access token and the properties 
+This function creates a \code{vosonSML::Authenticate} credential object with twitter app consumer keys
+and interactive web authorization. \code{rtweet::create_token} is used to create the access token and the properties
 \code{type} and \code{created} are added to the credential object to assist with \pkg{VOSONDash} token management.
 }
 \keyword{internal}
