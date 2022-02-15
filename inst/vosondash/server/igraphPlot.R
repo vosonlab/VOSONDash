@@ -98,7 +98,8 @@ igraphData <- reactive({
   plot_parameters[['vertex.frame.color']] = ifelse(V(g)$id %in% selected_row_names, "#000000", "gray")
   plot_parameters[['vertex.label.font']] <- ifelse(V(g)$id %in% selected_row_names, 2, 1)
   
-  base_vertex_size <- 4
+  # base_vertex_size <- 4
+  base_vertex_size <-input$igraph_node_base_size_slider
   base_label_size <- 0.8
   label_dist <- 0.6
   label_degree <- -(pi)/2  
@@ -116,14 +117,13 @@ igraphData <- reactive({
   }
   # --- end id labels  
 
-  plot_parameters[['vertex.size']] <- switch(node_degree_type,
-                                             "Degree" = igraph_vsize(V(g)$Degree),
-                                             "Indegree" = igraph_vsize(V(g)$Indegree),
-                                             "Outdegree" = igraph_vsize(V(g)$Outdegree),
-                                             "Betweenness" = igraph_vsize(V(g)$Betweenness),
-                                             "Closeness" = igraph_vsize(V(g)$Closeness),
-                                             "None" = (base_vertex_size + 0.1) * node_size_multiplier)
+  vertex_size <- ((base_vertex_size + 0.1) * node_size_multiplier)
+  if (node_degree_type != "None") {
+    vertex_size <- igraph_vsize(vertex_attr(g, node_degree_type))
+  }
   
+  plot_parameters[['vertex.size']] <- vertex_size
+
   if (.Platform$OS.type != "windows" & 
       ("Arial Unicode MS" %in% VOSONDash::getSystemFontFamilies()) &
       input$macos_font_check) {

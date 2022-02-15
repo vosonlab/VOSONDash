@@ -376,7 +376,9 @@ observeEvent(input$nbh_undo_button, {
 
 # reset node size slider when changed to none
 observeEvent(input$graph_node_size_select, {
-  if (input$graph_node_size_select == "None") { shinyjs::reset("graph_node_size_slider") }
+  if (input$graph_node_size_select == "None") { 
+    shinyjs::reset("graph_node_size_slider")
+  }
 })
 
 # on change layout event
@@ -795,6 +797,17 @@ graphNodes <- reactive({
     }  
   }
 
+  for (attr in attr_v) {
+    values <- get.vertex.attribute(g, attr)
+    if (is.numeric(values) &
+        (!attr %in% voson_txt_attrs) &
+        (!attr %in% voson_cat_attrs) &
+        (!attr %in% names(df_parameters)) &
+        (!tolower(attr) %in% names(df_parameters))) {
+      df_parameters[[attr]] <- values
+    }
+  }
+  
   df_parameters['stringsAsFactors'] <- FALSE
   df <- do.call(data.frame, df_parameters)
   

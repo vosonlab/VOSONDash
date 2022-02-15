@@ -41,21 +41,30 @@ visNetworkData <- reactive({
                          "layout_nicely")
   
   verts$font.size <- 24
-  base_vertex_size <- 20
+  # base_vertex_size <- 20
+  base_vertex_size <- input$visgraph_node_base_size_slider
   norm_multi <- 5
   
   vis_vsize <- function(x) {
     base_vertex_size + (((norm_values(x) + 0.1) * norm_multi) * node_size_multiplier)
   }
-  
-  verts$size <- switch(node_degree_type,
-                       "Degree" = vis_vsize(verts$degree),
-                       "Indegree" = vis_vsize(verts$indegree),
-                       "Outdegree" = vis_vsize(verts$outdegree),
-                       "Betweenness" = vis_vsize(verts$betweenness),
-                       "Closeness" = vis_vsize(verts$closeness),
-                       "None" = (base_vertex_size + 0.1) * node_size_multiplier)
 
+  vertex_size <- ((base_vertex_size + 0.1) * node_size_multiplier)
+  
+  if (node_degree_type != "None") {
+    v <- NULL
+    if (node_degree_type %in% names(verts)) {
+      v <- verts[[node_degree_type]]
+    } else if (tolower(node_degree_type) %in% names(verts)) {
+      v <- verts[[tolower(node_degree_type)]]
+    }
+    if (!is.null(v)) {
+      vertex_size <- vis_vsize(v)  
+    }
+  }
+  
+  verts$size <- vertex_size
+  
   v_color_in_data <- FALSE
   if ("color" %in% names(verts)) { v_color_in_data <- TRUE }
   

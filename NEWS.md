@@ -1,3 +1,13 @@
+# VOSONDash 0.5.11
+
+## Minor Changes
+- Added detection for numeric node attributes and addition to node size control.
+- Added base vertex size controls. Base vertex size gives greater control over starting node size independent from normalization.
+- Enabled vertex size for `visNetwork` graph.
+
+## Bug Fixes:
+- Fixed a problem with categorical attributes having multiple underscores in their names.
+
 # VOSONDash 0.5.10
 
 ## Minor Changes
