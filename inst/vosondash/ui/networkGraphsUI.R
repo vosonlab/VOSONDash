@@ -76,6 +76,14 @@ tabItem(tabName = "network_graphs_tab",
                                          disabled(sliderInput("graph_node_size_slider", label = "Multiplier", min = 0.1, max = 15, step = 0.1, value = c(1), ticks = FALSE, animate = FALSE))
                                   )
                                 ),
+                                fluidRow(
+                                  column(width = 6,
+                                         disabled(sliderInput("igraph_node_base_size_slider", label = "igraph base size", min = 0.1, max = 8, step = 0.1, value = c(4), ticks = FALSE, animate = FALSE))
+                                  ),
+                                  column(width = 6,
+                                         disabled(sliderInput("visgraph_node_base_size_slider", label = "visnet base size", min = 1, max = 40, step = 1, value = c(20), ticks = FALSE, animate = FALSE))
+                                  )
+                                ),
                                 
                                 checkboxInput('use_vertex_colors_check', 
                                               div("Node colors from graphml", style = "margin-bottom:5px;")

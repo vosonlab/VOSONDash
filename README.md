@@ -5,7 +5,7 @@
 [![CRAN_Monthly](https://cranlogs.r-pkg.org/badges/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 [![CRAN_Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 [![Github_Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github)](https://github.com/vosonlab/VOSONDash/releases)
-[![Github_Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.10&logo=github)](https://github.com/vosonlab/VOSONDash)
+[![Github_Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.11&logo=github)](https://github.com/vosonlab/VOSONDash)
 [![Last_Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?&logo=github)](https://github.com/vosonlab/VOSONDash/commits/master)
 [![Build_Status](https://github.com/vosonlab/VOSONDash/workflows/R-CMD-check/badge.svg)](https://github.com/vosonlab/VOSONDash/actions)
 
@@ -59,7 +59,7 @@ For example:
 ``` r
 runVOSONDash()
 # =================================================
-# VOSONDash v0.5.10
+# VOSONDash v0.5.11
 # ...
 # Checking packages...
 # 

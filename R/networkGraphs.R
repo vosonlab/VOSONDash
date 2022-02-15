@@ -137,14 +137,13 @@ addAdditionalMeasures <- function(g) {
 #' @export
 getVertexCategories <- function(g, cat_prefix = "vosonCA_") {
   graph_cats <- list()
-
+  
   attr_v <- igraph::vertex_attr_names(g)
   attr_v <- attr_v[grep(paste0("^", cat_prefix), attr_v, perl = TRUE)]
   
-  if (length(attr_v)) {
-    for (i in attr_v) {
-      graph_cats[[sapply(strsplit(i, "_"), `[`, 2)]] <- sort(unique(vertex_attr(g, i)))
-    }
+  for (voson_attr in attr_v) {
+    voson_attr_rm_prefix <- sub(paste0("^", cat_prefix), "", voson_attr)
+    graph_cats[[voson_attr_rm_prefix]] <- sort(unique(vertex_attr(g, voson_attr)))
   }
   
   graph_cats
