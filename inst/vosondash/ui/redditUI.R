@@ -23,7 +23,7 @@ tabItem(tabName = "reddit_collection_tab",
                                 actionButton("reddit_remove_url_button", label = "Remove"),
                                 p(""),
                                 disabled(actionButton("reddit_collect_button", label = "Collect Threads", 
-                                                      icon = icon("cloud-download")))
+                                                      icon = icon("cloud-arrow-down")))
                                 
                           ), # end tabPanel
                           tabPanel("Create Network",
@@ -35,7 +35,7 @@ tabItem(tabName = "reddit_collection_tab",
                                            checkboxInput("reddit_network_text", "Add Text", FALSE)
                                    ),
                                    p(""),
-                                   disabled(actionButton("reddit_create_button", label = "Create Network", icon = icon("share-alt")))
+                                   disabled(actionButton("reddit_create_button", label = "Create Network", icon = icon("share-nodes")))
                                    
                           ) # end tabPanel
                    ) # end tabBox

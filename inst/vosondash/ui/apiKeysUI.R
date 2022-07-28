@@ -51,12 +51,12 @@ tabItem(tabName = "keys_tab",
                                                                                          div("Note: Incomplete process will end session", vpopover(po_web_auth()$title, po_web_auth()$content), class = "div_inline"), 
                                                                                          # "Note: aborting will end session", 
                                                                                          value = FALSE, width = NULL), style = "display:inline-block; margin-left:15px;"),
-                                                                       div(disabled(actionButton("create_web_auth_token", "Create Web Auth Token", icon("drafting-compass"))), style = "display:inline-block;float:right;margin-right:15px;margin-left:5px;"),
+                                                                       div(disabled(actionButton("create_web_auth_token", "Create Web Auth Token", icon("compass-drafting"))), style = "display:inline-block;float:right;margin-right:15px;margin-left:5px;"),
                                                                        style = "padding-bottom:0px; margin-bottom:0px"),
                                                                        
                                                                        textInput("keys_twitter_access_token_input", label = "Access Token", value = ""),
                                                                        textInput("keys_twitter_access_token_secret_input", label = "Access Token Secret", value = ""),
-                                                                       fluidRow(div(actionButton("create_app_token", "Create Dev App Token", icon("drafting-compass"), style = "float:right;margin-right:15px;padding-bottom:2px")))
+                                                                       fluidRow(div(actionButton("create_app_token", "Create Dev App Token", icon("compass-drafting"), style = "float:right;margin-right:15px;padding-bottom:2px")))
                                                           , style = "margin-left:10px"),
                                                           sidebarPanel(width = 12, class = "custom_well_for_keys",
                                                                   h4("Created Token"),
@@ -78,7 +78,7 @@ tabItem(tabName = "keys_tab",
                                                                        #verbatimTextOutput("twitter_set_token", placeholder = FALSE),
                                                                        textOutput("twitter_set_token", container = span, inline = FALSE),
                                                                        fluidRow(actionButton("use_selected_token", "Use Token", icon("copy"), style = "margin-left:15px;"),
-                                                                                actionButton("delete_selected_token", "Delete", icon("delete"), style = "float:right;margin-right:15px;"))
+                                                                                actionButton("delete_selected_token", "Delete", icon("circle-minus"), style = "float:right;margin-right:15px;"))
                                                           , style = "margin-left:15px; margin-right:10px")
                                                         )
                                                  )

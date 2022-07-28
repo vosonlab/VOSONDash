@@ -31,7 +31,7 @@ tabItem(tabName = "youtube_collection_tab",
                                 div(div("Max Comments", class = "div_inline", style = "padding-bottom:10px;padding-right:10px;"),
                                     div(numericInput("youtube_max_comments_input", label = NULL, value = gbl_def_youtube_count, min = 1, width = "90px"), class = "div_inline")),
                                 p(""),
-                                disabled(actionButton("youtube_collect_button", label = "Collect Comments", icon = icon("cloud-download")))
+                                disabled(actionButton("youtube_collect_button", label = "Collect Comments", icon = icon("cloud-arrow-down")))
                           ), # end tabPanel
                           tabPanel("Create Network",
                                    div(tags$b("Network")),
@@ -56,7 +56,7 @@ tabItem(tabName = "youtube_collection_tab",
                                            checkboxInput("youtube_network_video_subs", "Only replace Video ID's", FALSE)
                                    ),
                                    p(""),
-                                   disabled(actionButton("youtube_create_button", label = "Create Network", icon = icon("share-alt")))
+                                   disabled(actionButton("youtube_create_button", label = "Create Network", icon = icon("share-nodes")))
                                    
                           ) # end tabPanel
                    ) # end tabBox

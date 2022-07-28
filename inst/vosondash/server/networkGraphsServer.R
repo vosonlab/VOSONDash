@@ -423,7 +423,7 @@ output$graph_legend_ui <- renderUI({
 })
 
 output$vis_plot_ui <- renderUI({
-  tabBox(width = 12, title = span(icon("share-alt", class = "social_green"), "Network Graphs"), 
+  tabBox(width = 12, title = span(icon("share-nodes", class = "social_green"), "Network Graphs"), 
          selected = input$selected_graph_tab, id = "selected_graph_tab",
          tabPanel("igraph", plotOutput("igraphPlot", width = "100%", height = "auto"), value = "Plot"),
          tabPanel("visNetwork", visNetworkOutput("visNetworkPlot", width = "100%",

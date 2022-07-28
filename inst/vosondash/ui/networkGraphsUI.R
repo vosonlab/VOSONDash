@@ -53,7 +53,7 @@ tabItem(tabName = "network_graphs_tab",
                                          disabled(sliderInput("graph_spread_slider", "Spread", min = 0.25, max = 2.5, step = 0.1, value = c(1), ticks = FALSE))
                                   ),
                                   column(width = 2,
-                                         div(div(id = "seed", "", class = "div_inline"), disabled(actionButton("graph_reseed_button", label = icon("refresh"), style = "padding:2px 8px;")), style = "float:right; margin-top:5px; font-size:0.98em;",
+                                         div(div(id = "seed", "", class = "div_inline"), disabled(actionButton("graph_reseed_button", label = icon("arrows-rotate"), style = "padding:2px 8px;")), style = "float:right; margin-top:5px; font-size:0.98em;",
                                              vpopover(po_reseed_graph()$title, po_reseed_graph()$content))       
                                   )
                                 ),

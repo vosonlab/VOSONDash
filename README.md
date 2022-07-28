@@ -16,22 +16,23 @@ manipulating network graphs, performing text analysis, displaying
 network metrics and the collection of network data using the
 [vosonSML](https://github.com/vosonlab/vosonSML) R package.
 
-## Installation
+## Installation Options
 
-Install the latest release via CRAN:
+Install the most recent CRAN release:
 
 ``` r
 install.packages("VOSONDash")
 ```
 
-Install the latest release via GitHub:
+Install the most recent release tag via GitHub:
 
 ``` r
-install.packages("https://api.github.com/repos/vosonlab/VOSONDash/tarball/v0.5.7",
-                 repo = NULL, type = "source")
+install.packages(
+  "https://github.com/vosonlab/VOSONDash/releases/download/v0.5.11/VOSONDash-0.5.11.tar.gz",
+  repo = NULL, type = "source")
 ```
 
-Install the development version:
+Install the latest development version:
 
 ``` r
 # library(remotes)

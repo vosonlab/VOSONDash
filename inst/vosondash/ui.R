@@ -12,7 +12,7 @@ dashboardPage(
             tags$style(".sidebar-toggle {height: 40px; padding-top: 1px !important;}"),
             tags$style(".navbar {min-height:40px !important}")),
             
-            title = span(icon("project-diagram"), "VOSON Dashboard", 
+            title = span(icon("diagram-project"), "VOSON Dashboard", 
                     span(app_version, class = "version")),
     
             titleWidth = 300
@@ -23,11 +23,11 @@ dashboardPage(
                    tags$style(".left-side, .main-sidebar {padding-top: 40px}"),
                    sidebarMenu(id = "sidebar_menu",
                                h4("Analysis", style = "padding-left:20px; font-size:16px;"),
-                               menuItem("Network Graphs", tabName = "network_graphs_tab", icon = icon("share-alt"), 
+                               menuItem("Network Graphs", tabName = "network_graphs_tab", icon = icon("share-nodes"), 
                                         selected = TRUE),
-                               menuItem("Network Metrics", tabName = "network_metrics_tab", icon = icon("bar-chart")),
-                               menuItem("Text Analysis", tabName = "text_analysis_tab", icon = icon("bar-chart")),
-                               menuItem("Assortativity", tabName = "assortativity_tab", icon = icon("bar-chart")),
+                               menuItem("Network Metrics", tabName = "network_metrics_tab", icon = icon("ruler-combined")),
+                               menuItem("Text Analysis", tabName = "text_analysis_tab", icon = icon("arrow-up-wide-short")),
+                               menuItem("Assortativity", tabName = "assortativity_tab", icon = icon("braille")),
                                h4("Collection", style = "padding-left:20px; font-size:16px;"),
                                menuItem("Twitter", tabName = "twitter_collection_tab", icon = icon("twitter")),
                                menuItem("Youtube", tabName = "youtube_collection_tab", icon = icon("youtube")),

@@ -37,7 +37,7 @@ tabItem(tabName="text_analysis_tab",
           
           column(width=9, offset=0,
                  fluidRow(
-                   tabBox(width = 12, title = span(icon("bar-chart", class = "social_green"), "Text Analysis"), 
+                   tabBox(width = 12, title = span(icon("arrow-up-wide-short", class = "social_green"), "Text Analysis"), 
                           selected = "Word Frequency", id = "selected_text_analysis_tab",
                           
                           tabPanel("Word Frequency",
@@ -62,7 +62,7 @@ tabItem(tabName="text_analysis_tab",
                                                                sliderInput("ta_wc_min_word_freq", "Minimum Frequency:", min = 1, max = 50, value = 1),
                                                                sliderInput("ta_wc_max_word_count", "Maximum Words:", min = 1, max = 300, value = 50),
                                                                sliderInput("ta_wc_vert_prop", "% Vertical Words:", min = 0, max = 100, value = 20),
-                                                               div(actionButton("wc_reseed_button", label = icon("refresh"), style = "padding:2px 8px;"),
+                                                               div(actionButton("wc_reseed_button", label = icon("arrows-rotate"), style = "padding:2px 8px;"),
                                                                    div(id = "wc_seed", "", class = "div_inline")),
                                                                checkboxInput("wc_random_col", "Random Colors", FALSE)
                                               ), style = "margin-right:10px;"))

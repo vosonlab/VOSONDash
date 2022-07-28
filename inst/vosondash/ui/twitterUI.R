@@ -69,7 +69,7 @@ tabItem(tabName = "twitter_collection_tab",
                                                  checkboxInput("twitter_filter_positive", "Positive Attitude", FALSE)
                                 ),
                                 p(""),
-                                disabled(actionButton("twitter_collect_button", label = "Collect Tweets", icon = icon("cloud-download")))
+                                disabled(actionButton("twitter_collect_button", label = "Collect Tweets", icon = icon("cloud-arrow-down")))
                                 
                           ), # end tabPanel
                           tabPanel("Create Network",
@@ -107,7 +107,7 @@ tabItem(tabName = "twitter_collection_tab",
                                                          TRUE)),
                                    ),
                                    p(""),
-                                   disabled(actionButton("twitter_create_button", label = "Create Network", icon = icon("share-alt")))
+                                   disabled(actionButton("twitter_create_button", label = "Create Network", icon = icon("share-nodes")))
                                    
                           ) # end tabPanel
                    ) # end tabBox
