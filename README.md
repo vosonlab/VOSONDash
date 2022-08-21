@@ -16,6 +16,10 @@ manipulating network graphs, performing text analysis, displaying
 network metrics and the collection of network data using the
 [vosonSML](https://github.com/vosonlab/vosonSML) R package.
 
+| * Breaking twitter changes with rtweet package v1.0.2 * |
+| ------------- |
+| Please note that the recent major CRAN release of the `rtweet` package has introduced changes that break `VOSONDash`'s Twitter features. I am working on an update, but in the meantime please consider using the [vosonSML](https://github.com/vosonlab/vosonSML) (>= v0.32.7) package directly for Twitter data collection and networks.<br><br>If you wish to continue using `VOSONDash` for twitter collection and analysis, you can still do so with the previous versions of `rtweet` v0.7.0 and `vosonSML` v30.6.<br><br>Instructions for installing previous versions can be found [here](https://github.com/vosonlab/VOSONDash/issues/32#issue-1345623129).|
+
 ## Installation Options
 
 Install the most recent CRAN release:
