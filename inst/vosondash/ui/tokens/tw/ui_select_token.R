@@ -13,8 +13,12 @@ sidebarPanel(
   ),
   textOutput("twitter_set_token", container = span, inline = FALSE),
   fluidRow(
-    actionButton("use_selected_token", "Use Token", icon("copy"), style = "margin-left:15px;"),
-    actionButton("delete_selected_token", "Delete", icon("circle-minus"), style = "float:right;margin-right:15px;")
+    disabled(actionButton("use_selected_token", "Use Token", icon("copy"), style = "margin-left:15px;")),
+    disabled(actionButton("delete_selected_token", "Delete", icon("circle-minus"), style = "float:right;margin-right:15px;"))
+  ),
+  conditionalPanel(
+    condition = "output.use_selected_token_toggle",
+    htmlOutput("selected_token_msg")
   ),
   style = "margin-left:10px;"
 )

@@ -20,11 +20,12 @@ observeEvent(input$hyperlink_add_url_button, {
   type <- input$hyperlink_crawl_type_select
   max_depth <- input$hyperlink_max_depth_input
   delay <- 1
-  if (input$hyperlink_request_delay_robots_checkbox) delay <- NULL
+  if (input$hyperlink_request_delay_robots_checkbox) delay <- NA
   hyperlink_rv$hyperlink_seed_urls <- dplyr::bind_rows(
     hyperlink_rv$hyperlink_seed_urls,
     tibble::tibble(page = page, type = type, max_depth = max_depth, delay = delay)
   )
+  updateTextInput(session, "hyperlink_url_input", label = NULL, value = "")
 })
 
 observeEvent(input$hyperlink_remove_url_button,{
@@ -35,10 +36,10 @@ observeEvent(input$hyperlink_remove_url_button,{
   tbl_value <- hyperlink_rv$hyperlink_seed_urls
   if (!is.null(tbl_value)) {
     if (inherits(tbl_value, "data.frame") && nrow(tbl_value) < 1) {
-      shinyjs::disable("hyperlink_create_button")
+      shinyjs::disable("hyperlink_collect_button")
     }
   } else {
-    shinyjs::disable("hyperlink_create_button") 
+    shinyjs::disable("hyperlink_collect_button") 
   }
 })
 
@@ -53,6 +54,12 @@ observeEvent(hyperlink_rv$hyperlink_seed_urls,{
   FALSE
 })
 
+check_req_pkgs <- function(pkgs) {
+  req <- sapply(pkgs, function(x) { requireNamespace(x, quietly = TRUE) })
+  if (any(req == FALSE)) return(names(which(req == FALSE)))
+  return(c())
+}
+
 # hyperlink collection button pushed
 observeEvent(input$hyperlink_collect_button, {
   
@@ -62,17 +69,43 @@ observeEvent(input$hyperlink_collect_button, {
   withProgress(message = 'Collecting hyperlinks', value = 0.5, {
     
     withConsoleRedirect("hyperlink_console", {
+      
+      missing_pkgs <- check_req_pkgs(c("robotstxt", "rvest", "urltools", "xml2"))
+      if (length(missing_pkgs)) {
+        cat(
+          paste0(
+            "Please exit VOSONDash and install ",
+            paste0(missing_pkgs, collapse = ", "),
+            " package",
+            ifelse(length(missing_pkgs) > 1, "s", ""),
+            " before using this collection method:\n",
+            paste0("install.packages(c(", 
+                   paste0(sapply(missing_pkgs, function(x) paste0("\"", x, "\"")), collapse = ","),
+                   "))\n")
+          )
+        )
+        incProgress(1, detail = "Finished")
+        
+      } else {
+      
       tryCatch({
-        hyperlink_rv$hyperlink_data <- vosonSML::collect_web_hyperlinks(pages = hyperlink_rv$hyperlink_seed_urls, verbose = TRUE)
+        hyperlink_rv$hyperlink_data <- 
+          vosonSML::Collect(
+            vosonSML::Authenticate("web"),
+            pages = hyperlink_rv$hyperlink_seed_urls,
+            verbose = TRUE)
         hyperlink_rv$data_cols <- names(hyperlink_rv$hyperlink_data)
       }, error = function(err) {
-        incProgress(1, detail = "Error")
         cat(paste('hyperlink collection error:', err))
         return(NULL)
       })
       
       incProgress(1, detail = "Finished")
-      updateTabItems(session, "hyperlink_control_tabset", selected = "Create Network")
+      if (!is.null(hyperlink_rv$hyperlink_data)) {
+        updateTabItems(session, "hyperlink_control_tabset", selected = "Create Network")
+      }
+      
+      }
     }) # withConsoleRedirect
     
   }) # withProgress
@@ -238,5 +271,24 @@ datatableHyperlinkData <- reactive({
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')),
                   class = 'cell-border stripe compact hover')
+  }
+})
+
+output$hyperlink_arguments_output <- renderText({
+  tbl_value <- hyperlink_rv$hyperlink_seed_urls
+  
+  if (!is.null(tbl_value)) {
+    if (inherits(tbl_value, "data.frame") && nrow(tbl_value)) {
+      output <- c(paste0("seed sites: ", nrow(tbl_value)))
+      for (i in 1:nrow(tbl_value)) {
+        seed <- dplyr::slice(tbl_value, i)
+        output <- append(output, paste0(
+                         "page: ", seed$page, " ",
+                         "- (max_depth: ", seed$max_depth, " | ",
+                         "type: ", seed$type, " | ",
+                         "delay: ", seed$delay, "s)"))
+      }
+      paste0(output, collapse = '\n')
+    }
   }
 })

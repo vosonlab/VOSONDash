@@ -10,6 +10,7 @@ api_keys <- NULL
 check_creds_startup <- TRUE
 
 creds_rv <- reactiveValues(
+  file_tokens = list(),
   tokens = list(), 
   created_token = NULL,
   selected_token_id = NULL,
@@ -47,7 +48,8 @@ observeEvent(check_creds_startup, {
     }
     
     if (file.exists(u_api_tokens_path)) {
-      creds_rv$tokens <- readRDS(file = u_api_tokens_path)
+      creds_rv$file_tokens <- readRDS(file = u_api_tokens_path)
+      creds_rv$tokens <- isolate(creds_rv$file_tokens)
       creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", u_api_tokens_path))
       ids <- getTokenIds()
       updateSelectInput(session, "twitter_token_select", label = NULL, choices = ids, selected = ids[length(ids)])
@@ -162,13 +164,22 @@ observeEvent(input$tokens_save_button, {
   if (isLocal) {
     # save tokens
     saveRDS(creds_rv$tokens, u_api_tokens_path)
+    creds_rv$file_tokens <- creds_rv$tokens
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste0("saved tokens to file (", length(creds_rv$tokens), ")"))
+    shinyjs::removeClass("tokens_save_button", "btn-success")
+  }
+})
+
+observeEvent(creds_rv$tokens, {
+  if (!identical(creds_rv$tokens, creds_rv$file_tokens)) {
+    shinyjs::addClass("tokens_save_button", "btn-success")
   }
 })
 
 observeEvent(input$tokens_load_button, {
   if (file.exists(u_api_tokens_path)) {
-    creds_rv$tokens <- readRDS(file = u_api_tokens_path)
+    creds_rv$file_tokens <- readRDS(file = u_api_tokens_path)
+    creds_rv$tokens <- isolate(creds_rv$file_tokens)
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("loaded tokens from file", u_api_tokens_path))
     ids <- getTokenIds()
     updateSelectInput(session, "twitter_token_select", label = NULL, choices = ids, selected = ids[length(ids)])
@@ -203,6 +214,16 @@ observeEvent(input$save_token, {
   }
 })
 
+observeEvent(input$twitter_token_select, {
+  if (input$twitter_token_select != "None") {
+    shinyjs::enable("use_selected_token")
+    shinyjs::enable("delete_selected_token")
+  } else {
+    shinyjs::disable("use_selected_token")
+    shinyjs::disable("delete_selected_token")
+  }
+})
+
 observeEvent(input$use_selected_token, {
   if (input$twitter_token_select == "None") {
     creds_rv$use_token <- NULL
@@ -211,6 +232,22 @@ observeEvent(input$use_selected_token, {
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("using token", input$twitter_token_select))
   }
 })
+
+output$use_selected_token_toggle <- reactive({
+  if (!is.null(creds_rv$use_token)) {
+    token <- createTokenId(creds_rv$use_token)
+    output$selected_token_msg <- renderUI({
+      tags$div(style = "padding:12px;",
+        tags$i(class = "fa-solid fa-circle-check"),
+        tags$span(token)
+      )
+    })
+    return(TRUE)
+  }
+  output$selected_token_msg <- renderText("")
+  return(FALSE)
+})
+outputOptions(output, "use_selected_token_toggle", suspendWhenHidden = FALSE)
 
 observeEvent(input$delete_selected_token, {
   if (input$twitter_token_select %in% names(creds_rv$tokens)) {
@@ -262,10 +299,13 @@ output$save_token_output <- renderText({
   if (is.null(token)) {
     output <- append(output, "Empty or invalid token.")
   } else {
+    key <- ifelse(token$type %in% c("dev", "user"), token$auth$app$key,
+                  ifelse(token$type %in% c("bearer"), token$auth$token, ""))
+    if (nchar(key) >= 32) key <- paste0(substr(key, 1, 4), "...", substr(key, nchar(key) - 4, nchar(key)))
+                                        
     output <- c(paste("token:", token$name),
                 paste("social media:", token$socialmedia), 
-                paste("key:", ifelse(token$type %in% c("dev", "user"), token$auth$app$key,
-                                     ifelse(token$type %in% c("bearer"), token$auth$token, ""))),
+                paste("key:", key),
                 paste("type:", token$type),
                 paste("created:", token$created))
   }

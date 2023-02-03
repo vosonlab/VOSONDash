@@ -50,6 +50,7 @@ shinyServer(function(input, output, session) {
     resetConsole("twitter_console", FALSE)
     resetConsole("youtube_console", FALSE)
     resetConsole("reddit_console", FALSE)
+    resetConsole("hyperlink_console", FALSE)
   }, once = TRUE, ignoreInit = FALSE)
   
   # stop app when browser closes

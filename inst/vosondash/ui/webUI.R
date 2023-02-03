@@ -70,6 +70,9 @@ tabItem(tabName = "hyperlink_collection_tab",
                           ),                          
                           tabPanel("Console", width = 12,
                                    verbatimTextOutput("hyperlink_arguments_output"),
+                                   tags$head(
+                                     tags$style("#hyperlink_arguments_output{overflow-y:scroll; max-height: 80px;}")
+                                   ),
                                    
                                    # hyperlink collect console
                                    pre(id = "hyperlink_console", style = "height: 300px; overflow-y: scroll")

@@ -11,7 +11,7 @@ tabItem(
       fluidRow(
         tabBox(
           width = 12,
-          title = "Keys",
+          title = div(span(icon("key"), "API Keys")),
           id = "selected_keys_tab",
           
           tabPanel(
