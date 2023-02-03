@@ -32,6 +32,10 @@ tabItem(tabName="text_analysis_tab",
                                 div("Current Network Graph", style = "font-weight:bold;margin-bottom:5px;"),
                                 div("These values summarise the current state of the network graph including any filtering by category and component controls.", style = "margin-bottom:5px;"),
                                 verbatimTextOutput("ta_details_output", placeholder = TRUE))
+                 ),
+                 fluidRow(
+                   sidebarPanel(width = 6, class = "custom_well_for_controls",
+                                div("Plot height ", uiOutput("ta_plot_height_ui")))
                  )
           ),
           

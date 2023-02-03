@@ -19,9 +19,6 @@ source("packages.R", local = TRUE)
 ifelse(isLocal, options(shiny.maxRequestSize = 128*1024^2), # 128 MB
                 options(shiny.maxRequestSize = 48*1024^2))  # 48 MB
 
-is2910 <- FALSE
-if (utils::packageVersion("vosonSML") >= "0.29.10") { is2910 <- TRUE }
-
 # graph data
 voson_cat_prefix <- "^vosonCA_"
 voson_txt_prefix <- "^vosonTxt_"
@@ -36,7 +33,8 @@ gbl_sel_label_col <- "#006cb7"
 gbl_plot_palette <- function(n = 8) brewer.pal(n, "Dark2")
 gbl_plot_height <- 500
 
-ta_plot_height <- "450px"
+# ta_plot_height <- "450px"
+gbl_ta_plot_height <- "450px"
 
 # data tables
 options(htmlwidgets.TOJSON_ARGS = list(na = 'string'))

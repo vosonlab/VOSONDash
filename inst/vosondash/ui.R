@@ -32,6 +32,7 @@ dashboardPage(
                                menuItem("Twitter", tabName = "twitter_collection_tab", icon = icon("twitter")),
                                menuItem("Youtube", tabName = "youtube_collection_tab", icon = icon("youtube")),
                                menuItem("Reddit", tabName = "reddit_collection_tab", icon = icon("reddit")),
+                               menuItem("Hyperlink", tabName = "hyperlink_collection_tab", icon = icon("globe")),
                                menuItem("API Keys", tabName = "keys_tab", icon = icon("key"))
                    )
   ),
@@ -89,6 +90,9 @@ dashboardPage(
       
       #### reddit collection tab
       source("ui/redditUI.R")$value,
+      
+      #### hyperlink collection tab
+      source("ui/webUI.R")$value,
       
       #### api keys tab
       source("ui/apiKeysUI.R")$value

@@ -51,7 +51,7 @@ collectDataButtons <- function(input, output, session, data, file_prefix = "") {
   })
   
   observeEvent(data(), {
-    if (!is.null(data()) && nrow(data()) > 0) {
+    if (!is.null(data())) { # && nrow(data()) > 0
       shinyjs::enable("dl_data")  
     } else {
       shinyjs::disable("dl_data")

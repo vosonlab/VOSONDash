@@ -29,7 +29,7 @@ taPlotContainerUI <- function(id) {
 #'
 #' @return None
 #' 
-taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
+taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1, h = "450px") {
   ns <- session$ns
   
   plotPlaceholders <- reactive({
@@ -42,13 +42,13 @@ taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
       
       title_tags <- fluidRow(column(width = 12, div(h4(title_cat, " ", title_sub_cats), style = "padding-left:20px;")))
       tag_list <- tagAppendChild(tag_list, title_tags)
-
+ 
       plot_id <- ns(plot_ids[i])
       if (sub_plots == 2) {
-        plot_tags <- fluidRow(column(width = 8, plotOutput(paste0(plot_id, "-a"), height = ta_plot_height)),
-                              column(width = 4, plotOutput(paste0(plot_id, "-b"), height = ta_plot_height)))
+        plot_tags <- fluidRow(column(width = 8, plotOutput(paste0(plot_id, "-a"), height = h)),
+                              column(width = 4, plotOutput(paste0(plot_id, "-b"), height = h)))
       } else {
-        plot_tags <- fluidRow(column(width = 12, plotOutput(plot_id, height = ta_plot_height)))
+        plot_tags <- fluidRow(column(width = 12, plotOutput(plot_id, height = h)))
       }
       tag_list <- tagAppendChild(tag_list, plot_tags)
     }
@@ -56,7 +56,7 @@ taPlotPlaceholders <- function(input, output, session, data, sub_plots = 1) {
     # creates a plot placeholder with the namespace id "no-data"
     if (length(tag_list) == 0) {
       tag_list <- tagAppendChild(tag_list, fluidRow(column(width = 12, plotOutput(ns("no-data"),
-                                                                                  height = ta_plot_height))))
+                                                                                  height = h))))
     }
     
     tag_list

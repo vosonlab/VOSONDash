@@ -145,7 +145,8 @@ observeEvent(input$twitter_collect_button, {
           
           tw_rv$tw_data <- tw_data
           
-          tw_rv$data_cols <- names(tw_rv$tw_data)
+          # tw_rv$data_cols <- names(tw_rv$tw_data)
+          tw_rv$data_cols <- names(tw_rv$tw_data$tweets)
         }, error = function(err) {
           incProgress(1, detail = "Error")
           cat(paste("twitter collection error: ", err))
@@ -170,7 +171,7 @@ observeEvent(input$twitter_collect_button, {
 })
 
 observeEvent(tw_rv$tw_data, {
-  if (!is.null(tw_rv$tw_data) && nrow(tw_rv$tw_data)) {
+  if (!is.null(tw_rv$tw_data)) { # && nrow(tw_rv$tw_data)) {
     shinyjs::enable("twitter_create_button")
   } else {
     shinyjs::disable("twitter_create_button")
@@ -200,12 +201,13 @@ observeEvent(input$twitter_create_button, {
     withConsoleRedirect("twitter_console", {
       if (net_type == "activity") {
         network <- vosonSML::Create(isolate(tw_rv$tw_data), "activity", verbose = TRUE)
-        if (add_text) { network <- vosonSML::AddText(network, isolate(tw_rv$tw_data)) }
+        if (add_text) { network <- vosonSML::AddText(network, isolate(tw_rv$tw_data), verbose = TRUE) }
       } else if (net_type == "actor") {
         network <- vosonSML::Create(isolate(tw_rv$tw_data), "actor", verbose = TRUE)
-        if (add_text) { network <- vosonSML::AddText(network, isolate(tw_rv$tw_data)) }
+        if (add_text) { network <- vosonSML::AddText(network, isolate(tw_rv$tw_data), verbose = TRUE) }
         if (add_user_data) { 
-          network <- vosonSML::AddUserData(network, isolate(tw_rv$tw_data), twitterAuth = creds_rv$use_token) 
+          network <- vosonSML::AddUserData(network, isolate(tw_rv$tw_data), twitterAuth = creds_rv$use_token,
+                                           verbose = TRUE) 
         }
       } else if (net_type == "twomode") {
         rem_terms <- parse_rem_terms(input$twitter_twomode_remove)
@@ -214,12 +216,13 @@ observeEvent(input$twitter_create_button, {
           network <- vosonSML::Create(isolate(tw_rv$tw_data), "twomode",
                                       removeTermsOrHashtags = rem_terms,
                                       verbose = TRUE)
+          
+          # network$nodes$vosonTxt_terms <- network$nodes$name
         }, error = function(e) { cat(e$message) })
       } else if (net_type == "semantic") {
         rem_terms <- parse_rem_terms(input$twitter_semantic_remove)
         network <- NULL
         tryCatch({
-          if (is2910) {
             network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic",
                                         removeTermsOrHashtags = rem_terms,
                                         stopwords = input$twitter_semantic_stopwords, # >= v0.29.10
@@ -227,14 +230,8 @@ observeEvent(input$twitter_create_button, {
                                         hashtagFreq = input$twitter_hashtag_freq,
                                         assoc = ifelse(input$twitter_semantic_assoc, "limited", "full"), # >= v0.29.10
                                         verbose = TRUE)
-          } else {
-            network <- vosonSML::Create(isolate(tw_rv$tw_data), "semantic",
-                                        removeTermsOrHashtags = rem_terms,
-                                        stopwordsEnglish = input$twitter_semantic_stopwords, # < v0.29.10
-                                        termFreq = input$twitter_term_freq,
-                                        hashtagFreq = input$twitter_hashtag_freq,
-                                        verbose = TRUE)            
-          }
+            
+            # network$nodes$vosonTxt_terms <- network$nodes$name
         }, error = function(e) { cat(e$message) })
         
       }
@@ -334,7 +331,7 @@ observeEvent(input$clear_all_twitter_dt_columns, {
 observeEvent(input$reset_twitter_dt_columns, {
   updateCheckboxGroupInput(session, "show_twitter_cols", label = NULL,
                            choices = isolate(tw_rv$data_cols),
-                           selected = c("user_id", "status_id", "created_at", "screen_name", "text",
+                           selected = c("user_id", "status_id", "created_at", "screen_name", "full_text",
                                         "is_retweet"),
                            inline = TRUE)
 })
@@ -350,7 +347,7 @@ output$twitter_data_cols_ui <- renderUI({
         actionButton("reset_twitter_dt_columns", "Reset")),
     checkboxGroupInput("show_twitter_cols", label = NULL,
                        choices = tw_rv$data_cols,
-                       selected = c("user_id", "status_id", "created_at", "screen_name", "text",
+                       selected = c("user_id", "status_id", "created_at", "screen_name", "full_text",
                                     "is_retweet"), 
                        inline = TRUE, width = '98%')
   )
@@ -405,27 +402,28 @@ datatableTwitterData <- reactive({
   if (!is.null(input$show_twitter_cols)) {
     if (length(input$show_twitter_cols) > 0) {
       # data <- dplyr::select(tw_rv$tw_data, input$show_twitter_cols)
-      data <- dplyr::select(data, input$show_twitter_cols)
+      # data <- dplyr::select(data, input$show_twitter_cols)
+      data$tweets <- dplyr::select(data$tweets, input$show_twitter_cols)
     } else { return(NULL) }
   } else { return(NULL) }
   
-  if (nrow(data) < 1) { return(NULL) }
+  if (nrow(data$tweets) < 1) { return(NULL) }
   
-  col_classes <- sapply(data, class)
+  col_classes <- sapply(data$tweets, class)
   for (i in seq(1, length(col_classes))) {
     if ("list" %in% col_classes[i]) {
       var <- names(col_classes)[i]
-      data[var] <- lapply(data[var], function(x) sapply(x, paste, collapse = ", ", character(1L)))
+      data$tweets[var] <- lapply(data$tweets[var], function(x) sapply(x, paste, collapse = ", ", character(1L)))
     }
   }
   
-  if (!is.null(tw_rv$tw_data)) {
+  if (!is.null(tw_rv$tw_data$tweets)) {
     col_defs <- NULL
     if (input$dt_twitter_truncate_text_check == TRUE) {
       col_defs <- gbl_dt_col_defs
       col_defs[[1]]$targets = "_all"
     }
-    DT::datatable(data, extensions = 'Buttons', filter = "top",
+    DT::datatable(data$tweets, extensions = 'Buttons', filter = "top",
                   options = list(lengthMenu = gbl_dt_menu_len, pageLength = gbl_dt_page_len, scrollX = TRUE,
                                  columnDefs = col_defs, dom = 'lBfrtip',
                                  buttons = c('copy', 'csv', 'excel', 'print')),

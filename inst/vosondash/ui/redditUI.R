@@ -10,7 +10,7 @@ tabItem(tabName = "reddit_collection_tab",
                           width = 12,
                           tabPanel("Collect Data",
                                          
-                                # youtube video ids input
+                                # reddit urls input
                                 div(tags$b("Add Reddit URL"), 
                                     vpopover(po_red_url()$title, po_red_url()$content), 
                                     style = "margin-bottom:5px;"),
@@ -58,7 +58,7 @@ tabItem(tabName = "reddit_collection_tab",
                           tabPanel("Console", width = 12,
                                    verbatimTextOutput("reddit_arguments_output"),
                                    
-                                   # youtube collect console
+                                   # reddit collect console
                                    pre(id = "reddit_console", style = "height: 300px; overflow-y: scroll")
                           )
                    ),
@@ -74,7 +74,7 @@ tabItem(tabName = "reddit_collection_tab",
         ),
         
         fluidRow(
-          # youtube collection data table
+          # reddit collection data table
           tabBox(width = 12, title = "Reddit Data",
                  tabPanel("Results", 
                           fluidRow(

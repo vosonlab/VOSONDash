@@ -31,6 +31,9 @@ observeEvent(check_creds_startup, {
       if (load_and_use_keys) {
         readKeysFile()
         
+        updateTextInput(session, "twitter_bearer_name_input", label = NULL, value = api_keys$twitter_bearer_name)
+        updateTextInput(session, "twitter_bearer_token_input", label = NULL, value = api_keys$twitter_bearer_token)
+        
         updateTextInput(session, "twitter_app_name_input", label = NULL, value = api_keys$twitter_app_name)
         updateTextInput(session, "twitter_api_key_input", label = NULL, value = api_keys$twitter_api_key)
         updateTextInput(session, "twitter_api_secret_input", label = NULL, value = api_keys$twitter_api_secret)
@@ -56,14 +59,45 @@ observeEvent(check_creds_startup, {
   } # end isLocal
 }, once = TRUE)
 
-observeEvent(input$create_app_token, {
-  keys <- list(apiKey = input$keys_twitter_api_key_input, 
-               apiSecret = input$keys_twitter_api_secret_input,
-               accessToken = input$keys_twitter_access_token_input, 
-               accessTokenSecret = input$keys_twitter_access_token_secret_input)
+observeEvent(input$create_bearer_auth_token, {
+  bearerToken <- input$keys_twitter_bearer_token_input
   
+  tryCatch({
+    creds_rv$created_token <- VOSONDash::createTwitterBearerToken(input$keys_twitter_bearer_name_input, bearerToken)
+  }, error = function(err) {
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation error:", err))
+    creds_rv$created_token <- NULL
+  }, warning = function(w) {
+    creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation warning:", w))
+  })    
+})
+
+observeEvent(input$rtweet_auth_check, {
+  if (input$rtweet_auth_check) {
+    shinyjs::disable("keys_twitter_app_name_input")
+    shinyjs::disable("keys_twitter_api_key_input")
+    shinyjs::disable("keys_twitter_api_secret_input")
+    shinyjs::disable("keys_twitter_access_token_input")
+    shinyjs::disable("keys_twitter_access_token_secret_input")
+    shinyjs::disable("create_app_token")
+  } else {
+    shinyjs::enable("keys_twitter_app_name_input")
+    shinyjs::enable("keys_twitter_api_key_input")
+    shinyjs::enable("keys_twitter_api_secret_input")
+    shinyjs::enable("keys_twitter_access_token_input")
+    shinyjs::enable("keys_twitter_access_token_secret_input")
+    shinyjs::enable("create_app_token")
+  }
+})
+
+observeEvent(input$create_app_token, {
   # not caught if httpuv aborted as it as ends shiny session
   tryCatch({
+    keys <- list(apiKey = input$keys_twitter_api_key_input, 
+                 apiSecret = input$keys_twitter_api_secret_input,
+                 accessToken = input$keys_twitter_access_token_input, 
+                 accessTokenSecret = input$keys_twitter_access_token_secret_input)
+    
     creds_rv$created_token <- VOSONDash::createTwitterDevToken(input$keys_twitter_app_name_input, keys)
   }, error = function(err) {
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation error:", err))
@@ -74,12 +108,24 @@ observeEvent(input$create_app_token, {
 })
 
 observeEvent(input$create_web_auth_token, {
-  keys <- list(apiKey = input$keys_twitter_api_key_input, 
-               apiSecret = input$keys_twitter_api_secret_input)
-  
   # not caught if httpuv aborted as it as ends shiny session
-  tryCatch({  
-    creds_rv$created_token <- VOSONDash::createTwitterWebToken(input$keys_twitter_app_name_input, keys)
+  tryCatch({
+    if (input$rtweet_auth_check == TRUE) {
+      cred <- list(socialmedia = "twitter", token = NULL, auth = NULL)
+      class(cred) <- append(class(cred), c("credential", "twitter"))
+      
+      cred$auth <- rtweet::rtweet_user()
+      cred$type <- "user"
+      cred$name <- "rstats2twitter"
+      cred$created <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
+      
+      creds_rv$created_token <- cred
+    } else {
+      keys <- list(apiKey = input$keys_twitter_api_key_input, 
+                   apiSecret = input$keys_twitter_api_secret_input)
+      
+      creds_rv$created_token <- VOSONDash::createTwitterWebToken(input$keys_twitter_app_name_input, keys)
+    }
   }, error = function(err) {
     creds_rv$msg_log <- logMessage(creds_rv$msg_log, paste("token creation error:", err))
     creds_rv$created_token <- NULL
@@ -137,7 +183,7 @@ observeEvent(creds_rv$created_token, {
     shinyjs::disable("save_token")
   } else {
     creds_rv$msg_log <- logMessage(isolate(creds_rv$msg_log), paste("created token",
-                                                                    creds_rv$created_token$auth$app$appname))
+                                                                    creds_rv$created_token$name))
     shinyjs::enable("save_token")
   }  
 }, ignoreInit = TRUE)
@@ -216,9 +262,10 @@ output$save_token_output <- renderText({
   if (is.null(token)) {
     output <- append(output, "Empty or invalid token.")
   } else {
-    output <- c(paste("token:", token$auth$app$appname),
+    output <- c(paste("token:", token$name),
                 paste("social media:", token$socialmedia), 
-                paste("key:", token$auth$app$key),
+                paste("key:", ifelse(token$type %in% c("dev", "user"), token$auth$app$key,
+                                     ifelse(token$type %in% c("bearer"), token$auth$token, ""))),
                 paste("type:", token$type),
                 paste("created:", token$created))
   }
@@ -248,7 +295,9 @@ getTokenIds <- reactive({
 saveButtonStatus <- reactive({
   if (!isLocal) { return(FALSE) }
   
-  key_values <- c(input$keys_twitter_app_name_input,
+  key_values <- c(input$keys_twitter_bearer_name_input,
+                  input$keys_twitter_bearer_token_input,
+                  input$keys_twitter_app_name_input,
                   input$keys_twitter_api_key_input,
                   input$keys_twitter_api_secret_input,
                   input$keys_twitter_access_token_input,
@@ -277,6 +326,8 @@ writeKeysFile <- function() {
     
     api_keys <<- list(
       load_and_use_keys = input$load_and_use_keys_check,
+      twitter_bearer_name = input$keys_twitter_bearer_name_input,
+      twitter_bearer_token = input$keys_twitter_bearer_token_input,
       twitter_app_name = input$keys_twitter_app_name_input,
       twitter_api_key = input$keys_twitter_api_key_input,
       twitter_api_secret = input$keys_twitter_api_secret_input,
@@ -307,6 +358,9 @@ readKeysFile <- function() {
   }
   
   updateCheckboxInput(session, "load_and_use_keys_check", label = NULL, value = api_keys$load_and_use_keys)
+  
+  updateTextInput(session, "keys_twitter_bearer_name_input", label = NULL, value = api_keys$twitter_bearer_name)
+  updateTextInput(session, "keys_twitter_bearer_token_input", label = NULL, value = api_keys$twitter_bearer_token)
   
   updateTextInput(session, "keys_twitter_app_name_input", label = NULL, value = api_keys$twitter_app_name)
   updateTextInput(session, "keys_twitter_api_key_input", label = NULL, value = api_keys$twitter_api_key)

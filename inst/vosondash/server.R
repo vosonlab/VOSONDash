@@ -33,12 +33,15 @@ shinyServer(function(input, output, session) {
   #### reddit ####
   source("server/redditServer.R", local = TRUE)
   
+  #### hyperlink ####
+  source("server/webServer.R", local = TRUE)
+  
   #### api keys ####
-  source("server/apiKeysServer.R", local = TRUE)
+  source("server/srv_auth.R", local = TRUE)
   
   source("server/consoleServer.R", local = TRUE)
   
-  if (is2910) { shinyjs::enable("twitter_semantic_assoc") }
+  shinyjs::enable("twitter_semantic_assoc")
   
   if (VOSONDash::isMac()) { shinyjs::enable("macos_font_check") }
   

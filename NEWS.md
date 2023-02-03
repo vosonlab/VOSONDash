@@ -1,3 +1,9 @@
+# VOSONDash 0.6
+
+## Major Changes
+- Added initial interface for `vosonSML` hyperlink networks
+- Added support for Twitter API v1.1 bearer tokens
+
 # VOSONDash 0.5.11
 
 ## Minor Changes

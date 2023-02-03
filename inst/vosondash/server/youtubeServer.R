@@ -110,24 +110,20 @@ observeEvent(input$youtube_create_button, {
       if (net_type == "activity") {
         network <- vosonSML::Create(isolate(yt_rv$yt_data), "activity", verbose = TRUE)
         if (add_text) { 
-          network <- vosonSML::AddText(network, isolate(yt_rv$yt_data))
+          network <- vosonSML::AddText(network, isolate(yt_rv$yt_data), verbose = TRUE)
         }
       } else if (net_type == "actor") {
         network <- vosonSML::Create(isolate(yt_rv$yt_data), "actor", verbose = TRUE)
         if (add_text) {
-            if (is2910) {
               # vosonSML changed param name
               network <- vosonSML::AddText(network, isolate(yt_rv$yt_data), 
-                                           repliesFromText = input$youtube_network_replies_from_text)
-            } else {
-              network <- vosonSML::AddText(network, isolate(yt_rv$yt_data), 
-                                           replies_from_text = input$youtube_network_replies_from_text) 
-            }
+                                           repliesFromText = input$youtube_network_replies_from_text, verbose = TRUE)
+
         }
         if (input$youtube_network_video_data) { 
           creds <- vosonSML::Authenticate("youtube", apiKey = youtube_api_key)
           network <- vosonSML::AddVideoData(network, youtubeAuth = creds,
-                                            actorSubOnly = input$youtube_network_video_subs)
+                                            actorSubOnly = input$youtube_network_video_subs, verbose = TRUE)
         }
       }
       if (!is.null(network)) { 

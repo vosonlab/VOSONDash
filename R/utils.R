@@ -71,18 +71,12 @@ systemTimeFilename <- function(name_suffix, name_ext, clean = FALSE) {
 createRedditRequestUrl <- function(url) {
   # url <- tolower(url)
   
-  if(!grepl("^https://(www\\.)?reddit.com/r/(.*?)/comments/([0-9A-Za-z]{6})?/.*?/$", 
+  if(!grepl("^https://(www\\.)?reddit.com/r/(.*?)/comments/([0-9A-Za-z]{2,})?/.*?/$", 
             url, ignore.case = TRUE, perl = TRUE)) {
     return(NULL)
   }
   
   url <- gsub("^https://(www\\.)?reddit.com/r/", "r/", url, ignore.case = TRUE, perl = TRUE)
-  
-  # url <- gsub("^(.*)?/comments/([0-9A-Za-z]{6})?/.*?(/)?$", "\\1/comments/\\2/", 
-  #             url, ignore.case = TRUE, perl = TRUE)
-  
-  # url <- gsub("^(.*)?/comments/([0-9A-Za-z]{6})?/(.*)?/$", "\\1/comments/\\2/\\3/", 
-  #            url, ignore.case = TRUE, perl = TRUE)
 }
 
 #' @title Get a reddit thread id from url

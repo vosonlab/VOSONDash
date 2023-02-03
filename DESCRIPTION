@@ -1,6 +1,6 @@
 Package: VOSONDash
 Title: User Interface for Collecting and Analysing Social Networks
-Version: 0.5.11
+Version: 0.6.0
 Description: A 'Shiny' application for the interactive visualisation and
     analysis of networks that also provides a web interface for collecting
     social media data using 'vosonSML'.
@@ -21,17 +21,17 @@ Imports:
     textutils,
     tm,
     utils,
-    vosonSML (>= 0.29.0),
+    vosonSML (>= 0.32.9),
     wordcloud
 Suggests:
     dplyr,
     DT,
     htmlwidgets,
-    rtweet (>= 0.6.8),
+    rtweet (>= 1.0.2),
     shinydashboard,
     shinyjs,
     visNetwork
-Depends: R (>= 3.6)
+Depends: R (>= 4.1)
 Encoding: UTF-8
 Authors@R: c( 
     person("Bryan", "Gertzel",
@@ -46,7 +46,7 @@ Authors@R: c(
 Maintainer: Bryan Gertzel <bryan.gertzel@anu.edu.au>
 License: GPL (>= 3)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 NeedsCompilation: no
 URL: https://github.com/vosonlab/VOSONDash
 BugReports: https://github.com/vosonlab/VOSONDash/issues

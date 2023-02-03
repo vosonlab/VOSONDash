@@ -89,10 +89,10 @@ observeEvent(input$reddit_create_button, {
     withConsoleRedirect("reddit_console", {
       if (net_type == "activity") {
         network <- vosonSML::Create(isolate(red_rv$reddit_data), "activity", verbose = TRUE)
-        if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
+        if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data), verbose = TRUE) }
       } else if (net_type == "actor") {
         network <- vosonSML::Create(isolate(red_rv$reddit_data), "actor", verbose = TRUE)
-        if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data)) }
+        if (add_text) { network <- vosonSML::AddText(network, isolate(red_rv$reddit_data), verbose = TRUE) }
       }
       if (!is.null(network)) {
         red_rv$reddit_network <- network

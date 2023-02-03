@@ -10,7 +10,8 @@ ta_rv <- reactiveValues(
   has_text = FALSE,                 # does graphml have voson text data
   txt_attr_type = "",               # is text atttribute a vertex or edge
   txt_attr_name = "",               # text attribute name in graphml
-  wc_seed = 100                     # wordcloud seed value
+  wc_seed = 100,                    # wordcloud seed value
+  plot_height = gbl_ta_plot_height
 )
 
 #### events ---------------------------------------------------------------------------------------------------------- #
@@ -105,6 +106,16 @@ observeEvent(ta_rv$wc_seed, {
   html("wc_seed", ta_rv$wc_seed)
 })
 
+# set reactive value plot height when height input changes
+observeEvent(input$ta_plot_height, {
+  ta_rv$plot_height <- input$ta_plot_height
+  
+    plotWordFrequencies()
+    plotWordClouds()
+    plotSentiments()
+    
+}, ignoreInit = FALSE)
+
 #### output ----------------------------------------------------------------------------------------------------------- #
 
 output$ta_details_output <- renderText({
@@ -119,6 +130,13 @@ output$comparison_cloud_plot <- renderPlot({
   comparisonCloudPlotData()
 })
 
+output$ta_plot_height_ui <- renderUI({
+  tagList(
+    div(selectInput("ta_plot_height", label = NULL, 
+                    choices = c("200px", "250px", "300px", "350px", "400px", "450px", "500px", "550px", "600px", "650px",
+                                "700px", "750px", "800px"), 
+                    multiple = FALSE, selectize = FALSE, selected = ta_rv$plot_height)))
+})
 #### reactives -------------------------------------------------------------------------------------------------------- #
 
 # plot word frequencies
@@ -130,7 +148,7 @@ plotWordFrequencies <- reactive({
   
   # create placeholders and plot word frequency charts from list of base text corpus data
   withProgress(message = "Processing word frequencies...", {
-    callModule(taPlotPlaceholders, "word_freqs", ta_rv$plot_data_list)
+    callModule(taPlotPlaceholders, "word_freqs", ta_rv$plot_data_list, h = ta_rv$plot_height)
     callModule(taPlotList, "word_freqs", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
                min_freq, NULL, top_count, "wf", col_palette = gbl_plot_palette(),
                word_len, mac_arial)
@@ -142,7 +160,7 @@ plotSentiments <- reactive({
   
   # create placeholders and plot charts from list of base text corpus data
   withProgress(message = "Processing sentiment...", {
-    callModule(taPlotPlaceholders, "word_sentiments", ta_rv$plot_data_list, sub_plots = 2)
+    callModule(taPlotPlaceholders, "word_sentiments", ta_rv$plot_data_list, sub_plots = 2, h = ta_rv$plot_height)
     callModule(taPlotList, "word_sentiments", ta_rv$plot_data_list, NULL, isolate(ng_rv$graph_cats), 
                NULL, NULL, NULL, "ws", col_palette = gbl_plot_palette(),
                word_len)
@@ -162,7 +180,7 @@ plotWordClouds <- reactive({
   
   # create placeholders and plot word clouds from list of base text corpus data
   withProgress(message = "Processing word clouds...", {      
-    callModule(taPlotPlaceholders, "word_clouds", ta_rv$plot_data_list)
+    callModule(taPlotPlaceholders, "word_clouds", ta_rv$plot_data_list, h = ta_rv$plot_height)
     callModule(taPlotList, "word_clouds", ta_rv$plot_data_list, isolate(ng_rv$graph_seed), 
                isolate(ng_rv$graph_cats), min_freq, max_words, NULL, "wc",
                col_palette = gbl_plot_palette(),
