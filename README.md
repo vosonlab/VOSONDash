@@ -5,7 +5,7 @@
 [![CRAN_Monthly](https://cranlogs.r-pkg.org/badges/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 [![CRAN_Total](https://cranlogs.r-pkg.org/badges/grand-total/VOSONDash)](https://CRAN.R-project.org/package=VOSONDash)
 [![Github_Release](https://img.shields.io/github/release-pre/vosonlab/VOSONDash.svg?logo=github)](https://github.com/vosonlab/VOSONDash/releases)
-[![Github_Dev](https://img.shields.io/static/v1?label=dev&message=v0.5.11&logo=github)](https://github.com/vosonlab/VOSONDash)
+[![Github_Dev](https://img.shields.io/static/v1?label=dev&message=v0.6.0&logo=github)](https://github.com/vosonlab/VOSONDash)
 [![Last_Commit](https://img.shields.io/github/last-commit/vosonlab/VOSONDash.svg?&logo=github)](https://github.com/vosonlab/VOSONDash/commits/master)
 [![Build_Status](https://github.com/vosonlab/VOSONDash/workflows/R-CMD-check/badge.svg)](https://github.com/vosonlab/VOSONDash/actions)
 
@@ -15,10 +15,6 @@ The app has a dashboard layout with sections for visualising and
 manipulating network graphs, performing text analysis, displaying
 network metrics and the collection of network data using the
 [vosonSML](https://github.com/vosonlab/vosonSML) R package.
-
-| * Breaking twitter changes with rtweet package v1.0.2 * |
-| ------------- |
-| Please note that the recent major CRAN release of the `rtweet` package has introduced changes that break `VOSONDash`'s Twitter features. I am working on an update, but in the meantime please consider using the [vosonSML](https://github.com/vosonlab/vosonSML) (>= v0.32.7) package directly for Twitter data collection and networks.<br><br>If you wish to continue using `VOSONDash` for twitter collection and analysis, you can still do so with the previous versions of `rtweet` v0.7.0 and `vosonSML` v30.6.<br><br>Instructions for installing previous versions can be found [here](https://github.com/vosonlab/VOSONDash/issues/32#issue-1345623129).|
 
 ## Installation Options
 
@@ -64,7 +60,7 @@ For example:
 ``` r
 runVOSONDash()
 # =================================================
-# VOSONDash v0.5.11
+# VOSONDash v0.6.0
 # ...
 # Checking packages...
 # 
@@ -93,11 +89,11 @@ objects and a section for the ‘Collection’ of social media data using
 
 Network and text analysis of graph data.
 
--   Network Graphs: Visualise and modify networks
--   Network Metrics: Calculate node and network level metrics
--   Text Analysis: Word frequency, word clouds and sentiment
--   Assortativity: Calculate homogeneity and homophily indexes (if VOSON
-    categorical node attributes present)
+- Network Graphs: Visualise and modify networks
+- Network Metrics: Calculate node and network level metrics
+- Text Analysis: Word frequency, word clouds and sentiment
+- Assortativity: Calculate homogeneity and homophily indexes (if VOSON
+  categorical node attributes present)
 
 ![VOSONDash Network Graphs
 Analysis](https://vosonlab.github.io/VOSONDash/images/network-graphs-1420x847.jpg)
@@ -110,9 +106,9 @@ Figure 1. Environmental activist site hyperlink network loaded from a
 Graphical interfaces for collecting network data from social media
 API’s.
 
--   Collect: Twitter, youtube and reddit network data
--   Create: different types of networks from the data such as activity,
-    actor, twomode and semantic networks
+- Collect: Twitter, youtube and reddit network data
+- Create: different types of networks from the data such as activity,
+  actor, twomode and semantic networks
 
 ![VOSONDash Twitter
 Collection](https://vosonlab.github.io/VOSONDash/images/collection-twitter-1420x980.jpg)
@@ -127,7 +123,7 @@ Figure 3. Create an actor network and add tweet text to the network.
 
 ### API Keys and Tokens
 
--   API Keys: Enter, save, load API keys and create access tokens
+- API Keys: Enter, save, load API keys and create access tokens
 
 ![VOSONDash Keys and Tokens
 Interface](https://vosonlab.github.io/VOSONDash/images/api-twitter-1420x848.jpg)
